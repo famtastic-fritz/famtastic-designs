@@ -1,0 +1,4056 @@
+{
+  "base_sha": "8eb1220912393fab824070a2a01a7556415fdf83",
+  "scope": "agency-tracked-html-not-entire-ecosystem-or-runtime-database",
+  "customer_facing": {
+    "tracked_showcase_html": 48,
+    "react_seo_output_shells": 170,
+    "existing_unlisted_marketing_html": 4,
+    "friends_20260918_files": 0
+  },
+  "html": [
+    {
+      "path": ".agents/skills/ad-creative/assets/creative-review-template.html",
+      "sha256": "12f7ec21a574efeb24af9b672fd46bab7ce7bc6c3afcfed8a12fa108e385cefb",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/changelog-video/examples/master-skeleton.html",
+      "sha256": "b2906d152aafe5e8056298a22f4c54b164d345fc5beeb674b2f517076617d3f6",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-architecture-dark.html",
+      "sha256": "3767f518519dc7b6fc98066cc76c70937446ea9e71e380cf7c6064dc6ed6f5ba",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-architecture-full.html",
+      "sha256": "84425acb29b181a165e8c07fad268304f77223a92797a7f58679f51c3dd47502",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-architecture.html",
+      "sha256": "03716fdb0a4ad641c30a5267b14a4c573d699f0f31ab3d8a0ba4e2b74ad56177",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-bar-dark.html",
+      "sha256": "fb96534eff0910a006dabca940d71aeb1019076abfbe9a020758747c2e2cbb0a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-bar-full.html",
+      "sha256": "0095ec6576fff513fee6a731d6eba7fbd9e4726a3e8f6ac183407c0b69a36f58",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-bar.html",
+      "sha256": "1bbd708cdca419c137160056ed9862532a3402ba65d9335bae1be0aef90c7abb",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-beeswarm-dark.html",
+      "sha256": "597cf05ad582eb0dbe8040949c6f164096ce84631e6d3ba85d5fbf778d2b1dc7",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-beeswarm-full.html",
+      "sha256": "b9c6db9d3cbae523d16ac476d37e7996d034d00835218ce8888c373396f2e702",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-beeswarm.html",
+      "sha256": "ddd5c2adc0a9aaf46673b4e3e3207619808d00b719090fe14353d5bf816ccd31",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-bubble-dark.html",
+      "sha256": "e5297625f2a81cebcd63250dcd7455f5c84160da501354f530dfcf59baf0ab9e",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-bubble-full.html",
+      "sha256": "21c83751d106234c8ec450c97d0681a9d680f8e1bea3ab06473696dbd262c42b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-bubble.html",
+      "sha256": "a507ae84a0a6d03c329e8a26cf5e9de9c77aa21c74d9ce25379af2019f7cd18a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-bump-dark.html",
+      "sha256": "c6982966a1c775a0d3b176a21f1a86193453ca9550a7c8c00db6ca4f38d4e757",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-bump-full.html",
+      "sha256": "80976313d11eb5c20148143ce2df4ec3fe2340c917965244d8ee959293e35d79",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-bump.html",
+      "sha256": "5c3b46f8d1d0db041cf524ea87a1147f37d1ff2f69ca3b9a4963ae4a8f514756",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-data-flow-dark.html",
+      "sha256": "68144451031cc5c6d56dbb15b6532f24efc2bac4e3dfc9c5e9b8177d539777d8",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-data-flow-full.html",
+      "sha256": "bf4db055606bd5f15e64e0da67c8f2023b8cbea6a27a4bca2be24dbe12f6245a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-data-flow.html",
+      "sha256": "511788f809b9d674e2f92568955e5fc0c5f5f7a3960eaa0049e136ec93957add",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-datalake-dark.html",
+      "sha256": "98ed93bddc4d2112c3bd886aa2aa469c4f592a034eb39d2d3056033dc75d810d",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-datalake-full.html",
+      "sha256": "c84e13615eeb5d1cee261e485831a180752ef905f9a6252be3cf3b85415073cf",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-datalake.html",
+      "sha256": "a6d9fbf97952ef55f41c531ef1d32d4ba46a6bdb1fc1664997e0b8f51926c9f9",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-db-schema-dark.html",
+      "sha256": "40d12080e78a1ce39f5d6858f9e02562b8f4ec0bffe303ab8d4fc473db561024",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-db-schema-full.html",
+      "sha256": "a69144b54b23e7e6046234ed31fcc26625147af8a9e0dfeff05f4553c3eba8f6",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-db-schema.html",
+      "sha256": "58d473906c57670fecee29bc55377df5b433549445962204412ebd2c081b76db",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-dependency-dark.html",
+      "sha256": "7eb7c3d1e90d9dbb49a97f9490184ff1768930847fe86a112f0262513691c035",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-dependency-full.html",
+      "sha256": "5844a5bfa0eb30e5c7c8d5d23d4a3230ed5fe051e6ca84daf34a5ecb7185ef5b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-dependency.html",
+      "sha256": "973f7b5f5ac1746bb018e9ea8de9f6853b5f14ff41173e64abcf9855ea5f353b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-deployment-dark.html",
+      "sha256": "7688eec54dde8950375d2bb724438bce6dce18714ed2f99a0a60ffaacb17190a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-deployment-full.html",
+      "sha256": "6f6ae188e2c2874a7b6f28943575eff72773950a9ac15dac8b7b3209cfd88cc5",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-deployment.html",
+      "sha256": "6e28f0eee98dd728bfa6b5210b1885caf2b39992fdd06a680e37bbc8863e89b2",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-dp-integration-dark.html",
+      "sha256": "8cb30572815bfe86e449bb22266768f6dd52d91725faebd276c7e9de24113749",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-dp-integration-full.html",
+      "sha256": "9fc9f12a662ed1bf3e837c11be1b05df03db7a845ea203846a47b247ab6edf99",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-dp-integration.html",
+      "sha256": "929b6aaefa9a362d4cd18fb1801a57f28d32aa8dd78ba577375a11926ee2cc94",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-dp-security-matrix-dark.html",
+      "sha256": "ac5515d7fb1e850249aedf6d39deb848cd9edc02068c6944d37a04ca0fcc995e",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-dp-security-matrix-full.html",
+      "sha256": "9cd7d120e069a9be73a0f98b94282e8e9906f802c49fb1c57e5553479d8033ee",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-dp-security-matrix.html",
+      "sha256": "88d7a3fb9788300082274924f1f95dfd0a5a8b3bfca3fcd91b424cc8caa50044",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-er-dark.html",
+      "sha256": "c007c14d88a48a8ea30b1144dd4ac392ee7891a2278262e2a6f6836b43aa7fdf",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-er-full.html",
+      "sha256": "9f43422370cbd751196fd5b8ab802a177d015f739b39064c58f5e7273f56e1c3",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-er.html",
+      "sha256": "aee470dcf37af317f14d21cd9420f6bcb1b65f0fb0047483a42b8afc0cab2774",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-fishbone-dark.html",
+      "sha256": "f884b81b83f7ce40cf85b8aa6c3a55db99b7fb2d38502deff222aaff36d7db47",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-fishbone-full.html",
+      "sha256": "75bfad970d61909fedbf2ede67c3e88057ab46909d7ea7f2c16d3ad2a029aa2e",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-fishbone.html",
+      "sha256": "cd7079857240a9f6228804d3492af0add2eb36343798c9e0ef90657f2a246d04",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-flowchart-dark.html",
+      "sha256": "d61779e1d57f2d5b3b9c01d09f0677251f99acb449ee40e8cb5e3297adaf9de1",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-flowchart-full.html",
+      "sha256": "0386adeb8ef6327a5ae42f6f1f89f59aa1455fa500ef18b3c656a59f010b8192",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-flowchart.html",
+      "sha256": "ba0a39df57d5fd4beccebeb51d62028b420371b30793b2658d308df04d571ff3",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-gantt-dark.html",
+      "sha256": "81016c2956b4cf51d0c2e2b0302ea53c535f3f59a21eae8d4b1a596c448ddb2b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-gantt-full.html",
+      "sha256": "aab29f4296a7500417c899a445bb7df5f6b785135960e66c5fdfbead27ca475f",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-gantt.html",
+      "sha256": "607745921006b312ab710c3166036aebeb31a2b7cd40df36713a850a28cb73f3",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-high-level-dark.html",
+      "sha256": "49a52a62a30781de7d6ee051cddf9837884a84bb1ce1891eb4dadb4bb82348ae",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-high-level-full.html",
+      "sha256": "d25bde14ab1ac1d9bf47b1613f864517ce3d88553043192abbc856f69bd0f7b6",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-high-level-vertical-dark.html",
+      "sha256": "492b0b9aebb037bfd10f65b16f2212592407a1731682d7469214225451a58fc6",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-high-level-vertical-full.html",
+      "sha256": "3f72c30a5be5a5bd9cde92e366ae1a97cae8473f1d8da2981ffc6d187b5c3dc3",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-high-level-vertical.html",
+      "sha256": "fac0ef026d59a5086880087db4162a3ee2e064a8685c0a093b218df737884c02",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-high-level.html",
+      "sha256": "33789942cb06be5228ffa6e450602d1f7c9344b7d263fa2674b7ba5e6dd7e788",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-import-drawio.html",
+      "sha256": "f6b4cc1e49c1a680dbc1914cc2efabe1f6be418f4473019d8358819a8fbf6d63",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-import-mermaid.html",
+      "sha256": "10c5623a9f6daf9dccb85f15225a155b721e0ec3304d7769c4bb87290da2664a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-it-state-dark.html",
+      "sha256": "21363f1e08eadbf4c88940f845dd36f462a60e191064d4d9781dd68c9daad4b5",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-it-state-full.html",
+      "sha256": "ed7b2271c358c6046a49c03498384a86fdceda98a1632b235047ee9da9a7b1a0",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-it-state.html",
+      "sha256": "59103bffa775b744828643e361b71f4b80e5ef8a0042abe9ce65c81e3d5dd21e",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-journey-dark.html",
+      "sha256": "c1866ca355d8859d27f6e99d9e2415daf204c313ed4463ae9663ba9e930a9949",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-journey-full.html",
+      "sha256": "8a8263ed88d245376cc7dd0ec8068f02701b346a5d3127e9bb999406046af7cc",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-journey.html",
+      "sha256": "b01e32ff87d63fddf6d1db47155906dd624acc13327856269114f760afc754f0",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-kanban-dark.html",
+      "sha256": "30809cae8600a1852131362df275d9ab1c6aeedc65d3855caed264d48e19f5dc",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-kanban-full.html",
+      "sha256": "a297c9d5da1ea46c6c3c69ffa49525965208cf2ffebb8031a577075d85a390d1",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-kanban.html",
+      "sha256": "3b19fb185019e0e341496de095bb1d92bd1fe4705c1502562ef47cb88329b2bb",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-layers-dark.html",
+      "sha256": "412df7b0710cf14cd95c1e806e708241bda6b3bc8e1f142107adf857ed6aa7d1",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-layers-full.html",
+      "sha256": "0719489be758a08ad66f2de27d120103c41a51982408e78faffac6b9409c9fbc",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-layers.html",
+      "sha256": "196f3cd9866d64da9e04323f258534b1a51d1116140c0db2c8e330adb516a809",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-line-dark.html",
+      "sha256": "552abdcac08788dac5ee7fa419ab854c5e09451b69822eb48935712880382a9d",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-line-full.html",
+      "sha256": "f3757327ce4d465a58b8aaf7428a1c4b3472f7422e782b32164f765b82dcdf96",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-line.html",
+      "sha256": "83f5e305d6ce509b25371db6f6e73fa6f3982b7a8dbe09451091c0a15f3b1d90",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-loop-dark.html",
+      "sha256": "cab1f56390bd59c6b13317854c0fe32497967ab4e822c004d30eedc3324d27c0",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-loop-full.html",
+      "sha256": "c2effa4d65d8713420c2a9261e7eea4f5273f3f87e7e09398bcc6310655bdb4e",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-loop-terminal.html",
+      "sha256": "93a2f86cca043537bf472973c6c1d51de54d85208ec54cd448c40e3f09aa73e8",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-loop.html",
+      "sha256": "b5d0e37b14614ba95d95cdbc5ecdfb84c6c03d7cf664124e029cecb97af340bc",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-medallion-dark.html",
+      "sha256": "65740eb4e2b1286636fc749bdb528dbab7e03948d104c368667ab1ccf85a46f2",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-medallion-full.html",
+      "sha256": "f6ceacd25be82850f65689b07d52b4c9b0e633604e909b13e77ad6468895a688",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-medallion.html",
+      "sha256": "e88a5b1f1f67a7bf6ad83c5144a7f79973a732f68972ba648ec81968579032eb",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-nested-dark.html",
+      "sha256": "1ff6c0e0dc7f9b321607a4de691a0ac1f5a99cef5b9d2dc0c6e9a75a13473f37",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-nested-full.html",
+      "sha256": "0efbb94f914d4edde8107df357f0869de0047011562dfc96856c3537c4e1648b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-nested.html",
+      "sha256": "17648e5a26604bf678d7cd256ec0d84a54f7f2c6920fb56c030226e6ffc6557a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-org-chart-dark.html",
+      "sha256": "fd0233be926462fd539b3a953a8abc012fb1f6248b71b658a0a3d194fd4f45e6",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-org-chart-full.html",
+      "sha256": "a1b5d313f47e6cb26240edd5d696e4dc944b6996bbe92f0be7c0b90836d2631f",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-org-chart.html",
+      "sha256": "8c4e95ee52d597f28743673ea11f01ecfcf1a230d6f3dfb6d5ad641b770af46c",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-paved-road-animated.html",
+      "sha256": "edc92180b5dc86cdec954ba50a81e50ccea4a994b58619819bfdf26ff5651689",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-polar-dark.html",
+      "sha256": "7c284696cfed61e832dd4dde814840901967cca64bd54a4cddfff7cbeaddb04e",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-polar-full.html",
+      "sha256": "bfd2ec50116c00a9312efe7bfa5dadfe2512de7c27873e15bdecaa044c932bf3",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-polar.html",
+      "sha256": "596e2042f18044ef1fa2c2eb849f39fa5c7767b2a17e272617ebd27e10bc86b1",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-policy-trace-animated.html",
+      "sha256": "a754efcb4d5d780798d3f386c0a5d68f36b0b12e142bc44603c2d39065daa1e3",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-process-dark.html",
+      "sha256": "5e6ac1365d2e473568ba736975495b9c3509004fb6fca571dedefa8e6cdc5c8e",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-process-full.html",
+      "sha256": "d0c0e6df7ae42fa92a1015421fa1cef211847c4037026de2c70d77a5e164a4cc",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-process.html",
+      "sha256": "50ca0b9e6a3e9f5ba8102ff3c6fb87b6a66b1d59f272777b72a97639d4fe2375",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-pyramid-dark.html",
+      "sha256": "831bc6531d0b3b0eba1b348722a0b3e4d5548f287f5380ddb7e26d3f5edcb80c",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-pyramid-full.html",
+      "sha256": "15306216ab2647d81038cafbb32139fd8e33cff6c1f2407fabbfb9dceb2c2c6e",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-pyramid.html",
+      "sha256": "d12cf7c4c921f3bbd66026af9ed947ff23acdcf414a4309b59c173377d9bdd80",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-quadrant-consultant.html",
+      "sha256": "421142d6be52e56315a4b7d02f94a940fe2d7e4d8b506795392b8086c900926c",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-quadrant-dark.html",
+      "sha256": "ac1edf5d9c1251a51a93eb82db17fc1820811f1934ec59c1272ea7f89c501465",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-quadrant-full.html",
+      "sha256": "11208b7d6353a4feed795e2c1539153843dcf2c057da414c73958b68e08b439e",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-quadrant.html",
+      "sha256": "a147cc85f78958da824d53d226067bff687f3e35a64601394c3075f55c675648",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-queue-animated.html",
+      "sha256": "f42628ce17ae487d0b1ebf2cf29a216a70775f8f305a243e38cb0c44d2efbe0a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-radar-dark.html",
+      "sha256": "e24eabbc722e67b83ac498407247e1c09d162ff19e047944a323d44594a68258",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-radar-full.html",
+      "sha256": "18203b78130ef1200e78afd8e5a574029f560f4064730e2f2661b6d33ff9e1e6",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-radar.html",
+      "sha256": "767b6a52116665a75b5895c1bde6d96a6a3277449229ff7e21b33afff9b9fcdf",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-ridgeline-dark.html",
+      "sha256": "b430c4ec58ab69c044cba2eb39e20adbc8769cbd85fb5f41d8c3f75136d62f90",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-ridgeline-full.html",
+      "sha256": "9c2631fdd7b5f9df360d18778400212c0fa689685ae1c46d0e65c7279b4a71e6",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-ridgeline.html",
+      "sha256": "0e6b87dfbbba5e8b246a195d28cdb49a52aeebd4912fb40ffabc4fb752b04821",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-sankey-dark.html",
+      "sha256": "4c2a4ff17cfba1412aee8b6569e76c1d314d9ce64d6038c99e89505225b9baf1",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-sankey-full.html",
+      "sha256": "52949b4f1bcfba7bf89c49542ddf6937fda80be6c10c806366cd056d94732eeb",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-sankey.html",
+      "sha256": "f9196488b04763405fe56a56ed201630ce63aa86c96dcf8ba652d3927093707c",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-scatter-dark.html",
+      "sha256": "d1e48f5da1c729879834b797d871eeeff1222fa270ae6a051d02ec40dda42744",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-scatter-full.html",
+      "sha256": "83e8cb8e6d2e788071b3a843c5746ed980675507e41d99b9a3b11beb07b8e6a6",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-scatter.html",
+      "sha256": "576e0061f65b1885cf5fccb794c2827b19fbea66cc14e8284f3fa075ef755d06",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-sequence-dark.html",
+      "sha256": "667d448a51a817fb334d3fae0c6f2ed2ab8a2219e42bb29d97c9e012c2d96a8a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-sequence-full.html",
+      "sha256": "e165d6e2fe2fa56538820ab6efa56a7ea79f29d75775bac47ee865483d512c1c",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-sequence-oauth-dark.html",
+      "sha256": "8237be551f450082823ba237958d62cf54c9ca1f98ea5e4f1c1eeed68e6613d0",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-sequence-oauth-full.html",
+      "sha256": "c5e5f5d947c7f99474e4390a4ca2536285ca03e57aa7eae7bcb580c4c955fc2f",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-sequence-oauth.html",
+      "sha256": "700ff6d8a06aa0b04b67520e4def6388f1a334c1a63d9df9edc5f697eeee4a40",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-sequence.html",
+      "sha256": "12dcedc98c28d15f7a455f1266c8d8bd93bebe1ed8f352d89bc20703eaa00fad",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-slopegraph-dark.html",
+      "sha256": "fb1fcd70a4d7e63cb57d39ddedfb54f4840118ec6e9905111a4d263ccc7c62b4",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-slopegraph-full.html",
+      "sha256": "262b5db6e1c27327e9ff204ec359821fa92700e5883926ac0217d67a6c13c237",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-slopegraph.html",
+      "sha256": "1d0d0d6835e38c1e84e6a8b7cf2a3f0f3c59f70025941b994b844a6048f53af5",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-state-dark.html",
+      "sha256": "d5a29f22ee80fef6fe6f857e767fb0bf4afca8bc8f8cbb478f33286d76f88706",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-state-full.html",
+      "sha256": "bdcd07a2f12fb3ae0afe34b8f3d9fc455a7fbe02f671b97a7163d35726894017",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-state.html",
+      "sha256": "75521144ce5aaf477096f355e86ae2d3301eb136391a6bd0702a844a8fe7ce30",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-story-map-dark.html",
+      "sha256": "0c288216307ff36b43b513445e0e63fa83ed5902695ead17fdd507a470acc6b7",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-story-map-full.html",
+      "sha256": "ba97bf483442959c35e8d64cd36d177d94fff76215ca3e3b44901b5e4f586443",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-story-map.html",
+      "sha256": "40f737ca1c2a9f46cd8a3ad1a377faabc1adc546a410ff8395e6622b4e773da1",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-swimlane-dark.html",
+      "sha256": "1b45aa776b6e9b71249cb244b0ae0ca9ccc341d316d324364a0fad3d51e60d00",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-swimlane-full.html",
+      "sha256": "5c26540db8c18a1b33e32b90b1cf640d6482804b01d45fa87547c2a73a625852",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-swimlane.html",
+      "sha256": "75fc463ad3282dd0faaa4328c6b07f7e853184eeb1edcff2add8f7ed1876ab3b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-timeline-dark.html",
+      "sha256": "64bcbb52a88e989b642dee6ef9ca2c47000407430b240760911a062a8e6735a7",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-timeline-full.html",
+      "sha256": "4e9195b6c3eb9d9ff4ee0bb9a19ac166c7098465d80ccf7148af73df4cdcd7f1",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-timeline.html",
+      "sha256": "1a58e3824eb2bb89ff6e57439b61c38d6e4c08b187143436f50108d8e60bfc45",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-tree-dark.html",
+      "sha256": "43aa056d0761d323cad0bd6205de3083fe7413af4e10639cad5e92c8ed41beac",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-tree-full.html",
+      "sha256": "988fda69a8fc3f043b263c254389adc282394d2a468163dde70fa8b56fc6392b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-tree.html",
+      "sha256": "5de9151661ad9e1b21809d58494390472cdd82ca1ef1ddcde88b6f14e667afcd",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-treemap-dark.html",
+      "sha256": "43cbbb2ec7c30a71edf5f5436e51dd8369cedb1da80f6e6241b62278ea4e5698",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-treemap-full.html",
+      "sha256": "c0b0569090b69050b7b70592dd7d0d3ad01a41e84ea80d03433cf5c3b35e52a2",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-treemap.html",
+      "sha256": "95f0dd0e5072bbe327c7a85d1fa71a18cff3ade32240a917c4b672940d151008",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-uml-class-dark.html",
+      "sha256": "eca2e26603714d4df494532a2a712101321a484cc2d1263f7629b8f0e214357d",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-uml-class-full.html",
+      "sha256": "9c9efff3c44878a9f7cf459ed7a1c7fcdd927cfbfb73ef35ac6b0c0c8d7a7671",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-uml-class.html",
+      "sha256": "c6c353f4d53c476fc3530f20d09cdb9d4b47a2bd22d0f3c56c807732534a685d",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-venn-dark.html",
+      "sha256": "85c6fd7c48e0c4989aebad24862e49d8783386f4cfa3efb27d1e86a724558077",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-venn-full.html",
+      "sha256": "1dd7525e58092b6a4bf1463fdf0df2914d717e3abcfdbaf04ed0ba3dd814f310",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-venn.html",
+      "sha256": "86d763a94bc20fb3038cb00b9ef0fedd1e00cd8009df50852eac77d92e3965da",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-wardley-dark.html",
+      "sha256": "80aff4e268d3775541eca4cf1c1cac918f0895637cd79568d4895e84b9f2046b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-wardley-full.html",
+      "sha256": "8a9d56c9e50b57bb990a172822b01361cd4cb57322675fdde40be364e890210b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/example-wardley.html",
+      "sha256": "b0ffc8f5bde65a8d77d863f22cd6c0d0211490c059dbcb503798851d1413860a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/icons.html",
+      "sha256": "8e7f54214b31e9152020e012aff18cb97defdec47ac09cee2081499c0bb0eb4f",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/index.html",
+      "sha256": "d9d750ff16685bb1d79729fb136201a8ed5fa88077683c9992c62d3f0ca525d4",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/template-dark.html",
+      "sha256": "84f1d003ebebc95545ed7d238f405e6967305e5ad9a17ebc750de97910369989",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/template-full.html",
+      "sha256": "538f0a5efdf9e4d14e4b02eb4712cf7479211edd92fd8128688fb910d0bcc8bd",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/template-motion.html",
+      "sha256": "799feaf296b3088f5e9ea77b1bd6ed16127a05bdbc600fec21fab86fda333429",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/template-terminal.html",
+      "sha256": "6d000bd0308a737afeb1a11f453945d315abeea9d2a9f357fba534590ea391f9",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/diagram-design/assets/template.html",
+      "sha256": "48887f37b265f00eff347d29d3d69ac42fe2eb63b867feb83e6f6250d227ba2a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/embedded-captions/modes/cinematic/_archive/champion/template.html",
+      "sha256": "f374671528f43a2b0a3558f6a2da4dcec2ff5125cf67e1c5316f8f09c7ccaacf",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/embedded-captions/modes/cinematic/_archive/memory-wall/template.html",
+      "sha256": "38b91ef473eb2e0f9057f304b54c8d90cbbd214c401c682a46dae77dcbedf7f2",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/embedded-captions/modes/cinematic/_archive/portrait-header/template.html",
+      "sha256": "3f438cb37803f927faf9c9ee19c14f13fe8eec29289644f5cce157980f2fd149",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/embedded-captions/modes/cinematic/cinematic-cream/template.html",
+      "sha256": "e6974daf039e51840a3d29a8f8cb371266a11a8f2e5909e9f85fac8f37243521",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/embedded-captions/modes/cinematic/engine.html",
+      "sha256": "3c156899efea20bb252a0e759087a8d705e908c86a4fc988d5d34105e34c8338",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/embedded-captions/references/example-renders/champion.html",
+      "sha256": "ae194e3a969a0159fa205e7795b71727503e2c184c5b001074f33d1db3d9f000",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/embedded-captions/references/example-renders/memory-wall.html",
+      "sha256": "c1eb4377d3b1eac6be9e631021cb094fff79c092b0429726c5ee3af57bee1937",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/brand-reveal-assemble-zoom.html",
+      "sha256": "6ef0274922bf33c9362c638476d97c475931941263f03934ce06f677c8301e5f",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/comparison-split-cards.html",
+      "sha256": "6fbf71a6620971f67d984d08346758a088d45297b68f2098d05a516001daa2b8",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/concept-demo-decode-pan.html",
+      "sha256": "003f8bbde732f9c982493ba3a531c8d861bdb3119fe772dc3bad135924b355ac",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/cta-morph-press.html",
+      "sha256": "4d423157e55cc7c46d112d3471bac207a2072f5f7d190f506809bc6c7ac68644",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/cta-orbit-collapse.html",
+      "sha256": "d41514f8bb0a4808a66f719bdc3b2118f16a476d47ac71b7db14a73e723f7aee",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/demo-page-scroll-spotlight.html",
+      "sha256": "aa1252821669b2f81d7925bac2869ee9a06650abec152c9ab0c978df1f9b2808",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/hook-counter-burst.html",
+      "sha256": "4766950cad912becd81d293ee23475caf4eac8c02dbde31c4c4f7ed015cb127b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/messaging-multi-phrase.html",
+      "sha256": "dbfa5e74f09b0e2b45cb28cd100915143aab7f59ad3a2dffb46f5f88c3cccd77",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/metric-video-text-pivot.html",
+      "sha256": "5d0ede336552e9ac402bd7bf7dc84d95c9f76699d0e8ebb78f2dfeac3c7ebc36",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/problem-mockup-overwhelm.html",
+      "sha256": "127d94b53a48d36bf1a5eb5a9fd4e44b0c4cb3a5478c19783aff940f6683106d",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/proof-logo-chain.html",
+      "sha256": "b607d15d84d7666cb519626f1292fa42902f1c58e38766c2c8b5dc75825e7cc2",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/takeover-ticker-displace.html",
+      "sha256": "8d39a9028d8302ccd185d6fa2c5a6da1f097b4e9af083d18a1f0063a96989d22",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-animation/examples/workflow-approve-press.html",
+      "sha256": "2b04b61cc30113195f3a8173aec2a3abcaf13ddd5b7d577baea44aacae65990d",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/biennale-yellow/caption-skin.html",
+      "sha256": "e6e24155d587ab0fe1beca7c62e6fbfcce9d069cfb9cf02dfcecffe95194554b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/biennale-yellow/frame-showcase.html",
+      "sha256": "5ba04e47cf9897e023dcfa49e1ec26fe26bac0c5061097dc6e7cb1d9ed46d7d0",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/blockframe/caption-skin.html",
+      "sha256": "85ef2bf1579587b97e26b617ea0c957329879e8413c2875605a278ad947c7d26",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/blockframe/frame-showcase.html",
+      "sha256": "8d2e4963713928b353d0aa28c2c83fce415df81b66a500c192b602c0aaf4ddf2",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/blue-professional/caption-skin.html",
+      "sha256": "a4cec56e723db7fc6b6f0c71a52314f80fc3f3f6c43747ae46af8a0761aa0c8b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/blue-professional/frame-showcase.html",
+      "sha256": "715b130d086977a48925a3c79bb079fbc7270274c9c9a7761bf275df3020b0ba",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/bold-poster/caption-skin.html",
+      "sha256": "c5408b8d2b36028d85455003a5f0bbcde863f33474799477bab6afa261ec0214",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/bold-poster/frame-showcase.html",
+      "sha256": "57bbc3374b6a8b37ce59e36ed784c22bbb88fd44d039955221913b3e1bacf159",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/broadside/caption-skin.html",
+      "sha256": "d09b3e09bf497c0f2ed8db9dee181f376f75c65a25246181dc9d8f82cc938d6a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/broadside/frame-showcase.html",
+      "sha256": "8d23a2cbeb898568a5626b38ffc864236fb4a09930d59b17c34c45f34c8e4161",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/capsule/caption-skin.html",
+      "sha256": "a66a37a0b2060ebe635f4d2309b3cf0f78c31203de19c12fc477a23009ec0e89",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/capsule/frame-showcase.html",
+      "sha256": "b3a642b5df3bbfb1ff227f1b82ee3ea02b51f20a0d7c5c46c97d72b180cddb4f",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/cartesian/caption-skin.html",
+      "sha256": "48f7b844d2936e0e0fc142605ec627adadc12120691bacb50dba7390d8706137",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/cartesian/frame-showcase.html",
+      "sha256": "d7867cee5e07c4f22345c566071f2ce0261b3fccca111a94dfbec5fde64f3e55",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/cobalt-grid/caption-skin.html",
+      "sha256": "506c0abc064ee4450afc7d34ff71a6fd04fa0dda69d57608ab310569d7651c03",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/cobalt-grid/frame-showcase.html",
+      "sha256": "b135214cd2e310273a01e3f72b2828149f022803954a22a13cbf27aa1c2f518a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/code-editorial/caption-skin.html",
+      "sha256": "fe96654fb76433caf5b3c81e4b9c52c07c1d03b267411c12ed94f054ccb92028",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/code-editorial/frame-showcase.html",
+      "sha256": "08d711f5409a6af3fb6de05febe47fee77e4c8e85517bf2d087e2277b524e4ab",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/coral/caption-skin.html",
+      "sha256": "9af79dabd44f5d6ac934a5c371aad5316a4e2db76542a1ec3c969245b33892fa",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/coral/frame-showcase.html",
+      "sha256": "8ddf31ae13a4e57fe9730892fbbcb171cae67a204b5cb00b00374984f49b8f76",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/creative-mode/caption-skin.html",
+      "sha256": "ef4a13de5757453294db153607891e60ab3f408603ed222e53b908359dcbd296",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/creative-mode/frame-showcase.html",
+      "sha256": "32c1371fcd526c56edb515e5b255ad736a3e330ba3ff2631c61576064b384ef0",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/daisy-days/caption-skin.html",
+      "sha256": "6090e702f09c1df11e7289269a5b1ebc126981107c3ed5d9f951f69d471d1494",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/daisy-days/frame-showcase.html",
+      "sha256": "4fb93e5fa3ba12367f303996b6ca8b62f8e18c721d02e8032274df12d49d96f3",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/editorial-forest/caption-skin.html",
+      "sha256": "31999378b8fed9a4511432e38017f287127ce25a534ee57bfe4cc0f3b74c7d48",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/frame-presets/editorial-forest/frame-showcase.html",
+      "sha256": "bb87b88b91184f4fee7f02eea63ed35d9d378fa89fad8988326e31e82a43dbb1",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/hyperframes-creative/templates/design-picker.html",
+      "sha256": "c417139fef8e21b34d56a85cedda8b9597c9574e0727ce603a4743c4ee592c1a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/motion-graphics/samples/asset-fusion/_ref-circle-highlight.html",
+      "sha256": "1c6d33b1fc191735fe035a9a104be58236f9cb1fde33a0445ae08808204118b5",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/3d-card-flip/index.html",
+      "sha256": "2b26580cde05d9c228c1ad55c40a0075d8369e32cf0bdae63243d301cfc46f0f",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/bg-flow-field/index.html",
+      "sha256": "29bce6fe18a1420a50ad1884eecafea165fdd6858181bed94a7a90d553a74ff4",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/binary-decrypt/index.html",
+      "sha256": "6b9d90d222fe51a75df7375931c0fc83d1ccbdb127cba897e915ff9811c8f5ed",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/blur-resolve/index.html",
+      "sha256": "9a48099d7fc5a9091cc664416d3f151c4e243315e009212e09490cd24d90a2d0",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/braam-punch/index.html",
+      "sha256": "20009fb3ac86997c85c511dc812f40b69bf91d4b793bb2aba5bba2b07a3b9c26",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/chromatic-split/index.html",
+      "sha256": "8a2d99f81b7316a8332afac21dbab51ddb444b7ff761cb2528f2f33bcab50e91",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/chrome-sweep/index.html",
+      "sha256": "370817d6e14a390904982e034cc3aa779c221a83c0305376aa7d0a13b51455a5",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/counting-punch/index.html",
+      "sha256": "52b17af7db444e9d81bac996f1e0590fb47e88a8a200cdc9d5cefb85e1dc42fb",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/crash-zoom-in/index.html",
+      "sha256": "3033ea34231347c1463c14e4d470757d32b0fa3bb35120094f1e90e3fdff0fa2",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/datamosh-smear/index.html",
+      "sha256": "40008888197aacd9292ec101dfd250885a90987ffbd4e9fc575c0858fb5192fd",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/directional-fill/index.html",
+      "sha256": "1c1f17792f9e80e8dc6d62ea1c5dc8f4271e42e04055f8c97e67c5831a030fcf",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/dolly-zoom/index.html",
+      "sha256": "5f880691b03b091d42a74c4f7ff187197e56bbb41103417288be1c7bb139a4dd",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/electric-arc/index.html",
+      "sha256": "a5d931c1952049235c56ce075ded16d910782ed75a2a8a004acb0f713f7fc13c",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/flash-cut/index.html",
+      "sha256": "05f76dc5fc4da23bd2de65f3aab754cb2bf58a4a5b4df9f2d2d826acb8ef5232",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/gooey-metaball/index.html",
+      "sha256": "5819a487314ee710c1bc1479223d7fb494e6176f17ded188825149b9deb8317a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/hard-cut/index.html",
+      "sha256": "d34752afe7745206d08b6cf0e0f61e94d47b75aaf1318cd06f133511bcbe3b19",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/hypercut-whip/index.html",
+      "sha256": "9048cdd93ec6494998c03bf2e92ca5d5ccc80a0fabd4ca768b474a26e1f8a083",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/iris-open/index.html",
+      "sha256": "8bf26be3cc3eabebbdd7ecaeffadda488db61d23a473aaceef4d927e64ff332b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/kinetic-letter-in/index.html",
+      "sha256": "962ec9ac7aa6b391f9cb5e3d66816336b0170550c50a194f6bdc9bd16eaccf2b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/liquid-morph/index.html",
+      "sha256": "a2a98514166502350d0737f5cee01b6189e1ff7c4eea8b541ea3a07be6794ec1",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/mask-reveal/index.html",
+      "sha256": "fe0c1e4538ccab949c8bd954a2cd6e2d454887afbbc2a32ee80738434cacbfce",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/mosaic-pack/index.html",
+      "sha256": "7f2975afcee9c1c6ff7e0f03b02790aeec8bedd40834bf4129a29ae02eae931a",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/neon-flicker/index.html",
+      "sha256": "26a5e950abe8e3434ad69efe97b89b9a565f7859f61764266caff9c1bfbb40dd",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/outline-to-fill/index.html",
+      "sha256": "279ea438384e364f9529dff342caa1641126d03e3dd753d100ea2743b17d2665",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/palette-flip/index.html",
+      "sha256": "c03696cfd77331f83cc006d0512e27be8a663670e2a37103d994ae112fbb73eb",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/particle-burst/index.html",
+      "sha256": "574bcef6f8c1c2eba8a7a15227de8f01d0135af97b8763aa93c58e3649f6eb72",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/pixel-dissolve/index.html",
+      "sha256": "4ff37db19f215f505c1b8de420dd5e3ddd2c75e87a85e577e7f39444a9db85a6",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/radial-burst-lines/index.html",
+      "sha256": "5022379e0d66d108a665377ea90ffc90e9d1d06e6144817f6b0695114a74cc95",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/screen-shake/index.html",
+      "sha256": "ffab022425f8c5f5aed6ef6b8533b62041b09ea0032e65edda77c5b893b8d873",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/slot-machine-reveal/index.html",
+      "sha256": "fe5c83695b6c1358fff5a01400a5bab728e58ae362266aa57467a2add3298ab4",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/spotlight-sweep/index.html",
+      "sha256": "c2f27aeb84f46a7bbae66307bb9da6c5b866de84705b34c78a7513fc63f4cf63",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/staggered-exit/index.html",
+      "sha256": "1463d62f72c428a76ad64a45411e8f55db0e3f7c672540dcf5a7d807771d55e1",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/text-spectral-rays/index.html",
+      "sha256": "5f8dd911524ffea34f13254235c2939b989a43fbb0e22afb5b21a175195fe1be",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/text-wave-distort/index.html",
+      "sha256": "9e40b743c70c73ee5fbc3bbfc1f4cd6f402664a6d8fbcc65648173f6faf0e02b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/tile-mosaic/index.html",
+      "sha256": "6c8bce28d90411d459d6fa71c350ce17521aeb9bacd2afc1f489853e7814f772",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/typewriter-reveal/index.html",
+      "sha256": "5387baba4095545024dbcc582396210eeda6d26f82ec11e96b12922ad40aa0ac",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/motion-primitives/word-grid-burst/index.html",
+      "sha256": "c1456e605d1e905379894b31e178a2f3f126e8cc3a7163f74fe45516efd476eb",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/templates/card-flyby/index.html",
+      "sha256": "22ee2bdc2eca84c124356e7b7d3e8d73f2db65641d5cbf1c7667a14d2ec457a4",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/templates/held-message-living-field/index.html",
+      "sha256": "6cb86b99a3734cf41baccce4914907866ea74746577d5f912f280d3f266e4ea5",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/templates/held-text-strobe-burst/index.html",
+      "sha256": "aa11432608a2672b62da03b19758f297c4dc3cda98dc7c74ffa22aee30030490",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/templates/intro-kinetic-cascade/index.html",
+      "sha256": "7a69edbfd3cae461f233c934430d66791c11cb8d00d2979d9e15ff842159ab23",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/templates/logo-split-lockup-pulse/index.html",
+      "sha256": "ec2c97b761011d0fe044ba0983b7ce4ec9943c2997b153b9029de414b9664511",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/templates/poster-tile-mosaic/index.html",
+      "sha256": "5d4d85c626f79bf443ad8d76ac98b1b106ffc99408128b767475ce91a5cac85f",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/templates/roll-flipbook-word-cycle/index.html",
+      "sha256": "fecd97e92610cc30f38e563ea2152727de8f82fed810debf5df64284f273fb61",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/templates/split-anchor-word-slot/index.html",
+      "sha256": "dbd8dba3ca08d9ea2a8eca7cd23b9f2c9da27a4b8c092271534e1377270f0b83",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/music-to-video/references/templates/typewriter-phrase-keyword-shuffle/index.html",
+      "sha256": "4c794931d075ca2e525c6023e5856ed36b29097d1454f69a1eb8dfaf24c2e88d",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/remotion-to-hyperframes/assets/test-corpus/tier-1-title-card/hf-src/index.html",
+      "sha256": "8a2551b3517f1b50cfef228ad6f62fbee356f6fdb94228cbb64a8b5bed255e87",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/remotion-to-hyperframes/assets/test-corpus/tier-2-multi-scene/hf-src/index.html",
+      "sha256": "a406157afd13831c077745aabd3735336911342f28cb091fa4086483c22e5225",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/remotion-to-hyperframes/assets/test-corpus/tier-3-data-driven/hf-src/index.html",
+      "sha256": "311495e83d8d6b2c566be26c49112a7a7e1a499cbc512b3c2d98541e622e3e16",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/frames/clean.html",
+      "sha256": "10c18a856b9b3430075b14eaaa346fd953827c158c6640cc19d94e1ad622bb0f",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/frames/hairline.html",
+      "sha256": "9de5bd85cb6f15dd6cd73ba0a08a69a698d8d68626d5255127a6d6455a35d17c",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/frames/polaroid.html",
+      "sha256": "6e031ce943bbc47891ff5bdc7ae5ac22c9b85ba6dc838f9ba06175e979dd54d9",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/layouts/overlay.html",
+      "sha256": "d8a44b6b0075b194b70e4df22b34c07d9bd4a41bd14017ef2c126eda37d91a26",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/layouts/pip.html",
+      "sha256": "3fc7da10775d5ac6caeca78482939d5a6afad6f1637c0190beb023ebfca0a4f0",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/layouts/split.html",
+      "sha256": "6078dba9780e850f1d21cd29fbc27f6dcf69ced3f8559e7db115d16d0ab41b7e",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/layouts/stack.html",
+      "sha256": "054d1ec184f53bc6d8ca2a3effc6f8f19a98d29d6c4ab6d3cbf6f9bd4f5b4cb7",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/styles/academic.html",
+      "sha256": "aae0f6b167f6a09a02622f1e785aa9b06f0d96382aba9f4cabcb89250747d5a6",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/styles/audit.html",
+      "sha256": "2edbd5cfdd9bd3bd6789ac2a6bea9555187f65b03485dc58771b4bdf982a7c7d",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/styles/editorial.html",
+      "sha256": "f59b3ef3edb66c523270179a59b1efd0b0183d8d4e871958142c99c6447f5710",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/styles/geom.html",
+      "sha256": "4d4e5cdf29ee8082c181f2001c00764355d2a408605ecda87bacc7d1fb48b7c1",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/styles/minimal.html",
+      "sha256": "cb161810bad03c9f8e2ed68a6bd300dafc52d184ff214a5e7933d0a0676e1a7f",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/styles/spotlight.html",
+      "sha256": "91f2a516f947eab9f40f112f13185724e2cfbeaffb99786ab14ea13629bc38a5",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/styles/swiss.html",
+      "sha256": "5c44a617334fb4f7bd4aaad23a2bea2231285ab25e80c952abaf72e9a5f4ac17",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/styles/terminal.html",
+      "sha256": "a81c69499a4af4df9c8b1b2b81ffbc7eb467e27b3107fa3adf34bb406b17b72d",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/styles/whiteboard.html",
+      "sha256": "5b01baa63fb41e39e8095da5397589489b2cfe328a3b2748a6f83ccd0f0ebb28",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": ".agents/skills/talking-head-recut/references/styles/xhs.html",
+      "sha256": "47af8ffdcab845deec36d7d39913ef230a54ddc28c6cd95a5f67f4d50899680b",
+      "classification": "third-party-template-excluded-unless-exported"
+    },
+    {
+      "path": "backend/web/themes/custom/famtastic_admin/tests/fixtures/future-module-primitives.html",
+      "sha256": "e480a388f86a1bcc4d706ba898548d606fff9334fad40a22c934d0844378101d",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "docs/design/mockups/2026-09-04-concierge-intake-email-v2.html",
+      "sha256": "be9ad27aaeb56551e95da9139cb8a7df1d3601fb87dc5c189569b02d0c14d460",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "docs/design/proofs/tighten-up-your-locs-v2/archive/index.html",
+      "sha256": "72cc8225409db7ba62b1ab0b6bce911b9c1578e6a53cd98d3fb67aba2f9822c6",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "docs/design/proofs/tighten-up-your-locs-v2/index.html",
+      "sha256": "8163fbeca49c09fdab25c2d940c41ca836ef8af0d6ee07e10625f2b1311e9d6c",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "docs/design/proofs/tighten-up-your-locs-v2/ledger/index.html",
+      "sha256": "ff975d82818b2819167c5ba65460dd5bef9988f71803d92e12e9b6a1ada783ed",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "docs/design/proofs/tighten-up-your-locs-v2/owner/index.html",
+      "sha256": "da9ac5394992704f24e874718d87f9ef8b2bcdf4224b481d75bf140ad214d5c6",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "docs/design/proofs/tighten-up-your-locs-v2/proofs/appointment-desk-hybrid/index.html",
+      "sha256": "98d6cd16bf5a0f2b643f09b248d764f29fda597d8be349d29c8b451554e6b5a0",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "docs/design/proofs/tighten-up-your-locs-v2/proofs/appointment-desk/index.html",
+      "sha256": "747b534d85bc713a8af0bbbf55103e5827b4c3d76780c3d23faebbe8e1a97c01",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "docs/design/proofs/tighten-up-your-locs-v2/proofs/care-rhythm/index.html",
+      "sha256": "55a434692afb2c82f98cc03551826f7d8a600bb477952b1eee43f4d6f4186123",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "docs/design/proofs/tighten-up-your-locs-v2/proofs/established-archive/index.html",
+      "sha256": "a463b96d5658a19bb49725eb92b24db31830bb38ea1dbd1ce25b61a5602e9a32",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "docs/design/proofs/tighten-up-your-locs-v2/proofs/index.html",
+      "sha256": "debfd71a6f838cd2435c1f3276282fb0c86c5aa1b4962c4a76a4f2fffb1c6ccd",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "docs/design/proofs/tighten-up-your-locs-v2/room/index.html",
+      "sha256": "7882034ebf85007d897f06430e91ee26e9439c542c19ec0756d9c67244432550",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "docs/design/proofs/tighten-up-your-locs/index.html",
+      "sha256": "b7e816612bf40a37523d866598fb2875c7a3eeaf04f836d08284317dae14d05d",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "famtastic-recut-project/index.html",
+      "sha256": "98d55643e383aa87588f380f1f61ecf4f3284cc06f0b056a0c79c9ea975d93a1",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "frontend/index.html",
+      "sha256": "f2196478b02ed774fc63015697ad0d8dffda3fa80af79a15ff044f062e218e98",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/index.html",
+      "sha256": "26fa5a7b5de234b2126c95a9de557efaacf0ac0456781330c4ce4295d390bf7d",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/owner/index.html",
+      "sha256": "a7def876a288002faeca43d2dc794eaab27fc58173505379d8f7b81e8f9375b4",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/alex-touch-prototype/index.html",
+      "sha256": "8f99e5d1337026e8982f3be94754e626010ee5cc3fa5d162b0e0571bd6212fcb",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/alex-touch-prototype/owner/index.html",
+      "sha256": "3c3bc6193fe82dca7901753abf263d689e92e1656e0fd758d97393fcd87c6b13",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-lab/image-only/01-soft-power/index.html",
+      "sha256": "9cf005329b24737d0870b2f900b8b30601dedc324e324fc0dafdadb299ec077f",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-lab/image-only/02-coil-culture/index.html",
+      "sha256": "dd574e2aaca115de99b64b0b68da3114b43aebd6a3ae22e5522b2b5b29788088",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-lab/image-only/03-studio-ritual/index.html",
+      "sha256": "914c11b493e53f2d4193b1b5c2ac404c2b15a49fb34a0b09cd4ddc7267679b5a",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-lab/image-only/04-coil-architecture/index.html",
+      "sha256": "c2c3dd40193176fc78c22337f46965897afe06e8ac37bc67dbe1d19be135d8cf",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-lab/index.html",
+      "sha256": "1a837db89b6543515c8aa245b06aca2ea24706b599df95c3360351808d9c63eb",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/emails/coastline-crown-barbers/index.html",
+      "sha256": "ab249f94e037b25755ade5e8bc1f611ca32f6681858b5f4855a60826baa135c6",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/emails/palmera-fade-society/index.html",
+      "sha256": "592063cf98c8529be171ed16f5fb305902332daaa4b7bc722fe65e81c068a65a",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/emails/saltline-color-house/index.html",
+      "sha256": "c60c34e324cdeccce355882b54e6c4420b53b9c051cd0164ac83ad55663d9124",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/emails/velvet-coil-atelier/index.html",
+      "sha256": "ea0b1dcbaeb30c63fe1d7bbe29ae5a39459205c98810ee4147b18b26347403c9",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/index.html",
+      "sha256": "c83232e959ae95286393d186d631b62f469b58d1e3b7d736fc90a25bb2a0f1f8",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/index.html",
+      "sha256": "3d1e8466f1be0182a1810626b69a666481f0bbfdb340104fa671e76ef12c196c",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/noise-cuts-proof/owner/index.html",
+      "sha256": "ca522d7c0ce6e2c26424d0db35e6d248fb09fc60ec30e905e57caae5eb14553b",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/package/index.html",
+      "sha256": "4042fe9789498a816e706e8a9cf80339a6e9167621cb1cf62b152c2242c93419",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/a/index.html",
+      "sha256": "452afc51488e45ec9681537b6ccbeefd0bd485a80a82019306ea0af1eac9fbbc",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/b/index.html",
+      "sha256": "acb9d3e0d13a4bd9dde07645fa62ca3acd528a966b7937ae9e408241332fb67d",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/c/index.html",
+      "sha256": "4d4620003677e56cf89524af2bba13f4571e42d6edcd291f3d3f30c3ce6a7313",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/a/index.html",
+      "sha256": "1070c677d82bf66f8278282107950dc3dd2e5c3a1c3a4ba8b5661e8d3df45d43",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/b/index.html",
+      "sha256": "5c814a008027a8d0374386fb9ea59822d4668b3451dc35032e5069da12dede1f",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/c/index.html",
+      "sha256": "21d8731717f4f0d23f2c74965882bb2b9fa5096c611ff40483312666120f842a",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/a/index.html",
+      "sha256": "0a9008c6e9dfa7882b0109dadf9985a64579231e2bc6b37d33f04dca84ad8fab",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/b/index.html",
+      "sha256": "a00fa33c4d52e3639c6c1962b6cca2b11e40b533fd339c2b5549271e0a21ba49",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/saltline-color-house/c/index.html",
+      "sha256": "5cb26515e3286776754cc959ac6cb17bc72e34540480e84a7115a7bf0be15c82",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/a/index.html",
+      "sha256": "c28349fd5b3ca65b093be4761c1deef91dcb31441538b716793c99fb829ac2ac",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/b/index.html",
+      "sha256": "9549a751c3059b7af030cead10e31015f37c20c702fb3c18697fd629a7047ef4",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/c/index.html",
+      "sha256": "1b11312f75457f81566c1ae3a1e80980154d01c2d8d943fb8dfbbf1307d86e83",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/research-proof-lab/index.html",
+      "sha256": "faf7ca6ebdab3a610d60d3098c07cfc53cc4cd7df3a97b29883a297c9e3ccae9",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/research-proof-lab/templates/barrio-signal/index.html",
+      "sha256": "ee0c5fd5568e94cbaa6f46c49afc0f42ffb134443dc2177635dba6ae48df1c1b",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/research-proof-lab/templates/coil-ritual/index.html",
+      "sha256": "7cb248f9e36ac172335f28de3e6f11573fc94b3f71315fa3efe668b226c5ca2f",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/research-proof-lab/templates/crown-ledger/index.html",
+      "sha256": "61ef9a16f333e5f43352dc06138291b2bb6673379413304e41b4df6a317f5819",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/research-proof-lab/templates/salt-glass/index.html",
+      "sha256": "84458a695a3b834b507ea2668c506cbfc0fe9ae067f56e64df801637401ee520",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/coastline-crown-barbers/index.html",
+      "sha256": "6c0f273f34e94646ef5accc41c70362da6fa27d45a63e4dce2896793e2358d15",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/palmera-fade-society/index.html",
+      "sha256": "f65bf3c73d6ffb4e776bd2abcc47b4bbd217366c22cc00953f22d2910f7d9368",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/saltline-color-house/index.html",
+      "sha256": "4c5f6851d0c7cead247b80816f04e70e53209664dbc534ca435f7a8cf3bfa53c",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/rooms/velvet-coil-atelier/index.html",
+      "sha256": "7fbe98a87ab1c0cabaaf0a9ee7a4ba9989a7d999e8d8eb4abb3bdad0833bbee3",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/template-lab/index.html",
+      "sha256": "39a96cd14a1367364f6b39e0110a748df9179a830622caf8049120b1698f8fda",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/wow-lab/velvet-coil-architecture/index.html",
+      "sha256": "1abde09be68c36a6625a985df7675b80ef3b2d39f6a0ebfcb00e3a8079337b31",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/creative-matrix.html",
+      "sha256": "5ceadb60ba4a37abcb19b04114ac9c644b90ee955c5af59c632abcafdd88dd3a",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/omar-top-deals/index.html",
+      "sha256": "106d4755a2fd0eaf7f809b743c32a9169691cf11a26c373170ac609a3072739b",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/omar-top-deals/owner/index.html",
+      "sha256": "9e548c6c36db5f7fa73aeb506358fa090a6e6ed998b495e935243ca8244e2926",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/omar-top-deals/v2/index.html",
+      "sha256": "89598df41f00985ff26f018b24fb3f3c33e4d037686894ce2cbe12b468b49c07",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/thirst-trap-772/index.html",
+      "sha256": "9f2c28a1b92bd3f1d366b02771435f536efd45e826e1e9e39e76e344c94faee0",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/thirst-trap-772/v1/index.html",
+      "sha256": "cfc2f4e1f27ee095d649c7d1d5722e252168d14f1066c948835e1b10ed0fe5e0",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/thirst-trap-772/v2/index.html",
+      "sha256": "808907320f117f8d96767b73336d4da4cb170ae4fd578fe25efef99f3dd73f20",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "frontend/public/showcase/thirst-trap-772/v2/owner/index.html",
+      "sha256": "f8fbe795a04237d65e7d966556b9260f8f54ec5795c45eb4ba12305e966fdf8a",
+      "classification": "public-source-new-credit-at-build"
+    },
+    {
+      "path": "marketing/adobe-pipeline/proofs/index.html",
+      "sha256": "7862693ad1cd69c201be4bc643f0f31e195987659d1ddd6c33fff79787aeffb5",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "marketing/blog/clusters/cluster-own-website-vs-rented-platforms/cluster-map.html",
+      "sha256": "74a141620b07b236d33acbbb10c9bb828201fe5e77508ad9b73499e0ef968c9c",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "marketing/campaigns/and-if-it-is-rattler-lifers/evidence/creative-finish-lab-20260820/index.html",
+      "sha256": "5078e52dc908f59b4b326e597a72b0857f739b2e8780f20f89b2dd0d220a1492",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "marketing/campaigns/and-if-it-is-rattler-lifers/experiments/lite-image-story-20260820/index.html",
+      "sha256": "64e2d92c1463e1c4359a4f6559ead6bfb5e93c06236510a7a1789a21f83579a6",
+      "classification": "historical-or-review-source-preserved-not-retrofit-target"
+    },
+    {
+      "path": "marketing/campaigns/and-if-it-is-rattler-lifers/lab-site/index.html",
+      "sha256": "f82c3415b16926f356b90241316ea9dcfd13ade7f256fe4ad9841cbc859a7bcd",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "marketing/campaigns/and-if-it-is-rattler-lifers/site/cards/01-question.html",
+      "sha256": "d1c469a4506ed86887c684eebb001fe3886a8c8f4cf13d31c72c14bab5926f08",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "marketing/campaigns/and-if-it-is-rattler-lifers/site/cards/02-lifer.html",
+      "sha256": "3078638b2dccac187748f8ea390feaa673f8eb4842ffff4d0941e0d856bfee92",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "marketing/campaigns/and-if-it-is-rattler-lifers/site/cards/03-proof.html",
+      "sha256": "a883e16f154ee99c38b1c42197e2aa5961ea3669ae0b5aefd351fbb1223c4150",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "marketing/campaigns/and-if-it-is-rattler-lifers/site/index.html",
+      "sha256": "d7932c3e2894d8c5a43fa9e15912668d78dd1e0561542987c8b1ddb226cf1433",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "marketing/hyperframes/campus-entrepreneurs/compositions/01-hook.html",
+      "sha256": "442669347b13dd69f6ab247b98c59d31bd1a6ba524beafcc24aaab2ca7d15e57",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/campus-entrepreneurs/compositions/02-desk.html",
+      "sha256": "d93bc4973d3067f36edfe4f5238dba7e385c0aaeb8e4e02a38addc7177f0400d",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/campus-entrepreneurs/compositions/03-address.html",
+      "sha256": "cc387ade85c12be6b4564c120cb07ebfd2e1193b6113db422ed66f59ed314c2c",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/campus-entrepreneurs/compositions/04-offer.html",
+      "sha256": "da7ef3027db89a702599456700608556da723ddd0a3ad72b2e05a3769dc66388",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/campus-entrepreneurs/compositions/05-close.html",
+      "sha256": "2c229d9c04cd071ab3c5d325132a2527a3ecf5052586211548aa28a2dcaa58b1",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/campus-entrepreneurs/index.html",
+      "sha256": "31b8bae24e3bbdc06c01648cec2e8ccfd63df14342dfb18069644f74c3480960",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/cost-is-not-the-reason/compositions/01-objection.html",
+      "sha256": "3ed30d72307796a12dac4a9ce2e01d1fa1d4af1dcb8a9833896d1d454dc13f0b",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/cost-is-not-the-reason/compositions/02-arithmetic.html",
+      "sha256": "cf98d1e9870530057e352d790fe590a4deffea5c26e07bca0ed68dd92618b30b",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/cost-is-not-the-reason/compositions/03-scope.html",
+      "sha256": "d783e428ffc066907581c7c5921e33ff44020f07d13ca33047ed77d597d77c08",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/cost-is-not-the-reason/compositions/04-renewal.html",
+      "sha256": "88a09da5a8024fde1439ce156dea30625b2284885a5bd0e63189f339fb2f37cf",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/cost-is-not-the-reason/compositions/05-close.html",
+      "sha256": "730de4d0bc50c4905f4285dd275c97fa5554a8228b0779caadac5aeaaf74f58e",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/cost-is-not-the-reason/index.html",
+      "sha256": "047e4cf3a2a62b7f5002b5648ca786c994557a55092c0777412961673752f988",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ghost-town/compositions/01-hook.html",
+      "sha256": "c38ff3fe6e65a3219a5770ef5cc2051b2864295e2a0cf32d46eb0c4189c20b91",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ghost-town/compositions/02-absence.html",
+      "sha256": "ae3f95e5f266c6f9654e0910269166fbd228122dce374f0f5d87910bec0256e4",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ghost-town/compositions/03-reframe.html",
+      "sha256": "998b6e7ee5020207ba10aff61662d7e6d830334c434488f6b9a5895e354d0dc2",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ghost-town/compositions/04-fix.html",
+      "sha256": "7eff5b8d0f9e7fff5da4e9d1c803fa77fe72b2f9ea01b667111a80c5790a86eb",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ghost-town/compositions/05-offer.html",
+      "sha256": "3a01df8de3fd7d1456f4dcf02c201d599c30c3ef6a9be1062ed770cc35cca0bd",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ghost-town/compositions/06-close.html",
+      "sha256": "77813553960bdb4f26151b55413b01c00d6f66569b06f63c000db0a5dca84756",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ghost-town/index.html",
+      "sha256": "2549e4faf9fe3be7060a68feb0d6e943e9f09491ec1509333f2922bf052f3cfb",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ghost-town/shorts/dm-trap/index.html",
+      "sha256": "85161ab14328a461a4112a24fd526fcfa853e159cc22d56d3a0f9f89772eb117",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ive-managed-fine/f1-thirty-years/index.html",
+      "sha256": "812299f56fd6f71b946dfbdf621d59db0c680e856bc656f84d335fda2860e91d",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ive-managed-fine/f2-know-where/index.html",
+      "sha256": "df47e5704171c21f5b4fc70e9e5e389562db9abc4a89d503e11c0b1bb91441f0",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ive-managed-fine/f3-not-technical/index.html",
+      "sha256": "e996453ff59790553061f11bb01b41a0fd8114d0e5dd4860346adfa7f9f0b18b",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ive-managed-fine/f4-got-burned/index.html",
+      "sha256": "58d70e4975e509ed8eda443487f274a5237d2a7553a425b4146296ec8512a3c4",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ive-managed-fine/f5-too-expensive/index.html",
+      "sha256": "ff709f8b385708cf801707767501a39b0636e0d722cae4a883b49f47c833444b",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/ive-managed-fine/f6-retiring/index.html",
+      "sha256": "5d7652bfe655a4b6008fedfc8cab31ff51a63f0b43b9d9addf68c3eaca00ac0d",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/platform-dependency/compositions/01-hook.html",
+      "sha256": "2d804e91a3f579dbb2510d759030a2d54e96415bfe42d65d9dce0ca6d6e3b6d6",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/platform-dependency/compositions/02-friction.html",
+      "sha256": "08f42270ef5b54fa4f06e3c11fb46389fbaa6f542534c4cf5cb67489511f3d3f",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/platform-dependency/compositions/03-mechanism.html",
+      "sha256": "849b7c09356350402255ff0695978b1af4b8662a7e2839fa30848610f7bb2a02",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/platform-dependency/compositions/04-turn.html",
+      "sha256": "f58020f7e0dc6985969baf81b63a1e74e52cfd1074fc185bfc8307daf99e08a3",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/platform-dependency/compositions/05-offer.html",
+      "sha256": "d60158a6fbe4fd72674b9fca590eb6b4030cfdba503d459ff1821a82e680c10b",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/platform-dependency/compositions/06-close.html",
+      "sha256": "508aea54d8f2005fa7d71e0e490ec5eff645be8fc8f24642e5347fccb8430516",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/platform-dependency/index.html",
+      "sha256": "e0319f14a982c42be6073dab089d10f22cf5779426e41011d561bc8ea2142c73",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/business-email/compositions/01-question.html",
+      "sha256": "c64a4bd2c84ad063cdb0c6dca2aa1cee6d6490bcaf57a2fb8e361501fc7f82f7",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/business-email/compositions/02-basics.html",
+      "sha256": "7acbfa9d3a95d087ed0eba21ce5bb14b6ffdf73e5dfe6c11689fa389f596a338",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/business-email/compositions/03-renewal.html",
+      "sha256": "ad15504a7cc42bc864d7e9764fe9969ba1c5ccc7d86ec125e1a49873ad561719",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/business-email/compositions/04-email.html",
+      "sha256": "ac95b6377c025244f1600eb86665e2ead151c1868dc5d673e1871fabeba4aa7f",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/business-email/compositions/05-close.html",
+      "sha256": "1354a900299c9509ff0e38e1486a62667891bd08f7ee0e87f3c6fd6de48fc752",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/business-email/index.html",
+      "sha256": "e15950593bbe90da69653e38057462367c7eb4cc1837f7d68b3cb9eac5e43ae7",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/local-seo/compositions/01-hook.html",
+      "sha256": "f668d72df1f2ff5e014f28e8097f8f4017e586601424223a87e7c22406f13591",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/local-seo/compositions/02-mechanism.html",
+      "sha256": "bfed737f62a9d0e86c7afd0ed23003d71b4d4ed095270c900db5c904c2ef2de2",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/local-seo/compositions/03-setup.html",
+      "sha256": "de226ec08b01d45b0dd0a1504423dfe10edabd4d9fc7b01a999de7368f940b68",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/local-seo/compositions/04-kept.html",
+      "sha256": "dd979b3d965280053b8cb79ce65653747ee5b02bf6c48f21c37671cc89fa9b0b",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/local-seo/compositions/05-close.html",
+      "sha256": "5ba8344cbdcb7fe0353da65642111c5597be3de87696b78ff9d5dfd659fd7504",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "marketing/hyperframes/services/local-seo/index.html",
+      "sha256": "d0207e27e08a52e2e930055fda6df72a9f84b3be714485735ceefac8bf3bb6c8",
+      "classification": "video-composition-not-webpage-preserved"
+    },
+    {
+      "path": "scripts/content-experience-review.html",
+      "sha256": "b77d358456bdfe953b8b83ede13d9d17cc2f9cd3358ba3fadbc85f88c8213386",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "scripts/content-families-review.html",
+      "sha256": "efa2dff280a0521884996c5a323daadfc1e6b52a669b61a42537f81312aaff85",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "scripts/email-preview/gallery.html",
+      "sha256": "c3cb8ce16779ec6b5e3e18b235fa0c4f22809b00de6c7eb8f10bc25c2c9e53e1",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    },
+    {
+      "path": "scripts/social-profile-kit.html",
+      "sha256": "34784c71e2c5c6a88af61715dfed4e50bc706ecf8a45611ddda2cbc7d4413e12",
+      "classification": "source-only-not-a-live-retrofit-target-unless-exported"
+    }
+  ],
+  "build": {
+    "version": 1,
+    "status": "new-build-not-deployment-or-customer-approval",
+    "artifacts": [
+      {
+        "path": "55-cents-a-day-website/index.html",
+        "source_sha256": "087d2d6342a0fb600abdc635a0229e94d73f63c7a98f985be3969a2c4208b720",
+        "output_sha256": "087d2d6342a0fb600abdc635a0229e94d73f63c7a98f985be3969a2c4208b720",
+        "credit": "react-app"
+      },
+      {
+        "path": "about/index.html",
+        "source_sha256": "c58034b400229a5059ab4fe3f8881d0deafa530882fd60d5a0977e45bc990035",
+        "output_sha256": "c58034b400229a5059ab4fe3f8881d0deafa530882fd60d5a0977e45bc990035",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/199-website-inclusions-and-boundaries/index.html",
+        "source_sha256": "7d11471502ae2a71832ad7c61dd257b867cc8f43ad398b463f656ab13b0f49f8",
+        "output_sha256": "7d11471502ae2a71832ad7c61dd257b867cc8f43ad398b463f656ab13b0f49f8",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/account-specific-special-pricing/index.html",
+        "source_sha256": "5992d4ed0b098928a82c2258166a52061aa20028442e99c8b94ed022ac9f8785",
+        "output_sha256": "5992d4ed0b098928a82c2258166a52061aa20028442e99c8b94ed022ac9f8785",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/after-buying-199-website/index.html",
+        "source_sha256": "ec2eb2ebcb02ea10efa06e3a6cea8a3ebc0a3f9e2482b7d32932c46bac66323b",
+        "output_sha256": "ec2eb2ebcb02ea10efa06e3a6cea8a3ebc0a3f9e2482b7d32932c46bac66323b",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/ai-agent-customer-documentation/index.html",
+        "source_sha256": "c8a733ab687ad42334dd2b0219d7673bd7032afbb5df7e464d7480e9ef576bdc",
+        "output_sha256": "c8a733ab687ad42334dd2b0219d7673bd7032afbb5df7e464d7480e9ef576bdc",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/ai-agent-human-handoff/index.html",
+        "source_sha256": "5c7ee3071fd1075587bb6829598ce3a2a3a50d6206099d31de3d5e98bd089484",
+        "output_sha256": "5c7ee3071fd1075587bb6829598ce3a2a3a50d6206099d31de3d5e98bd089484",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/ai-agent-knowledge-base/index.html",
+        "source_sha256": "31eb6bc96405f46d4e7f210c126315d27622f44f8403dffd8445b76d0811c6d7",
+        "output_sha256": "31eb6bc96405f46d4e7f210c126315d27622f44f8403dffd8445b76d0811c6d7",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/ai-chatbot-vs-ai-agent/index.html",
+        "source_sha256": "81e37468165a82826d5e5a222130159afaaf18dbb065f25fc043462c8893149b",
+        "output_sha256": "81e37468165a82826d5e5a222130159afaaf18dbb065f25fc043462c8893149b",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/analytics-and-customer-data/index.html",
+        "source_sha256": "918a992bf1a11b595fa5eacdd2fab85b53621ca941a5cfa52556812132444b21",
+        "output_sha256": "918a992bf1a11b595fa5eacdd2fab85b53621ca941a5cfa52556812132444b21",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/automation-failures-retries-dead-letter/index.html",
+        "source_sha256": "3550c14c0a5876c80412e4f07df07c38d5cf0b33fd183e4d94fb9824abd2e104",
+        "output_sha256": "3550c14c0a5876c80412e4f07df07c38d5cf0b33fd183e4d94fb9824abd2e104",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/booking-app-commissions-cost-per-year/index.html",
+        "source_sha256": "ea7131d4b8b6f977b3629f4d2119a4425333325a1bda6e1aa9f0b4ed11ec00cb",
+        "output_sha256": "ea7131d4b8b6f977b3629f4d2119a4425333325a1bda6e1aa9f0b4ed11ec00cb",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/business-email-on-your-own-domain/index.html",
+        "source_sha256": "66455003f528f8ce5d1a7b921f7af152393eb07af67961559a4621b5f5136a1e",
+        "output_sha256": "66455003f528f8ce5d1a7b921f7af152393eb07af67961559a4621b5f5136a1e",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/business-website-package-explained/index.html",
+        "source_sha256": "f025038343da6c29f9dd891d85884b266fd410cc8c6103816629e9fabaadd0b7",
+        "output_sha256": "f025038343da6c29f9dd891d85884b266fd410cc8c6103816629e9fabaadd0b7",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/choose-the-right-famtastic-website-package/index.html",
+        "source_sha256": "3e089e19c5102ea684e8d14019e955b911b9cb5fc5f3437712dc95c0beba6252",
+        "output_sha256": "3e089e19c5102ea684e8d14019e955b911b9cb5fc5f3437712dc95c0beba6252",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/connect-checkout-to-customer-intake/index.html",
+        "source_sha256": "8445dcc0f38ad10c3dd781f1b44b3c7bb4b1e862bebf9c4349baa417cb674e48",
+        "output_sha256": "8445dcc0f38ad10c3dd781f1b44b3c7bb4b1e862bebf9c4349baa417cb674e48",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/contact-form-vs-quote-form-vs-assessment/index.html",
+        "source_sha256": "9154d500e7c403c934f1fa174bfca8554dbfb9106bf0af0f4b4d9e57ecbceac3",
+        "output_sha256": "9154d500e7c403c934f1fa174bfca8554dbfb9106bf0af0f4b4d9e57ecbceac3",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/custom-website-vs-package/index.html",
+        "source_sha256": "2e1b2739cd7c0e935d429c2b396202367e427fc1c6b300f7432652e20604c5bd",
+        "output_sha256": "2e1b2739cd7c0e935d429c2b396202367e427fc1c6b300f7432652e20604c5bd",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/customer-portal-home-screen/index.html",
+        "source_sha256": "c0638483980632887ab68ddb98f4de3b0235837d12d20c18d4538b385846aa39",
+        "output_sha256": "c0638483980632887ab68ddb98f4de3b0235837d12d20c18d4538b385846aa39",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/customer-receipt-content/index.html",
+        "source_sha256": "fbf7d699bba7713ddc9a435efadabdb90fb8238694141c9604659dce79205355",
+        "output_sha256": "fbf7d699bba7713ddc9a435efadabdb90fb8238694141c9604659dce79205355",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/do-you-guarantee-google-rankings/index.html",
+        "source_sha256": "d1bbaf87273a82ea9d04690f73b447947f1b7dbd09b2e83c9624bbcf64fee8ca",
+        "output_sha256": "d1bbaf87273a82ea9d04690f73b447947f1b7dbd09b2e83c9624bbcf64fee8ca",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/do-you-have-to-leave-the-booking-app/index.html",
+        "source_sha256": "453cc30ae8f0377ab316ba48d127ad87a665784bf5bfc4683074fb2f7f2a38a0",
+        "output_sha256": "453cc30ae8f0377ab316ba48d127ad87a665784bf5bfc4683074fb2f7f2a38a0",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/does-google-index-your-booking-app-profile/index.html",
+        "source_sha256": "78970316063734266ab6060268e23f63a288385169cf344ba8d3dc24874c91c1",
+        "output_sha256": "78970316063734266ab6060268e23f63a288385169cf344ba8d3dc24874c91c1",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/failed-payments-refunds-cancellations/index.html",
+        "source_sha256": "036a05fef90326aaf0985f2e6d243ee50f5eb4a914ad5db48bfc9c9b0007d42e",
+        "output_sha256": "036a05fef90326aaf0985f2e6d243ee50f5eb4a914ad5db48bfc9c9b0007d42e",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/grow-beyond-first-website/index.html",
+        "source_sha256": "c883e394a850ba417d278cb488b7b75f4c0fa4d30648101562904185e0eeb581",
+        "output_sha256": "c883e394a850ba417d278cb488b7b75f4c0fa4d30648101562904185e0eeb581",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/hosting-domain-renewal-design/index.html",
+        "source_sha256": "fe6b050654a8f630f503be3ee46289cbf8d75bc0e258fac7ba79a836fff59f5d",
+        "output_sha256": "fe6b050654a8f630f503be3ee46289cbf8d75bc0e258fac7ba79a836fff59f5d",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/how-a-customer-portal-helps/index.html",
+        "source_sha256": "ce6f811e6b578c7fea11a7d6c4d2e44ba33a3598205182f38bcca1006c00e6aa",
+        "output_sha256": "ce6f811e6b578c7fea11a7d6c4d2e44ba33a3598205182f38bcca1006c00e6aa",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/how-a-website-captures-a-lead/index.html",
+        "source_sha256": "25e4070e7bde8b6f09fd08ef71b0739d95f544665ef91f2bb0dd84840ac84029",
+        "output_sha256": "25e4070e7bde8b6f09fd08ef71b0739d95f544665ef91f2bb0dd84840ac84029",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/how-automation-prevents-lost-opportunities/index.html",
+        "source_sha256": "d5fe8667b83c85f237e591f7f77834699b5cc16fe8f6f8f2742f2cf31be21cf8",
+        "output_sha256": "d5fe8667b83c85f237e591f7f77834699b5cc16fe8f6f8f2742f2cf31be21cf8",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/how-local-customers-find-your-business-online/index.html",
+        "source_sha256": "b7a685092c580e8d49dad775238c444a6ed31c08165ad57cbf0b05df2107ea04",
+        "output_sha256": "b7a685092c580e8d49dad775238c444a6ed31c08165ad57cbf0b05df2107ea04",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/how-many-pages-small-business-website/index.html",
+        "source_sha256": "53b49bd267014e21b8c0c48637d45a1a406ffaec7d210bdf40c47757bb98a6ca",
+        "output_sha256": "53b49bd267014e21b8c0c48637d45a1a406ffaec7d210bdf40c47757bb98a6ca",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/how-much-do-you-charge-dms-costs-bookings/index.html",
+        "source_sha256": "eee7f0a19d8d75bd957b6936857bbb0c771f2dd8a314879c6ca2a33da26b6a4e",
+        "output_sha256": "eee7f0a19d8d75bd957b6936857bbb0c771f2dd8a314879c6ca2a33da26b6a4e",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/idempotency-business-automation/index.html",
+        "source_sha256": "66bd3fa2f00e511356e12e3f3b3878fec4cad045cd3bdeb94c4d0d5f8a40197a",
+        "output_sha256": "66bd3fa2f00e511356e12e3f3b3878fec4cad045cd3bdeb94c4d0d5f8a40197a",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/index.html",
+        "source_sha256": "8d75ba9bc90feedf8ba8cb97b9a8c79dbb0618b4cf59b5032760039f31346b18",
+        "output_sha256": "8d75ba9bc90feedf8ba8cb97b9a8c79dbb0618b4cf59b5032760039f31346b18",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/landing-page-package-explained/index.html",
+        "source_sha256": "a7e3f67392618f87e2c3f0a46b35bfe38149819f8a9daea4bee44d86550fc88d",
+        "output_sha256": "a7e3f67392618f87e2c3f0a46b35bfe38149819f8a9daea4bee44d86550fc88d",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/lead-email-reply-ingestion/index.html",
+        "source_sha256": "762f486dd675ac7a257c9068452cc7b6f6b5979b94c5eb82499a1578d05eda11",
+        "output_sha256": "762f486dd675ac7a257c9068452cc7b6f6b5979b94c5eb82499a1578d05eda11",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/lead-follow-up-schedule/index.html",
+        "source_sha256": "adf4b6b9687d5571ba6c79e6afa69596a53194364610c44349cfe39ff7d0c664",
+        "output_sha256": "adf4b6b9687d5571ba6c79e6afa69596a53194364610c44349cfe39ff7d0c664",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/lead-nurture-not-ready-to-buy/index.html",
+        "source_sha256": "a8126eadfee41473c981d6156ef5d95b9cf7d5cf506135daaef13e44beed2131",
+        "output_sha256": "a8126eadfee41473c981d6156ef5d95b9cf7d5cf506135daaef13e44beed2131",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/linktree-vs-real-website-what-you-trade-away/index.html",
+        "source_sha256": "b63241d8f58258f3ba886bbdab662f3f6a0cbfa1743e6ca369f26f28d85f2c8a",
+        "output_sha256": "b63241d8f58258f3ba886bbdab662f3f6a0cbfa1743e6ca369f26f28d85f2c8a",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/measure-ai-agent-performance/index.html",
+        "source_sha256": "ac4622ded5c6b4f5173e23f6b8a0845a260fd4a465baea1705e0bcb5c1ee8690",
+        "output_sha256": "ac4622ded5c6b4f5173e23f6b8a0845a260fd4a465baea1705e0bcb5c1ee8690",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/measure-blog-content-performance/index.html",
+        "source_sha256": "9875198e1ea81e8e13efba9d22ceb693175d3d96cda82534209672238f8d4d4c",
+        "output_sha256": "9875198e1ea81e8e13efba9d22ceb693175d3d96cda82534209672238f8d4d4c",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/measure-whether-website-works/index.html",
+        "source_sha256": "c7168228edd39911618f984de6d995a96cac2f78408987b0ae983819f721eb9b",
+        "output_sha256": "c7168228edd39911618f984de6d995a96cac2f78408987b0ae983819f721eb9b",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/mobile-customer-portal-design/index.html",
+        "source_sha256": "b043aa7c9ba2581490440077d25ee1b429d39dba7da9c9f8af5f8b0f842fdb2b",
+        "output_sha256": "b043aa7c9ba2581490440077d25ee1b429d39dba7da9c9f8af5f8b0f842fdb2b",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/mobile-lead-capture-design/index.html",
+        "source_sha256": "99a82ab6a4aaa0a1124ed250dcf1e260a74a6fde0caa4620f9149d7eb5118236",
+        "output_sha256": "99a82ab6a4aaa0a1124ed250dcf1e260a74a6fde0caa4620f9149d7eb5118236",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/new-lead-notification-checklist/index.html",
+        "source_sha256": "704a1d98d2dba77d1c824bfe75bfe1e36f9d1746dc2d9a844131d99e0e042cf8",
+        "output_sha256": "704a1d98d2dba77d1c824bfe75bfe1e36f9d1746dc2d9a844131d99e0e042cf8",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/one-page-vs-multi-page-website/index.html",
+        "source_sha256": "ad53f324e79df09053bcf1b116545e218b6dce2d2b6775b273be728ca1fd4118",
+        "output_sha256": "ad53f324e79df09053bcf1b116545e218b6dce2d2b6775b273be728ca1fd4118",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/overdue-lead-alerts/index.html",
+        "source_sha256": "ae9f3059ae68fefeb1ed2a0aeefdf204b2b54f86d42c7ae2a2e40728e5746860",
+        "output_sha256": "ae9f3059ae68fefeb1ed2a0aeefdf204b2b54f86d42c7ae2a2e40728e5746860",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/own-your-signal-not-a-rented-one/index.html",
+        "source_sha256": "dd171f45ad0ad19a2409ad9794b1f1c1a1bf76a495a485180b1024625a21e232",
+        "output_sha256": "dd171f45ad0ad19a2409ad9794b1f1c1a1bf76a495a485180b1024625a21e232",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/parts-of-a-one-page-business-website/index.html",
+        "source_sha256": "1156f1d17ee89b8938c47a59a8998acad61001fd03f8154f1d03eac0364bc6f3",
+        "output_sha256": "1156f1d17ee89b8938c47a59a8998acad61001fd03f8154f1d03eac0364bc6f3",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/plan-website-around-customer-questions/index.html",
+        "source_sha256": "46a3fe30b2e208fb15e4e0b1f72feb2c4eb29e179b1b169615a0cf3f47198c2d",
+        "output_sha256": "46a3fe30b2e208fb15e4e0b1f72feb2c4eb29e179b1b169615a0cf3f47198c2d",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/portal-communication-preferences/index.html",
+        "source_sha256": "566f11389abd7dcad767742e86fdbaf1335f26150e285056e30f0384884e1756",
+        "output_sha256": "566f11389abd7dcad767742e86fdbaf1335f26150e285056e30f0384884e1756",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/portal-product-documentation-learning/index.html",
+        "source_sha256": "d9285c15a733e4dffc2ae046d02342117ec46f2fc32a0ba938d0db5dfbdd5912",
+        "output_sha256": "d9285c15a733e4dffc2ae046d02342117ec46f2fc32a0ba938d0db5dfbdd5912",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/portal-projects-files-approvals/index.html",
+        "source_sha256": "257632a179fa34cd6deb66849fbc24c77c9cb419b3062ddf651a67a77c2f1e34",
+        "output_sha256": "257632a179fa34cd6deb66849fbc24c77c9cb419b3062ddf651a67a77c2f1e34",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/portal-support-vs-contact-form/index.html",
+        "source_sha256": "f74a0ccb155bc8a07841682629efe330ad39a90a28cfde9efafa22e2cbfdd2e3",
+        "output_sha256": "f74a0ccb155bc8a07841682629efe330ad39a90a28cfde9efafa22e2cbfdd2e3",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/portal-team-members-business-accounts/index.html",
+        "source_sha256": "96643a3ba869efdd998cbb76f8a4906db2be947de5cd6a66a22eacee2bfd85ea",
+        "output_sha256": "96643a3ba869efdd998cbb76f8a4906db2be947de5cd6a66a22eacee2bfd85ea",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/premium-website-ai-package-explained/index.html",
+        "source_sha256": "8e2dd91f57ea8fe95053179df3fe62f8acc649d76ce1b358859e51a290171ce5",
+        "output_sha256": "8e2dd91f57ea8fe95053179df3fe62f8acc649d76ce1b358859e51a290171ce5",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/product-addon-entitlement-difference/index.html",
+        "source_sha256": "2c1eadc10e50acdfba3096df17c881156ad22f90291211ec7e7815eccc5b4b6d",
+        "output_sha256": "2c1eadc10e50acdfba3096df17c881156ad22f90291211ec7e7815eccc5b4b6d",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/professional-website-55-cents-a-day/index.html",
+        "source_sha256": "027cd734cec3a4601d7a2924b7bbaf845f53bf52bbc5bcb326c08d3fbcef7225",
+        "output_sha256": "027cd734cec3a4601d7a2924b7bbaf845f53bf52bbc5bcb326c08d3fbcef7225",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/proof-first-website-see-before-you-pay/index.html",
+        "source_sha256": "9d7cb1a03bbf9ed00ce82291ee88dc0dfa589a63fbee982029eaeceb5897beaf",
+        "output_sha256": "9d7cb1a03bbf9ed00ce82291ee88dc0dfa589a63fbee982029eaeceb5897beaf",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/prove-ecommerce-before-live-payments/index.html",
+        "source_sha256": "989ac1c7f6acb2e7fb9a871e64e7a457b625701bc32964aecb2dbd28eb6c78f9",
+        "output_sha256": "989ac1c7f6acb2e7fb9a871e64e7a457b625701bc32964aecb2dbd28eb6c78f9",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/real-answers-to-the-questions-we-actually-get/index.html",
+        "source_sha256": "3f5d285a66390c096bc4e1e23947632832d083cbc239d8727d9ec81cfd175d20",
+        "output_sha256": "3f5d285a66390c096bc4e1e23947632832d083cbc239d8727d9ec81cfd175d20",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/reduce-form-friction-without-bad-leads/index.html",
+        "source_sha256": "4297cd8b1bf501fd63541e122c2208fe41aee005d070c088c96f3574dbb30c4a",
+        "output_sha256": "4297cd8b1bf501fd63541e122c2208fe41aee005d070c088c96f3574dbb30c4a",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/safe-ai-agent-actions/index.html",
+        "source_sha256": "77900309a41b1a2c0f5ff24e2f219777b84c88ffbed5b711b628689269a3dfb9",
+        "output_sha256": "77900309a41b1a2c0f5ff24e2f219777b84c88ffbed5b711b628689269a3dfb9",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/scheduled-workers-customer-work/index.html",
+        "source_sha256": "c6a93640b1dfae8deb4ba2020f8aead7bfc795d9eb71c2d17b7170a4c204b90f",
+        "output_sha256": "c6a93640b1dfae8deb4ba2020f8aead7bfc795d9eb71c2d17b7170a4c204b90f",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/small-business-analytics-dashboard/index.html",
+        "source_sha256": "3d779f3d24ffc9f0dd3c1608741bdda7bc2a12e4928511a4ce80e7a1d2e0670f",
+        "output_sha256": "3d779f3d24ffc9f0dd3c1608741bdda7bc2a12e4928511a4ce80e7a1d2e0670f",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/small-business-lead-response-time/index.html",
+        "source_sha256": "722bce07f9b258af5298bf6bd9be2c5a0d00fa1c8b359ed01d4dffdd9bd0d9ee",
+        "output_sha256": "722bce07f9b258af5298bf6bd9be2c5a0d00fa1c8b359ed01d4dffdd9bd0d9ee",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/small-business-lead-stages/index.html",
+        "source_sha256": "f7078956fbeac5ab5d41294731098ba9e477d0bb8ba8c6ec0a4b2dc28d9fa4ab",
+        "output_sha256": "f7078956fbeac5ab5d41294731098ba9e477d0bb8ba8c6ec0a4b2dc28d9fa4ab",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/small-business-website-conversion/index.html",
+        "source_sha256": "02cd07e04f85dd6c8d7cf4f6776baa8adb7e263a6519ed152c5a3f9577bdaf22",
+        "output_sha256": "02cd07e04f85dd6c8d7cf4f6776baa8adb7e263a6519ed152c5a3f9577bdaf22",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/starter-website-package-explained/index.html",
+        "source_sha256": "ee0aa4c95a6f373c73aee9d4b67c637045328a04d6b81a7efffa9e34d6abaa39",
+        "output_sha256": "ee0aa4c95a6f373c73aee9d4b67c637045328a04d6b81a7efffa9e34d6abaa39",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/test-ai-website-agent/index.html",
+        "source_sha256": "527329a50e738acb8ddcc0e8f565db1cad2c17b66abac33061961ba50ff07ad0",
+        "output_sha256": "527329a50e738acb8ddcc0e8f565db1cad2c17b66abac33061961ba50ff07ad0",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/test-business-automation-safely/index.html",
+        "source_sha256": "ae96e5daadff3e6f0315b653ae17409dde2f0a14b9e10e6bef26ffe460615a90",
+        "output_sha256": "ae96e5daadff3e6f0315b653ae17409dde2f0a14b9e10e6bef26ffe460615a90",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/the-secret-is-a-page-of-your-own/index.html",
+        "source_sha256": "d30a4126dbd64fb97b3bf1d8cf76a8815c3df4a4772378f15b4bf4ac086237ff",
+        "output_sha256": "d30a4126dbd64fb97b3bf1d8cf76a8815c3df4a4772378f15b4bf4ac086237ff",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/track-pages-campaigns-create-leads/index.html",
+        "source_sha256": "17a9bfd5c27baef214bd8c2f99c3aa020fa7dd078d25f5e1f3781ab13dfbd363",
+        "output_sha256": "17a9bfd5c27baef214bd8c2f99c3aa020fa7dd078d25f5e1f3781ab13dfbd363",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/track-website-calls-to-action/index.html",
+        "source_sha256": "98f6bbbbb87232f0de9d213720908329b76c0b653c84d94d31ca41e647491618",
+        "output_sha256": "98f6bbbbb87232f0de9d213720908329b76c0b653c84d94d31ca41e647491618",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/understand-website-traffic-sources/index.html",
+        "source_sha256": "71bd93532d4f61460df5753ba04bb8326613e6772bed200bcdff73018c9357a2",
+        "output_sha256": "71bd93532d4f61460df5753ba04bb8326613e6772bed200bcdff73018c9357a2",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/website-answers-price-questions-before-asked/index.html",
+        "source_sha256": "91fe4d6d293609f2395dcd8dd263dd81f7a0d964f43e6b78d4e0ef1bb00c3f78",
+        "output_sha256": "91fe4d6d293609f2395dcd8dd263dd81f7a0d964f43e6b78d4e0ef1bb00c3f78",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/website-care-plan-explained/index.html",
+        "source_sha256": "274242981f1fafd6ba782db354960969e2250b3e5115895fd23d18bba38712f8",
+        "output_sha256": "274242981f1fafd6ba782db354960969e2250b3e5115895fd23d18bba38712f8",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/website-events-business-workflows/index.html",
+        "source_sha256": "212d11122369ba9713106d42f9f1c8d1c6f16f87f68b6edee8a10d34e2445aa6",
+        "output_sha256": "212d11122369ba9713106d42f9f1c8d1c6f16f87f68b6edee8a10d34e2445aa6",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/website-numbers-that-matter/index.html",
+        "source_sha256": "b871c1c53670a36686edd8b46252eeddf77c678c4a453bde406f048bbc396b55",
+        "output_sha256": "b871c1c53670a36686edd8b46252eeddf77c678c4a453bde406f048bbc396b55",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/website-project-information-checklist/index.html",
+        "source_sha256": "b4f44381002a122f05acfcc23880faabb9828799424415b7445479fed6e3d5fb",
+        "output_sha256": "b4f44381002a122f05acfcc23880faabb9828799424415b7445479fed6e3d5fb",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-a-bookable-page-actually-needs/index.html",
+        "source_sha256": "f649fddcc824d26dfd04f276fe390011b5875afd10e8db55db8b6f49b408bada",
+        "output_sha256": "f649fddcc824d26dfd04f276fe390011b5875afd10e8db55db8b6f49b408bada",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-does-199-website-include/index.html",
+        "source_sha256": "69d82d936d1c3054c1cec66bbffd2111e7a5ec6f3e3c3951b4b0f52cc1c1902c",
+        "output_sha256": "69d82d936d1c3054c1cec66bbffd2111e7a5ec6f3e3c3951b4b0f52cc1c1902c",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-happens-after-a-website-lead/index.html",
+        "source_sha256": "2a9b5fa9207784179589f433107344d0a1cdbcf895f9954726bf72b07f093dad",
+        "output_sha256": "2a9b5fa9207784179589f433107344d0a1cdbcf895f9954726bf72b07f093dad",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-happens-after-an-online-purchase/index.html",
+        "source_sha256": "324e5e03e88d85efa98441b50097af4c88a14741c869510ee3c015dd6f9da2b4",
+        "output_sha256": "324e5e03e88d85efa98441b50097af4c88a14741c869510ee3c015dd6f9da2b4",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-happens-when-first-year-hosting-ends/index.html",
+        "source_sha256": "aabaa83b4fa2330a04f1d4449bf8d67fe66269aac44a44c3551658a5d96da602",
+        "output_sha256": "aabaa83b4fa2330a04f1d4449bf8d67fe66269aac44a44c3551658a5d96da602",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-is-a-domain-name/index.html",
+        "source_sha256": "0519fc4cade6892125403ff61331e03ed5b6e9d5188bc35dad29c14983292720",
+        "output_sha256": "0519fc4cade6892125403ff61331e03ed5b6e9d5188bc35dad29c14983292720",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-is-included-199-web-basics-bundle/index.html",
+        "source_sha256": "e6e8f1ae0210aff40fa9f5680347a47e2f26f0d5f43d666ece27a173b43c8fb4",
+        "output_sha256": "e6e8f1ae0210aff40fa9f5680347a47e2f26f0d5f43d666ece27a173b43c8fb4",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-is-included-499-business-website-bundle/index.html",
+        "source_sha256": "148c142b0a0d3367e9652c53576938cbea523157f50b18cb9204774bacae38c5",
+        "output_sha256": "148c142b0a0d3367e9652c53576938cbea523157f50b18cb9204774bacae38c5",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-is-website-hosting/index.html",
+        "source_sha256": "b2713c65209a97edc2d83f2f2672f6a808825289d47643938a464ef1698f30c8",
+        "output_sha256": "b2713c65209a97edc2d83f2f2672f6a808825289d47643938a464ef1698f30c8",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-makes-business-website-trustworthy/index.html",
+        "source_sha256": "3ff529268beded555dbc5038a51b08edf8edae5ae85d0e2c012f7bd80d19e9be",
+        "output_sha256": "3ff529268beded555dbc5038a51b08edf8edae5ae85d0e2c012f7bd80d19e9be",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-not-to-fully-automate/index.html",
+        "source_sha256": "a20a6576ccc93a07607294617846b58ddfdd3adde5280279a240e3dc57bd99a7",
+        "output_sha256": "a20a6576ccc93a07607294617846b58ddfdd3adde5280279a240e3dc57bd99a7",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-should-a-small-business-website-do/index.html",
+        "source_sha256": "89023cd0e088c5cf49e0abf11bdaacc060c78dd26468eac16654969c491e2204",
+        "output_sha256": "89023cd0e088c5cf49e0abf11bdaacc060c78dd26468eac16654969c491e2204",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-should-thank-you-page-do/index.html",
+        "source_sha256": "76c3a83963f360071c58eefde90bcdfeaa8cdb1d8585b385d598b225ad123d1b",
+        "output_sha256": "76c3a83963f360071c58eefde90bcdfeaa8cdb1d8585b385d598b225ad123d1b",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-should-website-contact-form-ask/index.html",
+        "source_sha256": "2f1b610580f201d413996674be6d84a030ac3c8e7884d175aa9145b1f178fd68",
+        "output_sha256": "2f1b610580f201d413996674be6d84a030ac3c8e7884d175aa9145b1f178fd68",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-small-business-should-automate-first/index.html",
+        "source_sha256": "f76d3871572ccfb9f0ad2d338b0b3bb276be6bb1c684f2cc07e8a6e3279f393c",
+        "output_sha256": "f76d3871572ccfb9f0ad2d338b0b3bb276be6bb1c684f2cc07e8a6e3279f393c",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/what-website-maintenance-actually-covers/index.html",
+        "source_sha256": "a737579756d4491eead16c7e11f1a593d8de993e751131a2a199e1f587933bb4",
+        "output_sha256": "a737579756d4491eead16c7e11f1a593d8de993e751131a2a199e1f587933bb4",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/when-an-ai-website-agent-is-useful/index.html",
+        "source_sha256": "0802f59b4136168a1a8ba7ea510f26a7eff039f8d7a2818280f168bb40c5ab00",
+        "output_sha256": "0802f59b4136168a1a8ba7ea510f26a7eff039f8d7a2818280f168bb40c5ab00",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/when-to-change-website-from-analytics/index.html",
+        "source_sha256": "6215bce6ad355cde77720b8f9509d01127dc488d50e10f2215485789c5f098d2",
+        "output_sha256": "6215bce6ad355cde77720b8f9509d01127dc488d50e10f2215485789c5f098d2",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/who-is-199-website-for/index.html",
+        "source_sha256": "aa6b51b9f440ed243b96f7d4e0ecfac433b0a800fb0d3cfa38a7a1b4a0d892d8",
+        "output_sha256": "aa6b51b9f440ed243b96f7d4e0ecfac433b0a800fb0d3cfa38a7a1b4a0d892d8",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/who-owns-your-client-list-booking-app/index.html",
+        "source_sha256": "a4089186f980ce1c53afd62f6ec63a2da614ad7d63cb31743945b7f725b2158a",
+        "output_sha256": "a4089186f980ce1c53afd62f6ec63a2da614ad7d63cb31743945b7f725b2158a",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/why-independent-stylists-are-invisible-outside-the-app/index.html",
+        "source_sha256": "609608a7fbbad6cc1a038ac6e10222fcb45c5b058903cb84934286b23d5ee062",
+        "output_sha256": "609608a7fbbad6cc1a038ac6e10222fcb45c5b058903cb84934286b23d5ee062",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/why-link-in-bio-page-doesnt-show-up-in-google/index.html",
+        "source_sha256": "8c98311ece708b6b9c9a71328bb51a2ce543e58ab47edf077b311e69ad1d2d25",
+        "output_sha256": "8c98311ece708b6b9c9a71328bb51a2ce543e58ab47edf077b311e69ad1d2d25",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/why-running-business-on-gmail-and-linktree-costs-revenue/index.html",
+        "source_sha256": "a19d703ab410072b79f0b1a631d4915386dcab4f9353b8383a17ea4f71c157d9",
+        "output_sha256": "a19d703ab410072b79f0b1a631d4915386dcab4f9353b8383a17ea4f71c157d9",
+        "credit": "react-app"
+      },
+      {
+        "path": "blog/why-website-leads-get-lost/index.html",
+        "source_sha256": "3cc39daec61e07c28cd0f0da111b94a8d5e07fb1a95544adc39d84878cddd7e9",
+        "output_sha256": "3cc39daec61e07c28cd0f0da111b94a8d5e07fb1a95544adc39d84878cddd7e9",
+        "credit": "react-app"
+      },
+      {
+        "path": "buy/index.html",
+        "source_sha256": "1e1eea86c8b097f2563d50fbacf70ac57c1537ad59470dac454b28762c76d06d",
+        "output_sha256": "1e1eea86c8b097f2563d50fbacf70ac57c1537ad59470dac454b28762c76d06d",
+        "credit": "react-app"
+      },
+      {
+        "path": "contact/index.html",
+        "source_sha256": "a12204d6bc277bdfef9312d5384760f08a9b71417268b60ba33c9099b15bfaef",
+        "output_sha256": "a12204d6bc277bdfef9312d5384760f08a9b71417268b60ba33c9099b15bfaef",
+        "credit": "react-app"
+      },
+      {
+        "path": "faq/index.html",
+        "source_sha256": "10ce9ccf2efc336b177129cd6bec2c8bc7e82754b0a049b333958cbdc6238a10",
+        "output_sha256": "10ce9ccf2efc336b177129cd6bec2c8bc7e82754b0a049b333958cbdc6238a10",
+        "credit": "react-app"
+      },
+      {
+        "path": "index.html",
+        "source_sha256": "8f9d581ab1669ac497ee650f1d315adec8bfccd8724f0033dc119d84c6af48b4",
+        "output_sha256": "8f9d581ab1669ac497ee650f1d315adec8bfccd8724f0033dc119d84c6af48b4",
+        "credit": "react-app"
+      },
+      {
+        "path": "intake/ai-chatbot/index.html",
+        "source_sha256": "f80e99e02d34aabc53e70c5b75c1b4a95ed98030022b1b3d8cbd4c5854fa7193",
+        "output_sha256": "f80e99e02d34aabc53e70c5b75c1b4a95ed98030022b1b3d8cbd4c5854fa7193",
+        "credit": "react-app"
+      },
+      {
+        "path": "intake/client-portal/index.html",
+        "source_sha256": "e555fb8a4ca608fed80584816458439416e68ffac5a469938afd8c6bb1d7e486",
+        "output_sha256": "e555fb8a4ca608fed80584816458439416e68ffac5a469938afd8c6bb1d7e486",
+        "credit": "react-app"
+      },
+      {
+        "path": "intake/hosting-domain/index.html",
+        "source_sha256": "5ea4c4179906d78e4cf3a8b34dd0149e6873b0a3bb165a09ce44640f182e8932",
+        "output_sha256": "5ea4c4179906d78e4cf3a8b34dd0149e6873b0a3bb165a09ce44640f182e8932",
+        "credit": "react-app"
+      },
+      {
+        "path": "intake/index.html",
+        "source_sha256": "f6ed2195f36a6b3faf19957a95a6145225a4d2cdc3fa43d6d11fd6fbf09ee61f",
+        "output_sha256": "f6ed2195f36a6b3faf19957a95a6145225a4d2cdc3fa43d6d11fd6fbf09ee61f",
+        "credit": "react-app"
+      },
+      {
+        "path": "intake/maintenance/index.html",
+        "source_sha256": "4291aba6d0e20a26d85496ee03c2e6b94f9fd6b1fd87e1c5ec1529e4e02d3591",
+        "output_sha256": "4291aba6d0e20a26d85496ee03c2e6b94f9fd6b1fd87e1c5ec1529e4e02d3591",
+        "credit": "react-app"
+      },
+      {
+        "path": "intake/website-launch/index.html",
+        "source_sha256": "088512e1d19b4734442f5c67ab1f90be2fa90e7bfa3092632d8af41d047c00e1",
+        "output_sha256": "088512e1d19b4734442f5c67ab1f90be2fa90e7bfa3092632d8af41d047c00e1",
+        "credit": "react-app"
+      },
+      {
+        "path": "packages/199-quick-start/index.html",
+        "source_sha256": "d5e4df77dcdfa364cc8a57bfd715b6755531e9d0c0ffdb72f4cbe7fc1552a5a9",
+        "output_sha256": "d5e4df77dcdfa364cc8a57bfd715b6755531e9d0c0ffdb72f4cbe7fc1552a5a9",
+        "credit": "react-app"
+      },
+      {
+        "path": "packages/499-site-upgrade/index.html",
+        "source_sha256": "ea17a220c1f0dd3d32befe8f6dce865074ea65c8730c0569a77318cdc549f441",
+        "output_sha256": "ea17a220c1f0dd3d32befe8f6dce865074ea65c8730c0569a77318cdc549f441",
+        "credit": "react-app"
+      },
+      {
+        "path": "packages/business-website/index.html",
+        "source_sha256": "616c89f4a94be2256bf46cf5705e41dfc643b54ba55e12cfec6fe99f452d095b",
+        "output_sha256": "616c89f4a94be2256bf46cf5705e41dfc643b54ba55e12cfec6fe99f452d095b",
+        "credit": "react-app"
+      },
+      {
+        "path": "packages/index.html",
+        "source_sha256": "23606469952caf16eb823350ef49b83cc4fec225b011de4c9667b3212809b63d",
+        "output_sha256": "23606469952caf16eb823350ef49b83cc4fec225b011de4c9667b3212809b63d",
+        "credit": "react-app"
+      },
+      {
+        "path": "packages/landing-page/index.html",
+        "source_sha256": "596eff9a751672ab04859f7ea97e2b89f5e333e8e86c9cbb659300b656a68237",
+        "output_sha256": "596eff9a751672ab04859f7ea97e2b89f5e333e8e86c9cbb659300b656a68237",
+        "credit": "react-app"
+      },
+      {
+        "path": "packages/premium-website-ai/index.html",
+        "source_sha256": "5d1d729ea1bc2f636b951fe5ea93072ed792e2da08546bbd59fe31b15236f83b",
+        "output_sha256": "5d1d729ea1bc2f636b951fe5ea93072ed792e2da08546bbd59fe31b15236f83b",
+        "credit": "react-app"
+      },
+      {
+        "path": "packages/starter-website/index.html",
+        "source_sha256": "96762469b8ae7de2c089130152f2188fc33b6decfdd021934ea5144c59340c03",
+        "output_sha256": "96762469b8ae7de2c089130152f2188fc33b6decfdd021934ea5144c59340c03",
+        "credit": "react-app"
+      },
+      {
+        "path": "packages/website-care-plan/index.html",
+        "source_sha256": "cdeee5ce7ae34e9544f18a233a4096b53fca2f829e72109f183c4bafbae4071b",
+        "output_sha256": "cdeee5ce7ae34e9544f18a233a4096b53fca2f829e72109f183c4bafbae4071b",
+        "credit": "react-app"
+      },
+      {
+        "path": "portal/index.html",
+        "source_sha256": "147908e674aa6c86a7fd9d2ec968f01058497f3b9eb4e43be04caaeb155f2c8a",
+        "output_sha256": "147908e674aa6c86a7fd9d2ec968f01058497f3b9eb4e43be04caaeb155f2c8a",
+        "credit": "react-app"
+      },
+      {
+        "path": "pricing/index.html",
+        "source_sha256": "66e8e95a43c0f455d513ee46b2f0f693bda3be971bdbca3114f062077ceecfa1",
+        "output_sha256": "66e8e95a43c0f455d513ee46b2f0f693bda3be971bdbca3114f062077ceecfa1",
+        "credit": "react-app"
+      },
+      {
+        "path": "privacy-policy/index.html",
+        "source_sha256": "9d150388dc32cf7e4b3d342b89aa2254445d842bc23c18b1f4fcb0a1f18a23cb",
+        "output_sha256": "9d150388dc32cf7e4b3d342b89aa2254445d842bc23c18b1f4fcb0a1f18a23cb",
+        "credit": "react-app"
+      },
+      {
+        "path": "purchase/index.html",
+        "source_sha256": "8b005251aaed961b712e4f819d1c4134cabe2fede88d2989b099be1b3e25e934",
+        "output_sha256": "8b005251aaed961b712e4f819d1c4134cabe2fede88d2989b099be1b3e25e934",
+        "credit": "react-app"
+      },
+      {
+        "path": "services/ai-chatbot/index.html",
+        "source_sha256": "46ccfe80ea6c8284a2d781aca704fbb3900aca6a22c7e92e9b548d9b652819cb",
+        "output_sha256": "46ccfe80ea6c8284a2d781aca704fbb3900aca6a22c7e92e9b548d9b652819cb",
+        "credit": "react-app"
+      },
+      {
+        "path": "services/client-portal-systems/index.html",
+        "source_sha256": "45b6f0b7ccf1bae29148ea4a342679feeeb77bd144199ccf06b1154869eab49d",
+        "output_sha256": "45b6f0b7ccf1bae29148ea4a342679feeeb77bd144199ccf06b1154869eab49d",
+        "credit": "react-app"
+      },
+      {
+        "path": "services/custom-website-development/index.html",
+        "source_sha256": "d28bb7f9609a0e84a77f742ce7eb00de48433505a9eadc3149735a02d94dea37",
+        "output_sha256": "d28bb7f9609a0e84a77f742ce7eb00de48433505a9eadc3149735a02d94dea37",
+        "credit": "react-app"
+      },
+      {
+        "path": "services/e-commerce-solutions/index.html",
+        "source_sha256": "d2f3eea3e2181219b17ebeddd8d35f2f9dc5b28594635d172001d482acacdda5",
+        "output_sha256": "d2f3eea3e2181219b17ebeddd8d35f2f9dc5b28594635d172001d482acacdda5",
+        "credit": "react-app"
+      },
+      {
+        "path": "services/index.html",
+        "source_sha256": "76a98b5bd260520915a22a3ba6f1cb78b3f5dede2d93e748472cf644ef7a3e36",
+        "output_sha256": "76a98b5bd260520915a22a3ba6f1cb78b3f5dede2d93e748472cf644ef7a3e36",
+        "credit": "react-app"
+      },
+      {
+        "path": "services/landing-page-design/index.html",
+        "source_sha256": "03835cb16aaaa36db860253a1a0bd0af45a6f006644a97b582ce2708352e0527",
+        "output_sha256": "03835cb16aaaa36db860253a1a0bd0af45a6f006644a97b582ce2708352e0527",
+        "credit": "react-app"
+      },
+      {
+        "path": "services/site-rebuild/index.html",
+        "source_sha256": "6044ef9b7e6c413b42dbf9ed6b4e1bd689763f06f4039259c7c778875ac7ca77",
+        "output_sha256": "6044ef9b7e6c413b42dbf9ed6b4e1bd689763f06f4039259c7c778875ac7ca77",
+        "credit": "react-app"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/alex-touch-prototype/index.html",
+        "source_sha256": "8f99e5d1337026e8982f3be94754e626010ee5cc3fa5d162b0e0571bd6212fcb",
+        "output_sha256": "e67bc531f68bc4e5deb8a8ae3d515604c9671768a8956e342ad1d60c49900d9e",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/alex-touch-prototype/owner/index.html",
+        "source_sha256": "3c3bc6193fe82dca7901753abf263d689e92e1656e0fd758d97393fcd87c6b13",
+        "output_sha256": "29e8c0c075b390ae410e60043760e0d3df516d8291da9690171502a756318554",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/alex-touch-prototype-v2/index.html",
+        "source_sha256": "26fa5a7b5de234b2126c95a9de557efaacf0ac0456781330c4ce4295d390bf7d",
+        "output_sha256": "57be221f1cf4fc82013597f566a3b7131915320d7d50e4b515c2d90754f755a4",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/alex-touch-prototype-v2/owner/index.html",
+        "source_sha256": "a7def876a288002faeca43d2dc794eaab27fc58173505379d8f7b81e8f9375b4",
+        "output_sha256": "bc31ad23eb0e696e545d303e29212f3af2a7d06c345e376013b98695f863e237",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/component-lab/image-only/01-soft-power/index.html",
+        "source_sha256": "9cf005329b24737d0870b2f900b8b30601dedc324e324fc0dafdadb299ec077f",
+        "output_sha256": "dafde25d400133d2bc2ad002fabcf24422ecef41405021ed426fed779f406587",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/component-lab/image-only/02-coil-culture/index.html",
+        "source_sha256": "dd574e2aaca115de99b64b0b68da3114b43aebd6a3ae22e5522b2b5b29788088",
+        "output_sha256": "98836031a954b12d03f2b1dfc11005c2f9e748f7556dad0ff36278f926ffe137",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/component-lab/image-only/03-studio-ritual/index.html",
+        "source_sha256": "914c11b493e53f2d4193b1b5c2ac404c2b15a49fb34a0b09cd4ddc7267679b5a",
+        "output_sha256": "f7455e4accc6e0bf66cba88403e8ab61515757a3e54f4b08fec5e0f37251149d",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/component-lab/image-only/04-coil-architecture/index.html",
+        "source_sha256": "c2c3dd40193176fc78c22337f46965897afe06e8ac37bc67dbe1d19be135d8cf",
+        "output_sha256": "a341416fadbb6c967865e63559c8982f6e94c56060a582a7d359b7fb3e211329",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/component-lab/index.html",
+        "source_sha256": "1a837db89b6543515c8aa245b06aca2ea24706b599df95c3360351808d9c63eb",
+        "output_sha256": "205b668c027043f5512486fb974669468583f1864305534af37377fbf0257469",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/emails/coastline-crown-barbers/index.html",
+        "source_sha256": "ab249f94e037b25755ade5e8bc1f611ca32f6681858b5f4855a60826baa135c6",
+        "output_sha256": "a467ca54abefae2ae1e2c88d7cfcee4792bacd6f0ad14eb6b03dbbf88fee3dc1",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/emails/palmera-fade-society/index.html",
+        "source_sha256": "592063cf98c8529be171ed16f5fb305902332daaa4b7bc722fe65e81c068a65a",
+        "output_sha256": "13fd458d3f49afb38ac312fd06a5cac7dac8c90a2d17ea05065c96e05223f5b4",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/emails/saltline-color-house/index.html",
+        "source_sha256": "c60c34e324cdeccce355882b54e6c4420b53b9c051cd0164ac83ad55663d9124",
+        "output_sha256": "f19892d980cdc31b530957dbf63bc47cc29ae1fb4b49123687ebceca58d3d86a",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/emails/velvet-coil-atelier/index.html",
+        "source_sha256": "ea0b1dcbaeb30c63fe1d7bbe29ae5a39459205c98810ee4147b18b26347403c9",
+        "output_sha256": "e72f8638a4ec3d18082752b9e8799bab57a08cdb4c97835f7f6124b0e1d393b4",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/index.html",
+        "source_sha256": "c83232e959ae95286393d186d631b62f469b58d1e3b7d736fc90a25bb2a0f1f8",
+        "output_sha256": "1129c1dcc59e44280e1980b14cb88d9220cf21a0e7c391aea10e639021956953",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/noise-cuts-proof/index.html",
+        "source_sha256": "3d1e8466f1be0182a1810626b69a666481f0bbfdb340104fa671e76ef12c196c",
+        "output_sha256": "9745ed1b8ba7f5ebe309d4ceadadad6c188ca61b924198058bec625f2d9083c0",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/noise-cuts-proof/owner/index.html",
+        "source_sha256": "ca522d7c0ce6e2c26424d0db35e6d248fb09fc60ec30e905e57caae5eb14553b",
+        "output_sha256": "180262247bb14dac8c8afe52ff63b1c6d06a38469aa418ae697b05615f53eb54",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/package/index.html",
+        "source_sha256": "4042fe9789498a816e706e8a9cf80339a6e9167621cb1cf62b152c2242c93419",
+        "output_sha256": "8523628b6cc899e3d1167dff1889ad2c47dafb07782effaf13159dce89b94e60",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/a/index.html",
+        "source_sha256": "452afc51488e45ec9681537b6ccbeefd0bd485a80a82019306ea0af1eac9fbbc",
+        "output_sha256": "373f934661ca0b2179b74454fd1c4edcf953a3b365116c4dc9038a47a4507e29",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/b/index.html",
+        "source_sha256": "acb9d3e0d13a4bd9dde07645fa62ca3acd528a966b7937ae9e408241332fb67d",
+        "output_sha256": "5fef9ad745c1386b8b035b80db7309a66d74744f65ef7c06d4a066a34bf72066",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/c/index.html",
+        "source_sha256": "4d4620003677e56cf89524af2bba13f4571e42d6edcd291f3d3f30c3ce6a7313",
+        "output_sha256": "8d6fd6feb2281f9154844690337566327b2f67acafb4ab41f7af51763e9488aa",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/palmera-fade-society/a/index.html",
+        "source_sha256": "1070c677d82bf66f8278282107950dc3dd2e5c3a1c3a4ba8b5661e8d3df45d43",
+        "output_sha256": "59cd2a1e5ca0d85df78898025780eccb720142c505cfefa769eb53fd8e0a156f",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/palmera-fade-society/b/index.html",
+        "source_sha256": "5c814a008027a8d0374386fb9ea59822d4668b3451dc35032e5069da12dede1f",
+        "output_sha256": "05253d3834fda1eaf34aa7f1b208abbb7c5c7a060546bfafa105cff47baa36e3",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/palmera-fade-society/c/index.html",
+        "source_sha256": "21d8731717f4f0d23f2c74965882bb2b9fa5096c611ff40483312666120f842a",
+        "output_sha256": "78f04ecc7488ec2dc81e390d10213ee2475277de67538b55089edde0778f098b",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/saltline-color-house/a/index.html",
+        "source_sha256": "0a9008c6e9dfa7882b0109dadf9985a64579231e2bc6b37d33f04dca84ad8fab",
+        "output_sha256": "fad7e9eea36bf75efff011442c1fdd9853d4ff17baeb0f20b9599d1374e9747f",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/saltline-color-house/b/index.html",
+        "source_sha256": "a00fa33c4d52e3639c6c1962b6cca2b11e40b533fd339c2b5549271e0a21ba49",
+        "output_sha256": "6fe0bed8cd4e691abd246e52c50cf6b4320d27f80b1d58c6bed419edcb6e2171",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/saltline-color-house/c/index.html",
+        "source_sha256": "5cb26515e3286776754cc959ac6cb17bc72e34540480e84a7115a7bf0be15c82",
+        "output_sha256": "bfa87764bf14c37061cb9405b71a1c75481e9e93d64702ffd602e09050be18d2",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/a/index.html",
+        "source_sha256": "c28349fd5b3ca65b093be4761c1deef91dcb31441538b716793c99fb829ac2ac",
+        "output_sha256": "b8c94d8c57e7b91eafe8add3d8b61a42f9a6763f52eb9f00af8bf980df8f78d8",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/b/index.html",
+        "source_sha256": "9549a751c3059b7af030cead10e31015f37c20c702fb3c18697fd629a7047ef4",
+        "output_sha256": "bc6eb071e5d529443926edb62c318ec87811756f9111b9430f5393dc87c86980",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/c/index.html",
+        "source_sha256": "1b11312f75457f81566c1ae3a1e80980154d01c2d8d943fb8dfbbf1307d86e83",
+        "output_sha256": "ad9303e8be96b206aface219d7d322dcc47c4f39d2aa3972c0149d6ed804eb93",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/research-proof-lab/index.html",
+        "source_sha256": "faf7ca6ebdab3a610d60d3098c07cfc53cc4cd7df3a97b29883a297c9e3ccae9",
+        "output_sha256": "8e2e16b2f1bd5eb536aa52f3983887ff221c2984dc02c7c880d96cf854f1ea2b",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/research-proof-lab/templates/barrio-signal/index.html",
+        "source_sha256": "ee0c5fd5568e94cbaa6f46c49afc0f42ffb134443dc2177635dba6ae48df1c1b",
+        "output_sha256": "73df075b004517d5801eb0061f98bf6a9f5c0320a897d347bc3e2cdfb5d845e0",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/research-proof-lab/templates/coil-ritual/index.html",
+        "source_sha256": "7cb248f9e36ac172335f28de3e6f11573fc94b3f71315fa3efe668b226c5ca2f",
+        "output_sha256": "c282cec6376dcf352099c3209e08f548bd992b7e3537ad2f378ac63cc038af10",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/research-proof-lab/templates/crown-ledger/index.html",
+        "source_sha256": "61ef9a16f333e5f43352dc06138291b2bb6673379413304e41b4df6a317f5819",
+        "output_sha256": "78caa4082cabef92964143322891db0a500e5d7fb495f4f03523fc8a51b4a70d",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/research-proof-lab/templates/salt-glass/index.html",
+        "source_sha256": "84458a695a3b834b507ea2668c506cbfc0fe9ae067f56e64df801637401ee520",
+        "output_sha256": "0ae863733df4f0156cc531e1806008d8089bfdd4fa5b379ac3d19936c73a649f",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/rooms/coastline-crown-barbers/index.html",
+        "source_sha256": "6c0f273f34e94646ef5accc41c70362da6fa27d45a63e4dce2896793e2358d15",
+        "output_sha256": "98ac9bd46fdc96385db64cbf9cd22fe6b35f14b49a4aec8da496884babcd15e8",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/rooms/palmera-fade-society/index.html",
+        "source_sha256": "f65bf3c73d6ffb4e776bd2abcc47b4bbd217366c22cc00953f22d2910f7d9368",
+        "output_sha256": "a77b9fcf166fb3bb3b3aee55543cc6bc88a075345d79ab0fa8c439ba6a657e89",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/rooms/saltline-color-house/index.html",
+        "source_sha256": "4c5f6851d0c7cead247b80816f04e70e53209664dbc534ca435f7a8cf3bfa53c",
+        "output_sha256": "026d81606e6826145c80f5bc03c5f27765c76e02c8515d836a4f3af3cc4e95e1",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/rooms/velvet-coil-atelier/index.html",
+        "source_sha256": "7fbe98a87ab1c0cabaaf0a9ee7a4ba9989a7d999e8d8eb4abb3bdad0833bbee3",
+        "output_sha256": "7764a4c192a535b716804a9622744bf3153fe250df03378d49ec1993d1609e8c",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/template-lab/index.html",
+        "source_sha256": "39a96cd14a1367364f6b39e0110a748df9179a830622caf8049120b1698f8fda",
+        "output_sha256": "17a8b61562c1e10df0475b1d4405325479016e3bee1b2d84bfbcbbdeb75f0f1b",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/booked-and-branded-pilot/wow-lab/velvet-coil-architecture/index.html",
+        "source_sha256": "1abde09be68c36a6625a985df7675b80ef3b2d39f6a0ebfcb00e3a8079337b31",
+        "output_sha256": "f0b8562720a204e8dd425228fb019c39dc44b6606edbe465d7604b0d0f69e8fb",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/creative-matrix.html",
+        "source_sha256": "5ceadb60ba4a37abcb19b04114ac9c644b90ee955c5af59c632abcafdd88dd3a",
+        "output_sha256": "52f9542b15909848ae15c3ae8ae562bd34acea3fa75d891ce62614bdf65b79e9",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/omar-top-deals/index.html",
+        "source_sha256": "106d4755a2fd0eaf7f809b743c32a9169691cf11a26c373170ac609a3072739b",
+        "output_sha256": "0439c417f6a52b5513833873be87c9da05a404867b5c036ae8cf13ff91cc0f86",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/omar-top-deals/owner/index.html",
+        "source_sha256": "9e548c6c36db5f7fa73aeb506358fa090a6e6ed998b495e935243ca8244e2926",
+        "output_sha256": "f551b6e074cf2e77f700785ce4db628ccf427f134b28618444be09bea5c147ad",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/omar-top-deals/v2/index.html",
+        "source_sha256": "89598df41f00985ff26f018b24fb3f3c33e4d037686894ce2cbe12b468b49c07",
+        "output_sha256": "05eb262e90f5f8a37d593322ee88cf99fcf434c0dd663825bab739bc69231704",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/thirst-trap-772/index.html",
+        "source_sha256": "9f2c28a1b92bd3f1d366b02771435f536efd45e826e1e9e39e76e344c94faee0",
+        "output_sha256": "fd7f4d98b6c1713caab32c28ed18699e16304004ac47f9065e113c7190b37a58",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/thirst-trap-772/v1/index.html",
+        "source_sha256": "cfc2f4e1f27ee095d649c7d1d5722e252168d14f1066c948835e1b10ed0fe5e0",
+        "output_sha256": "d7823c753098613904ac0f62b66a2694af7d4097e9400e10c81f252580dd29f5",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/thirst-trap-772/v2/index.html",
+        "source_sha256": "808907320f117f8d96767b73336d4da4cb170ae4fd578fe25efef99f3dd73f20",
+        "output_sha256": "726529594f92ee3c0dace5ee98d58729bb8a115aa9f120f717d6d5a9bd61b852",
+        "credit": "static-v1"
+      },
+      {
+        "path": "showcase/thirst-trap-772/v2/owner/index.html",
+        "source_sha256": "f8fbe795a04237d65e7d966556b9260f8f54ec5795c45eb4ba12305e966fdf8a",
+        "output_sha256": "ddcc8407ca0ab898e7c6d67594b78eaa21c15ee4bb103e879ba62d3fb874098f",
+        "credit": "static-v1"
+      },
+      {
+        "path": "start/index.html",
+        "source_sha256": "80e56188216a0ae653d4f81351ac7c3395173ea8e5ee9cb68e71af845b8df16b",
+        "output_sha256": "80e56188216a0ae653d4f81351ac7c3395173ea8e5ee9cb68e71af845b8df16b",
+        "credit": "react-app"
+      },
+      {
+        "path": "terms-of-service/index.html",
+        "source_sha256": "083b33fa6d41f1f680cb0339614e4432fc275f8f07cfe94260562f8e4c296d87",
+        "output_sha256": "083b33fa6d41f1f680cb0339614e4432fc275f8f07cfe94260562f8e4c296d87",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/borrowed-land/index.html",
+        "source_sha256": "e630d2c71682b0e644a5b380bbe90f6802161953fc23c678983bb2612da08942",
+        "output_sha256": "e630d2c71682b0e644a5b380bbe90f6802161953fc23c678983bb2612da08942",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/fd-drop-01/index.html",
+        "source_sha256": "a25365dbdb1c0fb6eb8f64236ca9fd399c37383e796c7e444af415ce3b2b87db",
+        "output_sha256": "a25365dbdb1c0fb6eb8f64236ca9fd399c37383e796c7e444af415ce3b2b87db",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/fd-drop-02/index.html",
+        "source_sha256": "2d133fa093362c29e32f3c4dc94c256a1b3bc64c9d7e35252aad1ebb808d7646",
+        "output_sha256": "2d133fa093362c29e32f3c4dc94c256a1b3bc64c9d7e35252aad1ebb808d7646",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/fd-drop-03/index.html",
+        "source_sha256": "00f97f41e32693008fbef2d17185f45df8da0f8a6825ad9a9b697de487af74d9",
+        "output_sha256": "00f97f41e32693008fbef2d17185f45df8da0f8a6825ad9a9b697de487af74d9",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/fd-drop-04/index.html",
+        "source_sha256": "1620e7d1b87c92477ad1c0a7c4ce308ddae3b9d21421080b0fd771ad0e79a7b1",
+        "output_sha256": "1620e7d1b87c92477ad1c0a7c4ce308ddae3b9d21421080b0fd771ad0e79a7b1",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/fd-drop-05/index.html",
+        "source_sha256": "9b264a366cd9b667e31c9bac21a4eae63caea24503f30ae1761e13de9c59e982",
+        "output_sha256": "9b264a366cd9b667e31c9bac21a4eae63caea24503f30ae1761e13de9c59e982",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/fd-drop-06/index.html",
+        "source_sha256": "1feeab511449ba2314deb0510417234672ce7958113aa7b51cedc1edee973e05",
+        "output_sha256": "1feeab511449ba2314deb0510417234672ce7958113aa7b51cedc1edee973e05",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/fd-drop-07/index.html",
+        "source_sha256": "6034686b17efd3c5c2c2fa4c368b01f4278bf5854b0aff6564a9e21091fda91e",
+        "output_sha256": "6034686b17efd3c5c2c2fa4c368b01f4278bf5854b0aff6564a9e21091fda91e",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/fd-drop-08/index.html",
+        "source_sha256": "66c15822657ead010c3267f4f68bc239e6a7c88a272d35eaf027c9e4948aea2d",
+        "output_sha256": "66c15822657ead010c3267f4f68bc239e6a7c88a272d35eaf027c9e4948aea2d",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/fifty-five-cents/index.html",
+        "source_sha256": "55d4de4a87c452d04f6fb514df9eb7ff1dc7f56fe817820741747a0c2c85c9d9",
+        "output_sha256": "55d4de4a87c452d04f6fb514df9eb7ff1dc7f56fe817820741747a0c2c85c9d9",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/found-then-kept/index.html",
+        "source_sha256": "7fb8097b97f3da7e7cafa54223a7579d1538f64fdec98fdede34eb2dc522d7a4",
+        "output_sha256": "7fb8097b97f3da7e7cafa54223a7579d1538f64fdec98fdede34eb2dc522d7a4",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/index.html",
+        "source_sha256": "d30ccc8d8eedcbbf1013af29595a8c153346ae8263dddf1392336ce2008a7267",
+        "output_sha256": "d30ccc8d8eedcbbf1013af29595a8c153346ae8263dddf1392336ce2008a7267",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/not-a-home-base/index.html",
+        "source_sha256": "c70850c7fb4d4e2a21d673993a0a01e61e1c5f80638c06e60a18c96b3be1ecd9",
+        "output_sha256": "c70850c7fb4d4e2a21d673993a0a01e61e1c5f80638c06e60a18c96b3be1ecd9",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/sas-drop-01/index.html",
+        "source_sha256": "5d6b6a0889f8c150999c617036a8beae15de06d299ec986668bb2d129c8229a8",
+        "output_sha256": "5d6b6a0889f8c150999c617036a8beae15de06d299ec986668bb2d129c8229a8",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/sas-drop-02/index.html",
+        "source_sha256": "fb0f2acd324d724a54dcf4a1a958f9fc89cf44a6dbaadf9a2015d6ff38974d35",
+        "output_sha256": "fb0f2acd324d724a54dcf4a1a958f9fc89cf44a6dbaadf9a2015d6ff38974d35",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/sas-drop-03/index.html",
+        "source_sha256": "c77f5a3c64febeb0c0c778076865315aad784184c0cdf362aab1e36762a14bdf",
+        "output_sha256": "c77f5a3c64febeb0c0c778076865315aad784184c0cdf362aab1e36762a14bdf",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/sas-drop-04/index.html",
+        "source_sha256": "8fd320cfe27ddf24f0feaacfd03432a1b0e16ff57693d5496c00e8c1b1be4fc8",
+        "output_sha256": "8fd320cfe27ddf24f0feaacfd03432a1b0e16ff57693d5496c00e8c1b1be4fc8",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/sas-drop-05/index.html",
+        "source_sha256": "c81b2dd2309bd279b6c73c23c5b49021c485be597cb7e30859f8e53414cdd9eb",
+        "output_sha256": "c81b2dd2309bd279b6c73c23c5b49021c485be597cb7e30859f8e53414cdd9eb",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/sas-drop-06/index.html",
+        "source_sha256": "c859b1ebce5f5bc5c9a0c611242af90d9671056adb16aac4384193a6df2aba4e",
+        "output_sha256": "c859b1ebce5f5bc5c9a0c611242af90d9671056adb16aac4384193a6df2aba4e",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/sas-drop-07/index.html",
+        "source_sha256": "444b5cd564b9ad192dfbfd429a158cef54578d20bcd5a9a086717b77308fbfd7",
+        "output_sha256": "444b5cd564b9ad192dfbfd429a158cef54578d20bcd5a9a086717b77308fbfd7",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/sas-drop-08/index.html",
+        "source_sha256": "23df5b6986ec1e69648bccd13ac6dedc6d17046e4f39c0d9ea32afbc1eddbffd",
+        "output_sha256": "23df5b6986ec1e69648bccd13ac6dedc6d17046e4f39c0d9ea32afbc1eddbffd",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/somebody-elses-app/index.html",
+        "source_sha256": "fcae66d0cb43e3aaf38eae76340b1397a0d434f33502e1d5efe49e5755392d3b",
+        "output_sha256": "fcae66d0cb43e3aaf38eae76340b1397a0d434f33502e1d5efe49e5755392d3b",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/the-dm-trap/index.html",
+        "source_sha256": "cb1718e63f715316596fa0542233bef9a07f0aaed627bbf16d119d14c4c5d4a6",
+        "output_sha256": "cb1718e63f715316596fa0542233bef9a07f0aaed627bbf16d119d14c4c5d4a6",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/the-sign-that-isnt-there/index.html",
+        "source_sha256": "c4c14581f5b5313b0fbfa9ffc0756f11122c2de3042aea8fa22267630f11a096",
+        "output_sha256": "c4c14581f5b5313b0fbfa9ffc0756f11122c2de3042aea8fa22267630f11a096",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/two-different-jobs/index.html",
+        "source_sha256": "aabc38fe53193cc7483feb428e2c8c9a74bf7c39b6cda71ff731416ccce6156c",
+        "output_sha256": "aabc38fe53193cc7483feb428e2c8c9a74bf7c39b6cda71ff731416ccce6156c",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/wys-drop-01/index.html",
+        "source_sha256": "a25b21058db92c4a14dc96fd815a65f0bf57af7b265a693e26d8ca2dd0255077",
+        "output_sha256": "a25b21058db92c4a14dc96fd815a65f0bf57af7b265a693e26d8ca2dd0255077",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/wys-drop-02/index.html",
+        "source_sha256": "59f3888f1a57dc47d16b1654f3e7420e7adb6a8c95b1f379fb3675a780b2671f",
+        "output_sha256": "59f3888f1a57dc47d16b1654f3e7420e7adb6a8c95b1f379fb3675a780b2671f",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/wys-drop-03/index.html",
+        "source_sha256": "8eb200d3f5a64d49b8a0ab52a39b4f240363f062d4265a4ea1b39cab11e4cba4",
+        "output_sha256": "8eb200d3f5a64d49b8a0ab52a39b4f240363f062d4265a4ea1b39cab11e4cba4",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/wys-drop-04/index.html",
+        "source_sha256": "b3af66eae0a631223cd9ed1d56c3b49c536ef88250bbdf00a10207d76746c366",
+        "output_sha256": "b3af66eae0a631223cd9ed1d56c3b49c536ef88250bbdf00a10207d76746c366",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/wys-drop-05/index.html",
+        "source_sha256": "77fc7fd2a8ae53da742f68faa2f5efdebe6205ead956a564ece3490c69d48dd2",
+        "output_sha256": "77fc7fd2a8ae53da742f68faa2f5efdebe6205ead956a564ece3490c69d48dd2",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/wys-drop-06/index.html",
+        "source_sha256": "effda3066a479c678cb38733583487f73e9ab77a4d5a44d05b8af84716e43578",
+        "output_sha256": "effda3066a479c678cb38733583487f73e9ab77a4d5a44d05b8af84716e43578",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/wys-drop-07/index.html",
+        "source_sha256": "9eee964a64443fed817d20ce17bb8bf60f5cb78dad528ffbe7622f779acc98f5",
+        "output_sha256": "9eee964a64443fed817d20ce17bb8bf60f5cb78dad528ffbe7622f779acc98f5",
+        "credit": "react-app"
+      },
+      {
+        "path": "watch/wys-drop-08/index.html",
+        "source_sha256": "58700951b716a15d6f6807c12e97e4ebb9f7942267dbabf6310e7c22e48bc0e7",
+        "output_sha256": "58700951b716a15d6f6807c12e97e4ebb9f7942267dbabf6310e7c22e48bc0e7",
+        "credit": "react-app"
+      },
+      {
+        "path": "website-options/index.html",
+        "source_sha256": "84ee9039fb5fb1fa788f8fdca0b2a7f01b76ce820d7c71a5523fc981f6e9a1d7",
+        "output_sha256": "84ee9039fb5fb1fa788f8fdca0b2a7f01b76ce820d7c71a5523fc981f6e9a1d7",
+        "credit": "react-app"
+      },
+      {
+        "path": "work/index.html",
+        "source_sha256": "88a00df8996d35fa6760261e634dcac97c28016a14394ba1af15b5b5d81f540b",
+        "output_sha256": "88a00df8996d35fa6760261e634dcac97c28016a14394ba1af15b5b5d81f540b",
+        "credit": "react-app"
+      }
+    ]
+  },
+  "browser": {
+    "classification": "local-presentation-only-api-mocked-no-writes",
+    "results": [
+      {
+        "path": "/",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/portal",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/login",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype/owner/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/owner/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/01-soft-power/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/02-coil-culture/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/03-studio-ritual/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/04-coil-architecture/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/coastline-crown-barbers/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/palmera-fade-society/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/saltline-color-house/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/velvet-coil-atelier/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/noise-cuts-proof/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/noise-cuts-proof/owner/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/package/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/a/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/b/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/c/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/a/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/b/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/c/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/saltline-color-house/a/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/saltline-color-house/b/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/saltline-color-house/c/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/a/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/b/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/c/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/barrio-signal/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/coil-ritual/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/crown-ledger/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/salt-glass/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/coastline-crown-barbers/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/palmera-fade-society/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/saltline-color-house/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/velvet-coil-atelier/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/template-lab/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/wow-lab/velvet-coil-architecture/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/creative-matrix.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/omar-top-deals/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/omar-top-deals/owner/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/omar-top-deals/v2/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/v1/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/v2/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/v2/owner/index.html",
+        "width": 320,
+        "passed": true
+      },
+      {
+        "path": "/",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/portal",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/login",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype/owner/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/owner/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/01-soft-power/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/02-coil-culture/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/03-studio-ritual/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/04-coil-architecture/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/coastline-crown-barbers/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/palmera-fade-society/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/saltline-color-house/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/velvet-coil-atelier/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/noise-cuts-proof/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/noise-cuts-proof/owner/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/package/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/a/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/b/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/c/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/a/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/b/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/c/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/saltline-color-house/a/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/saltline-color-house/b/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/saltline-color-house/c/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/a/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/b/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/c/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/barrio-signal/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/coil-ritual/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/crown-ledger/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/salt-glass/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/coastline-crown-barbers/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/palmera-fade-society/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/saltline-color-house/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/velvet-coil-atelier/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/template-lab/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/wow-lab/velvet-coil-architecture/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/creative-matrix.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/omar-top-deals/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/omar-top-deals/owner/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/omar-top-deals/v2/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/v1/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/v2/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/v2/owner/index.html",
+        "width": 390,
+        "passed": true
+      },
+      {
+        "path": "/",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/portal",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/login",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype/owner/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/owner/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/01-soft-power/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/02-coil-culture/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/03-studio-ritual/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/image-only/04-coil-architecture/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/component-lab/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/coastline-crown-barbers/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/palmera-fade-society/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/saltline-color-house/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/emails/velvet-coil-atelier/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/noise-cuts-proof/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/noise-cuts-proof/owner/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/package/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/a/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/b/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/c/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/a/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/b/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/palmera-fade-society/c/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/saltline-color-house/a/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/saltline-color-house/b/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/saltline-color-house/c/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/a/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/b/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/c/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/barrio-signal/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/coil-ritual/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/crown-ledger/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/research-proof-lab/templates/salt-glass/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/coastline-crown-barbers/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/palmera-fade-society/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/saltline-color-house/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/rooms/velvet-coil-atelier/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/template-lab/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/booked-and-branded-pilot/wow-lab/velvet-coil-architecture/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/creative-matrix.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/omar-top-deals/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/omar-top-deals/owner/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/omar-top-deals/v2/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/v1/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/v2/index.html",
+        "width": 1440,
+        "passed": true
+      },
+      {
+        "path": "/showcase/thirst-trap-772/v2/owner/index.html",
+        "width": 1440,
+        "passed": true
+      }
+    ]
+  }
+}

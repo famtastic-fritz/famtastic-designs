@@ -33,7 +33,9 @@ namespace {
   $render = fn(string $body) => StagingReviewEmail::render($fixture['subject'], $body, $logo, TRUE);
   $html = $render($fixture['body']);
   check(str_contains($html, '<strong>The Signal Room</strong>'), 'Selected direction');
-  check(substr_count($html, 'href=') === 1, 'One action only');
+  check(substr_count($html, 'href=') === 2, 'One operational action plus creator credit');
+  check(substr_count($html, 'data-famtastic-creator-credit="v1"') === 1, 'One final creator credit');
+  check(str_contains($html, 'href="https://famtasticdesigns.com/?utm_source=famtastic-designs&amp;utm_medium=creator_credit&amp;utm_campaign=created_by_famtastic"'), 'Exact public attribution');
   check(str_contains($html, 'href="https://prosintraining.famtasticinc.com/"'), 'Exact destination');
   check(!preg_match('/\{\{\s*[a-z_]+\s*\}\}|555-0123|View in browser/i', $html), 'No placeholders');
   check(str_contains($fixture['body'], "Always FAMtastic,\nShay"), 'Exact signature');
@@ -41,7 +43,7 @@ namespace {
   $attack = $render("<script>alert(1)</script> & \"quote\" https://evil.invalid/\n\n" . $fixture['body']);
   check(!str_contains($attack, '<script>'), 'Customer markup escaped');
   check(str_contains($attack, '&lt;script&gt;') && str_contains($attack, '&quot;quote&quot;'), 'Entities escaped');
-  check(substr_count($attack, 'href=') === 1, 'Customer URLs never become actions');
+  check(substr_count($attack, 'href=') === 2, 'Customer URLs never become actions');
   check(str_contains(StagingReviewEmail::render('<img src=x>', $fixture['body'], $logo, TRUE), '&lt;img src=x&gt;'), 'Subject escaped');
   foreach (['javascript:alert(1)', 'http://prosintraining.famtasticinc.com/', 'https://evil.invalid/', 'https://prosintraining.famtasticinc.com.evil.invalid/', 'https://user@prosintraining.famtasticinc.com/', 'https://prosintraining.famtasticinc.com:8443/', 'https://prosintraining.famtasticinc.com/?next=https://evil.invalid', 'https://prosintraining.famtasticinc.com/redirect', 'https://prosintraining.famtasticinc.com/#x'] as $url) {
     rejected(fn() => $render(str_replace('https://prosintraining.famtasticinc.com/', $url, $fixture['body'])));
@@ -64,7 +66,9 @@ namespace {
     $body = "Hello & welcome.\n\nOpen your workspace:\nhttps://famtasticdesigns.com/portal";
     $current = $method->invoke($mailer, 'A <review>', $body, $template);
     preg_match_all('/href="([^"]+)"/', $current, $afterLinks);
-    check(($template === 'customer_message_reply' ? [] : ['https://famtasticdesigns.com/portal']) === $afterLinks[1], 'Destinations unchanged: ' . $template);
+    $expectedLinks = $template === 'customer_message_reply' ? [] : ['https://famtasticdesigns.com/portal'];
+    $expectedLinks[] = 'https://famtasticdesigns.com/?utm_source=famtastic-designs&amp;utm_medium=creator_credit&amp;utm_campaign=created_by_famtastic';
+    check($expectedLinks === $afterLinks[1], 'Operational destinations unchanged plus exact credit: ' . $template);
     check(str_contains($current, 'data-famtastic-email-brand="v1"'), 'Shared brand: ' . $template);
     check(str_contains($current, 'famtastic-designs-logo-v1.png'), 'Original logo: ' . $template);
     check(str_contains($current, 'Hello &amp; welcome.'), 'Body preserved: ' . $template);
@@ -90,7 +94,7 @@ namespace {
     $message = $method->invoke($mailer, 'Proof test', "Hello <script>x</script>\n\nOpen your project:\n$projectUrl\n\nAlways FAMtastic,\nShay", $template);
     $doc = new \DOMDocument(); @$doc->loadHTML($message);
     check(!str_contains($doc->getElementsByTagName('body')->item(0)->textContent, 'https://'), 'No visible raw URLs: ' . $template);
-    check($doc->getElementsByTagName('a')->length === 1, 'Exactly one named action: ' . $template);
+    check($doc->getElementsByTagName('a')->length === 2, 'One named action plus credit: ' . $template);
     check($doc->getElementsByTagName('a')->item(0)->getAttribute('href') === $projectUrl, 'Exact query preserved: ' . $template);
     check(!str_contains($message, '<script>'), 'Escaped content: ' . $template);
   }
@@ -99,7 +103,7 @@ namespace {
   check(!str_contains($legacy, '/web/api/'), 'API URL never an email entry');
   foreach (['https://user:password@evil.invalid/', 'https://evil.invalid/"onclick="x'] as $unsafe) {
     $bad = $method->invoke($mailer, 'Unsafe', $unsafe, 'standard');
-    check(!str_contains($bad, 'href='), 'Invalid or credential-bearing action rejected');
+    check(substr_count($bad, 'href=') === 1 && !str_contains($bad, 'href="https://evil.invalid'), 'Invalid action rejected; only fixed creator credit remains');
   }
   echo "PASS: {$count} presentation assertions; no transport, queue or database loaded.\n";
 }

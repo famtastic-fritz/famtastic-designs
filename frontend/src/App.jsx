@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router';
 import Layout from './components/Layout.jsx';
+import CreatorCredit from './components/CreatorCredit.jsx';
 import HomePage from './pages/HomePage.jsx';
 import ContentPage from './pages/ContentPage.jsx';
 import NodeView from './components/NodeView.jsx';
@@ -122,6 +123,7 @@ export default function App() {
           <Route path="*" element={<AliasPage />} />
         </Route>
       </Routes>
+      <CreatorCredit />
     </UserProvider>
   );
 }

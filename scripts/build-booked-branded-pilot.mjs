@@ -7,6 +7,7 @@ import { mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderBookedBrandedOnePage } from './booked-branded-components.mjs';
+import { addCreatorCredit } from './creator-credit.mjs';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const publicRoot = join(repositoryRoot, 'frontend/public/showcase/booked-and-branded-pilot');
@@ -529,7 +530,7 @@ function proofPage(business, direction, { imageOverride = null, imageOnlyProof =
 async function write(relativePath, contents) {
   const destination = join(publicRoot, relativePath);
   await mkdir(dirname(destination), { recursive: true });
-  await writeFile(destination, contents);
+  await writeFile(destination, relativePath.endsWith('.html') ? addCreatorCredit(contents) : contents);
 }
 
 async function walk(directory) {

@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-18 — Agency creator credit
+
+- Added exact-PNG final credit to agency React, static/lead proof builders, future
+  mail/stub rendering and marketing publication gates. Preserved existing footers.
+- Added new-version inventories and existing-files-only deploy modes; no state or
+  historical approval mutation. See operations/agency-creator-credit-lane-2026-09-18.md
+  for exact source, tests, rollout status and exclusions.
+
 ## 2026-09-18 — Proof email correction and portal return
 
 - Sent one owner-authorized request17 correction through the existing branded

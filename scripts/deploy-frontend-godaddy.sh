@@ -8,6 +8,8 @@ REMOTE_ROOT="${FAMTASTIC_REMOTE_ROOT:-public_html}"
 REMOTE_DEPLOY_BASE="${FAMTASTIC_REMOTE_DEPLOY_BASE:-deploy/famtastic-designs}"
 REPOSITORY_URL="${FAMTASTIC_REPOSITORY_URL:-https://github.com/famtastic-fritz/famtastic-designs.git}"
 APPLY=false
+CREATOR_CREDIT_ONLY="${FAMTASTIC_CREATOR_CREDIT_ONLY:-0}"
+[[ "$CREATOR_CREDIT_ONLY" == 0 || "$CREATOR_CREDIT_ONLY" == 1 ]] || exit 2
 
 usage() {
   cat <<USAGE
@@ -98,13 +100,14 @@ REMOTE_PREFLIGHT
 fi
 
 ssh -T "$SSH_TARGET" bash -s -- \
-  "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" <<'REMOTE_APPLY'
+  "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" "$CREATOR_CREDIT_ONLY" <<'REMOTE_APPLY'
 set -euo pipefail
 remote_apply() {
 remote_root="$1"
 deploy_base="$2"
 repository_url="$3"
 commit_sha="$4"
+creator_credit_only="$5"
 deploy_dir="$HOME/$deploy_base"
 mirror_dir="$deploy_dir/repository.git"
 release_dir="$deploy_dir/releases/$commit_sha"
@@ -195,6 +198,11 @@ while IFS= read -r asset_path; do
   }
 done < "$asset_manifest"
 
+if [[ "$creator_credit_only" == 1 ]]; then
+  node "$source_dir/scripts/deploy-creator-credit-existing.mjs" "$dist_dir" "$production_dir" "$release_dir" "$commit_sha"
+  return
+fi
+
 backup_items=()
 [[ -e "$production_dir/index.html" ]] && backup_items+=("index.html")
 [[ -e "$production_dir/assets" ]] && backup_items+=("assets")
@@ -268,6 +276,11 @@ echo "Backup: $backup_path"
 }
 remote_apply "$@"
 REMOTE_APPLY
+
+if [[ "$CREATOR_CREDIT_ONLY" == 1 ]]; then
+  ssh -T "$SSH_TARGET" "cat ~/$REMOTE_ROOT/.creator-credit-release.json"
+  exit 0
+fi
 
 DEPLOYED_COMMIT="$(
   ssh -T "$SSH_TARGET" \

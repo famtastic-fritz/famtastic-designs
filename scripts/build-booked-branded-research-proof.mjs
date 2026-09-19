@@ -3,6 +3,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { addCreatorCredit } from './creator-credit.mjs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -158,7 +159,7 @@ function labPage() {
 async function write(relative, contents) {
   const destination = join(outputRoot, relative);
   await mkdir(dirname(destination), { recursive: true });
-  await writeFile(destination, contents);
+  await writeFile(destination, relative.endsWith('.html') ? addCreatorCredit(contents) : contents);
 }
 
 validate();

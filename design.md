@@ -1,5 +1,12 @@
 # FAMtastic Experience System v1
 
+Creator credit is mandatory by default for every authored surface, regardless of
+tier. Preserve original footer text and customer visual world; append the exact
+owner PNG in a centered final row. The September 18 contract is
+[CREATOR-CREDIT-2026-09-18.md](docs/design/CREATOR-CREDIT-2026-09-18.md).
+Only explicit owner override creates an exception. Source implementation and
+production proof are recorded separately; historical approvals remain historical.
+
 ## Preserve before enhancing — visual authority
 
 [FAMTASTIC-DESIGN-SYSTEM.md](docs/design/FAMTASTIC-DESIGN-SYSTEM.md) is the canonical

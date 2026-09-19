@@ -1,5 +1,11 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Creator credit source implementation
+
+Agency credit pattern/build gates are locally tested. Live release and uncovered
+runtime surfaces remain separately recorded in the agency creator-credit lane report.
+No ecosystem-wide, email-send or customer-acceptance capability upgrade is implied.
+
 ## 2026-09-18 — Corrected proof notification acceptance
 
 Request17 correction outbox772 is SMTP-accepted once with the existing

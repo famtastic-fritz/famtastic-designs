@@ -1,11 +1,14 @@
 #!/usr/bin/env node
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync as writeRaw, existsSync } from 'node:fs';
+import { addCreatorCredit } from '../../../scripts/creator-credit.mjs';
+const writeFileSync = (path, data) => writeRaw(path, String(path).endsWith('.html') ? addCreatorCredit(data) : data);
 import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const pilot = dirname(fileURLToPath(import.meta.url));
 const output = resolve(process.argv[2] || join(pilot, 'proof'));
+if (!process.argv[2] || existsSync(output)) throw new Error('Supply a new output directory; historical proof versions are immutable.');
 const scenario = JSON.parse(readFileSync(join(pilot, 'scenario.json'), 'utf8'));
 const directions = JSON.parse(readFileSync(join(pilot, 'directions.json'), 'utf8'));
 const prompts = JSON.parse(readFileSync(join(pilot, 'image-prompts.json'), 'utf8'));

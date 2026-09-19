@@ -84,6 +84,40 @@ case "${1:-}" in
   *) usage >&2; exit 2 ;;
 esac
 
+# Presentation-only retrofit: no Composer, database, config, cron, queue or cache mutation.
+if [[ "${FAMTASTIC_CREATOR_CREDIT_ONLY:-0}" == 1 ]]; then
+  cd "$REPO_ROOT"
+  [[ -z "$(git status --porcelain)" ]] || { echo 'Dirty worktree'; exit 1; }
+  credit_commit="$(git rev-parse HEAD)"
+  [[ "$credit_commit" == "$(git ls-remote "$REPOSITORY_URL" refs/heads/main | awk '{print $1}')" ]] || { echo 'HEAD must equal main'; exit 1; }
+  ssh -T "$SSH_TARGET" bash -s -- "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$credit_commit" "$APPLY" <<'CREDIT_BACKEND'
+set -euo pipefail
+production="$HOME/$1"
+release="$HOME/$2/releases/$3"
+commit="$3"
+apply="$4"
+source="$release/source/backend/web/modules/custom/famtastic_pipeline/src/Service"
+target="$production/web/modules/custom/famtastic_pipeline/src/Service"
+test "$(git -C "$release/source" rev-parse HEAD)" = "$commit"
+test "$(sha256sum "$target/BrandedEmail.php" | cut -d' ' -f1)" = 89b8b39a5dfd25e75c805a696272a5e19bd7883f300d8019c94d6086b1f1e7c1
+test "$(sha256sum "$target/ProofCampaignService.php" | cut -d' ' -f1)" = 56b66b5973fd1627799ed33f2e1a82e8a22c25cb2a837b5569869e6f4fc5db92
+test ! -e "$target/CreatorCredit.php"
+for name in CreatorCredit.php BrandedEmail.php ProofCampaignService.php; do php -l "$source/$name"; done
+if [[ "$apply" != true ]]; then echo 'Scoped backend preflight passed; three presentation source files only'; exit 0; fi
+backup="$release/creator-credit-backend-backup"
+test ! -e "$backup"
+mkdir "$backup"
+cp -p "$target/BrandedEmail.php" "$target/ProofCampaignService.php" "$backup/"
+for name in CreatorCredit.php BrandedEmail.php ProofCampaignService.php; do
+  install -m 0644 "$source/$name" "$target/$name"
+  cmp "$source/$name" "$target/$name"
+done
+{ printf 'commit=%s\nbackup=%s\nscope=three-presentation-files-no-state-mutation\n' "$commit" "$backup"; sha256sum "$target/CreatorCredit.php" "$target/BrandedEmail.php" "$target/ProofCampaignService.php"; } > "$production/.creator-credit-backend-release"
+cat "$production/.creator-credit-backend-release"
+CREDIT_BACKEND
+  exit 0
+fi
+
 case "$PILOT_EXACT_DISPATCH_ONLY" in
   0|1) ;;
   *)

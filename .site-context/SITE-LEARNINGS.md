@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Credit retrofit provenance
+
+Observation: static showcase source carries historical approval/hash evidence,
+and normal deployers promote broader files/state than a creator-credit retrofit.
+Guidance: author new output hashes, back up exact existing targets, exclude absent
+customer routes, and separate narrow release markers from full-site release claims.
+Fixed mobile owner/portal navigation needs clearance below the final credit row.
+
 ## 2026-09-18 — Test the email's entry point, not just protected proof bytes
 
 Observation: request17's branded personal notice exposed protected `/web/api`
