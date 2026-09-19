@@ -64,7 +64,7 @@ No generation skill needed: reuse the supplied finished implementation and media
 
 ## Proof
 Local proof passed:
-- Node 22.23.2 build, npm audit (zero vulnerabilities), 15 Node contracts,
+- Node 22.23.2 build, npm audit (zero vulnerabilities), 16 Node contracts,
   shared-brand check and git diff --check.
 - CUA at 320×568 and 390×844: card and QR fit without horizontal overflow;
   commercial plays unmuted (H.264/AAC, 30.041667 seconds), closes and pauses;
@@ -83,3 +83,7 @@ Local proof passed:
 
 Live receipts pending. Android installation requires device-owner confirmation
 and remains distinct from browser/manifest/launch verification.
+
+Release packaging check caught the repository-wide `*.mp4` ignore rule before
+merge. Added an exact exception for this supplied commercial and a regression
+that requires every requested source file to be tracked for server builds.
