@@ -111,11 +111,11 @@ for direction in "${directions[@]}"; do
     exit 1
   fi
   thumbnail_path=""
-  media_type=""
+  thumbnail_media_type=""
   for candidate in "$BUNDLE_DIR/$direction/thumbnail.png" "$BUNDLE_DIR/$direction/thumbnail.jpg"; do
     if [[ -s "$candidate" ]]; then
       thumbnail_path="$candidate"
-      [[ "$candidate" == *.png ]] && media_type="image/png" || media_type="image/jpeg"
+      [[ "$candidate" == *.png ]] && thumbnail_media_type="image/png" || thumbnail_media_type="image/jpeg"
       break
     fi
   done
@@ -174,7 +174,7 @@ for direction in "${directions[@]}"; do
   variant_file="$temporary_dir/$direction.variant.json"
   next_variants="$temporary_dir/$direction.variants.json"
   base64 < "$thumbnail_path" | tr -d '\n' > "$thumbnail_base64"
-  jq -n --arg direction "$direction" --rawfile html "$html_path" --rawfile thumbnail "$thumbnail_base64" --arg media_type "$media_type" --argjson design_dna "$design_dna" --slurpfile assets "$assets_file" '{direction_id: $direction, html: $html, thumbnail_base64: $thumbnail, thumbnail_media_type: $media_type, design_dna: $design_dna, assets: $assets[0]}' > "$variant_file"
+  jq -n --arg direction "$direction" --rawfile html "$html_path" --rawfile thumbnail "$thumbnail_base64" --arg media_type "$thumbnail_media_type" --argjson design_dna "$design_dna" --slurpfile assets "$assets_file" '{direction_id: $direction, html: $html, thumbnail_base64: $thumbnail, thumbnail_media_type: $media_type, design_dna: $design_dna, assets: $assets[0]}' > "$variant_file"
   jq -c --slurpfile variant "$variant_file" '. + [$variant[0]]' "$variants_file" > "$next_variants"
   mv "$next_variants" "$variants_file"
 done
@@ -207,5 +207,5 @@ remote_dir=".config/famtastic/proof-inbox"
 remote_file="$remote_dir/${event_id}-${checksum}.json"
 ssh -T "$SSH_TARGET" "mkdir -p \"\$HOME/$remote_dir\" && chmod 700 \"\$HOME/$remote_dir\""
 scp -q "$payload" "$SSH_TARGET:$remote_file"
-ssh -T "$SSH_TARGET" "chmod 600 \"\$HOME/$remote_file\" && cd \"\$HOME/$REMOTE_ROOT\" && vendor/bin/drush famtastic:proof-local-import \"\$HOME/$remote_file\" --confirm='$campaign_id' --checksum='$checksum'"
+ssh -T "$SSH_TARGET" "chmod 600 \"\$HOME/$remote_file\" && cd \"\$HOME/$REMOTE_ROOT\" && /usr/local/bin/php vendor/bin/drush.php famtastic:proof-local-import \"\$HOME/$remote_file\" --confirm='$campaign_id' --checksum='$checksum'"
 echo "Production import complete. Private audit payload retained at ~/$remote_file"
