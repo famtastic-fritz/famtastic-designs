@@ -24,6 +24,7 @@ export default function FiftyFiveCentWebsitePage() {
             <Link className="v1-btn v1-btn--secondary" to="/website-options">Compare it with the $499 option</Link>
           </div>
           <p className="campaign-disclosure">{WEB_BASICS.hero.disclosure}</p>
+          <p className="campaign-disclosure"><Link to="/why-famtastic">Hear the thinking behind the offer: “What’s the Catch?” →</Link></p>
         </div>
       </header>
 

@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Original narrated film release
+
+**Observation:** Uppercase `FAMtastic` made the local narrator spell F.A.M.; cached Whisper caught it even though every word was present. A title-case pronunciation A/B fixed the speech while retaining exact source/caption spelling. **Guidance:** Preserve source spelling separately from a recorded TTS normalization map, audit names with short A/B clips, and retain failed/quiet masters instead of overwriting their evidence.
+
+**Observation:** Ignored generated media cannot enter the clean server-side Git frontend build. **Guidance:** Publish only the exact versioned MP4/JPG/VTT set via private staging, hash verification and no-clobber promotion; then use the canonical frontend release. An existing accessible MIME/range response is not proof of the new film. Verify actual assets and CUA playback before one exact-key owner notice.
+
+**Observation:** A post-run source repair can invalidate a ledger that references mutable runner paths. **Guidance:** Preserve historical attested bytes, version corrected reproduction scripts and freeze those runner inputs for new runs; do not retroactively attest unexecuted code.
+
 ## 2026-09-19 — Measure the final soundtrack and respect baked-in occlusion
 
 Native video metadata and plausible loudness do not prove preserved audio. The

@@ -1,0 +1,137 @@
+{
+  "schema": "famtastic.no-catch.voice-tts-normalizations.v1",
+  "source_script": "user-script.txt",
+  "source_script_sha256": "12a242dae7818a836495ebc92bb3ff0274ccddfc230df531c9016a8261c0676f",
+  "voice_id": "am_michael",
+  "speed": 0.78,
+  "language": "en-us",
+  "policy": "Source/caption text remains exactly bound to user-script.txt. TTS-only spelling/punctuation changes preserve meaning and aid pronunciation.",
+  "lines": [
+    {
+      "index": 0,
+      "source_text": "The question I get asked the most about our $199 Special is:",
+      "tts_text": "The question I get asked the most about our one hundred ninety-nine dollar Special is:",
+      "normalization": "Spelled out $199 for speech; amount and offer meaning preserved."
+    },
+    {
+      "index": 1,
+      "source_text": "“What’s the catch?”",
+      "tts_text": "What's the catch?",
+      "normalization": "Removed display-only quotation marks and normalized curly apostrophe to ASCII."
+    },
+    {
+      "index": 2,
+      "source_text": "There isn’t one. No hidden fees. No surprise add-ons. No trick buried in the fine print.",
+      "tts_text": "There isn't one. No hidden fees. No surprise add-ons. No trick buried in the fine print.",
+      "normalization": "Unchanged from supplied script."
+    },
+    {
+      "index": 3,
+      "source_text": "And I think the reason people keep looking for a catch is because they don’t fully understand what FAMtastic means.",
+      "tts_text": "And I think the reason people keep looking for a catch is because they don't fully understand what Famtastic means.",
+      "normalization": "Pronunciation-only change: title-case Famtastic avoids the all-caps F.A.M spelling. Cue/source_text remains exact owner spelling. In a local smoke comparison, cached small.en transcribed Famtastic as one word; it transcribed FAMtastic as separated letters."
+    },
+    {
+      "index": 4,
+      "source_text": "At FAMtasticDesigns.com, we simply have a different business philosophy.",
+      "tts_text": "At Famtastic Designs dot com, we simply have a different business philosophy.",
+      "normalization": "Pronunciation-only change: spoken URL uses Famtastic Designs dot com; cue/source_text remains exact owner spelling. Local small.en smoke decoded the title-case pronunciation as famtasticdesigns.com."
+    },
+    {
+      "index": 5,
+      "source_text": "We believe in you.",
+      "tts_text": "We believe in you.",
+      "normalization": "Unchanged from supplied script."
+    },
+    {
+      "index": 6,
+      "source_text": "Your vision.",
+      "tts_text": "Your vision.",
+      "normalization": "Unchanged from supplied script."
+    },
+    {
+      "index": 7,
+      "source_text": "Your hustle.",
+      "tts_text": "Your hustle.",
+      "normalization": "Unchanged from supplied script."
+    },
+    {
+      "index": 8,
+      "source_text": "Your grind.",
+      "tts_text": "Your grind.",
+      "normalization": "Unchanged from supplied script."
+    },
+    {
+      "index": 9,
+      "source_text": "The business you’re trying to build.",
+      "tts_text": "The business you're trying to build.",
+      "normalization": "Normalized curly apostrophe to ASCII."
+    },
+    {
+      "index": 10,
+      "source_text": "So instead of asking you to spend a fortune just to get started, we invest in your vision first.",
+      "tts_text": "So instead of asking you to spend a fortune just to get started, we invest in your vision first.",
+      "normalization": "Unchanged from supplied script."
+    },
+    {
+      "index": 11,
+      "source_text": "We help establish your web presence. We help you build the plan. We give you the tools and strategy to become a stronger, better business.",
+      "tts_text": "We help establish your web presence. We help you build the plan. We give you the tools and strategy to become a stronger, better business.",
+      "normalization": "Unchanged from supplied script."
+    },
+    {
+      "index": 12,
+      "source_text": "Why?",
+      "tts_text": "Why?",
+      "normalization": "Unchanged from supplied script."
+    },
+    {
+      "index": 13,
+      "source_text": "Because we’re confident in what we do.",
+      "tts_text": "Because we're confident in what we do.",
+      "normalization": "Normalized curly apostrophe to ASCII."
+    },
+    {
+      "index": 14,
+      "source_text": "Let us help take your grind to the next level. Let us prove our value with results.",
+      "tts_text": "Let us help take your grind to the next level. Let us prove our value with results.",
+      "normalization": "Unchanged from supplied script."
+    },
+    {
+      "index": 15,
+      "source_text": "And when your business grows, when you're making more, and when you're ready for the next level...",
+      "tts_text": "And when your business grows, when you're making more, and when you're ready for the next level...",
+      "normalization": "Normalized curly apostrophes to ASCII; ellipsis retained as a pause cue."
+    },
+    {
+      "index": 16,
+      "source_text": "We believe you'll remember who believed in your vision from the beginning.",
+      "tts_text": "We believe you'll remember who believed in your vision from the beginning.",
+      "normalization": "Normalized curly apostrophe to ASCII."
+    },
+    {
+      "index": 17,
+      "source_text": "That’s the philosophy.",
+      "tts_text": "That's the philosophy.",
+      "normalization": "Normalized curly apostrophe to ASCII."
+    },
+    {
+      "index": 18,
+      "source_text": "You grow. We grow.",
+      "tts_text": "You grow. We grow.",
+      "normalization": "Unchanged from supplied script."
+    },
+    {
+      "index": 19,
+      "source_text": "That’s FAMtastic.",
+      "tts_text": "That's Famtastic.",
+      "normalization": "Pronunciation-only change: says Famtastic as one word, preserving the brand pronunciation; cue/source_text remains exact owner spelling."
+    },
+    {
+      "index": 20,
+      "source_text": "FAMtasticDesigns.com",
+      "tts_text": "Famtastic Designs dot com.",
+      "normalization": "Pronunciation-only change: spoken URL uses Famtastic Designs dot com; cue/source_text remains exact owner spelling."
+    }
+  ]
+}

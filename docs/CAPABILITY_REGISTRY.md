@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Full-script original local brand film
+
+**Locally proven; publication state recorded separately in the release report.** The owner’s supplied 21-line script now has eleven original motion-graphics scenes, new local Kokoro speech, phrase captions and canonical branding. A controlled pronunciation A/B exposed all-capital FAM being spoken as initials; title-case speech normalization preserves the written brand and corrects narration. The static film page has an accessible player, optional text track, complete transcript and explicit canonical offer terms. Video Studio suite: 93 passed. This does not prove voice cloning, generated live-action footage, paid generation, social scheduling or human creative acceptance. See `docs/marketing/local-video-studio/NO-CATCH-FILM-2026-09-19.md`.
+
 ## 2026-09-19 — Authored local video and supplied-performance recomposition
 
 Locally proved: continuous authored HyperFrames projects with immutable input
