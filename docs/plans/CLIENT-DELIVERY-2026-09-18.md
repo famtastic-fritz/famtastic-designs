@@ -136,3 +136,9 @@ at2026-09-19T01:02:52Z with one named portal button and existing proof-ready/v4
 branding. Original769 is unchanged. No selection/payment/build state changed.
 See `../design/PROOF-EMAIL-NAVIGATION-2026-09-18.md` for recurrence guards,
 login-return browser evidence, deployment status and recipient-read limits.
+
+Separate owner approval also sent request16 correction773 once at01:13:10Z;
+original767 unchanged. Repair8eb12209 is now deployed to both backend and frontend.
+Live markers and browser/controller evidence are recorded in the same receipt.
+At01:23:11Z neither client had selected a direction; this navigation correction
+does not assert a started staging build or activate the pending scheduler repairs.

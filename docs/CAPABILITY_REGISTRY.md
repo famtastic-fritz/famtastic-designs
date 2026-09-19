@@ -13,8 +13,10 @@ customer_proof_ready/v4 shell, one portal button and no raw visible URLs.
 Separately authorized request16 correction773 has the same verified acceptance.
 Live anonymous desktop/mobile login return and mocked post-login rendering of
 the actual deployed frontend pass; no client password/readership claim.
-The new recurrence guards and Concepts focus are source-tested pending the
-release recorded in `docs/design/PROOF-EMAIL-NAVIGATION-2026-09-18.md`.
+The recurrence guards and Concepts focus are live at8eb12209 (backend01:20:09Z,
+frontend01:22:41Z September19 UTC). Eight live-frontend browser-fixture cases
+and75 actual deployed proof-controller/asset checks pass. Exact release evidence
+and real-customer-login limits: `docs/design/PROOF-EMAIL-NAVIGATION-2026-09-18.md`.
 
 ## 2026-09-18 — Independent QA proof release, locally proven
 
