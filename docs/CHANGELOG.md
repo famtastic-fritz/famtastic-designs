@@ -10,6 +10,9 @@
   and direct Concepts focus after login; repaired the Review3 anchor.
 - Added regression/browser checks and mandatory agent/design guidance. Release
   and evidence status: `docs/design/PROOF-EMAIL-NAVIGATION-2026-09-18.md`.
+- Released8eb12209 to backend and frontend; exact markers/source hashes verified.
+  Full unit suite273tests/1449assertions,8 live-frontend fixture cases and75
+  deployed account/asset boundary checks pass. No real customer login is claimed.
 
 ## 2026-09-18 — Evidence-bound personal proof delivery (local)
 

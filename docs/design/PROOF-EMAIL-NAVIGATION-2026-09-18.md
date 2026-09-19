@@ -82,5 +82,42 @@ Private operational receipt also retained under server `.config/famtastic/client
 
 ## Release status
 
-Corrected email is sent. Recurrence repair and Concepts focus are prepared locally;
-do not call them deployed until exact release markers and browser checks below.
+Both corrected emails are sent. The recurrence repair and Concepts focus are live:
+
+- Exact source `8eb1220912393fab824070a2a01a7556415fdf83`, pushed to origin/main.
+- Canonical backend release at2026-09-19T01:20:09Z, CLI PHP8.3.32; frontend
+  release at01:22:41Z, Node22.23.2. Both authoritative release markers match.
+  Database backup, module/theme/dependency/config backups and frontend rollback
+  archive retained. No pending database updates. The first cold-start updatedb
+  command warned after reporting no updates; a separate authoritative pending-update
+  check succeeded before promotion continued. The legacy scheduler was preserved;
+  this release does not claim to activate the separate automation-reliability lane.
+- Deployed OutreachMailer SHA256
+  `2176f695067287f9d52417a1297845ec15aadabba2bf5cd548816cbaf71b3fa7`
+  and AutomatedProofRelease SHA256
+  `352d02105e0e8297bace87cd568ce81e14733195f4092b008d7b6b71ffe58cdc`
+  match the committed source. All84 presentation assertions also pass under the
+  server's CLI PHP, without loading a transport, queue or database.
+- Full local module unit suite:273tests/1449assertions pass, with68 existing
+  PHPUnit deprecation notices. Frontend build passed; existing bundle-size warning
+  remains. Canonical deployment verified216 route shells and compiled asset MIME.
+- Live frontend regression on apex and www:8 owner/wrong-account desktop/mobile
+  cases pass, including exact login return, automatic Concepts focus, Review3
+  anchor, all three previews and signed-in reload. Login/workspace/proof responses
+  are browser fixtures, not real customer credential/session tests. Evidence:
+  `.artifacts/proof-portal/2026-09-19T01-23-05-970Z-7068/results.json` and
+  `.artifacts/proof-portal/2026-09-19T01-23-07-143Z-7084/results.json`.
+- Actual deployed controller/asset checks at01:21:52–53Z pass33checks for#16 and
+  42for#17: owner access, anonymous/cross-account denial, undeclared-asset denial
+  and exact immutable asset hashes. CLI account switching is not a browser login.
+- Fresh Drupal read at01:23:11Z confirms originals767/769 and corrections772/773
+  remain sent, each at one attempt with the same provider receipts. Both requests
+  are customer_ready, neither has selected a direction, and staging has not started.
+  No additional resend, selection, payment or broad notification dispatch occurred.
+- Separate unmocked read-only browser run passed on apex/www at390px/1440px:
+  four populated public-home checks, real compiled JavaScript/CSS MIME checks,
+  zero page errors, and all eight real request16/request17 anonymous redirects
+  preserve the exact destination. No POST or customer login was performed.
+  Mobile login and Concepts screenshots were visually inspected. Evidence:
+  `.artifacts/proof-navigation/live-2026-09-19T01-23-55-698Z/results.json`.
+  The Drive mirror was updated locally; remote Drive sync is not independently proved.
