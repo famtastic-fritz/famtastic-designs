@@ -2,7 +2,9 @@
 
 ## 2026-09-19 — FAMtastic Connect card migration
 
-Static `/connect/` card, install fallback and exact production QR formats are locally verified. The installed-mode launch guard is simulation-proven; real Android installation and the reported old-origin black-screen cause remain unverified. No service worker or offline capability is introduced. Production status: `docs/plans/CONNECT_PRODUCTION_2026-09-19.md`.
+**Production verified:** `3f5c8474` is live at `/connect/`; all 17 apex/www files match the build, both QR formats decode exactly, mobile CUA/video/contact/install fallback and main-site checks pass. Physical Android installation remains untested. See `docs/evidence/connect-production/release.json`.
+
+Static `/connect/` card, install fallback and exact production QR formats are production verified. The installed-mode launch guard is simulation-proven; real Android installation and the reported old-origin black-screen cause remain unverified. No service worker or offline capability is introduced. Release and Android limitations: `docs/plans/CONNECT_PRODUCTION_2026-09-19.md`.
 
 ## 2026-09-19 — Source-bound local narration performance
 

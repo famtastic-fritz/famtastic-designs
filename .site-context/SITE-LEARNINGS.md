@@ -6,6 +6,9 @@
 
 **Guidance:** Preserve app/media bytes and remove origin-specific hosting injection when migrating. Set explicit subpath identity/start/scope, keep the document usable without JS, skip the intro for installed launches and provide an independent CSS deadline. Verify native prompting separately from manual instructions and real device installation. Decode new QR artifacts exactly; neither old downloaded codes nor old-origin installed apps update across origins. Evidence: `docs/plans/CONNECT_PRODUCTION_2026-09-19.md`.
 
+
+**Release recovery:** The first exact-SHA checkout hit account quota before promotion. Two obsolete private release checkouts (expected SHA, no tracked/untracked/ignored changes, retained Git history) reclaimed 2,149,820 KiB using Git's non-force removal. The same release then passed. Preserve live/recent builds, runtime directories, backups and receipts; do not infer quota headroom from `df`.
+
 ## 2026-09-19 — Hosting quota is separate from filesystem free space
 
 **Observation:** A canonical frontend install failed with `EDQUOT` (−122), despite `df` reporting 957 GB free. Old private release build outputs consumed account storage. **Guidance:** Treat per-account quota independently of the host filesystem. For a routine repair, verify exact old release revisions and untracked `frontend/dist` paths, remove only reproducible generated builds, preserve the live build/source/backups, retain a cleanup receipt, then retry the canonical deployment. Five old dist trees reclaimed 1,067,544 KiB and the same-commit retry succeeded. See `docs/marketing/local-video-studio/NATURAL-NARRATION-2026-09-19.md`.
