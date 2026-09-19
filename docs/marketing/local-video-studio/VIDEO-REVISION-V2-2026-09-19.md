@@ -39,6 +39,6 @@ The one fresh `video-v2-20260919-motion-complete` standard/v2 owner notice has S
 
 Additional checks: two fixed-edition/collision publisher tests, five creator-credit tests and 86 shared email presentation assertions passed. GitHub Actions did not start because the account is locked by a billing issue; remote CI is not green. No billing or repository-protection setting was changed. Local source/native checks are recorded separately.
 
-## Remaining work in this revision
+## Other delivered revision parts and remaining limits
 
-The presenter-led continuation and the local synthetic voice-conversion experiment now have separate native proof in [WALKING-AND-VOICE-PROOF-2026-09-19.md](WALKING-AND-VOICE-PROOF-2026-09-19.md). Personal voice matching and a new generated walking performance remain unproved. No paid provider, social scheduler or automatic publication has been enabled.
+The presenter-led continuation and the local synthetic voice-conversion experiment are public, with separate native proof and verified owner email receipts in [WALKING-AND-VOICE-PROOF-2026-09-19.md](WALKING-AND-VOICE-PROOF-2026-09-19.md). The expanded suite passes 105 tests; this ad's completed release evidence is Drupal row 57. Personal voice matching, owner listening acceptance and a new generated walking performance remain unproved. No paid provider, social scheduler or automatic publication has been enabled.

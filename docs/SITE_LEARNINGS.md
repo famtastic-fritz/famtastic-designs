@@ -6,6 +6,8 @@ A supplied-performance continuation can retain original dialogue-to-picture timi
 
 Freeze runner bytes and their input dependencies before voice conversion; a post-run repair must create a fresh attempt instead of changing a historical ledger. Measure local conversion independently of perceptual quality: successful inference and equal duration do not establish correct brand pronunciation or personal voice identity.
 
+**Observation:** Both revision notices reached Gmail with correct links and authentication after exact-source private execution; read-only repeats preserved outbox 803/804. **Guidance:** Keep media hash/range/full-playback proof, SMTP acceptance and inbox verification as separate receipts. A native render ledger gated only on human review can still carry passed technical integrity; do not relabel human approval to satisfy a projection preflight.
+
 ## 2026-09-19 — Pronunciation is phonetic, not orthographic
 
 - **Observation:** ASR recognized Famtastic while the owner heard fam-TAY-stik. **Guidance:** Inspect the actual phonemes and preserve explicit brand IPA separately from source/caption text; ASR alone cannot approve pronunciation. The faster 1.06-speed revision is 72.8 seconds, with complete content and new timing.
