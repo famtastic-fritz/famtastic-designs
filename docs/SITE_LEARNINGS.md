@@ -2617,6 +2617,12 @@ keys; never promote an input value to trusted audit data. Keep original intake
 bytes/hash in their immutable event record. Regression must exercise repeated
 actual public-writer saves, including forged and absent values.
 
+Isolated merge6792b0db preserves main's callback replay/CAS method exactly while
+retaining authored page history. Never resolve a shared-service conflict by
+wholesale file replacement: narrow main fixes and selected-flow methods must both
+survive. Actual writer/callback regressions and fresh synthetic lifecycle pass;
+this source proof does not activate the worker or authorize a second deployment.
+
 # 2026-09-18 — Owner-confirmed offline receipts
 
 The legacy assumption that completed order = money received fails for prepaid

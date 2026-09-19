@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Reconciled callback/intake/selected writer (locally proven)
+
+Isolated merge6792b0db incorporates main5a9c6906 without dropping authored page
+content/history. The actual callback method equals main;101 PHP tests/604
+assertions include14 callback replay/interleaving and7 audit/authored-history
+cases. 28 Node and34 portal DNA checks pass. Fresh full synthetic lifecycle
+receipt `fresh-customer-proof-20260919T002624Z-96357/evidence.json` passed00:27:03Z.
+These are fixture/provider-free checks, not live concurrency or worker activation.
+
 ## 2026-09-18 — Trusted intake metadata preservation (locally proven)
 
 Actual public request-update writer passes six SQLite tests/117 assertions for

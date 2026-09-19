@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Preserve both sides of the selected-flow merge
+
+Observation: main's bounded intake fix does not yet include the selected-flow
+authored-content writer. Guidance: do not resolve that merge with an entire
+"ours" or "theirs" file. Keep the reviewed callback method identical to main,
+retain authored-content/history and trusted audit keys, and exercise all three
+behaviors together. Promotion/deployer/payment source equality and a fresh
+canonical lifecycle are separate verification steps before a shared release.
+
 ## 2026-09-18 — Customer edits must not replace staff audit data
 
 Observation: validated intake replacement retained only old proof-revision keys,

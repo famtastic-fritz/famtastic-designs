@@ -214,9 +214,17 @@ Node environment: `FAMTASTIC_WORKER_ID`, `FAMTASTIC_WORKER_API_BASE` (HTTPS `/we
 - Audit-preservation regression/full focused checks now total86 PHP tests/535
   assertions; portal DNA34/34. Full synthetic lifecycle repeated at00:21:49Z on
   source3c2dd9d4, receipt `fresh-customer-proof-20260919T002110Z-93045/evidence.json`.
-  Main owns the urgent same-campaign callback replay regression repair. Do not
-  activate worker code or merge an older main over that delivery fix. Reconcile
-  its final reviewed commit and rerun the shared integration before deployment.
+  Main owns the urgent same-campaign callback replay regression repair. Worker
+  activation remains separate from a reviewed source merge.
+- Main5a9c6906 (includingd971f67f callback and4d6d9f1d audit fixes) merged into
+  isolated6792b0db. The entire callback method and the promotion/deployer/native
+  payment files equal reviewed main. Authored-content/history and all five trusted
+  audit keys survive the only merge conflict; the added merged-writer regression
+  verifies that combination. 101 focused PHP tests/604 assertions,28 Node tests,
+  portal DNA34/34 pass. Full fresh canonical lifecycle passes00:27:03Z on6792b0db,
+  receipt `fresh-customer-proof-20260919T002624Z-96357/evidence.json`. All provider
+  calls remain disabled in that proof. Production and observe-cron installation
+  remain main-owned controlled actions; dispatch stays disabled pending review.
 - Before enabling cloud delivery: prove bad signatures/replays, simultaneous Mac/cloud
   claim, worker interruption, stale token, lost callback/acknowledgement, exhausted
   budget and same immutable receipt after retry on an isolated synthetic target; then

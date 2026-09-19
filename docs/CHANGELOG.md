@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-18 — Main callback repair reconciled into reliability branch
+
+- Isolated merge6792b0db includes main5a9c6906, preserving its complete callback
+  replay/CAS writer, promotion thumbnail/CLI patch, deployer fix and commercial
+  service byte-for-byte. Retains selected-flow authored content and all audit keys.
+- 101 focused PHP tests/604 assertions,28 Node regressions and34 portal DNA checks
+  pass. Full fresh synthetic lifecycle passes at00:27:03Z. No production release
+  or worker activation; reviewed source is not an automatic implementation worker.
+
 ## 2026-09-18 — Retain trusted intake audit metadata (source-only)
 
 - `3c2dd9d4` preserves server-stored `staff_assisted_brief` and
