@@ -1,5 +1,15 @@
 # Agent Instructions
 
+## September 18 — Bounded workers are opt-in, not a historic queue drain
+
+Read `docs/plans/AUTOMATION_RUNTIME_2026-09-18.md` before scheduler activation.
+The explicit CLI-PHP replacement defaults to observe-only. Dispatch admits only
+fresh exact static jobs, shared Drupal leases and conservative cost reservations;
+static packaging is not an ecommerce implementation. Preserve the commercial
+lane's narrowly reconciled prepaid exception and exact customer acceptance.
+Coordinate one shared release with the main lane. A Mac heartbeat is an
+orchestrated fallback; no Cloud Run/laptop-independent claim without actual proof.
+
 ## September 18 — Routine green proof release
 
 The approved client-delivery policy allows independently QA-passed account-bound

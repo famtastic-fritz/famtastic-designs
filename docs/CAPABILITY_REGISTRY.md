@@ -1,5 +1,20 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Bounded worker coordination, locally proven only
+
+Drupal ledger/lease/budget, HMAC/replay and one-shot static dispatch are covered
+by 74 relevant PHP tests (377 assertions) and eight Node tests. Database tests
+use SQLite and a mocked lock backend, not concurrent MySQL proof. Exact CLI cron
+repair defaults to observe-only. No scheduler activation, cloud invocation,
+automatic job enrollment or ecommerce implementation is established by this code.
+Independent QA gate is separately deployed as988d9d6d; a source release is not
+a customer-notification receipt. See AUTOMATION_RUNTIME_2026-09-18 runbook.
+
+Fresh canonical lifecycle passed00:00:11Z with fixture27ab74fa: real installed
+Drupal/SQLite, authenticated customer HTTP, signed synthetic hosting receipt,
+receipt-bound acceptance, memory email/payment, fixture DNS and local deployment.
+No real hosting, merchant, cloud or laptop-unavailable proof is implied.
+
 ## 2026-09-18 — Independent QA proof release, locally proven
 
 Trusted service operation atomically retains automated QA/research and reveals

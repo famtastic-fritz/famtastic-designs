@@ -30,7 +30,7 @@ function famtastic_pipeline_update_8001(&$sandbox) {
  * Implements hook_schema().
  */
 function famtastic_pipeline_schema(): array {
-  return _famtastic_pipeline_automation_schema() + [
+  return \Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema::tables() + _famtastic_pipeline_automation_schema() + [
     'famtastic_proof_version' => _famtastic_pipeline_proof_version_schema(),
     'famtastic_website_proof_research_snapshot' => _famtastic_pipeline_website_proof_research_snapshot_schema(),
     'famtastic_booking_site_owner' => _famtastic_pipeline_booking_site_owner_schema(),
@@ -3250,6 +3250,15 @@ function _famtastic_pipeline_booking_appointment_event_schema(): array {
       'site_time' => ['site_key', 'created'],
     ],
   ];
+}
+
+/** Create empty claim/budget tables. Never enroll, run or replay existing jobs. */
+function famtastic_pipeline_update_8065(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  foreach (\Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema::tables() as $table => $definition) {
+    if (!$schema->tableExists($table)) $schema->createTable($table, $definition);
+  }
+  return 'Created bounded worker coordination tables; no jobs enrolled and no scheduler activated.';
 }
 
 /**

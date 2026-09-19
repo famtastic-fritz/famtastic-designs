@@ -1,5 +1,15 @@
 # FAMtastic agent operating contract
 
+## September 18 amendment — scheduler and worker activation
+
+Follow `plans/AUTOMATION_RUNTIME_2026-09-18.md`. Observe-only explicit-PHP cron,
+exact static-job enrollment, signed independent reviewer identity, leases and a
+$20 reservation stop within the $25 incremental ceiling are separate from live
+activation. Never use a broad lifecycle drain to demonstrate the new worker.
+Routine green work needs no extra Fritz decision; unsupported commerce needs its
+implementation capability, not a false static success. Laptop independence is
+unproven until a real unattended test runs with the Mac unavailable.
+
 ## September 18 amendment — independent QA authority
 
 For routine account-bound three-proof deliveries, the owner's approved policy

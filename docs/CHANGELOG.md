@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-09-18 — Bounded automation coordinator (local; activation pending)
+
+- Added opt-in Drupal claims, renewable fenced leases, exact payload hashes,
+  signed worker/reviewer requests, replay rejection and bounded attempt budgets.
+- Added explicit CLI-PHP observe-only schedule repair with exact crontab hash,
+  backup and no historical queue/mail drain; no live cron mutation performed.
+- Added one-shot static dispatch runner and operator recovery/cost runbook.
+  No WooCommerce worker, cloud deployment or laptop-independent claim.
+- Focused checks: 74 PHP tests / 377 assertions, eight Node tests; email fixture
+  versions independently verified with 72 presentation assertions.
+- Complete fresh canonical synthetic customer lifecycle passed00:00:11Z after
+  fixture27ab74fa added actual source files, signed callback/replay, exact receipt
+  acceptance and reselection invalidation; live gates were not changed for tests.
+- QA gate `988d9d6d` independently observed deployed at23:46:20Z. Worker changes
+  remain separate and disabled; main owns subsequent shared releases.
+
 ## 2026-09-18 — Evidence-bound personal proof delivery (local)
 
 - Added trusted independent-QA release with automation attribution, current

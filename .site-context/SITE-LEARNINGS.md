@@ -1,5 +1,19 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Repair runtime without unleashing a backlog
+
+Observation: cron resolves PHP CGI; `/usr/local/bin/php` is CLI. The old lifecycle
+command combines jobs and mail, so fixing PATH alone would enable unrelated work.
+Guidance: install only the exact observe-only schedule first, retain evidence,
+then opt in exact fresh jobs with shared authority, fencing and bounded costs.
+Lost heartbeat is not proof a process stopped; wait out its execution fence.
+
+Observation: old journey fixtures expected intake v1/proof v3 and lacked current
+selected-source/receipt identity. Guidance: verify canonical versions, then repair
+fixture evidence; never relax acceptance/checkout gates to make stale tests green.
+Native held prepayments may be bound by a private offer and order data while the
+normal converted-order field is NULL; do not manufacture another sale.
+
 ## 2026-09-18 — Automation approval is not a human uid
 
 Observation: reusing human proof approval would stamp a staff uid and queue the

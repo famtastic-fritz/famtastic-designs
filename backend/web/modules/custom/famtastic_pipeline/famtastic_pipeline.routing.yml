@@ -1434,3 +1434,14 @@ famtastic_pipeline.selected_worker_artifact:
     _access: 'TRUE'
     revision: '[0-9]+'
     sha256: '[a-f0-9]{64}'
+# Signed, short-lived worker operations; disabled until installation configuration.
+famtastic_pipeline.worker_coordinator:
+  path: '/api/pipeline/worker/{operation}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\WorkerCoordinatorController::handle'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    operation: 'claim|renew|finish|fail|review'
+  options:
+    no_cache: 'TRUE'
