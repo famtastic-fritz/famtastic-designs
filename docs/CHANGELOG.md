@@ -2,7 +2,7 @@
 
 ## 2026-09-19 — Phone-friendly video review page
 
-- Added `/video-review/` with all three latest films, inline controls, captions and direct video links. Only one soundtrack plays at a time; movies load on demand. The exact owner notice uses a new immutable key. Local production build, mobile browser checks and nine existing contracts pass; live receipts are recorded in `docs/marketing/local-video-studio/MOBILE-REVIEW-PAGE-2026-09-19.md`.
+- Added `/video-review/` with all three latest films, inline controls, captions and direct video links. Only one soundtrack plays at a time; movies load on demand. The exact owner notice uses a new immutable key. Deployed `736ab1ff` through the canonical frontend lane; public mobile playback and owner Gmail receipt (outbox 805) pass. Local build and nine existing contracts pass; full receipts are recorded in `docs/marketing/local-video-studio/MOBILE-REVIEW-PAGE-2026-09-19.md`.
 
 ## 2026-09-19 — Presenter continuation and free local voice-conversion proof
 
