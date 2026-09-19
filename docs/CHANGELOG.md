@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-09-19 — Bounded AlreadyBuilt owned-channel introduction
+
+- Added one source-bound $39 AlreadyBuilt Facebook introduction, verified its exact draft/account/copy and scheduled only that record with the existing runner. No older campaigns, customer sites, payments or email sends were replayed. Publication and trial-health evidence: `marketing/campaigns/alreadybuilt-fix-map-trial/RECEIPT-20260919.md`.
+- Publication remains blocked at 23:07Z: the exact workflow has not started processing and main/Facebook queues have zero pollers. Further scheduling is paused; broader repair/holding old posts awaits separate authority. No worker restart or public-post success is claimed.
+- Scoped campaign/link checks and frontend build pass; the unchanged demand library separately fails its existing `own-your-online-presence` completeness check. No agency frontend/backend deployment occurred.
+
 ## 2026-09-19 — Female narrator auditions and phrase pacing
 
 - Added source-bound phrase speeds and pauses, measured phrase cues, two cached local female voice auditions, and the reusable natural-narration skill.

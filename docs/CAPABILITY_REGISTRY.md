@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — AlreadyBuilt social execution currently blocked
+
+The approved trial has one independently verified Facebook draft adopted and scheduled by the existing campaign runner. At 23:07:22Z, exact Postiz record `cmu8zjjhz0010rq76qt0wo4b2` remained QUEUE with no release URL or provider error. Its initial Temporal workflow task has not run; main workflow and Facebook activity queues show zero pollers, despite PM2 reporting the orchestrator online. This is not a new publish proof and does not invalidate historical published receipts. Expansion is paused pending a scoped shared-runtime repair; 42 overdue unrelated records were not retried, held or drained. The FAMtastic Inc website referral is live; the independent AlreadyBuilt service/reconciliation/backup checks pass with zero external revenue. Evidence and limits: `marketing/campaigns/alreadybuilt-fix-map-trial/RECEIPT-20260919.md`.
+
 ## 2026-09-19 — Source-bound local narration performance
 
 Local female stock narration and exact inserted phrase pauses are technically proved with Kokoro af_heart/af_bella; human naturalness and pronunciation acceptance remain pending. A script-bound performance plan preserves canonical copy, produces sample-derived phrase/source-line cues and retains model/input/audio hashes. Natural-narration skill installed and validated. HeyGen account/catalog connection and SSML controls are available but no cloud speech request was run; image credentials do not prove Gemini/OpenAI TTS entitlement. See `docs/marketing/local-video-studio/NATURAL-NARRATION-2026-09-19.md` for actual publication status.

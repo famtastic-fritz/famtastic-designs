@@ -28,7 +28,7 @@
       "label": "A score is a starting point",
       "theme": "Understand an existing website before paying for changes",
       "headline": "Already have a website? What should you fix first?",
-      "state": "copy_ready",
+      "state": "scheduled",
       "channels": [
         "facebook"
       ],
@@ -49,9 +49,34 @@
         "publish": true
       },
       "provider_ids": {
-        "postiz_draft_id": "cmu8zjjhz0010rq76qt0wo4b2"
+        "postiz_draft_id": "cmu8zjjhz0010rq76qt0wo4b2",
+        "postiz_scheduled_id": "cmu8zjjhz0010rq76qt0wo4b2",
+        "postiz_scheduled_group": [
+          "cmu8zjjhz0010rq76qt0wo4b2"
+        ]
       },
       "evidence": [
+        {
+          "kind": "postiz_publication_blocked_readback",
+          "at": "2026-09-19T23:07:22.102Z",
+          "postiz_post_id": "cmu8zjjhz0010rq76qt0wo4b2",
+          "state": "QUEUE",
+          "release_url": null,
+          "workflow_id": "post_cmu8zjjhz0010rq76qt0wo4b2",
+          "workflow_run_id": "01a0bbe2-4577-7ca2-aa42-ec0e362f3f30",
+          "workflow_history_events": 2,
+          "main_workflow_pollers": 0,
+          "facebook_activity_pollers": 0,
+          "note": "Initial workflow task remains Scheduled with no activity attempt. No public publication or provider rejection is established. Shared-worker repair could release 42 overdue unrelated posts; expansion is paused and separate owner approval was requested to hold those records before repair. No restart, hold, retry or duplicate creation occurred. Inspect this exact record before any future action."
+        },
+        {
+          "kind": "postiz_schedule_readback",
+          "at": "2026-09-19T22:56:07Z",
+          "postiz_post_id": "cmu8zjjhz0010rq76qt0wo4b2",
+          "date_utc": "2026-09-19T23:00:00Z",
+          "integrations": ["facebook"],
+          "note": "Exactly one verified draft adopted and armed; state QUEUE. Public publication is not yet claimed. 290 unrelated Post records retain the same state/date/release/deletion hash before and after."
+        },
         {
           "kind": "agent_content_and_destination_qa",
           "at": "2026-09-19T22:54:00Z",

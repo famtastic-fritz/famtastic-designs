@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Fresh campaign proof must not replay a historic backlog
+
+**Current diagnostic:** the exact new AlreadyBuilt workflow remained on its initial Scheduled task at 23:07Z, with two history events, zero activities and zero main/Facebook pollers. Both clients use the same Temporal endpoint/namespace. PM2 online/zero restarts is not proof of an operational worker. Expansion paused; owner approval requested before holding older posts and repairing this shared runtime.
+
+**Observation:** Postiz processes report online with zero restarts, but 34 Facebook/Instagram and eight YouTube records remain overdue. This does not establish the historical OOM diagnosis. **Guidance:** Prove one newly approved campaign record with a unique campaign/content marker, compare exact stored copy/account/date, and verify its real release URL. Never restart/drain the backlog to demonstrate a fresh campaign. The AlreadyBuilt checkpoint preserves a matching hash for 290 unrelated post records; source and publication evidence live in `marketing/campaigns/alreadybuilt-fix-map-trial/RECEIPT-20260919.md`. Aggregate access-log requests include owner/tools/crawlers and are not human visitors or conversion proof.
+
 ## 2026-09-19 — Hosting quota is separate from filesystem free space
 
 **Observation:** A canonical frontend install failed with `EDQUOT` (−122), despite `df` reporting 957 GB free. Old private release build outputs consumed account storage. **Guidance:** Treat per-account quota independently of the host filesystem. For a routine repair, verify exact old release revisions and untracked `frontend/dist` paths, remove only reproducible generated builds, preserve the live build/source/backups, retain a cleanup receipt, then retry the canonical deployment. Five old dist trees reclaimed 1,067,544 KiB and the same-commit retry succeeded. See `docs/marketing/local-video-studio/NATURAL-NARRATION-2026-09-19.md`.
