@@ -99,6 +99,16 @@ credentials; the eighth phase is the interruption. Runtime removed, test payment
 fully refunded. No customer identity or message/payment changes, no production
 activation or deployment. The failed first run remains separately recorded/refunded.
 
+Independent read-only receipt review found no mismatch: all five current source
+hashes match both actual/offline receipts;14/13 journal entries, the sole seq4 gap,
+one payment/receipt through replay, full refund and separate failed cleanup agree.
+No credential patterns in the15 inspected artifacts. Body/signature were deliberately
+discarded, so their signature cannot be independently reverified from saved files;
+the capture-time check is source-bound runtime evidence. Parent verified no remaining
+owned probe process or temporary runtime. Implementation commit `b0bebd46` is pushed
+on the feature branch; production/main are unchanged. No broad agency/UI/email rerun
+for this isolated tooling change; their earlier receipts retain their own source.
+
 This proves only controlled response-observation and callback-processing loss in
 the anonymous native bridge. It does not prove a restarted parent/host, callback
 loss before Event ID observation, browser3DS/return, private request authority,
