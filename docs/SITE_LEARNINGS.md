@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Narration snapshots and performance controls
+
+A narration runner that parses a script and later rereads it for the frozen snapshot can attest different bytes from those spoken. Failure paths also need to register partial WAVs, logs and receipts. Freeze one input read, retain failed attempts, and keep variable pause plans explicitly separate from consumers with a fixed-gap contract. Effective pauses come from the resolved plan, not the campaign default. See `docs/marketing/local-video-studio/NATURAL-NARRATION-2026-09-19.md`.
+
 ## 2026-09-19 — One link for mobile film review
 
 **Observation:** Individual MP4 links were technically playable but inconvenient for reviewing three revisions on a phone. **Guidance:** Provide one canonical page with explicitly labeled editions, native inline controls and direct-file fallbacks. Use on-demand loading and pause other players when playback starts. Verify the narrow layout and public page after the canonical release. The current page passed public playback at `736ab1ff`; the separate owner inbox receipt is outbox 805.

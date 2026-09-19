@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Narration pace and pause are separate controls
+
+**Observation:** The owner liked the faster V2 film but wanted a female narrator and more realistic pauses. Uniformly slowing speech would undo the pacing improvement. **Guidance:** Compare a short stock-voice excerpt using complete thought groups, local speed adjustments and explicit phrase/line rests; preserve the IPA pronunciation override and canonical text. Read the resolved performance schedule instead of mistaking the fallback gap for effective timing. ASR and playback prove neither human naturalness nor correct-sounding brand pronunciation.
+
 ## 2026-09-19 — One link for mobile film review
 
 **Observation:** Individual MP4 links were technically playable but inconvenient for reviewing three revisions on a phone. **Guidance:** Provide one canonical page with explicitly labeled editions, native inline controls and direct-file fallbacks. Use on-demand loading and pause other players when playback starts. Verify the narrow layout and public page after the canonical release. The current page passed public playback at `736ab1ff`; the separate owner inbox receipt is outbox 805.

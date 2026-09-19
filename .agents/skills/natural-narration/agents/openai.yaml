@@ -1,0 +1,4 @@
+interface:
+  display_name: "Natural Narration"
+  short_description: "Shape local narration with natural pauses"
+  default_prompt: "Use $natural-narration to refine local narration pacing and FAMtastic pronunciation."

@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Source-bound local narration performance
+
+Local female stock narration and exact inserted phrase pauses are technically proved with Kokoro af_heart/af_bella; human naturalness and pronunciation acceptance remain pending. A script-bound performance plan preserves canonical copy, produces sample-derived phrase/source-line cues and retains model/input/audio hashes. Natural-narration skill installed and validated. HeyGen account/catalog connection and SSML controls are available but no cloud speech request was run; image credentials do not prove Gemini/OpenAI TTS entitlement. See `docs/marketing/local-video-studio/NATURAL-NARRATION-2026-09-19.md` for actual publication status.
+
 ## 2026-09-19 — Unified mobile video review
 
 The live `/video-review/` page presents the three proven films with phone-sized players, native full-screen controls, optional captions, direct MP4 links and exclusive audio playback. Local CUA verifies 320/390px layout and player switching; public apex playback and www rendering pass at deployed `736ab1ff`. One new owner notice reached Gmail (outbox 805) without resend. This presentation adds no voice-cloning or generated-motion capability; production and email receipts are retained in `docs/marketing/local-video-studio/MOBILE-REVIEW-PAGE-2026-09-19.md`.

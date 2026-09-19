@@ -1,0 +1,4 @@
+# Native audio players use the MPEG-4 audio media type.
+<IfModule mod_mime.c>
+  AddType audio/mp4 .m4a
+</IfModule>
