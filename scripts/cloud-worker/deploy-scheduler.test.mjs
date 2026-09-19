@@ -41,7 +41,12 @@ test('ordinary release validates before promotion and never installs another sch
   const preflight = source.indexOf('ordinary_lifecycle_mode="$(classify_owned_lifecycle_cron)"');
   const preflightExit = source.indexOf('if [[ "$mode" == "preflight" ]]');
   assert.ok(preflight > 0 && preflight < preflightExit);
-  const block = source.slice(source.indexOf('# Installing a bounded marker'), source.indexOf("printf 'commit=%s"));
+  const blockStart = source.indexOf('# Installing a bounded marker');
+  // The scoped creator-credit release also writes a commit marker earlier in
+  // this script. Inspect the ordinary release's marker, not that other lane.
+  const blockEnd = source.indexOf("printf 'commit=%s", blockStart);
+  assert.ok(blockStart > preflightExit && blockEnd > blockStart);
+  const block = source.slice(blockStart, blockEnd);
   assert.match(block, /current_crontab.*!=.*ordinary_cron_snapshot/);
   assert.match(block, /bounded_observe/); assert.match(block, /bounded_dispatch/);
   assert.doesNotMatch(block, /crontab\s+(?:"\$cron_stage"|-)|>>\s*"\$cron_stage"/);

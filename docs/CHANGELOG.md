@@ -1,5 +1,19 @@
 # Product changelog
 
+## 2026-09-18 — Reconciled release and stale embedded-build guard (local)
+
+- Reconciled latest main b2aadd5a at33df2775, retaining portal navigation, creator
+  credit, callback/CAS, native payment and audit fixes. No live change at this record.
+- Fixed stale embedded continuation reuse after current page/copy/type/commerce or
+  asset changes; missing producer binding routes to planning, never a false static
+  completion. Preserves source/history, deduplication and exact acceptance boundaries.
+- 305 PHP tests/1563 assertions,81 installed Drupal assertions and full fresh
+  synthetic journey pass.27 Node,86 email and34 portal-DNA checks pass. CUA proves
+  stale-receipt reset/mobile containment of the real component using a local422 stub.
+- Fixed the deployer regression test's extraction marker after creator-credit code
+  introduced an earlier commit printf; runtime classification was already correct.
+  Added non-sending `--cua` browser harness mode. See selected-request binding plan.
+
 ## 2026-09-18 — Main callback repair reconciled into reliability branch
 
 - Isolated merge6792b0db includes main5a9c6906, preserving its complete callback

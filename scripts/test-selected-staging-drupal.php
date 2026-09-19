@@ -270,6 +270,7 @@ function fixture(int $uid, string $label, bool $executable = TRUE, bool $normalC
     $html = '<!doctype html><html lang="en"><head><title>Synthetic ' . $direction . '</title></head><body><main><h1>Disposable selected source ' . $direction . '</h1></main></body></html>';
     file_put_contents($absolute, $html);
     $continuation = [
+      'request_binding' => \Drupal\famtastic_pipeline\Service\SelectedSourceIntent::requestBinding(array_replace($row, ['proof_campaign_id' => (string) $campaign->id()])),
       'operation' => 'package_existing', 'initiating_system' => 'designs', 'correlation_id' => 'fixture:' . $row['id'], 'requested_next_action' => 'protected_review',
       'spec' => ['capability_class' => 'static', 'site_needs' => ['pages' => ['home']]], 'required_pages' => ['index.html'],
       'files' => [['path' => 'index.html', 'source_path' => $path, 'url' => 'https://artifacts.example.test/' . $row['id'] . '/' . $direction . '/index.html', 'rights' => ['status' => 'approved', 'evidence_ref' => 'synthetic-authored-source']]],
@@ -524,6 +525,92 @@ try {
   ]), 'selected_test_content_failure');
 } finally { $db->query('DROP TRIGGER selected_fail_content'); }
 check(row($normalId) === $beforeRow && studio($normalId) === $beforeStudio && counts() === $before, 'normal_content_update_job_failure_rolls_back_intake_packet_and_events');
+
+// P1 regression: immutable embedded build evidence must not silently cover a
+// later request. These edits use the real authenticated writer, not a serializer.
+foreach ([
+  'added_page' => ['page_count' => 2, 'page_list' => "Home\nAbout", 'page_content' => [['page_name' => 'About', 'title' => 'About', 'heading' => 'About us', 'body' => 'New customer-authored About copy.']]],
+  'same_count_copy' => ['page_content' => [['page_name' => 'Home', 'title' => 'Updated Home', 'heading' => 'New heading', 'body' => 'Changed copy with exactly the same page count.']]],
+  'commerce_scope' => ['ecommerce_details' => 'WooCommerce product catalog and checkout'],
+  'project_type_only' => ['project_type' => 'online_store'],
+] as $case => $change) {
+  $editId = fixture($uid, 'Embedded scope ' . $case);
+  $baseInput = ['project_name' => 'Embedded scope ' . $case, 'business_name' => 'Embedded scope ' . $case,
+    'action' => 'save', 'page_count' => 1, 'page_list' => 'Home',
+    'primary_goal' => 'Describe this synthetic business', 'products_services' => 'Synthetic services'];
+  portalCall($uid, 'websiteProofDecision', $editId, ['direction' => 'a']);
+  $oldPacket = studio($editId)['site_studio_build_packet'];
+  $before = counts();
+  portalCall($uid, 'updateWebsiteRequest', $editId, $baseInput);
+  check(studio($editId)['site_studio_build_packet'] === $oldPacket && counts() === $before, 'embedded_' . $case . '_unchanged_save_keeps_one_packet_job');
+  $oldReceipt = receipt($oldPacket, 'embedded-old-' . $case);
+  callback($oldReceipt);
+  $oldHash = row($editId)['staging_receipt_hash'];
+  portalCall($uid, 'websiteStagingReviewAccept', $editId, ['receipt_hash' => $oldHash]);
+  $before = counts();
+  portalCall($uid, 'updateWebsiteRequest', $editId, array_replace($baseInput, $change));
+  $edited = row($editId); $state = studio($editId); $planned = $state['selected_dispatch_packet'];
+  check($edited['staging_status'] === 'planning' && $planned['schema'] === 'famtastic.site-studio.planning-packet.v1'
+    && $planned['intent']['selection']['revision'] === 2 && $state['site_studio_build_packet'] === $oldPacket
+    && json_decode(stagingJob($planned)['payload'], TRUE)['packet'] === $planned,
+    'embedded_' . $case . '_queues_exact_planning_not_stale_executable');
+  $savedIntake = json_decode($edited['intake_data'], TRUE);
+  check($planned['intent']['scope']['snapshot']['page_count'] === $savedIntake['page_count']
+    && $planned['intent']['scope']['snapshot']['project_type'] === $edited['project_type']
+    && $planned['intent']['authored_content'] === $savedIntake['authored_content']
+    && $planned['selected_artifacts'] === $oldPacket['selected_artifacts'], 'embedded_' . $case . '_preserves_current_request_and_winning_source');
+  check($edited['staging_receipt_hash'] === '' && $edited['staging_review_status'] === 'not_started'
+    && !$receipts->isReady((int) $edited['id'])
+    && $state['site_studio_staging_history'][0]['receipt_hash'] === $oldHash
+    && $state['site_studio_staging_history'][0]['review_status'] === 'accepted'
+    && counts()['famtastic_notification_outbox'] === $before['famtastic_notification_outbox'], 'embedded_' . $case . '_invalidates_readiness_preserves_receipt_without_new_mail');
+  check($db->select('famtastic_notification_outbox', 'n')->fields('n', ['status'])->condition('notification_key', 'website-request:' . $edited['id'] . ':staging-review-ready:' . $oldHash)->execute()->fetchField() === 'superseded', 'embedded_' . $case . '_supersedes_old_review_notice');
+  callback(array_replace($oldReceipt, ['event_id' => 'embedded-late-' . $case]), 422);
+  portalCall($uid, 'websiteStagingReviewAccept', $editId, ['receipt_hash' => $oldHash], 422);
+  expectThrow(static fn() => $registry->assertActiveSelectedPacket($oldPacket), 'superseded');
+  $before = counts();
+  $portal->refreshSelectedWebsiteRequest((int) $edited['customer_id'], $editId);
+  check(counts() === $before && studio($editId)['selected_dispatch_packet'] === $planned, 'embedded_' . $case . '_retry_is_idempotent_and_old_work_rejected');
+}
+
+$unboundId = fixture($uid, 'Legacy embedded evidence has no baseline');
+$unboundRow = row($unboundId);
+$unboundVariants = $entities->getStorage('proof_variant');
+$variantIds = $unboundVariants->getQuery()->accessCheck(FALSE)->condition('campaign_id', $unboundRow['proof_campaign_id'])->execute();
+foreach ($unboundVariants->loadMultiple($variantIds) as $variant) {
+  $dna = json_decode($variant->get('design_dna')->value, TRUE);
+  unset($dna['selected_build_continuation']['request_binding']);
+  $variant->set('design_dna', json_encode($dna, JSON_THROW_ON_ERROR))->save();
+}
+portalCall($uid, 'websiteProofDecision', $unboundId, ['direction' => 'a']);
+check(row($unboundId)['staging_status'] === 'planning' && !isset(studio($unboundId)['site_studio_build_packet']), 'unbound_legacy_evidence_cannot_be_blessed_at_first_selection');
+
+$preEditId = fixture($uid, 'Scope changed before selection');
+portalCall($uid, 'updateWebsiteRequest', $preEditId, ['project_name' => 'Scope changed before selection', 'project_type' => 'online_store', 'page_count' => 1, 'page_list' => 'Home']);
+portalCall($uid, 'websiteProofDecision', $preEditId, ['direction' => 'a']);
+check(row($preEditId)['staging_status'] === 'planning' && !isset(studio($preEditId)['site_studio_build_packet']), 'preselection_scope_change_cannot_reuse_old_static_evidence');
+
+// Simulate a historical mapped intent that already matches today's facts but
+// whose embedded executable never recorded a trustworthy baseline. The old
+// unchanged-intent shortcut must not rescue it, even if its policy label exists.
+$mappedId = fixture($uid, 'Legacy mapped shortcut');
+portalCall($uid, 'websiteProofDecision', $mappedId, ['direction' => 'a']);
+$mappedRow = row($mappedId); $mappedState = studio($mappedId);
+$mappedOldPacket = $mappedState['site_studio_build_packet'];
+$mappedVariant = $unboundVariants->load($mappedOldPacket['continuation']['selection']['proof_variant_id']);
+$mappedDna = json_decode($mappedVariant->get('design_dna')->value, TRUE);
+unset($mappedDna['selected_build_continuation']['request_binding']);
+$mappedVariant->set('design_dna', json_encode($mappedDna, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+$mappedState['selected_source_intent']['source']['design_dna'] = $mappedDna;
+$mappedState['selected_source_intent']['source']['design_dna_sha256'] = hash('sha256', json_encode($mappedDna, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+$mappedState['selected_source_intent']['execution_binding']['association_id'] = 'synthetic-legacy-association';
+$mappedState['selected_source_mapping'] = ['association_id' => 'synthetic-legacy-association'];
+$entities->getStorage('famtastic_project')->load($mappedRow['project_id'])->set('studio_json', json_encode($mappedState, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+$portal->refreshSelectedWebsiteRequest((int) $mappedRow['customer_id'], $mappedId);
+check(row($mappedId)['staging_status'] === 'planning'
+  && studio($mappedId)['selected_dispatch_packet']['intent']['selection']['revision'] === 2,
+  'unbound_mapped_intent_cannot_bypass_guard_via_unchanged_shortcut');
+expectThrow(static fn() => $registry->assertActiveSelectedPacket($mappedOldPacket), 'superseded');
 
 file_put_contents($sandbox . '/state.json', json_encode(['uid' => $uid, 'request' => $publicId, 'packet' => $revision, 'receipt' => $secondReceipt], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
 $report['records'] = ['request' => $publicId, 'project_id' => $revision['project_id'], 'packet_id' => $revision['packet_id'], 'counts' => counts()];

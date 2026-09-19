@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Reconcile embedded build evidence after customer edits
+
+Root cause: an existing `selected_build_continuation` skipped normal-record
+resolution even when updated intent requested new pages/copy or commerce. Rule:
+require producer-frozen tenant/scope/content/asset authority, including top-level
+project type, before reuse. No baseline or changed evidence means planning, never
+retagged static completion. Preserve immutable source/history; clear readiness,
+supersede queued old notices and reject stale dispatch/callback/acceptance.
+The mapped unchanged-intent shortcut must obey the same guard. Full local lifecycle
+and81 installed Drupal assertions pass; this is not production activation proof.
+
 ## 2026-09-18 — Branded does not prove usable email navigation
 
 Personal proof notices used standard/v2, whose autolinker printed raw URLs;

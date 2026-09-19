@@ -1951,11 +1951,19 @@ final class CustomerPortalService {
       $artifacts[] = ['role' => 'source_material', 'path' => $path, 'sha256' => $file['sha256'], 'bytes' => $file['bytes']];
     }
     $dnaJson = (string) $variant->get('design_dna')->value;
+    $requestAssets = $this->requestAssets((int) $row['id']);
+    $embeddedMismatch = is_array($designDna['selected_build_continuation'] ?? NULL)
+      && ($designDna['selected_build_continuation']['request_binding'] ?? NULL) !== SelectedSourceIntent::requestBinding($row, $requestAssets);
     $intent = SelectedSourceIntent::create($row, (string) $project->id(), (int) $variant->id(), $direction, $revision,
       gmdate(DATE_ATOM, $this->time->getRequestTime()), $artifacts, is_array($designDna) ? $designDna : [],
-      $this->requestAssets((int) $row['id']), $revisionNotes);
+      $requestAssets, $revisionNotes);
     $intent['execution_binding'] = ['export' => isset($studio['selected_source_mapping']) ? ($studio['selected_source_intent']['execution_binding']['export'] ?? NULL) : ($studio['next_source_export']['sha256'] ?? NULL),
       'authority_sha256' => hash('sha256', json_encode($studio['selected_source_authority'] ?? [], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))];
+    // Version the reconciliation rule so an old intent cannot take the unchanged
+    // shortcut after upgrade. Never bless legacy evidence with today's digest.
+    if (is_array($designDna['selected_build_continuation'] ?? NULL)) {
+      $intent['execution_binding']['embedded_request_policy'] = 'famtastic.selected-request-binding.v1';
+    }
     if (isset($studio['selected_source_mapping']['association_id'])) $intent['execution_binding']['association_id'] = $studio['selected_source_mapping']['association_id'];
     $priorIntent = $studio['selected_source_intent'] ?? NULL;
     if (is_array($priorIntent)) {
@@ -1965,7 +1973,9 @@ final class CustomerPortalService {
         $value['execution_binding'] ?? [],
         $value['authored_content']['pages'] ?? NULL,
       ], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
-      if (hash_equals($fingerprint($priorIntent), $fingerprint($intent))) {
+      $requiresPlanning = $embeddedMismatch || ($row['project_type'] ?? '') === 'online_store';
+      $canReuseIntent = !$requiresPlanning || ($studio['selected_dispatch_packet']['schema'] ?? '') === 'famtastic.site-studio.planning-packet.v1';
+      if ($canReuseIntent && hash_equals($fingerprint($priorIntent), $fingerprint($intent))) {
         $intent = $priorIntent;
         $revision = (int) $intent['selection']['revision'];
         if (isset($studio['selected_source_mapping'], $studio['selected_dispatch_packet'])) {
@@ -1977,6 +1987,12 @@ final class CustomerPortalService {
     $packetId = 'staging-packet:request:' . (int) $row['id'] . ':revision:' . $revision;
     $studio['selected_source_intent'] = $intent;
     $project->set('studio_json', json_encode($studio, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR))->save();
+    if (($row['project_type'] ?? '') === 'online_store') {
+      return $this->queueSelectedPlanning($row, $intent, 'unsupported_scope: online stores require an implementation worker, not static packaging.');
+    }
+    if ($embeddedMismatch) {
+      return $this->queueSelectedPlanning($row, $intent, 'selected_continuation_request_binding_missing_or_changed: reconcile executable evidence with current scope, authored pages and asset authority.');
+    }
     if (!is_array($designDna['selected_build_continuation'] ?? NULL) && empty($designDna['source_capture']) && !isset($studio['selected_source_mapping']) && isset($studio['next_source_export'])) {
       try { $designDna['selected_build_continuation'] = SelectedFinalizedSource::continuation($studio['next_source_export'], $intent, $studio['selected_source_authority'] ?? []); }
       catch (\InvalidArgumentException $error) { return $this->queueSelectedPlanning($row, $intent, $error->getMessage()); }

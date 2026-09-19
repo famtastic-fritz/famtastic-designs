@@ -1,5 +1,19 @@
 # September 18 client delivery — operational truth
 
+## September19 03:32Z monitoring and reliability checkpoint
+
+Authoritative read still shows16/17 customer_ready with no selection or staging.
+Original/correction outboxes767/769/772/773 remain sent, one attempt each. No resend,
+payment mutation, new campaign or selected build was initiated. Native payment
+semantics are unchanged; the normal checkout field remains intentionally NULL.
+
+Reliability merged latest main b2aadd5a at33df2775 and corrected an independently
+found stale embedded-spec reuse defect. Actual local controller tests now prove
+edited scope/content goes to planning with old acceptance invalidated. Full fresh
+synthetic journey passed. See SELECTED_REQUEST_BINDING_2026-09-18 and runtime plan
+for exact evidence and pending release/observe-only activation; static work still
+does not implement either client's backend.
+
 Owner-authorized priority: StockandShip98 request17/customer15/campaign56, then
 Class of2000 request16/customer14/account campaign57. Do not duplicate campaigns.
 Public inquiry campaign55 remains separate from account-bound reunion campaign57.

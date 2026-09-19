@@ -7,9 +7,39 @@ namespace Drupal\famtastic_pipeline\Service;
 /** Projects existing selection facts; never promotes a concept to a full site. */
 final class SelectedSourceIntent {
 
+  private const SCOPE_FIELDS = ['page_count', 'page_list', 'required_features', 'integrations', 'booking_details', 'ecommerce_details', 'custom_needs', 'content_status', 'copywriting_needs', 'products_services', 'desired_actions'];
+
+  private static function scope(array $row, array $intake): array {
+    $scope = ['project_type' => (string) ($row['project_type'] ?? '')];
+    foreach (self::SCOPE_FIELDS as $field) {
+      if (array_key_exists($field, $intake)) $scope[$field] = $intake[$field];
+    }
+    return $scope;
+  }
+
+  /**
+   * Freeze at source preparation, never when reusing embedded build evidence.
+   *
+   * This binds what the producer actually covered, not a claim that a digest
+   * implements the work. Revision notes remain explicit unfinished build work.
+   */
+  public static function requestBinding(array $row, array $assets = []): array {
+    $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE, 512, JSON_THROW_ON_ERROR) ?: [];
+    $snapshot = [
+      'request_id' => (string) $row['public_id'],
+      'customer_id' => (string) $row['customer_id'],
+      'proof_campaign_id' => (string) $row['proof_campaign_id'],
+      'scope' => self::scope($row, $intake),
+      'authored_pages' => $intake['authored_content']['pages'] ?? NULL,
+      'asset_authority' => $assets,
+    ];
+    return ['schema' => 'famtastic.selected-request-binding.v1',
+      'sha256' => hash('sha256', json_encode($snapshot, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR))];
+  }
+
   public static function create(array $row, string $projectId, int $variantId, string $direction, int $revision, string $selectedAt, array $artifacts, array $dna, array $assets, ?string $changes): array {
     $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE) ?: [];
-    $scope = array_intersect_key($intake, array_flip(['page_count', 'page_list', 'required_features', 'integrations', 'booking_details', 'ecommerce_details', 'custom_needs', 'content_status', 'copywriting_needs', 'products_services', 'desired_actions']));
+    $scope = self::scope($row, $intake);
     $scopeJson = json_encode($scope, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     return [
       'schema' => 'famtastic.selected-source-intent.v1',

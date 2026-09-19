@@ -1,5 +1,16 @@
 # Agent Instructions
 
+## September 18 — Embedded build instructions must cover the current request
+
+Never reuse `selected_build_continuation` merely because it exists. Its producer
+must have frozen a `famtastic.selected-request-binding.v1` digest covering tenant,
+campaign, project type, requested scope, authored pages and asset authority. Missing
+or changed evidence goes to the existing planning handoff; never backfill today's
+digest over yesterday's specification. Unchanged retries remain deduplicated.
+Online-store requests need an implementation worker, not the static adapter.
+See `docs/plans/SELECTED_REQUEST_BINDING_2026-09-18.md` and run the installed
+selected-staging and full customer-journey tests after changing this boundary.
+
 ## September 18 — Bounded workers are opt-in, not a historic queue drain
 
 Read `docs/plans/AUTOMATION_RUNTIME_2026-09-18.md` before scheduler activation.

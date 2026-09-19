@@ -1,5 +1,14 @@
 # FAMtastic agent operating contract
 
+## September 18 amendment — executable evidence is request-version-bound
+
+Embedded continuation evidence needs a producer-recorded request binding, not a
+digest invented by the consuming selection handler. Page/copy/type/commerce/asset
+changes invalidate reuse, readiness and acceptance through the existing planning
+successor. Preserve source/history; reject the old callback and dispatch. No
+baseline means reconciliation, not permission to package old work. See
+`plans/SELECTED_REQUEST_BINDING_2026-09-18.md`.
+
 ## September 18 amendment — scheduler and worker activation
 
 Follow `plans/AUTOMATION_RUNTIME_2026-09-18.md`. Observe-only explicit-PHP cron,

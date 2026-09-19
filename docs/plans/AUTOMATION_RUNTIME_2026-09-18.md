@@ -1,5 +1,19 @@
 # Bounded automation runtime: source implemented, activation pending
 
+## September19 03:32Z reconciliation checkpoint
+
+Latest main b2aadd5a merged at33df2775. Current live read: both requests16/17 remain
+customer_ready, unselected, staging not_started; outboxes767/769/772/773 sent once.
+Base backend/frontend8eb12209 and scoped creator-credit backend7490f297 observed.
+Legacy five-minute implicit-PHP scheduler remains unchanged; no dispatch enabled.
+
+Independent review found stale embedded specs bypassing new scope/content. The
+request-binding repair and installed regressions are recorded in
+`SELECTED_REQUEST_BINDING_2026-09-18.md`:305 PHP/1563 assertions,81 installed
+checks, full fresh synthetic lifecycle,27 Node,86 email and34 portal DNA pass.
+No production mutation occurred in this checkpoint. Independent re-review and
+canonical coordinated release precede any observe-only schedule installation.
+
 Owner policy: routine submitted-request research, three independently reviewed
 proofs, authorized notice and selected-site continuation proceed without another
 Fritz gate. Scope, spending, rights, security, merchant authority and repeated QA

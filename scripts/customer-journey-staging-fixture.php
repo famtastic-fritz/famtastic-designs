@@ -51,6 +51,7 @@ if (getenv('FAMTASTIC_FIXTURE_PHASE') === 'prepare') {
     }
     $dna['selected_build_artifacts'] = $extra;
     $dna['selected_build_continuation'] = [
+      'request_binding' => \Drupal\famtastic_pipeline\Service\SelectedSourceIntent::requestBinding($row),
       'operation' => 'package_existing', 'initiating_system' => 'designs', 'correlation_id' => 'fixture:' . $row['id'], 'requested_next_action' => 'protected_review',
       'spec' => ['capability_class' => 'static', 'site_needs' => ['pages' => array_column($files, 'path')]], 'required_pages' => array_column($files, 'path'),
       'files' => $files, 'source' => ['campaign_id' => (string) $row['proof_campaign_id']],

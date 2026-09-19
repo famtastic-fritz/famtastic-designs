@@ -1,5 +1,19 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — A newer revision can still contain an old specification
+
+Observation: embedded continuation metadata bypassed normal scope reconciliation.
+New intent/revision records alone did not prove that old static source covered new
+pages, named copy or commerce. Guidance: compare producer-frozen request evidence
+before every reuse shortcut; absent or changed evidence goes to planning, with old
+acceptance/callback/dispatch invalidated. Include top-level project type in scope.
+Test the real authenticated writer, unchanged retries and mapped legacy state.
+Never calculate a fresh digest to bless old evidence during consumption.
+
+Observation: a source-extraction regression test matched an earlier new printf in
+the deployer and tested an empty block. Guidance: find the end marker after the
+verified start and assert boundaries; distinguish harness defects from runtime bugs.
+
 ## 2026-09-18 — Preserve both sides of the selected-flow merge
 
 Observation: main's bounded intake fix does not yet include the selected-flow

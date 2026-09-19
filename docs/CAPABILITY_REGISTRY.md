@@ -1,5 +1,15 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Current-request bound continuation (locally proven)
+
+Producer-bound embedded evidence cannot silently cover later scope/copy/asset edits.
+305 PHP tests/1563 assertions,81 actual installed Drupal/SQLite checks and the full
+fresh synthetic journey pass on reconciled main33df2775 plus the recorded fix.
+CUA verifies the real frontend's stale-receipt reset and320–1280px containment with
+a local synthetic422 endpoint. No production worker, customer browser acceptance,
+MySQL concurrency, ecommerce completion or laptop-independent execution is implied.
+Exact receipts/limits: `plans/SELECTED_REQUEST_BINDING_2026-09-18.md`.
+
 ## 2026-09-18 — Reconciled callback/intake/selected writer (locally proven)
 
 Isolated merge6792b0db incorporates main5a9c6906 without dropping authored page
