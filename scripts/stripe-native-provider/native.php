@@ -30,7 +30,7 @@ if ($phase === 'configure') {
 
 // Per-process only. Native nested gateway loads must receive the same ephemeral
 // key through Drupal's config overrides; never save it to config storage.
-if (in_array(getenv('NATIVE_PROBE_PHASE'), ['create', 'confirm', 'callback', 'replay', 'refund', 'inspect', 'observe', 'cancel'], TRUE)) {
+if (in_array(getenv('NATIVE_PROBE_PHASE'), ['create', 'confirm', 'callback', 'replay', 'refund', 'inspect', 'observe', 'cancel', 'reconcile', 'recover_callback', 'recover_replay'], TRUE)) {
   if (!isset($GLOBALS['nativeProbeSecrets'])) {
     $GLOBALS['nativeProbeSecrets'] = json_decode(file_get_contents('php://stdin'), TRUE, 512, JSON_THROW_ON_ERROR);
   }
@@ -85,6 +85,31 @@ try {
       'in_memory_key_before_nested_gateway' => $before, 'in_memory_key_after_nested_gateway' => $after]) . "\n";
     return;
   }
+  if ($phase === 'offline_interrupt') {
+    // Exercise the SAME Guard exit through the actual locked Drush wrapper.
+    // No real key resolution, SDK transport or provider objects. Keep fake
+    // journals separate from the provider ledger and leave the native order alone.
+    if (function_exists('curl_exec')) throw new RuntimeException('offline_transport_required');
+    $journal = realpath(getenv('NATIVE_PROBE_EVIDENCE') ?: '') ?: '';
+    if (!str_ends_with($journal, '/.artifacts/stripe-native-provider/' . $binding['run_id'])) throw new RuntimeException('journal_boundary_refused');
+    $fixture = $journal . '/offline-interruption';
+    if (!mkdir($fixture, 0700)) throw new RuntimeException('offline_fixture_exists');
+    $fakeBinding = $binding;
+    $fakeBinding['scenario'] = 'recovery'; $fakeBinding['phase'] = 'confirm';
+    $fakeBinding['intent_id'] = 'pi_Offline';
+    $fakeBinding['verified_account'] = 'acct_1TqwE9DDGtWR2WVN'; $fakeBinding['verified_test'] = TRUE;
+    NativeProbeGuard::durable($fixture . '/binding.json', json_encode($fakeBinding));
+    $fakeKey = implode('_', ['rk', 'test', 'synthetic_not_real']);
+    $fake = new class implements \Stripe\HttpClient\ClientInterface {
+      public function request($method, $absUrl, $headers, $params, $hasFile) {
+        return ['NOT_JSON_NEVER_LOG_THIS_RESPONSE', 200, []];
+      }
+    };
+    $guard = new NativeProbeGuard($fixture, $fakeKey, $fake);
+    $guard->request('post', 'https://api.stripe.com/v1/payment_intents/pi_Offline/confirm',
+      ['Authorization: Bearer ' . $fakeKey], ['payment_method' => 'pm_card_visa'], FALSE);
+    throw new RuntimeException('offline_interruption_missing');
+  }
   // Pipe only: keys/signatures/raw events never enter files, CLI arguments or DB.
   $secrets = $GLOBALS['nativeProbeSecrets'] ?? [];
   if (!preg_match('/^(sk|rk)_test_[A-Za-z0-9_]+$/', $secrets['key'] ?? '') || !preg_match('/^whsec_[A-Za-z0-9]+$/', $secrets['webhook'] ?? '')) throw new RuntimeException('test_secrets_refused');
@@ -105,13 +130,14 @@ try {
   if (\Stripe\Stripe::getApiKey() !== $secrets['key']) throw new RuntimeException('ephemeral_gateway_reload_failed');
   $order = Order::load($binding['order_id']);
   if (!$order || $order->getEmail() !== 'buyer@example.test' || $order->getCustomerId() != 0
+    || (string) $order->getStoreId() !== $binding['store_id'] || $order->get('payment_gateway')->target_id !== 'native_probe'
     || !$order->getTotalPrice()->equals(new \Drupal\commerce_price\Price('199.00', 'USD'))) throw new RuntimeException('synthetic_order_refused');
   $scenario = $binding['scenario'] ?? 'success';
-  $eventType = ['success' => 'payment_intent.succeeded', 'decline' => 'payment_intent.payment_failed',
+  $eventType = ['success' => 'payment_intent.succeeded', 'recovery' => 'payment_intent.succeeded', 'decline' => 'payment_intent.payment_failed',
     'action-required' => 'payment_intent.requires_action', 'abandonment' => 'payment_intent.canceled'][$scenario] ?? NULL;
   if (!$eventType) throw new RuntimeException('scenario_refused');
   $verifyIntent = static function($intent) use (&$binding): void {
-    if ($intent->livemode !== FALSE || $intent->id !== $binding['intent_id'] || $intent->amount !== 19900 || $intent->currency !== 'usd'
+    if ($intent->livemode !== FALSE || $intent->id !== $binding['intent_id'] || $intent->amount !== 19900 || $intent->currency !== 'usd' || $intent->capture_method !== 'automatic'
       || $intent->customer !== NULL || $intent->receipt_email !== NULL || $intent->metadata->native_probe !== $binding['run_id']
       || (string) $intent->metadata->order_id !== $binding['order_id'] || (string) $intent->metadata->store_id !== $binding['store_id'])
       throw new RuntimeException('intent_binding_refused');
@@ -132,7 +158,7 @@ try {
   }
   elseif ($phase === 'confirm') {
     $binding['phase'] = 'confirm'; $save();
-    $fixture = ['success' => 'pm_card_visa', 'decline' => 'pm_card_visa_chargeDeclined', 'action-required' => 'pm_card_threeDSecure2Required'][$scenario] ?? NULL;
+    $fixture = ['success' => 'pm_card_visa', 'recovery' => 'pm_card_visa', 'decline' => 'pm_card_visa_chargeDeclined', 'action-required' => 'pm_card_threeDSecure2Required'][$scenario] ?? NULL;
     if (!$fixture) throw new RuntimeException('scenario_refused');
     try {
       $intent = $client->paymentIntents->confirm($binding['intent_id'], ['payment_method' => $fixture]);
@@ -146,6 +172,61 @@ try {
       $binding['decline_verified'] = TRUE;
     }
     $observeIntent($intent); $binding['phase'] = 'confirmed'; $save();
+  }
+  elseif ($phase === 'reconcile') {
+    if ($scenario !== 'recovery' || ($binding['phase'] ?? '') !== 'confirm' || is_file($journal . '/reconciliation.json')) throw new RuntimeException('recovery_boundary_refused');
+    $fault = json_decode(file_get_contents($journal . '/interruption.json'), TRUE, 512, JSON_THROW_ON_ERROR);
+    $attempts = array_map(static fn($s) => json_decode($s, TRUE, 512, JSON_THROW_ON_ERROR), file($journal . '/attempts.jsonl', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
+    $responses = array_map(static fn($s) => json_decode($s, TRUE, 512, JSON_THROW_ON_ERROR), file($journal . '/requests.jsonl', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES));
+    $missing = array_values(array_filter($attempts, static fn($a) => !in_array($a['seq'], array_column($responses, 'seq'), TRUE)));
+    if (count($missing) !== 1 || $fault['seq'] !== $missing[0]['seq'] || $fault['run_id'] !== $binding['run_id']
+      || $fault['intent_id'] !== $binding['intent_id'] || $fault['account_id'] !== 'acct_1TqwE9DDGtWR2WVN'
+      || $fault['fault'] !== 'exit_before_response_observation' || $fault['exit_code'] !== 86
+      || $fault['method'] !== 'post' || $fault['path'] !== '/v1/payment_intents/' . $binding['intent_id'] . '/confirm'
+      || $fault['params_sha256'] !== hash('sha256', json_encode(['payment_method' => 'pm_card_visa']))
+      || $fault['idempotency_sha256'] !== hash('sha256', $binding['run_id'] . '-confirm')
+      || array_intersect_key($fault, $missing[0]) !== $missing[0]) throw new RuntimeException('recovery_journal_refused');
+    if ($client->accounts->retrieve()->id !== 'acct_1TqwE9DDGtWR2WVN' || $client->balance->retrieve()->livemode !== FALSE) throw new RuntimeException('account_mode_refused');
+    $intent = $client->paymentIntents->retrieve($binding['intent_id']);
+    $readSeq = (int) file_get_contents($journal . '/request-count');
+    $verifyIntent($intent);
+    if ($intent->status !== 'succeeded' || $intent->amount_received !== 19900 || !preg_match('/^ch_[A-Za-z0-9]+$/', $intent->latest_charge ?? '')) throw new RuntimeException('recovery_state_refused');
+    $charge = $intent->latest_charge;
+    $binding['recovery_validated'] = TRUE; $binding['phase'] = 'confirm_replay'; $save();
+    // Reconcile only the original operation, identical parameters and key.
+    $replayed = $client->paymentIntents->confirm($binding['intent_id'], ['payment_method' => 'pm_card_visa']);
+    $replaySeq = (int) file_get_contents($journal . '/request-count');
+    $verifyIntent($replayed);
+    if ($replayed->status !== 'succeeded' || $replayed->amount_received !== 19900 || $replayed->latest_charge !== $charge
+      || NativeProbeGuard::header($replayed->getLastResponse()->headers, 'idempotent-replayed') !== 'true') throw new RuntimeException('idempotent_recovery_refused');
+    NativeProbeGuard::durable($journal . '/reconciliation.json', json_encode([
+      'schema' => 'famtastic.native-confirm-reconciliation.v1', 'run_id' => $binding['run_id'], 'intent_id' => $binding['intent_id'],
+      'account_id' => 'acct_1TqwE9DDGtWR2WVN', 'livemode' => FALSE, 'provider_status' => 'succeeded', 'amount_received' => 19900,
+      'currency' => 'usd', 'charge_id' => $charge, 'covered_seq' => $fault['seq'], 'read_seq' => $readSeq, 'replay_seq' => $replaySeq]));
+    $observeIntent($replayed); $binding['confirmation_reconciled'] = TRUE; $binding['phase'] = 'reconciled'; $save();
+  }
+  elseif ($phase === 'recover_callback' || $phase === 'recover_replay') {
+    if ($scenario !== 'recovery' || ($binding['confirmation_reconciled'] ?? FALSE) !== TRUE) throw new RuntimeException('recovery_boundary_refused');
+    $existing = \Drupal::entityTypeManager()->getStorage('commerce_payment')->loadByProperties(['order_id' => $order->id()]);
+    if ($phase === 'recover_callback' && ($existing || $order->getState()->getId() !== 'draft' || $order->getData('stripe_intent') !== $binding['intent_id'])) throw new RuntimeException('recovery_order_refused');
+    if ($phase === 'recover_replay') {
+      $previous = $existing ? reset($existing) : NULL;
+      if (count($existing) !== 1 || $previous->getRemoteId() !== $binding['intent_id'] || $previous->getPaymentGatewayId() !== 'native_probe'
+        || $previous->getState()->getId() !== 'completed' || !$order->getBalance()->isZero() || $order->getState()->getId() !== 'completed') throw new RuntimeException('recovery_order_refused');
+    }
+    $lost = json_decode(file_get_contents($journal . '/lost-callback.json'), TRUE, 512, JSON_THROW_ON_ERROR);
+    if ($lost['run_id'] !== $binding['run_id'] || $lost['intent_id'] !== $binding['intent_id'] || $lost['signature_verified'] !== TRUE
+      || $lost['body_retained'] !== FALSE || !preg_match('/^evt_[A-Za-z0-9]+$/', $lost['event_id'] ?? '')) throw new RuntimeException('lost_callback_refused');
+    $binding['event_id'] = $lost['event_id']; $save();
+    // Authenticated provider API recovery, NOT a forged/redelivered signed webhook.
+    $event = $client->events->retrieve($binding['event_id']);
+    if ($event->livemode !== FALSE || $event->type !== 'payment_intent.succeeded' || !empty($event->account)) throw new RuntimeException('event_account_refused');
+    $verifyIntent($event->data->object);
+    if ($event->data->object->status !== 'succeeded' || $event->data->object->amount_received !== 19900) throw new RuntimeException('recovery_state_refused');
+    $binding['method_id'] = $event->data->object->payment_method; $save();
+    $response = $plugin->processWebHook(NULL, $event);
+    if ($response && $response->getStatusCode() >= 400) throw new RuntimeException('native_callback_failed');
+    $binding['recovery_event_verified'] = TRUE; $binding['event_type'] = $event->type; $save();
   }
   elseif ($phase === 'observe' || $phase === 'cancel') {
     if ($scenario === 'success') throw new RuntimeException('scenario_refused');
@@ -199,6 +280,7 @@ try {
     'event_type' => $binding['event_type'] ?? NULL, 'scenario' => $scenario,
     'provider_status' => $binding['provider_status'] ?? NULL, 'amount_received' => $binding['amount_received'] ?? NULL,
     'decline_verified' => $binding['decline_verified'] ?? FALSE, 'action_required' => $binding['action_required'] ?? FALSE,
+    'confirmation_reconciled' => $binding['confirmation_reconciled'] ?? FALSE, 'recovery_event_verified' => $binding['recovery_event_verified'] ?? FALSE,
     'captured_mail_count' => count(\Drupal::state()->get('system.test_mail_collector', [])),
     'credentials_persisted' => !empty($savedGateway['configuration']['secret_key']) || !empty($savedGateway['configuration']['webhook_signing_secret']),
     'ephemeral_gateway_reload_verified' => TRUE,

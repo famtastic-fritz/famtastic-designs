@@ -45,6 +45,12 @@ foreach (['decline' => 'pm_card_visa_chargeDeclined', 'action-required' => 'pm_c
 }
 $check('success cannot cancel', 'post', "$base/v1/payment_intents/pi_Test/cancel", ['cancellation_reason' => 'abandoned'], array_replace($binding, ['phase' => 'cancel']), FALSE);
 $check('abandoned cannot confirm', 'post', "$base/v1/payment_intents/pi_Test/confirm", ['payment_method' => 'pm_card_visa'], array_replace($binding, ['phase' => 'confirm', 'scenario' => 'abandonment']), FALSE);
+$recoveryBinding = array_replace($binding, ['phase' => 'confirm_replay', 'scenario' => 'recovery']);
+$check('recovery requires verified retrieval', 'post', "$base/v1/payment_intents/pi_Test/confirm", ['payment_method' => 'pm_card_visa'], $recoveryBinding, FALSE);
+$check('recovery exact replay', 'post', "$base/v1/payment_intents/pi_Test/confirm", ['payment_method' => 'pm_card_visa'], $recoveryBinding + ['recovery_validated' => TRUE], TRUE);
+foreach ([['Idempotent-Replayed' => 'true'], new \Stripe\Util\CaseInsensitiveArray(['IDEMPOTENT-REPLAYED' => 'true'])] as $headers) {
+  if (NativeProbeGuard::header($headers, 'idempotent-replayed') !== 'true') throw new LogicException('SDK header shape failed'); ++$passed;
+}
 $declineBinding = array_replace($binding, ['phase' => 'confirm', 'scenario' => 'decline']);
 $declineObject = ['error' => ['type' => 'card_error', 'code' => 'card_declined', 'decline_code' => 'generic_decline',
   'payment_intent' => ['id' => 'pi_Test', 'livemode' => FALSE, 'status' => 'requires_payment_method', 'amount' => 19900,
@@ -100,8 +106,21 @@ try {
   $lines = array_map('json_decode', explode("\n", trim(file_get_contents($directory . '/requests.jsonl'))));
   if ($result[1] !== 402 || end($lines)->expected_decline !== TRUE) throw new LogicException('Definite decline not journaled');
   ++$passed;
+  $childDirectory = $directory . '/interrupt'; mkdir($childDirectory, 0700);
+  NativeProbeGuard::durable($childDirectory . '/binding.json', json_encode(array_replace($binding, ['phase' => 'confirm', 'scenario' => 'recovery', 'expires_at' => time() + 60])));
+  $process = proc_open([PHP_BINARY, __DIR__ . '/test-interruption.php', $childDirectory], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+  fclose($pipes[0]); $output = stream_get_contents($pipes[1]); fclose($pipes[1]); $errors = stream_get_contents($pipes[2]); fclose($pipes[2]);
+  $exit = proc_close($process);
+  if ($exit !== 86 || $output !== '' || $errors !== '' || is_file($childDirectory . '/requests.jsonl')) throw new LogicException('Interruption did not stop before response observation'); ++$passed;
+  $fault = json_decode(file_get_contents($childDirectory . '/interruption.json'), TRUE);
+  if ($fault['seq'] !== 1 || $fault['intent_id'] !== 'pi_Test' || $fault['idempotency_sha256'] !== hash('sha256', $binding['run_id'] . '-confirm')
+    || !is_file($childDirectory . '/attempts.jsonl')) throw new LogicException('Interruption evidence missing'); ++$passed;
 }
 finally {
+  if (isset($childDirectory) && is_dir($childDirectory)) {
+    foreach (['binding.json', 'request-count', 'attempts.jsonl', 'interruption.json'] as $file) if (is_file($childDirectory . '/' . $file)) unlink($childDirectory . '/' . $file);
+    rmdir($childDirectory);
+  }
   foreach (['binding.json', 'request-count', 'attempts.jsonl', 'requests.jsonl'] as $file) if (is_file($directory . '/' . $file)) unlink($directory . '/' . $file);
   rmdir($directory);
 }

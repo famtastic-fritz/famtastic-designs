@@ -62,11 +62,20 @@ FAMTASTIC_STRIPE_NATIVE_TEST=1 \
 # node scripts/stripe-native-provider/run.mjs --scenario decline
 # node scripts/stripe-native-provider/run.mjs --scenario action-required
 # node scripts/stripe-native-provider/run.mjs --scenario abandonment
+# node scripts/stripe-native-provider/run.mjs --scenario recovery
 ```
 
 Default invocation refuses before providers. `--offline` proves the fresh native
 installation and a fake-key nested-gateway reload with networking disabled, without
-real credential resolution or provider access. The existing broad
+real credential resolution or provider access. It also executes the real Guard
+interruption through locked Drush `php:script`, using an invalid-JSON fake transport
+response and a separate clearly offline journal; fresh inspection proves the native
+order remains unpaid. Drush's shutdown handler needs an explicit runtime exit code;
+a direct-PHP exit test alone did not catch its exit1 override. Only status86 with
+the exact unmatched durable attempt is accepted; arbitrary failures are not faults.
+Safe child diagnostics contain only status/signal/killed flags and byte lengths,
+never raw stdout/stderr. Controlled exit still runs shutdown handlers, not SIGKILL.
+The existing broad
 `stripe-provider-e2e.sh` remains a scaffold; this narrower runner does not relabel it.
 Do not enable network on `test-private-purchase-drupal.php` or weaken protected
 staging's503 refusal. No rendering/screenshot or real customer mail is performed.
@@ -82,6 +91,24 @@ this is test cleanup, not native order cancellation or a new production feature.
 Native `requires_action` event handling is an ignored event; asserting no payment
 does not claim the plugin implements challenge UX. Preserve each phase snapshot.
 Any known intent without proved refund/cancellation is reconciliation-required.
+
+`--scenario recovery` injects a controlled PHP exit86 after the confirmation
+transport returns, before response parsing/journaling/SDK observation. The receiver
+verifies the genuine success event but acknowledges and discards its body without
+calling the native handler; only Event ID/hash survives. A fresh PHP process checks
+the exact account/test PI, then replays only the same confirmation operation with
+identical parameters/key and requires the provider's idempotent-replay header and
+same charge. A missing-response journal entry remains missing; a separate scoped
+read/replay receipt covers only that one gap. Other gaps still refuse completion.
+
+The real Event is then retrieved from the authenticated API and passed to existing
+native `processWebHook`, not forged or passed off as signed redelivery. Exact native
+order/intent/gateway/store binding and replay state are checked. Assert one native
+payment/order receipt through replay, then native full refund. This models response
+observation and callback-processing loss, not loss before any Event ID is observed,
+a whole-host crash, restarted parent orchestration, hosted retries, browser return,
+concurrent workers or interruption midway through native fulfillment. Those are
+separate gates. Never blindly retry native onReturn after partial persistence.
 
 `refund-failed-test.mjs <recorded-native-probe-run-id>` is only an explicitly opted-in
 cleanup for a failed synthetic run that already created a payment. It rechecks

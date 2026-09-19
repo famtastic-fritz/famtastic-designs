@@ -52,9 +52,10 @@ final class NativeProbeGuard implements \Stripe\HttpClient\ClientInterface {
         'payment_method_options' => ['us_bank_account' => ['verification_method' => 'instant']]];
       if ($same($params, $expected)) return $path;
     }
-    $fixture = ['success' => 'pm_card_visa', 'decline' => 'pm_card_visa_chargeDeclined', 'action-required' => 'pm_card_threeDSecure2Required'][$scenario] ?? NULL;
+    $fixture = ['success' => 'pm_card_visa', 'recovery' => 'pm_card_visa', 'decline' => 'pm_card_visa_chargeDeclined', 'action-required' => 'pm_card_threeDSecure2Required'][$scenario] ?? NULL;
     if ($method === 'post' && $intent && $path === '/v1/payment_intents/' . $intent . '/confirm'
-      && ($binding['phase'] ?? '') === 'confirm' && $fixture && $params === ['payment_method' => $fixture]) return $path;
+      && (($binding['phase'] ?? '') === 'confirm' || ($scenario === 'recovery' && ($binding['phase'] ?? '') === 'confirm_replay' && ($binding['recovery_validated'] ?? FALSE) === TRUE))
+      && $fixture && $params === ['payment_method' => $fixture]) return $path;
     if ($method === 'post' && $intent && $path === '/v1/payment_intents/' . $intent . '/cancel'
       && ($binding['phase'] ?? '') === 'cancel' && in_array($scenario, ['decline', 'action-required', 'abandonment'], TRUE)
       && $params === ['cancellation_reason' => 'abandoned']) return $path;
@@ -81,10 +82,21 @@ final class NativeProbeGuard implements \Stripe\HttpClient\ClientInterface {
       && (string) ($intent['metadata']['store_id'] ?? '') === $binding['store_id'];
   }
 
+  public static function header($headers, string $name): ?string {
+    // SDK15 uses CaseInsensitiveArray; casting the object exposes its container
+    // property, not the headers. Exercise this real SDK shape in offline tests.
+    $values = $headers instanceof \Traversable ? iterator_to_array($headers) : (array) $headers;
+    $value = array_change_key_case($values, CASE_LOWER)[strtolower($name)] ?? NULL;
+    return is_string($value) ? $value : NULL;
+  }
+
   public function request($method, $absUrl, $headers, $params, $hasFile) {
     $binding = json_decode(file_get_contents($this->directory . '/binding.json'), TRUE, 512, JSON_THROW_ON_ERROR);
     if (time() > $binding['expires_at'] || !preg_match('/^(sk|rk)_test_[A-Za-z0-9_]+$/', $this->key)) throw new RuntimeException('expired_or_non_test_binding');
     $path = self::allow($method, $absUrl, $params, $binding, $hasFile);
+    $interrupt = ($binding['scenario'] ?? '') === 'recovery' && ($binding['phase'] ?? '') === 'confirm'
+      && $method === 'post' && $path === '/v1/payment_intents/' . ($binding['intent_id'] ?? '') . '/confirm';
+    if ($interrupt && is_file($this->journalDirectory . '/interruption.json')) throw new RuntimeException('interruption_already_injected');
     $authorization = array_values(array_filter($headers, static fn($h) => stripos($h, 'Authorization:') === 0));
     if ($authorization !== ['Authorization: Bearer ' . $this->key]) throw new RuntimeException('credential_binding_refused');
     foreach ($headers as $index => $header) {
@@ -106,15 +118,30 @@ final class NativeProbeGuard implements \Stripe\HttpClient\ClientInterface {
       $suffix = $path === '/v1/refunds' ? 'refund' : (str_ends_with($path, '/confirm') ? 'confirm' : (str_ends_with($path, '/cancel') ? 'cancel' : 'intent'));
       $headers[] = 'Idempotency-Key: ' . $binding['run_id'] . '-' . $suffix;
     }
-    self::durable($this->journalDirectory . '/attempts.jsonl', json_encode(['method' => $method, 'path' => $path,
-      'run_id' => $binding['run_id'], 'account_id' => 'acct_1TqwE9DDGtWR2WVN', 'intent_id' => $binding['intent_id'] ?? NULL]) . "\n", TRUE);
+    $idempotency = NULL;
+    foreach ($headers as $header) if (str_starts_with($header, 'Idempotency-Key: ')) $idempotency = hash('sha256', substr($header, 17));
+    $attempt = ['seq' => $count + 1, 'method' => $method, 'path' => $path, 'params_sha256' => hash('sha256', json_encode($params)), 'idempotency_sha256' => $idempotency,
+      'run_id' => $binding['run_id'], 'account_id' => 'acct_1TqwE9DDGtWR2WVN', 'intent_id' => $binding['intent_id'] ?? NULL];
+    self::durable($this->journalDirectory . '/attempts.jsonl', json_encode($attempt) . "\n", TRUE);
     $result = $this->transport->request($method, $absUrl, $headers, $params, $hasFile);
+    if ($interrupt) {
+      // Deliberately lose the entire response BEFORE decoding, journaling or SDK
+      // observation. A fresh process must reconcile this exact durable attempt.
+      self::durable($this->journalDirectory . '/interruption.json', json_encode($attempt + ['fault' => 'exit_before_response_observation', 'exit_code' => 86]));
+      // php:script is included inside Drush. Its shutdown handler otherwise
+      // replaces exit(86) with exit(1). Keep the command marked incomplete;
+      // this is a controlled exit (shutdown handlers still run), not SIGKILL.
+      if (class_exists(\Drush\Drush::class) && \Drush\Drush::hasContainer()) {
+        \Drush\Runtime\Runtime::setExitCode(86);
+      }
+      exit(86);
+    }
     $object = json_decode($result[0], TRUE, 512, JSON_THROW_ON_ERROR);
     if (self::expectedDecline($object, $binding, $method, $path, (int) $result[1])) {
       // A correlated, definite decline is a recorded response, not an uncertain
       // transport outcome. Let the locked SDK emit its normal CardException.
-      self::durable($this->journalDirectory . '/requests.jsonl', json_encode(['method' => $method, 'path' => $path,
-        'status' => 402, 'request_id' => $result[2]['Request-Id'] ?? NULL, 'provider_object_id' => $binding['intent_id'],
+      self::durable($this->journalDirectory . '/requests.jsonl', json_encode(['seq' => $count + 1, 'method' => $method, 'path' => $path,
+        'status' => 402, 'request_id' => self::header($result[2], 'request-id'), 'provider_object_id' => $binding['intent_id'],
         'expected_decline' => TRUE]) . "\n", TRUE);
       return $result;
     }
@@ -126,7 +153,8 @@ final class NativeProbeGuard implements \Stripe\HttpClient\ClientInterface {
         || ($object['currency'] ?? '') !== 'usd' || ($object['status'] ?? '') !== 'succeeded') throw new RuntimeException('refund_response_refused');
     }
     elseif ($path !== '/v1/account' && ($object['livemode'] ?? NULL) !== FALSE) throw new RuntimeException('provider_mode_refused');
-    $safe = ['method' => $method, 'path' => $path, 'status' => $result[1], 'request_id' => $result[2]['Request-Id'] ?? NULL,
+    $safe = ['seq' => $count + 1, 'method' => $method, 'path' => $path, 'status' => $result[1], 'request_id' => self::header($result[2], 'request-id'),
+      'idempotent_replayed' => self::header($result[2], 'idempotent-replayed') === 'true',
       'provider_object_id' => isset($object['id']) && preg_match('/^(pi|pm|evt|re)_[A-Za-z0-9]+$/', $object['id']) ? $object['id'] : NULL];
     self::durable($this->journalDirectory . '/requests.jsonl', json_encode($safe) . "\n", TRUE);
     return $result;

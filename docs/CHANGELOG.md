@@ -1,5 +1,17 @@
 # Product changelog
 
+## 2026-09-19 — Same-intent recovery and real-wrapper fault proof (test only)
+
+- Added bounded response-interruption/callback-processing-loss scenario to the
+  existing native bridge;9 actual provider checks pass with one payment/receipt
+  through replay and full native refund. Exact journal gap stays visible/resolved.
+- Fixed locked Drush's exit-code override, proven with fake transport through the
+  actual command wrapper;94 Node/61 PHP checks pass. Child diagnostics are safe
+  status/byte counts only; strict interruption binding refuses arbitrary failures.
+- Retained/refunded failed attempt, exact source/receipt hashes, remaining private/
+  browser/hosted gates and agent lessons. No application/deployment/customer changes;
+  production checkout remainsOFF and client selections remain pending.
+
 ## 2026-09-19 — Native nonpayment and replay evidence (test-provider only)
 
 - Added exact declined/action-required/unconfirmed-abandonment scenarios to the

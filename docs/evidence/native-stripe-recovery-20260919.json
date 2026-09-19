@@ -1,0 +1,929 @@
+{
+  "schema": "famtastic.native-recovery-suite.v1",
+  "classification": "test-provider proven: controlled response observation and callback-processing loss only",
+  "production_deployed": false,
+  "offline_checks": {
+    "node": 94,
+    "php": 61
+  },
+  "passed": {
+    "evidence.json": {
+      "path": ".artifacts/stripe-native-provider/native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6/evidence.json",
+      "sha256": "c07d828122a1eae329be26230fee149c23e551b7cfdd3b982608e70fbbe6886c",
+      "data": {
+        "schema": "famtastic.native-stripe-provider.v1",
+        "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+        "started_at": "2026-09-19T09:59:42.490Z",
+        "status": "passed",
+        "offline": false,
+        "scenario": "recovery",
+        "source_sha": "4e9a630bbf894baa29f09f509ff02f660ebe7c79",
+        "limits": [
+          "Native plugin in a fresh SQLite installation, not production or the request16 private purchase.",
+          "Signed CLI-forwarded body is discarded without native handling; recovery retrieves the genuine Event over authenticated API, not signed redelivery.",
+          "Anonymous synthetic native order; no browser Payment Element, login, 3DS, catalog matrix or agency entitlements claim.",
+          "Controlled PHP exit after response dispatch and handler body loss, not whole-host crash recovery or partial native-fulfillment recovery."
+        ],
+        "profile": "famtastic-sandbox-auth",
+        "account_id": "acct_1TqwE9DDGtWR2WVN",
+        "customer_records_copied": false,
+        "production_checkout_activated": false,
+        "phases": {
+          "create": {
+            "phase": "create",
+            "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+            "order_id": "1",
+            "order_state": "draft",
+            "balance": "199",
+            "payment_count": 0,
+            "payment_id": null,
+            "balance_zero": false,
+            "payment_state": null,
+            "refunded": null,
+            "refunded_full": false,
+            "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+            "event_id": null,
+            "callback_verified": false,
+            "event_type": null,
+            "scenario": "recovery",
+            "provider_status": null,
+            "amount_received": null,
+            "decline_verified": false,
+            "action_required": false,
+            "confirmation_reconciled": false,
+            "recovery_event_verified": false,
+            "captured_mail_count": 0,
+            "credentials_persisted": false,
+            "ephemeral_gateway_reload_verified": true,
+            "agency_module_installed": false,
+            "browser_checkout_proven": false
+          },
+          "confirm": {
+            "phase": "confirm",
+            "status": "interrupted",
+            "exit_code": 86,
+            "response_observed_by_sdk": false
+          },
+          "inspect": {
+            "phase": "inspect",
+            "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+            "order_id": "1",
+            "order_state": "draft",
+            "balance": "199",
+            "payment_count": 0,
+            "payment_id": null,
+            "balance_zero": false,
+            "payment_state": null,
+            "refunded": null,
+            "refunded_full": false,
+            "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+            "event_id": null,
+            "callback_verified": false,
+            "event_type": null,
+            "scenario": "recovery",
+            "provider_status": null,
+            "amount_received": null,
+            "decline_verified": false,
+            "action_required": false,
+            "confirmation_reconciled": false,
+            "recovery_event_verified": false,
+            "captured_mail_count": 0,
+            "credentials_persisted": false,
+            "ephemeral_gateway_reload_verified": true,
+            "agency_module_installed": false,
+            "browser_checkout_proven": false
+          },
+          "reconcile": {
+            "phase": "reconcile",
+            "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+            "order_id": "1",
+            "order_state": "draft",
+            "balance": "199",
+            "payment_count": 0,
+            "payment_id": null,
+            "balance_zero": false,
+            "payment_state": null,
+            "refunded": null,
+            "refunded_full": false,
+            "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+            "event_id": null,
+            "callback_verified": false,
+            "event_type": null,
+            "scenario": "recovery",
+            "provider_status": "succeeded",
+            "amount_received": 19900,
+            "decline_verified": false,
+            "action_required": false,
+            "confirmation_reconciled": true,
+            "recovery_event_verified": false,
+            "captured_mail_count": 0,
+            "credentials_persisted": false,
+            "ephemeral_gateway_reload_verified": true,
+            "agency_module_installed": false,
+            "browser_checkout_proven": false
+          },
+          "recover_callback": {
+            "phase": "recover_callback",
+            "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+            "order_id": "1",
+            "order_state": "completed",
+            "balance": "0",
+            "payment_count": 1,
+            "payment_id": "1",
+            "balance_zero": true,
+            "payment_state": "completed",
+            "refunded": "0",
+            "refunded_full": false,
+            "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+            "event_id": "evt_3UHL3qDDGtWR2WVN1BssVGsK",
+            "callback_verified": false,
+            "event_type": "payment_intent.succeeded",
+            "scenario": "recovery",
+            "provider_status": "succeeded",
+            "amount_received": 19900,
+            "decline_verified": false,
+            "action_required": false,
+            "confirmation_reconciled": true,
+            "recovery_event_verified": true,
+            "captured_mail_count": 1,
+            "credentials_persisted": false,
+            "ephemeral_gateway_reload_verified": true,
+            "agency_module_installed": false,
+            "browser_checkout_proven": false
+          },
+          "recover_replay": {
+            "phase": "recover_replay",
+            "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+            "order_id": "1",
+            "order_state": "completed",
+            "balance": "0",
+            "payment_count": 1,
+            "payment_id": "1",
+            "balance_zero": true,
+            "payment_state": "completed",
+            "refunded": "0",
+            "refunded_full": false,
+            "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+            "event_id": "evt_3UHL3qDDGtWR2WVN1BssVGsK",
+            "callback_verified": false,
+            "event_type": "payment_intent.succeeded",
+            "scenario": "recovery",
+            "provider_status": "succeeded",
+            "amount_received": 19900,
+            "decline_verified": false,
+            "action_required": false,
+            "confirmation_reconciled": true,
+            "recovery_event_verified": true,
+            "captured_mail_count": 1,
+            "credentials_persisted": false,
+            "ephemeral_gateway_reload_verified": true,
+            "agency_module_installed": false,
+            "browser_checkout_proven": false
+          },
+          "refund": {
+            "phase": "refund",
+            "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+            "order_id": "1",
+            "order_state": "completed",
+            "balance": "0",
+            "payment_count": 1,
+            "payment_id": "1",
+            "balance_zero": true,
+            "payment_state": "refunded",
+            "refunded": "199",
+            "refunded_full": true,
+            "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+            "event_id": "evt_3UHL3qDDGtWR2WVN1BssVGsK",
+            "callback_verified": false,
+            "event_type": "payment_intent.succeeded",
+            "scenario": "recovery",
+            "provider_status": "succeeded",
+            "amount_received": 19900,
+            "decline_verified": false,
+            "action_required": false,
+            "confirmation_reconciled": true,
+            "recovery_event_verified": true,
+            "captured_mail_count": 1,
+            "credentials_persisted": false,
+            "ephemeral_gateway_reload_verified": true,
+            "agency_module_installed": false,
+            "browser_checkout_proven": false
+          },
+          "inspect_2": {
+            "phase": "inspect",
+            "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+            "order_id": "1",
+            "order_state": "completed",
+            "balance": "199",
+            "payment_count": 1,
+            "payment_id": "1",
+            "balance_zero": false,
+            "payment_state": "refunded",
+            "refunded": "199",
+            "refunded_full": true,
+            "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+            "event_id": "evt_3UHL3qDDGtWR2WVN1BssVGsK",
+            "callback_verified": false,
+            "event_type": "payment_intent.succeeded",
+            "scenario": "recovery",
+            "provider_status": "succeeded",
+            "amount_received": 19900,
+            "decline_verified": false,
+            "action_required": false,
+            "confirmation_reconciled": true,
+            "recovery_event_verified": true,
+            "captured_mail_count": 1,
+            "credentials_persisted": false,
+            "ephemeral_gateway_reload_verified": true,
+            "agency_module_installed": false,
+            "browser_checkout_proven": false
+          }
+        },
+        "child_diagnostics": [
+          {
+            "phase": "create",
+            "exit_code": 0,
+            "signal": null,
+            "killed": false,
+            "stdout_bytes": 691,
+            "stderr_bytes": 0
+          },
+          {
+            "phase": "confirm",
+            "exit_code": 86,
+            "signal": null,
+            "killed": false,
+            "stdout_bytes": 0,
+            "stderr_bytes": 48
+          },
+          {
+            "phase": "inspect",
+            "exit_code": 0,
+            "signal": null,
+            "killed": false,
+            "stdout_bytes": 692,
+            "stderr_bytes": 0
+          },
+          {
+            "phase": "reconcile",
+            "exit_code": 0,
+            "signal": null,
+            "killed": false,
+            "stdout_bytes": 701,
+            "stderr_bytes": 0
+          },
+          {
+            "phase": "recover_callback",
+            "exit_code": 0,
+            "signal": null,
+            "killed": false,
+            "stdout_bytes": 761,
+            "stderr_bytes": 0
+          },
+          {
+            "phase": "recover_replay",
+            "exit_code": 0,
+            "signal": null,
+            "killed": false,
+            "stdout_bytes": 759,
+            "stderr_bytes": 0
+          },
+          {
+            "phase": "refund",
+            "exit_code": 0,
+            "signal": null,
+            "killed": false,
+            "stdout_bytes": 751,
+            "stderr_bytes": 0
+          },
+          {
+            "phase": "inspect",
+            "exit_code": 0,
+            "signal": null,
+            "killed": false,
+            "stdout_bytes": 755,
+            "stderr_bytes": 0
+          }
+        ],
+        "checks": {
+          "no_registered_remote_destinations": true,
+          "confirm_response_interrupted": true,
+          "unpaid_during_unknown": true,
+          "same_intent_confirm_reconciled": true,
+          "api_event_recovery_once": true,
+          "recovery_replay_once": true,
+          "native_refund": true,
+          "refund_persisted": true,
+          "credentials_not_saved": true
+        },
+        "source_hashes": {
+          "run.mjs": "42d88bfc7ab02261e6aac76e8996c8a66a1fa78c3aaf8e1ddb497b780e37064c",
+          "native.php": "24de83bb5071f34782f0b52d8d9829841da372fb14bfe8000940ee4564cc2b53",
+          "Guard.php": "68890eadf0a79fc35d736bc430019c75dc04d07c4a20150e3a314289fcb5fe59",
+          "prepare.sh": "27834dc87c1521b8cacc9f0630b6f26eb733d498ecc88ea137dbfd08e40bf3a5",
+          "recovery.mjs": "e9fc250dd0405e9ca2ba48a4e816baa5801debefc3251953c238cff27764e714"
+        },
+        "journal_before_recovery": {
+          "unresolved": [
+            4
+          ],
+          "reconciled": []
+        },
+        "classification": "test-provider proven: injected response and callback-processing loss recovery only",
+        "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+        "event_id": "evt_3UHL3qDDGtWR2WVN1BssVGsK",
+        "provider_write_attempts": 5,
+        "journal_after_recovery": {
+          "unresolved": [],
+          "reconciled": [
+            4
+          ]
+        },
+        "uncertain_provider_response": false,
+        "disposable_runtime_removed": true,
+        "completed_at": "2026-09-19T10:00:07.135Z",
+        "provider_objects_retained_in_test_mode": true,
+        "test_refund_confirmed": true,
+        "test_cancellation_confirmed": false,
+        "reconciliation_required": false
+      }
+    },
+    "attempts.jsonl": {
+      "path": ".artifacts/stripe-native-provider/native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6/attempts.jsonl",
+      "sha256": "9b0035d27fea8ed29664cce67adea0e10d9baba446141f007dc89f55549a55ef",
+      "data": [
+        {
+          "seq": 1,
+          "method": "get",
+          "path": "/v1/account",
+          "params_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "idempotency_sha256": null,
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": null
+        },
+        {
+          "seq": 2,
+          "method": "get",
+          "path": "/v1/balance",
+          "params_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "idempotency_sha256": null,
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": null
+        },
+        {
+          "seq": 3,
+          "method": "post",
+          "path": "/v1/payment_intents",
+          "params_sha256": "91ea8b7c16b5c8b2daba935e7b9570fd03d594be07ee4d281a494880e3f23860",
+          "idempotency_sha256": "21d39cbebccf2a2bb18768b59f93d14a777203140d2176622e40e190ad83ebb1",
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": null
+        },
+        {
+          "seq": 4,
+          "method": "post",
+          "path": "/v1/payment_intents/pi_3UHL3qDDGtWR2WVN13ZFkoqt/confirm",
+          "params_sha256": "aa5dcb85c9903a9ecb4f7e491416bddec266ee673b4d6dd838a0f6af7154cc93",
+          "idempotency_sha256": "6eff8b6da82a1f3a51c70f96f9805894137d8b64312d9824118ab122c33175c9",
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 5,
+          "method": "get",
+          "path": "/v1/account",
+          "params_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "idempotency_sha256": null,
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 6,
+          "method": "get",
+          "path": "/v1/balance",
+          "params_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "idempotency_sha256": null,
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 7,
+          "method": "get",
+          "path": "/v1/payment_intents/pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+          "params_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "idempotency_sha256": null,
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 8,
+          "method": "post",
+          "path": "/v1/payment_intents/pi_3UHL3qDDGtWR2WVN13ZFkoqt/confirm",
+          "params_sha256": "aa5dcb85c9903a9ecb4f7e491416bddec266ee673b4d6dd838a0f6af7154cc93",
+          "idempotency_sha256": "6eff8b6da82a1f3a51c70f96f9805894137d8b64312d9824118ab122c33175c9",
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 9,
+          "method": "get",
+          "path": "/v1/events/evt_3UHL3qDDGtWR2WVN1BssVGsK",
+          "params_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "idempotency_sha256": null,
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 10,
+          "method": "get",
+          "path": "/v1/payment_methods/pm_1UHL3rDDGtWR2WVNPuHTZh0w",
+          "params_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "idempotency_sha256": null,
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 11,
+          "method": "get",
+          "path": "/v1/payment_intents/pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+          "params_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "idempotency_sha256": null,
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 12,
+          "method": "post",
+          "path": "/v1/payment_intents/pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+          "params_sha256": "73a791c4a9b2336da4d978988309b14278ce014b524460f06a26da419cb4ab08",
+          "idempotency_sha256": null,
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 13,
+          "method": "get",
+          "path": "/v1/events/evt_3UHL3qDDGtWR2WVN1BssVGsK",
+          "params_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "idempotency_sha256": null,
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 14,
+          "method": "post",
+          "path": "/v1/refunds",
+          "params_sha256": "24438b7c7da92626b01f569de0a42cf7ded98c090b9eb64b283eeff6b9009ef4",
+          "idempotency_sha256": "1c17a3c3fd8db1ef616a6f6365c4e0d516c6aff02787696747671a091a31f058",
+          "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+          "account_id": "acct_1TqwE9DDGtWR2WVN",
+          "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        }
+      ]
+    },
+    "requests.jsonl": {
+      "path": ".artifacts/stripe-native-provider/native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6/requests.jsonl",
+      "sha256": "acc3dfd022d291ab7ff1f9f23d3c22a9c1faaef82740345ff977151fa0725e9d",
+      "data": [
+        {
+          "seq": 1,
+          "method": "get",
+          "path": "/v1/account",
+          "status": 200,
+          "request_id": "req_RF0XEkeLlSTsn1",
+          "idempotent_replayed": false,
+          "provider_object_id": null
+        },
+        {
+          "seq": 2,
+          "method": "get",
+          "path": "/v1/balance",
+          "status": 200,
+          "request_id": "req_nMyXQjbZt7uHDY",
+          "idempotent_replayed": false,
+          "provider_object_id": null
+        },
+        {
+          "seq": 3,
+          "method": "post",
+          "path": "/v1/payment_intents",
+          "status": 200,
+          "request_id": "req_dcDqgecqlU83vl",
+          "idempotent_replayed": false,
+          "provider_object_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 5,
+          "method": "get",
+          "path": "/v1/account",
+          "status": 200,
+          "request_id": "req_J7RAljmFsy4k9Y",
+          "idempotent_replayed": false,
+          "provider_object_id": null
+        },
+        {
+          "seq": 6,
+          "method": "get",
+          "path": "/v1/balance",
+          "status": 200,
+          "request_id": "req_gI571DMHYK9O7H",
+          "idempotent_replayed": false,
+          "provider_object_id": null
+        },
+        {
+          "seq": 7,
+          "method": "get",
+          "path": "/v1/payment_intents/pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+          "status": 200,
+          "request_id": "req_PJeOkcaCTtTlBv",
+          "idempotent_replayed": false,
+          "provider_object_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 8,
+          "method": "post",
+          "path": "/v1/payment_intents/pi_3UHL3qDDGtWR2WVN13ZFkoqt/confirm",
+          "status": 200,
+          "request_id": "req_6eEp1l3kTYbXSB",
+          "idempotent_replayed": true,
+          "provider_object_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 9,
+          "method": "get",
+          "path": "/v1/events/evt_3UHL3qDDGtWR2WVN1BssVGsK",
+          "status": 200,
+          "request_id": "req_XsyciJf6btDi2X",
+          "idempotent_replayed": false,
+          "provider_object_id": "evt_3UHL3qDDGtWR2WVN1BssVGsK"
+        },
+        {
+          "seq": 10,
+          "method": "get",
+          "path": "/v1/payment_methods/pm_1UHL3rDDGtWR2WVNPuHTZh0w",
+          "status": 200,
+          "request_id": "req_FWCS5nvtTXvCMr",
+          "idempotent_replayed": false,
+          "provider_object_id": "pm_1UHL3rDDGtWR2WVNPuHTZh0w"
+        },
+        {
+          "seq": 11,
+          "method": "get",
+          "path": "/v1/payment_intents/pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+          "status": 200,
+          "request_id": "req_9vzwAy8tTQBdZk",
+          "idempotent_replayed": false,
+          "provider_object_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 12,
+          "method": "post",
+          "path": "/v1/payment_intents/pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+          "status": 200,
+          "request_id": "req_4tXRJpHE0qnDBj",
+          "idempotent_replayed": false,
+          "provider_object_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt"
+        },
+        {
+          "seq": 13,
+          "method": "get",
+          "path": "/v1/events/evt_3UHL3qDDGtWR2WVN1BssVGsK",
+          "status": 200,
+          "request_id": "req_ieI7j4bykgYa5X",
+          "idempotent_replayed": false,
+          "provider_object_id": "evt_3UHL3qDDGtWR2WVN1BssVGsK"
+        },
+        {
+          "seq": 14,
+          "method": "post",
+          "path": "/v1/refunds",
+          "status": 200,
+          "request_id": "req_8mz7MmTJhiNxxR",
+          "idempotent_replayed": false,
+          "provider_object_id": "re_3UHL3qDDGtWR2WVN1vE79BqN"
+        }
+      ]
+    },
+    "interruption.json": {
+      "path": ".artifacts/stripe-native-provider/native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6/interruption.json",
+      "sha256": "66356dc630382f1d3fe35d375ab434d3440015e69208b8ff9f5f14255f9adbde",
+      "data": {
+        "seq": 4,
+        "method": "post",
+        "path": "/v1/payment_intents/pi_3UHL3qDDGtWR2WVN13ZFkoqt/confirm",
+        "params_sha256": "aa5dcb85c9903a9ecb4f7e491416bddec266ee673b4d6dd838a0f6af7154cc93",
+        "idempotency_sha256": "6eff8b6da82a1f3a51c70f96f9805894137d8b64312d9824118ab122c33175c9",
+        "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+        "account_id": "acct_1TqwE9DDGtWR2WVN",
+        "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+        "fault": "exit_before_response_observation",
+        "exit_code": 86
+      }
+    },
+    "lost-callback.json": {
+      "path": ".artifacts/stripe-native-provider/native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6/lost-callback.json",
+      "sha256": "ad826bc95604da6dd4c7951e49294f3c3e10fd55f30c26faed55f1da9653109e",
+      "data": {
+        "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+        "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+        "event_id": "evt_3UHL3qDDGtWR2WVN1BssVGsK",
+        "signature_verified": true,
+        "body_retained": false,
+        "native_handler_called": false,
+        "body_sha256": "91f9e7a6073bf2eb3e2f9a1d5deff63a9cb8141889f7219aade176a140ed3085"
+      }
+    },
+    "reconciliation.json": {
+      "path": ".artifacts/stripe-native-provider/native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6/reconciliation.json",
+      "sha256": "1794f7ab54882acc7ace15e78d60c5bd96a2c0fc9945e3fe892149d141028e19",
+      "data": {
+        "schema": "famtastic.native-confirm-reconciliation.v1",
+        "run_id": "native-probe-efdffb3a-6068-4b08-969f-85dac1fef2a6",
+        "intent_id": "pi_3UHL3qDDGtWR2WVN13ZFkoqt",
+        "account_id": "acct_1TqwE9DDGtWR2WVN",
+        "livemode": false,
+        "provider_status": "succeeded",
+        "amount_received": 19900,
+        "currency": "usd",
+        "charge_id": "ch_3UHL3qDDGtWR2WVN1bXPuoKj",
+        "covered_seq": 4,
+        "read_seq": 7,
+        "replay_seq": 8
+      }
+    }
+  },
+  "failed_attempt": {
+    "evidence.json": {
+      "path": ".artifacts/stripe-native-provider/native-probe-4d564d1a-8287-4c45-8123-82273b000618/evidence.json",
+      "sha256": "29366d93a05aa4b2f6c8af440cf1058d7c4cffe163060db0b4fa6f4db74d5740",
+      "data": {
+        "schema": "famtastic.native-stripe-provider.v1",
+        "run_id": "native-probe-4d564d1a-8287-4c45-8123-82273b000618",
+        "started_at": "2026-09-19T09:33:28.874Z",
+        "status": "failed",
+        "offline": false,
+        "scenario": "recovery",
+        "source_sha": "4e9a630bbf894baa29f09f509ff02f660ebe7c79",
+        "limits": [
+          "Native plugin in a fresh SQLite installation, not production or the request16 private purchase.",
+          "Signed CLI-forwarded body is discarded without native handling; recovery retrieves the genuine Event over authenticated API, not signed redelivery.",
+          "Anonymous synthetic native order; no browser Payment Element, login, 3DS, catalog matrix or agency entitlements claim.",
+          "Controlled PHP exit after response dispatch and handler body loss, not whole-host crash recovery or partial native-fulfillment recovery."
+        ],
+        "profile": "famtastic-sandbox-auth",
+        "account_id": "acct_1TqwE9DDGtWR2WVN",
+        "customer_records_copied": false,
+        "production_checkout_activated": false,
+        "phases": {
+          "create": {
+            "phase": "create",
+            "run_id": "native-probe-4d564d1a-8287-4c45-8123-82273b000618",
+            "order_id": "1",
+            "order_state": "draft",
+            "balance": "199",
+            "payment_count": 0,
+            "payment_id": null,
+            "balance_zero": false,
+            "payment_state": null,
+            "refunded": null,
+            "refunded_full": false,
+            "intent_id": "pi_3UHKeTDDGtWR2WVN0es4eJUP",
+            "event_id": null,
+            "callback_verified": false,
+            "event_type": null,
+            "scenario": "recovery",
+            "provider_status": null,
+            "amount_received": null,
+            "decline_verified": false,
+            "action_required": false,
+            "confirmation_reconciled": false,
+            "recovery_event_verified": false,
+            "captured_mail_count": 0,
+            "credentials_persisted": false,
+            "ephemeral_gateway_reload_verified": true,
+            "agency_module_installed": false,
+            "browser_checkout_proven": false
+          }
+        },
+        "checks": {
+          "no_registered_remote_destinations": true
+        },
+        "source_hashes": {
+          "run.mjs": "8f9fed5cafe5daaae907c417dc70f95e981779b51b8bcb15a462238f03b4f5a7",
+          "native.php": "37ab6f639ad445bc1a04af6f7cf883083c667636c7a250bda7cfdb566fc304d5",
+          "Guard.php": "7cf77912a45099c77b3fd700b3aa1ea1462e616806cfffc984e1de7ac85dbce5",
+          "prepare.sh": "27834dc87c1521b8cacc9f0630b6f26eb733d498ecc88ea137dbfd08e40bf3a5",
+          "recovery.mjs": "ceff030dadc6da8369ed1f6547d75178a7bf19161c23f647f88139ae227cc3c4"
+        },
+        "reason": "native_confirm_invalid_result",
+        "intent_id": "pi_3UHKeTDDGtWR2WVN0es4eJUP",
+        "event_id": null,
+        "provider_write_attempts": 2,
+        "journal_after_recovery": {
+          "unresolved": [
+            4
+          ],
+          "reconciled": []
+        },
+        "uncertain_provider_response": true,
+        "disposable_runtime_removed": true,
+        "completed_at": "2026-09-19T09:33:49.753Z",
+        "provider_objects_retained_in_test_mode": true,
+        "test_refund_confirmed": false,
+        "test_cancellation_confirmed": false,
+        "reconciliation_required": true
+      }
+    },
+    "interruption.json": {
+      "path": ".artifacts/stripe-native-provider/native-probe-4d564d1a-8287-4c45-8123-82273b000618/interruption.json",
+      "sha256": "e81ad4ceb2f2ed071ec9629d21039e78ee856eb5ef79094944c9cac7ccb70963",
+      "data": {
+        "seq": 4,
+        "method": "post",
+        "path": "/v1/payment_intents/pi_3UHKeTDDGtWR2WVN0es4eJUP/confirm",
+        "params_sha256": "aa5dcb85c9903a9ecb4f7e491416bddec266ee673b4d6dd838a0f6af7154cc93",
+        "idempotency_sha256": "c99043a4a33dfd895d00172a00db67b96a9788845d80b228b36972bd83d8984b",
+        "run_id": "native-probe-4d564d1a-8287-4c45-8123-82273b000618",
+        "account_id": "acct_1TqwE9DDGtWR2WVN",
+        "intent_id": "pi_3UHKeTDDGtWR2WVN0es4eJUP",
+        "fault": "exit_before_response_observation",
+        "exit_code": 86
+      }
+    },
+    "cleanup-receipt-d31600a3-def0-4e53-9890-51eaf46dde1b.json": {
+      "path": ".artifacts/stripe-native-provider/native-probe-4d564d1a-8287-4c45-8123-82273b000618/cleanup-receipt-d31600a3-def0-4e53-9890-51eaf46dde1b.json",
+      "sha256": "c200a5750985a8a400e6264772acefb2365811d183539987d1a2e5bc61e1c900",
+      "data": {
+        "schema": "famtastic.failed-native-probe-cleanup.v1",
+        "status": "test_cleanup_refund_confirmed",
+        "native_refund_proven": false,
+        "cleanup_id": "d31600a3-def0-4e53-9890-51eaf46dde1b",
+        "source_sha256": "430391da15511248315e1fedb2cc1019cdba4104d16de67440c50539b970786d",
+        "run_id": "native-probe-4d564d1a-8287-4c45-8123-82273b000618",
+        "account_id": "acct_1TqwE9DDGtWR2WVN",
+        "intent_id": "pi_3UHKeTDDGtWR2WVN0es4eJUP",
+        "observed_at": "2026-09-19T09:34:33.335Z",
+        "refund_write_attempted": true,
+        "reconciliation_required": false,
+        "refund_id": "re_3UHKeTDDGtWR2WVN0vAqoe3J",
+        "amount_cents": 19900,
+        "currency": "usd",
+        "production_mutations": false
+      }
+    }
+  },
+  "offline_wrapper": {
+    "path": ".artifacts/stripe-native-provider/native-probe-c177d196-1dd3-4960-a194-5852a0735851/evidence.json",
+    "sha256": "6bc8154230c62ae0df06d4429499a91efec8ab226195746a3547dbaf174fa494",
+    "data": {
+      "schema": "famtastic.native-stripe-provider.v1",
+      "run_id": "native-probe-c177d196-1dd3-4960-a194-5852a0735851",
+      "started_at": "2026-09-19T09:57:55.321Z",
+      "status": "offline_runtime_prepared",
+      "offline": true,
+      "scenario": "success",
+      "source_sha": "4e9a630bbf894baa29f09f509ff02f660ebe7c79",
+      "limits": [
+        "Native plugin in a fresh SQLite installation, not production or the request16 private purchase.",
+        "CLI-forwarded signed test event then native onNotify in process, not hosted Apache webhook middleware.",
+        "Anonymous synthetic native order; no browser Payment Element, login, 3DS, catalog matrix or agency entitlements claim."
+      ],
+      "profile": "famtastic-sandbox-auth",
+      "account_id": "acct_1TqwE9DDGtWR2WVN",
+      "customer_records_copied": false,
+      "production_checkout_activated": false,
+      "phases": {
+        "inspect": {
+          "phase": "inspect",
+          "run_id": "native-probe-c177d196-1dd3-4960-a194-5852a0735851",
+          "order_id": "1",
+          "order_state": "draft",
+          "balance": "199",
+          "payment_count": 0,
+          "payment_id": null,
+          "balance_zero": false,
+          "payment_state": null,
+          "refunded": null,
+          "refunded_full": false,
+          "intent_id": null,
+          "event_id": null,
+          "callback_verified": false,
+          "event_type": null,
+          "scenario": "success",
+          "provider_status": null,
+          "amount_received": null,
+          "decline_verified": false,
+          "action_required": false,
+          "confirmation_reconciled": false,
+          "recovery_event_verified": false,
+          "captured_mail_count": 0,
+          "credentials_persisted": false,
+          "ephemeral_gateway_reload_verified": true,
+          "agency_module_installed": false,
+          "browser_checkout_proven": false
+        },
+        "offline_interrupt": {
+          "phase": "offline_interrupt",
+          "status": "interrupted",
+          "exit_code": 86,
+          "response_observed_by_sdk": false
+        },
+        "inspect_2": {
+          "phase": "inspect",
+          "run_id": "native-probe-c177d196-1dd3-4960-a194-5852a0735851",
+          "order_id": "1",
+          "order_state": "draft",
+          "balance": "199",
+          "payment_count": 0,
+          "payment_id": null,
+          "balance_zero": false,
+          "payment_state": null,
+          "refunded": null,
+          "refunded_full": false,
+          "intent_id": null,
+          "event_id": null,
+          "callback_verified": false,
+          "event_type": null,
+          "scenario": "success",
+          "provider_status": null,
+          "amount_received": null,
+          "decline_verified": false,
+          "action_required": false,
+          "confirmation_reconciled": false,
+          "recovery_event_verified": false,
+          "captured_mail_count": 0,
+          "credentials_persisted": false,
+          "ephemeral_gateway_reload_verified": true,
+          "agency_module_installed": false,
+          "browser_checkout_proven": false
+        }
+      },
+      "child_diagnostics": [
+        {
+          "phase": "inspect",
+          "exit_code": 0,
+          "signal": null,
+          "killed": false,
+          "stdout_bytes": 666,
+          "stderr_bytes": 0
+        },
+        {
+          "phase": "offline_interrupt",
+          "exit_code": 86,
+          "signal": null,
+          "killed": false,
+          "stdout_bytes": 0,
+          "stderr_bytes": 48
+        },
+        {
+          "phase": "inspect",
+          "exit_code": 0,
+          "signal": null,
+          "killed": false,
+          "stdout_bytes": 666,
+          "stderr_bytes": 0
+        }
+      ],
+      "checks": {
+        "ephemeral_gateway_reload": true,
+        "drush_guard_interruption": true,
+        "offline_order_unchanged": true
+      },
+      "source_hashes": {
+        "run.mjs": "42d88bfc7ab02261e6aac76e8996c8a66a1fa78c3aaf8e1ddb497b780e37064c",
+        "native.php": "24de83bb5071f34782f0b52d8d9829841da372fb14bfe8000940ee4564cc2b53",
+        "Guard.php": "68890eadf0a79fc35d736bc430019c75dc04d07c4a20150e3a314289fcb5fe59",
+        "prepare.sh": "27834dc87c1521b8cacc9f0630b6f26eb733d498ecc88ea137dbfd08e40bf3a5",
+        "recovery.mjs": "e9fc250dd0405e9ca2ba48a4e816baa5801debefc3251953c238cff27764e714"
+      },
+      "classification": "locally proven: native fixture, ephemeral config and fake-transport Drush interruption only",
+      "intent_id": null,
+      "event_id": null,
+      "provider_write_attempts": 0,
+      "journal_after_recovery": {
+        "unresolved": [],
+        "reconciled": []
+      },
+      "uncertain_provider_response": false,
+      "disposable_runtime_removed": true,
+      "completed_at": "2026-09-19T09:58:11.793Z",
+      "provider_objects_retained_in_test_mode": false,
+      "test_refund_confirmed": false,
+      "test_cancellation_confirmed": false,
+      "reconciliation_required": false
+    }
+  }
+}

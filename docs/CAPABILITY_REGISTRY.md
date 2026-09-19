@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Same-intent recovery (narrow test-provider proof)
+
+Deliberately lost confirm response plus discarded signed callback body recovered
+one exact synthetic intent via account-bound read/idempotent confirm/API Event
+retrieval. Replay kept one completed native payment/order/receipt; full native
+refund persisted.9 provider checks,94 Node/61 PHP checks and actual offline Drush
+fault test pass. NOT abrupt host restart, unobserved-event discovery, partial native
+fulfillment/concurrency, private/browser/hosted/agency checkout proof. Production
+checkoutOFF; source only. Earlier failed attempt separately refunded, not relabeled
+success. See plans/STRIPE_RECOVERY_PROVIDER_2026-09-19.md.
+
 ## 2026-09-19 — Native nonpayment boundary (narrow test-provider proof)
 
 Three real synthetic provider cases passed: generic decline, unfinished3DS action

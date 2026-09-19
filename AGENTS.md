@@ -1,5 +1,16 @@
 # Agent Instructions
 
+## September19 — Recovery evidence and command-wrapper parity
+
+Read `docs/plans/STRIPE_RECOVERY_PROVIDER_2026-09-19.md` before more provider work.
+Do not repeat refunded failed runs or passing cases merely for activity. Missing
+responses stay missing; only exact same-intent/account/request/key read-and-replay
+evidence may cover one gap. Test fault injection through actual locked Drush, not
+only direct PHP; refuse arbitrary exit1 and preserve byte-count-only diagnostics.
+Controlled exit runs shutdown handlers; API Event recovery is not signed redelivery,
+whole-host restart or partial-native/concurrent fulfillment proof. Those remain
+separate gates. Keep production checkoutOFF and real-account fixtures network-disabled.
+
 ## September19 — Nonpayment proof is not browser recovery
 
 Read `docs/plans/STRIPE_NONPAYMENT_PROVIDER_2026-09-19.md` for the three passing

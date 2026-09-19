@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Test interruption through the actual command wrapper
+
+Observation: a direct-PHP fake-transport exit86 passed, but locked Drush's shutdown
+handler rewrites an incomplete command's default status to1. The real probe stopped
+after dispatch; exact test payment was separately refunded before another scenario.
+Guidance: test the same Guard through actual Drush with curl disabled; persist the
+fault first, set Drush's runtime exit code without marking completion, and require
+exact unmatched request/identity/parameter/idempotency evidence. Never broadly allow
+exit1. Retain status/signal/byte lengths, not raw child errors. PHP shutdown handlers
+still run, so controlled exit is not abrupt kill or host-crash recovery proof.
+SDK15 headers use CaseInsensitiveArray's iterator, not an object-to-array cast.
+Native onReturn is not independently idempotent after partial persistence; do not
+blindly retry it or equate sequential replay with concurrency/partial-write safety.
+See plans/STRIPE_RECOVERY_PROVIDER_2026-09-19.md for exact receipts and remaining gates.
+
 ## 2026-09-19 — Verify nonpayment state independently of webhook status
 
 Observation: native failure/cancel callbacks may skip and requires_action is an

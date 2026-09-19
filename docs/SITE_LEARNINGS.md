@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Drush shutdown can override an injected exit
+
+The recovery runner's first actual confirmation lost its response as designed but
+was rejected as invalid JSON: Drush13.7.6 overrides the unrecorded script exit to1.
+The failed receipt lacks actual child-status diagnostics; source explains the path.
+Its exact synthetic payment was fully CLI-refunded before retry; the failed receipt
+was not rewritten as success. Fix: set Drush's runtime exit86 only after durable
+fault journaling, leave incomplete status intact, then test through real php:script
+using disabled networking/fake transport and a separate offline ledger. Require
+exact fault/attempt identity, no response, exit86/no signal/empty stdout. Do not accept
+arbitrary exit1 or log raw errors/keys. Controlled PHP exit still invokes shutdown
+handlers, not abrupt kill. SDK15 response headers require their iterator contract.
+Partial native fulfillment and concurrent callbacks are separate unproven boundaries;
+onReturn retry can duplicate payment after partial save. See the recovery plan.
+
 ## 2026-09-19 — An expected decline is not a lost response
 
 The guard previously refused every HTTP error before response journaling, which

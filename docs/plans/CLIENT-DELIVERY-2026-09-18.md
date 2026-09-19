@@ -1,5 +1,13 @@
 # September 18 client delivery — operational truth
 
+10:00UTC finite-work checkpoint: same-intent lost-confirm-response and discarded-
+callback-body recovery passed9 actual synthetic provider checks; one native payment/
+receipt through replay, fully refunded.94 Node/61 PHP checks and real offline Drush
+fault test pass. Earlier failed attempt is separately refunded. No actual client
+payment, notice or checkout activation.09:54UTC authoritative read still shows8/16/17
+unselected; notices sent once;09:50:04UTC scheduled tick observe_only. See
+[recovery evidence and remaining boundaries](STRIPE_RECOVERY_PROVIDER_2026-09-19.md).
+
 08:58UTC finite-work checkpoint: isolated declined/action-required/unconfirmed
 abandonment cases pass real test-provider callbacks/replay with no native payment
 or receipt; all three intents canceled.102 offline checks pass. This is not

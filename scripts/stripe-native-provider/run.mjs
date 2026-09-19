@@ -8,6 +8,7 @@ import crypto from 'node:crypto';
 import { spawn, spawnSync, execFile } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { inspectTestProfile, cliEnvironment } from '../stripe-provider-preflight.mjs';
+import { assessJournal, expectedInterruption } from './recovery.mjs';
 
 export const PROFILE = 'famtastic-sandbox-auth';
 export const ACCOUNT = 'acct_1TqwE9DDGtWR2WVN';
@@ -17,14 +18,16 @@ const writePrivate = (file, value) => fs.writeFileSync(file, JSON.stringify(valu
 export function parseScenario(args) {
   if (args.length === 0) return { scenario: 'success', offline: false };
   if (args.length === 1 && args[0] === '--offline') return { scenario: 'success', offline: true };
-  if (args.length === 2 && args[0] === '--scenario' && ['decline', 'action-required', 'abandonment'].includes(args[1]))
+  if (args.length === 2 && args[0] === '--scenario' && ['decline', 'action-required', 'abandonment', 'recovery'].includes(args[1]))
     return { scenario: args[1], offline: false };
   fail('scenario_refused');
 }
-export const eventFor = scenario => ({ success: 'payment_intent.succeeded', decline: 'payment_intent.payment_failed',
+export const eventFor = scenario => ({ success: 'payment_intent.succeeded', recovery: 'payment_intent.succeeded', decline: 'payment_intent.payment_failed',
   'action-required': 'payment_intent.requires_action', abandonment: 'payment_intent.canceled' })[scenario];
 export const unpaidNative = state => state?.payment_count === 0 && state.order_state === 'draft'
   && state.balance_zero === false && Number(state.balance) === 199 && state.captured_mail_count === 0;
+export const completedNative = state => state?.payment_count === 1 && state.payment_state === 'completed'
+  && state.order_state === 'completed' && state.balance_zero === true && Number(state.balance) === 0 && state.captured_mail_count === 1;
 
 // Evidence/report errors must never bypass secret/runtime cleanup.
 export async function finalizeProbe({ collect, cleanup, persist }) {
@@ -125,8 +128,12 @@ async function main() {
     limits: ['Native plugin in a fresh SQLite installation, not production or the request16 private purchase.',
       'CLI-forwarded signed test event then native onNotify in process, not hosted Apache webhook middleware.',
       'Anonymous synthetic native order; no browser Payment Element, login, 3DS, catalog matrix or agency entitlements claim.'],
-    profile: PROFILE, account_id: ACCOUNT, customer_records_copied: false, production_checkout_activated: false, phases: {}, checks: {} };
-  report.source_hashes = Object.fromEntries(['run.mjs', 'native.php', 'Guard.php', 'prepare.sh'].map(name => [name,
+    profile: PROFILE, account_id: ACCOUNT, customer_records_copied: false, production_checkout_activated: false, phases: {}, child_diagnostics: [], checks: {} };
+  if (scenario === 'recovery') {
+    report.limits[1] = 'Signed CLI-forwarded body is discarded without native handling; recovery retrieves the genuine Event over authenticated API, not signed redelivery.';
+    report.limits.push('Controlled PHP exit after response dispatch and handler body loss, not whole-host crash recovery or partial native-fulfillment recovery.');
+  }
+  report.source_hashes = Object.fromEntries(['run.mjs', 'native.php', 'Guard.php', 'prepare.sh', 'recovery.mjs'].map(name => [name,
     crypto.createHash('sha256').update(fs.readFileSync(`${root}/scripts/stripe-native-provider/${name}`)).digest('hex')]));
   let listener, server, activeNative, key, webhook, packet, cancelled = false;
   const stopListener = signal => {
@@ -144,20 +151,38 @@ async function main() {
       'php:script', `${runtime}/probe/native.php`];
     const result = await new Promise(resolve => {
       activeNative = execFile('php', args, { env: { ...childEnv, NATIVE_PROBE_PHASE: phase },
-        encoding: 'utf8', timeout: 60000, maxBuffer: 1024 * 1024 }, (error, stdout) => {
+        encoding: 'utf8', timeout: 60000, maxBuffer: 1024 * 1024 }, (error, stdout, stderr) => {
         activeNative = undefined;
-        resolve({ status: error ? 2 : 0, stdout });
+        resolve({ status: error ? (Number.isInteger(error.code) ? error.code : 2) : 0, stdout,
+          signal: error?.signal ?? null, killed: error?.killed === true, stderr_bytes: Buffer.byteLength(stderr ?? '') });
       });
       activeNative.stdin.on('error', () => {}); // EPIPE is reported by process result.
       activeNative.stdin.end(JSON.stringify({ key, webhook, packet }));
     });
+    report.child_diagnostics.push({ phase, exit_code: result.status, signal: result.signal, killed: result.killed,
+      stdout_bytes: Buffer.byteLength(result.stdout), stderr_bytes: result.stderr_bytes });
     let record;
-    try { record = JSON.parse(result.stdout.trim()); } catch { fail(`native_${phase}_invalid_result`); }
+    if ((scenario === 'recovery' && phase === 'confirm') || (offline && phase === 'offline_interrupt')) {
+      const directory = phase === 'offline_interrupt' ? `${evidence}/offline-interruption` : evidence;
+      const fault = JSON.parse(fs.readFileSync(`${directory}/interruption.json`));
+      const rows = name => fs.existsSync(`${directory}/${name}.jsonl`) ? fs.readFileSync(`${directory}/${name}.jsonl`, 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse) : [];
+      const exactBinding = JSON.parse(fs.readFileSync(phase === 'offline_interrupt' ? `${directory}/binding.json` : bindingPath));
+      if (!expectedInterruption(result, fault, rows('attempts'), rows('requests'), exactBinding)) fail('interruption_evidence_refused');
+      record = { phase, status: 'interrupted', exit_code: 86, response_observed_by_sdk: false };
+    }
+    else { try { record = JSON.parse(result.stdout.trim()); } catch { fail(`native_${phase}_invalid_result`); } }
     let phaseKey = phase, occurrence = 1;
     while (Object.hasOwn(report.phases, phaseKey)) phaseKey = `${phase}_${++occurrence}`;
     report.phases[phaseKey] = record;
-    if (result.status !== 0 || record.status === 'refused') fail(`native_${phase}_failed`);
+    if ((result.status !== 0 && record.status !== 'interrupted') || record.status === 'refused') fail(`native_${phase}_failed`);
     return record;
+  };
+  const journalState = () => {
+    const rows = name => fs.existsSync(`${evidence}/${name}.jsonl`) ? fs.readFileSync(`${evidence}/${name}.jsonl`, 'utf8').trim().split('\n').filter(Boolean).map(JSON.parse) : [];
+    const binding = JSON.parse(fs.readFileSync(bindingPath));
+    const attempts = rows('attempts'), results = rows('requests');
+    const resolution = fs.existsSync(`${evidence}/reconciliation.json`) ? JSON.parse(fs.readFileSync(`${evidence}/reconciliation.json`)) : null;
+    return { attempts, results, ...assessJournal(attempts, results, resolution, binding) };
   };
   try {
     const installLog = fs.openSync(`${evidence}/install.log`, 'wx', 0o600);
@@ -171,7 +196,12 @@ async function main() {
       const fixture = await native('inspect');
       report.checks.ephemeral_gateway_reload = fixture.ephemeral_gateway_reload_verified === true && fixture.credentials_persisted === false;
       if (!report.checks.ephemeral_gateway_reload) fail('ephemeral_gateway_reload_failed');
-      report.status = 'offline_runtime_prepared'; report.classification = 'locally proven: native fixture and ephemeral config only'; return;
+      const fault = await native('offline_interrupt');
+      const after = await native('inspect');
+      report.checks.drush_guard_interruption = fault.status === 'interrupted' && fault.exit_code === 86;
+      report.checks.offline_order_unchanged = unpaidNative(after) && after.credentials_persisted === false;
+      if (Object.values(report.checks).includes(false)) fail('offline_interruption_assertion_failed');
+      report.status = 'offline_runtime_prepared'; report.classification = 'locally proven: native fixture, ephemeral config and fake-transport Drush interruption only'; return;
     }
     const config = `${baseEnv.HOME}/.config/stripe/config.toml`;
     const stat = fs.lstatSync(config);
@@ -194,7 +224,24 @@ async function main() {
           const signature = request.headers['stripe-signature'];
           if (!webhook || !validSignature(body, signature, webhook)) { response.writeHead(400).end(); return; }
           const binding = JSON.parse(fs.readFileSync(bindingPath));
-          if (ownEvent(JSON.parse(body), binding) && !packet) packet = { body, signature };
+          const event = JSON.parse(body);
+          if (ownEvent(event, binding)) {
+            if (scenario === 'recovery') {
+              // Deliberately acknowledge without queueing/processing the body.
+              // Retain only an observed Event ID, never a body/signature packet.
+              const lostPath = `${evidence}/lost-callback.json`;
+              if (!fs.existsSync(lostPath)) {
+                const fd = fs.openSync(lostPath, 'wx', 0o600);
+                try {
+                  fs.writeFileSync(fd, JSON.stringify({ run_id: runId, intent_id: binding.intent_id, event_id: event.id,
+                    signature_verified: true, body_retained: false, native_handler_called: false,
+                    body_sha256: crypto.createHash('sha256').update(body).digest('hex') }));
+                  fs.fsyncSync(fd);
+                } finally { fs.closeSync(fd); }
+              }
+            }
+            else if (!packet) packet = { body, signature };
+          }
           response.writeHead(200).end();
         } catch { response.writeHead(400).end(); }
       });
@@ -217,6 +264,33 @@ async function main() {
     });
     inspectRemoteDestinations({ ...baseEnv, STRIPE_API_KEY: key });
     await native('create');
+    if (scenario === 'recovery') {
+      const interrupted = await native('confirm');
+      report.checks.confirm_response_interrupted = interrupted.status === 'interrupted' && interrupted.response_observed_by_sdk === false;
+      const deadline = Date.now() + 30000;
+      while (!fs.existsSync(`${evidence}/lost-callback.json`) && !cancelled && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 200));
+      if (!fs.existsSync(`${evidence}/lost-callback.json`)) fail('lost_callback_not_observed');
+      const before = await native('inspect'), unresolved = journalState();
+      report.journal_before_recovery = { unresolved: unresolved.unresolved, reconciled: unresolved.reconciled };
+      report.checks.unpaid_during_unknown = unpaidNative(before) && unresolved.unresolved.length === 1 && !packet;
+      if (Object.values(report.checks).includes(false)) fail('interruption_assertion_failed');
+      const reconciled = await native('reconcile'), resolved = journalState();
+      report.checks.same_intent_confirm_reconciled = reconciled.confirmation_reconciled === true && unpaidNative(reconciled)
+        && resolved.unresolved.length === 0 && resolved.reconciled.length === 1;
+      if (!report.checks.same_intent_confirm_reconciled) fail('confirmation_reconciliation_failed');
+      const paid = await native('recover_callback'), replay = await native('recover_replay');
+      report.checks.api_event_recovery_once = paid.recovery_event_verified === true && completedNative(paid);
+      report.checks.recovery_replay_once = replay.payment_id === paid.payment_id && replay.order_id === paid.order_id
+        && completedNative(replay);
+      if (Object.values(report.checks).includes(false)) fail('recovery_assertion_failed');
+      const refunded = await native('refund'), durable = await native('inspect');
+      report.checks.native_refund = refunded.payment_state === 'refunded' && refunded.refunded_full === true;
+      report.checks.refund_persisted = durable.payment_id === paid.payment_id && durable.payment_state === 'refunded' && durable.refunded_full === true;
+      report.checks.credentials_not_saved = Object.values(report.phases).filter(x => x.status !== 'interrupted').every(x => x.credentials_persisted === false);
+      if (Object.values(report.checks).includes(false)) fail('recovery_assertion_failed');
+      report.status = 'passed'; report.classification = 'test-provider proven: injected response and callback-processing loss recovery only';
+      return;
+    }
     if (scenario === 'abandonment') {
       const waiting = await native('observe');
       report.checks.abandoned_unconfirmed = unpaidNative(waiting) && waiting.provider_status === 'requires_payment_method' && waiting.amount_received === 0;
@@ -270,11 +344,12 @@ async function main() {
         // runtime BEFORE network dispatch. Cleanup never removes these journals.
         const binding = JSON.parse(fs.readFileSync(bindingPath));
         report.intent_id = binding.intent_id ?? null; report.event_id = binding.event_id ?? null;
-        const attempts = fs.existsSync(`${evidence}/attempts.jsonl`) ? fs.readFileSync(`${evidence}/attempts.jsonl`, 'utf8').trim().split('\n').map(JSON.parse) : [];
-        const results = fs.existsSync(`${evidence}/requests.jsonl`) ? fs.readFileSync(`${evidence}/requests.jsonl`, 'utf8').trim().split('\n').map(JSON.parse) : [];
+        const { attempts, results, unresolved, reconciled } = journalState();
         report.intent_id ||= results.find(x => x.path === '/v1/payment_intents')?.provider_object_id ?? null;
         report.provider_write_attempts = attempts.filter(x => x.method === 'post').length;
-        report.uncertain_provider_response = attempts.length !== results.length;
+        report.journal_after_recovery = { unresolved, reconciled };
+        report.uncertain_provider_response = unresolved.length !== 0;
+        if (report.status === 'passed' && unresolved.length) fail('unresolved_provider_response');
       },
       cleanup: async () => {
         // Shut down sockets in a nested try; even a shutdown error cannot prevent
