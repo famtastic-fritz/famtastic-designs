@@ -1,0 +1,41 @@
+{
+  "status": "production_verified",
+  "commit": "3f5c847482aa3e727ef9e38ed709e8e36c8c9d97",
+  "pull_request": "https://github.com/famtastic-fritz/famtastic-designs/pull/34",
+  "deployed_at": "2026-09-19T23:51:17Z",
+  "node": "v22.23.2",
+  "build_seconds": 22.05,
+  "route_shells_verified": 219,
+  "backup": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260919T234728Z-3f5c847482aa3e727ef9e38ed709e8e36c8c9d97.tgz",
+  "deployment_command": "./scripts/deploy-frontend-godaddy.sh --apply",
+  "initial_attempt": "Private checkout failed with Disk quota exceeded before promotion; live release remained ca42d7db.",
+  "quota_recovery": {
+    "reclaimed_kib": 2149820,
+    "removed_clean_reproducible_checkouts": [
+      "378c3d869814cce733d0225fd1f6edfea037869b",
+      "49ce503300bda5984a95e5a65106d7995865c9e7"
+    ],
+    "checks": "Expected HEAD, no tracked/untracked/ignored changes, ancestor of main, not live; git worktree remove without force; immutable commits retained.",
+    "retained": "Production, recent release sources/builds, Git mirror, backups and parent release receipts."
+  },
+  "ci": {
+    "status": "not_started",
+    "reason": "The job was not started because your account is locked due to a billing issue.",
+    "run": "https://github.com/famtastic-fritz/famtastic-designs/actions/runs/35476884664",
+    "required_branch_checks": false,
+    "admin_bypass_used": false,
+    "local_checks": "16 Node contracts, Node 22 build, zero npm audit vulnerabilities, shared-brand check, whitespace and tracked-asset verification"
+  },
+  "http": {
+    "apex_assets_matching_build": 17,
+    "www_assets_matching_build": 17,
+    "slashless_redirect": 301,
+    "slashless_location": "https://famtasticdesigns.com/connect/",
+    "missing_js": 404,
+    "mp4_range_status": 206,
+    "mp4_range": "bytes 0-1023/7473049",
+    "range_bytes_match": true,
+    "vcf_mime": "text/vcard",
+    "vcf_disposition": "attachment; filename=\"Fritz-FAMtastic-Designs.vcf\""
+  }
+}

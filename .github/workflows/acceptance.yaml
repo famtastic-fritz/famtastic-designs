@@ -30,7 +30,7 @@ jobs:
       - run: npm --prefix frontend ci
       - run: npm --prefix frontend audit --audit-level=high
       - run: npm --prefix frontend run build
-      - run: node --test scripts/test-creator-credit.mjs
+      - run: node --test scripts/test-creator-credit.mjs scripts/test-connect.mjs
 
   backend:
     runs-on: ubuntu-latest

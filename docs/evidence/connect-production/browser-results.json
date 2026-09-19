@@ -1,0 +1,53 @@
+{
+  "tool": "CUA in-app browser",
+  "physical_android_install_tested": false,
+  "local": {
+    "viewports": [
+      "320x568",
+      "390x844"
+    ],
+    "horizontal_overflow": false,
+    "interrupted_intro_without_scripts": {
+      "intro_hidden_attribute": false,
+      "computed_visibility": "hidden",
+      "pointer_events": "none",
+      "scripts": 0,
+      "main_inert_attribute": false,
+      "website_link_navigated": true
+    }
+  },
+  "production": {
+    "viewports": [
+      "320x568",
+      "390x844",
+      "1280px desktop"
+    ],
+    "card_apex": true,
+    "card_www": true,
+    "slashless_qr_final_url": "https://famtasticdesigns.com/connect/#qr",
+    "tappable_qr": true,
+    "open_card_button": true,
+    "qr_loads": true,
+    "horizontal_overflow": false,
+    "commercial": {
+      "duration": 30.041667,
+      "played_to_end": true,
+      "muted": false,
+      "ready_state": 4,
+      "media_error": null,
+      "restarted_and_close_paused": true
+    },
+    "contact_download_event": true,
+    "manual_install_dialog": true,
+    "native_install_prompt": "Not exposed by test browser; accepted/dismissed/error paths and owner-gesture requirement covered by deterministic Node simulations.",
+    "offer_navigation": true,
+    "contact_form_navigation": true,
+    "contact_form_anchor_exists": true,
+    "email_href_preserved": true,
+    "main_apex_root_populated": true,
+    "main_www_root_populated": true,
+    "main_heading": "Websites and Digital Systems Built Around the Work You Need Done",
+    "console_errors_observed": []
+  },
+  "android_investigation": "Current source card renders in a browser; source has no service-worker registration. Green-F report may describe OS splash, but affected installed app and Android logs were unavailable. Root cause and real fresh-install launch remain unconfirmed. Production uses explicit /connect/ manifest URLs, installed-mode intro bypass, CSS escape deadline and no service worker."
+}

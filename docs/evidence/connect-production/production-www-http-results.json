@@ -1,0 +1,159 @@
+{
+  "verified_at": "2026-09-19T23:52:15.311164+00:00",
+  "base": "https://www.famtasticdesigns.com/connect/",
+  "assets": [
+    {
+      "path": "index.html",
+      "status": 200,
+      "content_type": "text/html",
+      "bytes": 9928,
+      "sha256": "0274b955291d6b497eaae0ed5c39111d5be40f3f8efc20b4fda32d95abf0c3a8",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/"
+    },
+    {
+      "path": "style.css",
+      "status": 200,
+      "content_type": "text/css",
+      "bytes": 10202,
+      "sha256": "d31413b2baa3ce84b59785bb75576520f73cd573c8f18d15b64f4c882b1ea419",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/style.css"
+    },
+    {
+      "path": "app.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 4129,
+      "sha256": "15752fa44691c0f1c8a11cf246217da1b36fc6a2a5de2e3261984516b2e0ec78",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/app.js"
+    },
+    {
+      "path": "install.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "bytes": 5286,
+      "sha256": "c66ca3a4c375254603ef4f862fb681a37374cf286727d458d89710abe7a1a22e",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/install.js"
+    },
+    {
+      "path": "logo.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 2020725,
+      "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/logo.png"
+    },
+    {
+      "path": "commercial.mp4",
+      "status": 200,
+      "content_type": "video/mp4",
+      "bytes": 7473049,
+      "sha256": "95ae3ca64a6eaee00c772ddd70063c210b55dff03632b9690ec645ffa2bae49f",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/commercial.mp4"
+    },
+    {
+      "path": "commercial-poster.jpg",
+      "status": 200,
+      "content_type": "image/jpeg",
+      "bytes": 47711,
+      "sha256": "397d7904c1abbd74877ce74752d6f85018f252ecb624d707a6dfb7f3e07ccb1f",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/commercial-poster.jpg"
+    },
+    {
+      "path": "fritz-famtastic.vcf",
+      "status": 200,
+      "content_type": "text/vcard",
+      "bytes": 307,
+      "sha256": "487d2fe72a9ce029ab1114392f40c879a2664ec6410aa048019d5cac056eb59c",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/fritz-famtastic.vcf"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "status": 200,
+      "content_type": "application/manifest+json",
+      "bytes": 799,
+      "sha256": "9756a0fbc2ab0c39284d1b226cbb9d71c5571aa3002c8eb44dc0488734415632",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/manifest.webmanifest"
+    },
+    {
+      "path": "qr.svg",
+      "status": 200,
+      "content_type": "image/svg+xml",
+      "bytes": 13111,
+      "sha256": "dde091d4741fb27e5fda13720d9ec91e02644622a729c245a2deba2f98ae7fbf",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/qr.svg"
+    },
+    {
+      "path": "FAMtastic-Connect-QR.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 1828,
+      "sha256": "fcfb9945199a342866eb317cee9ae8704aec3ec5b22de826e09e2e82df4e9899",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/FAMtastic-Connect-QR.png"
+    },
+    {
+      "path": "icons/icon.svg",
+      "status": 200,
+      "content_type": "image/svg+xml",
+      "bytes": 194,
+      "sha256": "6d7a29ec36dd951408025a8dbf9b2c42b01155f32feac7b8f950cd23bf9eb91b",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/icons/icon.svg"
+    },
+    {
+      "path": "icons/icon-maskable.svg",
+      "status": 200,
+      "content_type": "image/svg+xml",
+      "bytes": 183,
+      "sha256": "57ef4d991aff2be178f7e42a64608294554bb326fbf486da573c016f302a515d",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/icons/icon-maskable.svg"
+    },
+    {
+      "path": "icons/icon-192.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 2563,
+      "sha256": "0cb9961bf0216fb2f7533e4043167eb779d59fe37fcb46be1dc34256355d7abd",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/icons/icon-192.png"
+    },
+    {
+      "path": "icons/icon-512.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 11102,
+      "sha256": "d84f69df871e71e27a0270625be28270c696310f9be8304bb0f80cd19365f8c2",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/icons/icon-512.png"
+    },
+    {
+      "path": "icons/icon-maskable-512.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 7282,
+      "sha256": "07a2579536623c9eeedb446179172c432486e03a2aee773518fc2ee6a1f033de",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/icons/icon-maskable-512.png"
+    },
+    {
+      "path": "icons/apple-touch-icon.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 2441,
+      "sha256": "ab44eb2c9752f98d18e48a55f51d99784e8b64d8af6867d7381c168300577456",
+      "matches_build": true,
+      "url": "https://www.famtasticdesigns.com/connect/icons/apple-touch-icon.png"
+    }
+  ]
+}
