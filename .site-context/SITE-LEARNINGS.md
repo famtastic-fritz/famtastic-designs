@@ -1,5 +1,36 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Measure the final soundtrack and respect baked-in occlusion
+
+Native video metadata and plausible loudness do not prove preserved audio. The
+supplied-movie check found inconsistent waveform alignment in native HyperFrames
+audio; keep those attempts and master from the explicit AAC source when exact
+preservation is required. Validate decoded PCM and packet hashes. A browser mute
+attribute alone is weaker than a visual asset with no audio stream.
+
+A local Vision matte can separate a supplied performer within the M5's memory
+limits, but it cannot recover a sleeve hidden behind a baked-in price card.
+Preserve that occlusion intentionally in composition and disclose source detail,
+matte edges and subjective-review limits. Use a trusted authored-project manifest,
+freeze inputs, and inspect actual encoded transitions, not only browser snapshots.
+See `docs/marketing/local-video-studio/RECREATION-PROOF-2026-09-19.md`.
+
+## 2026-09-19 — Keep native video proof tied to the actual workstation
+
+Observation: the existing HyperFrames CLI uses `standard/high`, the package uses
+`looks/delivery`, and MoneyPrinterTurbo exposes an older single-task interface.
+Guidance: inspect advertised flags/schema, negotiate only verified equivalents,
+bind every output to its new native task, and preserve installed source/config.
+Local media and supplied audio remain separate from generation or publication.
+
+Four-format native composition, imported footage, captions and cache fault tests
+now have hashes, canonical Build DNA, timing and sampled visual evidence. Require
+all successful retained evidence before cache reuse. Keep broken fault copies
+labeled; never replace an existing review sheet. Browser playback and measured
+audio are not subjective listening or two-original-movie acceptance. No ComfyUI
+model was installed on the memory/storage-constrained Mac; record absence honestly.
+See `docs/marketing/local-video-studio/WORKSTATION-PROOF-2026-09-19.md`.
+
 ## 2026-09-19 — Compact utility navigation without smaller targets
 
 Observation:44px mobile targets plus grid gaps and a full-width single Company
@@ -2722,6 +2753,18 @@ data, and YouTube's PNG export included transparent padding that made it too sma
 Guidance: use the official PNG at an appropriate pixel size; preserve mark geometry
 and measure visible artwork, export padding and compressed asset size independently.
 Keep material/interaction layers separate from official symbols.
+
+
+## 2026-09-19 — Local video production and machine truth
+
+Observation: the uploaded discussion treated16GB as dedicated GPU VRAM, while `marketing/local-models.json` documents Apple Silicon16GB unified memory. Guidance: use deterministic local composition as the dependable baseline; benchmark optional generation on the actual host before claiming fit or speed.
+
+Observation: cached video bytes alone do not prove retained source/evidence is intact. Guidance: verify the cached ledger and all referenced artifact hashes, and include source bytes, code, brand dependencies and stable tool version in invalidation.
+
+Observation: HyperFrames' native animation example needs the runtime's `data-no-timeline` root contract; compact captioned formats can overflow despite a valid vertical render. Guidance: run real checks and render representative aspects; never weaken checks to conceal missing motion or overflowing copy. See the local-video-studio proof and handoff.
+
+Observation: repository metadata reported push permissions but the connected integration rejected Git-object writes. Guidance: actual write authorization must be verified; provide a verified bundle and clearly label local-only commits when remote publication is blocked.
+
 ## September 19, 2026 — compact footer atmosphere release candidate
 
 Owner authorized deployment. Mobile Company links are compact with 44px targets;

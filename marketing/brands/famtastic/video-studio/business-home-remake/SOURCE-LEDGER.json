@@ -1,0 +1,51 @@
+{
+  "schema": "famtastic.supplied-performance-recreation.v1",
+  "source": {
+    "name": "FAMtastic-Designs-30sec-FINAL-COPY-FIXED.mp4",
+    "sha256": "95ae3ca64a6eaee00c772ddd70063c210b55dff03632b9690ec645ffa2bae49f",
+    "width": 480,
+    "height": 854,
+    "fps": 24,
+    "frames": 721,
+    "duration_seconds": 30.041666666666668,
+    "status": "owner-supplied; original retained unchanged"
+  },
+  "scenes": [
+    {
+      "start": 0,
+      "end": 7.1,
+      "story": "Hustle without a website; establish a business home",
+      "performance": "Supplied pixels through local Vision matte",
+      "graphics": "Authored city, inbox/profile fragments, type and house draw"
+    },
+    {
+      "start": 7.1,
+      "end": 13.3,
+      "story": "Show work, explain services, collect inquiries",
+      "performance": "Supplied gesture/performance",
+      "graphics": "Clearly labelled website illustration, timed benefit headings; no live form or invented customer records"
+    },
+    {
+      "start": 13.3,
+      "end": 25.25,
+      "story": "First-year offer and hosting renewal",
+      "performance": "Supplied close performance; original price panel occludes sleeve",
+      "graphics": "New price card intentionally covers unrecoverable source-card area, with $199 first year, rounded 55 cents/day, $9.99/month hosting renewal and separate domain renewal"
+    },
+    {
+      "start": 25.25,
+      "end": 30.041666666666668,
+      "story": "Opportunity, business home, website destination",
+      "performance": "Supplied whole-body ending",
+      "graphics": "Authored house stage, clear URL and canonical brand marks"
+    }
+  ],
+  "audio": {
+    "policy": "Original AAC master, separate from visual presenter media",
+    "subjective_listening": "Not performed by the tool surface"
+  },
+  "captions": "captions.json: local ASR plus editorial phrase grouping; approximate phrase alignment, not word-perfect subtitles",
+  "identity": "No new face, voice clone, generated actor movement, recovered occluded detail or HD performer claim",
+  "paid_provider_fee_usd": 0,
+  "publication": "disabled"
+}

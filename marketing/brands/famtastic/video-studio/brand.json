@@ -1,0 +1,13 @@
+{
+  "name": "FAMtastic Designs",
+  "url": "https://famtasticdesigns.com/",
+  "logo": "frontend/public/brand/famtastic-designs-logo-v1.png",
+  "logo_sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+  "signature_font": "frontend/public/brand/fonts/kaushan-script-latin-v19.woff2",
+  "palette": {"background":"#070907","text":"#F7F7F4","accent":"#7CFC00"},
+  "definition": "Fearless deviation from established norms with a bold and unapologetic commitment to stand apart on purpose, applying mastery of craft to the point that the results are the proof, and manifesting the extraordinary from the ordinary.",
+  "creative_rule": "Normal energy. Impossible context.",
+  "identity_rule": "Preserve the supplied person's identity. No invented face; no beautification drift.",
+  "source": "BRAND.md; docs/brand/famtastic-designs-logo.md; supplied Unreasonable Reality conversation",
+  "credit_module": "scripts/creator-credit.mjs"
+}

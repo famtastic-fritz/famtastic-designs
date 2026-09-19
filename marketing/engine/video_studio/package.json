@@ -1,0 +1,8 @@
+{
+  "name": "famtastic-local-video-toolchain",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pinned optional compositor; Python orchestration has no third-party dependencies",
+  "engines": {"node": ">=22"},
+  "dependencies": {"hyperframes":"0.8.50"}
+}

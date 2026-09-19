@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "famtastic-video-studio"
+version = "0.1.0"
+description = "Explicit local video composition and generation adapters"
+requires-python = ">=3.11"
+dependencies = []
+[project.scripts]
+video-studio = "fam_video.cli:main"
+[tool.setuptools.packages.find]
+include = ["fam_video*"]

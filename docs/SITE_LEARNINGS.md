@@ -1,5 +1,36 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Prove authored video with the real source
+
+A real 30-second source exposed seams the synthetic fixture did not: baked-in
+foreground occlusion, low-resolution matte edges, and an audio waveform mismatch
+that stream presence and loudness checks missed. Retain original/source hashes,
+all rejected takes, source-aligned captions, and a separately evidenced lossless
+AAC mastering step. Test required renderer prerequisites independently of optional
+model/server integrations and update notifications.
+
+The new project-manifest path captures continuous custom compositions in canonical
+Build DNA and invalidates reuse when any declared input or retained proof changes.
+Local Vision segmentation is not local diffusion or new performer generation.
+One movie was supplied; do not keep describing it as absent or invent a second.
+GitHub runner billing failures are external blockers, not failing source tests.
+See `docs/marketing/local-video-studio/RECREATION-PROOF-2026-09-19.md`.
+
+## 2026-09-19 — Prove the installed video toolchain and retained evidence
+
+The installed HyperFrames 0.8.29 names quality presets differently from the
+packaged 0.8.50 contract. Negotiate against that executable's help and record the
+resolved preset; do not silently upgrade a working installation. Mac temporary
+paths can resolve from `/var` to `/private/var`, so compare canonical paths.
+
+A playable cache entry also needs intact terminal Build DNA and every evidence
+artifact. Missing/tampered contact sheets now force a fresh run; test faults on
+copies and preserve original evidence. Explicit zero video duration cannot fall
+back to a valid container duration. Sampled frames, browser playback and waveform
+correlation establish different facts from human listening or owner acceptance.
+Measure actual memory and disk before optional model installation. See the dated
+Local Video Studio workstation report and two-movie acceptance procedure.
+
 ## 2026-09-19 — Separate immutable review from live acceptance
 
 Footer approval authorized the existing implementation release, not unrelated
@@ -2705,3 +2736,10 @@ data, and YouTube's PNG export included transparent padding that made it too sma
 Guidance: use the official PNG at an appropriate pixel size; preserve mark geometry
 and measure visible artwork, export padding and compressed asset size independently.
 Keep material/interaction layers separate from official symbols.
+
+
+## 2026-09-19 — Reusable local video lane
+
+The source plan assumed NVIDIA-like16GB video generation; the repo confirms16GB Apple unified memory. The new engine therefore defaults to local HyperFrames composition/reuse, with explicit optional shot generation. Existing MPT configuration can auto-upload after rendering, so the wrapper rejects an armed switch before invoking it. Actual upstream checks also exposed a required WAAPI root annotation and compact-format overflow; both are handled in the compositor, with test and real-render evidence in `docs/marketing/local-video-studio/PROOF.md`. Preserve zero-provider-fee versus unmeasured electricity/time, and contract-tested versus native-proven distinctions.
+
+Remote delivery correction: GitHub integration returned403 for Git-object creation despite broad repository metadata permissions, and shell push lacked credentials. Do not treat metadata as proof of write access. The concrete fallback is a verified Git bundle with the exact committed tree and explicit owner-side import instructions.

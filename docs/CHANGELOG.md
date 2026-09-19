@@ -1,5 +1,37 @@
 # Product changelog
 
+## 2026-09-19 — Supplied-movie remake and authored project evidence
+
+- Added `render-project` with frozen manifests/assets, canonical branding,
+  native verification, Build DNA and integrity-checked reuse.
+- Added explicit AAC master copying with retained raw video and mastering logs;
+  the final soundtrack matches all 937 original AAC packets and decoded PCM.
+- Separated required HyperFrames readiness from update notices and optional
+  TTS, music, transcription and Docker integrations.
+- Rebuilt the supplied movie at 1080p with original performance, local Vision
+  matte, newly authored graphics, phrase captions and the original AAC master.
+- Proved the installed MPT montage worker with this actual source and soundtrack.
+- Recorded 93 passing regressions, 19 valid completed ledgers, native timings,
+  playback, cache reuse and limitations in
+  `docs/marketing/local-video-studio/RECREATION-PROOF-2026-09-19.md`.
+  Paid providers, publication and production deployment remain disabled.
+
+## 2026-09-19 — Local Video Studio workstation proof and repairs
+
+Imported the exact packaged implementation into isolated branch
+`codex/local-video-studio-proof`, preserving existing work. The M5/16 GiB Mac
+rendered all four full-resolution formats with supplied audio/captions and four
+additional imported-video/still proofs. Native cache reuse, changed-input misses,
+and missing/tampered-evidence recovery pass with retained originals and timings.
+
+Repaired installed HyperFrames quality negotiation, macOS path handling,
+zero-duration verification and contact-sheet preservation. Cache hits now require
+intact successful canonical evidence. The existing MoneyPrinterTurbo CLI receives
+an explicit compatibility path with local inputs and exact new-task output binding.
+Workstation results and remaining runtime/creative limits:
+`docs/marketing/local-video-studio/WORKSTATION-PROOF-2026-09-19.md`.
+No paid providers, publishing or production deployment were activated.
+
 ## 2026-09-19 — Mobile footer spacing and atmosphere (local)
 
 - Tightened mobile footer grid and two-column Company navigation, retaining44px targets.
@@ -3713,6 +3745,16 @@ Final independent parent code review passed 1,022 tests/99 files in77.73s with a
 - Replaced the existing SocialSignal orbit with reusable smoked-metal/enamel social badges and one approved-profile configuration inside SiteFooter; preserved canonical logo, CMS navigation, legal/year/signature and native click events.
 - Added ten-platform local gallery, official-asset provenance, Design MD/Site DNA and focused tests. Desktop social height 368px → 157.45px; five responsive widths fit. Build, seven footer/analytics tests, five credit tests, public-flow and brand checks pass.
 - Source only on `famtastic/social-footer-v1`; Fritz visual review pending. No push, merge, deployment or customer send. See `docs/design/social-footer/REVIEW.md` for exact limits, commands and screenshots.
+
+
+## 2026-09-19 — Local video production studio
+
+- Added the local campaign video CLI, four-format HyperFrames composition, exact brand/caption/audio support and source-aware cache under `marketing/engine/video_studio/`.
+- Added explicit MoneyPrinterTurbo draft and local ComfyUI workflow/resume adapters, canonical Build DNA, media checks and recreation comparison tooling.
+- Added FAMtastic creative examples, current primary-source research and a workstation proof handoff at `docs/marketing/local-video-studio/`; no deployment or publishing.
+
+- Remote write access rejected the feature push; supplied a verified Git bundle for owner-side CLI import instead of claiming a pushed branch.
+
 ## September 19, 2026 — compact footer atmosphere release candidate
 
 Owner authorized deployment. Mobile Company links are compact with 44px targets;
