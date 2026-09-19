@@ -207,3 +207,23 @@ work explicitly; it is not a claim that the entire fleet retrofit is finished.
   browser coverage remain separately listed gaps, not implied complete.
 - Disk pressure is actively limiting remaining checks. No source/assets were
   deleted to make space. Unlaunched sites are not launched under retrofit authority.
+
+### Final follow-up receipts
+
+- Hosting: feature888baacfd003 remains unmerged; main2a8ed5c31410. Tests/build
+  passed and mobile homepage/login credit is clear. Full breakpoint QA unfinished.
+  Live certificate is expired; documented runtime files are absent and deployment
+  binding unresolved. Task-created dependency symlink is untracked.
+- Lawn: feature8f0c2669d268 remains unmerged; maina51c7a1d6d5d. Seven pages at
+  three widths passed CUA including open-popup clearance. A two-line clearance
+  CSS fix remains uncommitted in the isolated worktree; tests passed after it,
+  full build passed before it. Existing Netlify site responds, provider binding
+  remains unresolved. Only validated disposable task build output was removed.
+- Locs: public three-page release remains live. Login/forgot/reset, owner desk,
+  newsletter owner and confirmation/unsubscribe, and419/429 runtime templates
+  are still uncredited; assessed read-only, not represented as complete.
+- Kakes: public/auth/desk renderer release remains live. Standalone404 and
+  authenticated admin guide remain pending. Decorate the guide response rather
+  than modifying historical guide HTML/screenshots; version the404 safely.
+- MBSH documentation/main advanced to9c2d7c6 after plan closeout. Its live runtime
+  remains76b578c, unchanged by documentation-only commits.
