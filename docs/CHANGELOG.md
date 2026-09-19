@@ -15,7 +15,6 @@
   acceptance and reselection invalidation; live gates were not changed for tests.
 - QA gate `988d9d6d` independently observed deployed at23:46:20Z. Worker changes
   remain separate and disabled; main owns subsequent shared releases.
-
 ## 2026-09-18 — Evidence-bound personal proof delivery (local)
 
 - Added trusted independent-QA release with automation attribution, current
@@ -3593,3 +3592,7 @@ Final separate-handoff/backoff regression: **1,022 tests / 99 files in 70.01s**,
 ## 2026-09-17 - Current handoff synopsis and independent closeout
 
 Final independent parent code review passed 1,022 tests/99 files in77.73s with all PHP/browser environments, plus PHP42/3 selection/3 portal API cases and lint/diff. Refreshed the canonical handoff and writer-plan openings to describe current bounded support, explicit unsupported profiles and actual operational gates; marked older checkpoint claims historical. Append-only progress entries must not leave the current synopsis stale. No production or Drive changes; final dependency cleanup is separate from code proof.
+# 2026-09-18 — Request 17 offline-prepayment lane
+
+- Added a bounded native-Commerce manual receipt operation, account-bound single-use same-order completion, private empty project conversation, and tests. Money received is separate from order placement, acceptance and launch; production receipt/release evidence is tracked in `docs/plans/REQUEST17_OFFLINE_PREPAYMENT_2026-09-18.md`.
+- Recorded native order21/payment5 for request17 ($200 received/$0 outstanding), with fresh-process replay and no notices or fulfillment. Request16 has a replay-safe $199 one-time private scope only, not a charge. Added exact paid-exception selection evidence checks and a rollback-only native selector rehearsal; shared-module deployment remains coordinated with the main lane.

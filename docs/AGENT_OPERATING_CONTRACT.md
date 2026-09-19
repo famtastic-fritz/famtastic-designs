@@ -9,7 +9,6 @@ activation. Never use a broad lifecycle drain to demonstrate the new worker.
 Routine green work needs no extra Fritz decision; unsupported commerce needs its
 implementation capability, not a false static success. Laptop independence is
 unproven until a real unattended test runs with the Mac unavailable.
-
 ## September 18 amendment — independent QA authority
 
 For routine account-bound three-proof deliveries, the owner's approved policy

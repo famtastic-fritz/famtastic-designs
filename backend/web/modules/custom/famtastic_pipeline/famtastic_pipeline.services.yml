@@ -2,11 +2,14 @@ services:
   famtastic_pipeline.worker_coordinator:
     class: Drupal\famtastic_pipeline\Service\WorkerCoordinator
     arguments: ['@database', '@datetime.time', '@lock']
-
   famtastic_pipeline.automated_proof_release:
     class: Drupal\famtastic_pipeline\Service\AutomatedProofRelease
     arguments: ['@database', '@entity_type.manager', '@datetime.time', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.customer_portal']
 
+  famtastic_pipeline.offline_prepayment_placement_guard:
+    class: Drupal\famtastic_pipeline\EventSubscriber\OfflinePrepaymentPlacementGuard
+    tags:
+      - { name: event_subscriber }
   famtastic_pipeline.client_messages:
     class: Drupal\famtastic_pipeline\Service\ClientMessagingService
     arguments: ['@database', '@datetime.time', '@uuid', '@config.factory', '@lock']

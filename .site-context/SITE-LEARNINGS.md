@@ -13,7 +13,6 @@ selected-source/receipt identity. Guidance: verify canonical versions, then repa
 fixture evidence; never relax acceptance/checkout gates to make stale tests green.
 Native held prepayments may be bound by a private offer and order data while the
 normal converted-order field is NULL; do not manufacture another sale.
-
 ## 2026-09-18 — Automation approval is not a human uid
 
 Observation: reusing human proof approval would stamp a staff uid and queue the
@@ -2591,3 +2590,15 @@ Independent POST-route review found that combining build and source association 
 ## 2026-09-17 - Current handoff synopsis and independent closeout
 
 Final independent parent code review passed 1,022 tests/99 files in77.73s with all PHP/browser environments, plus PHP42/3 selection/3 portal API cases and lint/diff. Refreshed the canonical handoff and writer-plan openings to describe current bounded support, explicit unsupported profiles and actual operational gates; marked older checkpoint claims historical. Append-only progress entries must not leave the current synopsis stale. No production or Drive changes; final dependency cleanup is separate from code proof.
+# 2026-09-18 — Prepaid does not mean placed or delivered
+
+Observation: the existing completed-order hook starts fulfillment and queues mail,
+while normal request order binding closes pre-purchase revision paths. Guidance:
+record a confirmed offline receipt through native Commerce manual payment on a
+held unplaced order; bind via an audited private offer, preserve actual unknown
+bank fields, and keep terms, client acceptance and release distinct. Never use a
+coupon/comp or a second order to acknowledge already-received funds.
+The exact private offer can bind an offline receipt without filling the request's
+normal order field and blocking proof selection. Any compatibility bridge must
+reconcile the native payment, immutable scope hash and held unaccepted order;
+source tests do not replace an actual ready-proof selection rehearsal.

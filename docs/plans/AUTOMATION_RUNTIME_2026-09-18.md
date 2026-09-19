@@ -67,6 +67,12 @@ request cannot start pre-payment staging." Commercial source `e692d890` adds
 `OfflinePrepaymentService::permitsSelectedStaging()` for the exact authorized
 prepaid exception. Before releasing the combined selected repair, use that helper
 at both selection and selected-revision guards and test its authoritative bindings.
+The isolated integration retains this helper, including the locked selection
+re-read. This does not authorize changing the normal converted-order field: source
+association, packet registration and receipt CAS also intentionally require NULL.
+Supporting an early populated field end-to-end is a separate cross-service policy
+change, not a selector-only patch. Current native prepayment is compatible through
+its intentionally NULL normal field and private offer/order binding.
 Do not globally bypass paid checks. Rawls' receipt records native order21/payment5;
 the request's normal checkout field intentionally remains NULL while the private
 offer and order data provide the bidirectional request/customer/payment binding.

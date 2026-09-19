@@ -2601,3 +2601,14 @@ Independent POST-route review found that combining build and source association 
 ## 2026-09-17 - Current handoff synopsis and independent closeout
 
 Final independent parent code review passed 1,022 tests/99 files in77.73s with all PHP/browser environments, plus PHP42/3 selection/3 portal API cases and lint/diff. Refreshed the canonical handoff and writer-plan openings to describe current bounded support, explicit unsupported profiles and actual operational gates; marked older checkpoint claims historical. Append-only progress entries must not leave the current synopsis stale. No production or Drive changes; final dependency cleanup is separate from code proof.
+# 2026-09-18 — Owner-confirmed offline receipts
+
+The legacy assumption that completed order = money received fails for prepaid
+exceptions. Native manual payment plus a held order preserves financial truth
+without starting fulfillment or mail. Request17's receipt source is Fritz's
+explicit confirmation; unknown bank date/reference remain unknown. Use the
+request-specific transaction/row lock and replay guard; never fake a paid flag.
+Keep the pre-purchase request's normal order field empty until final readiness;
+its audited private offer carries the prepaid binding. If compatibility requires
+an earlier binding, use exact reconciled exception evidence, never a general
+paid-request selection bypass. Scope hash, ownership and held status matter.

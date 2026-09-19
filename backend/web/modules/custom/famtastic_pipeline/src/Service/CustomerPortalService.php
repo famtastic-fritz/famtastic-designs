@@ -269,8 +269,11 @@ final class CustomerPortalService {
         'package' => implode(', ', array_map(static fn($item): string => $item->getTitle(), $commerceOrder->getItems())),
         'amount' => (int) round((float) $commerceOrder->getTotalPrice()->getNumber() * 100),
         'currency' => strtolower($commerceOrder->getTotalPrice()->getCurrencyCode()),
-        'payment_status' => $commerceOrder->getState()->value === 'completed' ? 'paid' : $commerceOrder->getState()->value,
-        'paid_at' => $commerceOrder->getPlacedTime(),
+        'payment_status' => $commerceOrder->getData('famtastic_offline_prepayment') && $commerceOrder->isPaid()
+          ? 'paid' : ($commerceOrder->getState()->value === 'completed' ? 'paid' : $commerceOrder->getState()->value),
+        'paid_at' => $commerceOrder->getData('famtastic_offline_prepayment') ? NULL : $commerceOrder->getPlacedTime(),
+        'payment_recorded_at' => $commerceOrder->getData('famtastic_offline_prepayment')['recorded_at'] ?? NULL,
+        'fulfillment_hold' => $commerceOrder->getData('famtastic_offline_prepayment')['hold'] ?? NULL,
         'created' => $commerceOrder->getCreatedTime(),
         'source' => 'commerce',
       ];
@@ -988,9 +991,10 @@ final class CustomerPortalService {
     $row['customer_archived_at'] = (int) ($row['customer_archived_at'] ?? 0) ?: NULL;
     $row['customer_archived'] = $row['customer_archived_at'] !== NULL;
     $recommendation = (array) ($row['intake']['recommendation'] ?? []);
-    $offer = $this->database->select('famtastic_private_offer', 'o')->fields('o', ['public_id', 'sku', 'list_amount_minor', 'offered_amount_minor', 'currency', 'reason', 'expires_at'])
-      ->condition('website_request_id', (int) $row['id'])->condition('status', 'active')
-      ->condition('expires_at', $this->time->getRequestTime(), '>')->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    $offerQuery = $this->database->select('famtastic_private_offer', 'o')->fields('o', ['public_id', 'sku', 'list_amount_minor', 'offered_amount_minor', 'currency', 'reason', 'expires_at'])
+      ->condition('website_request_id', (int) $row['id'])->condition('status', 'active');
+    $offer = $offerQuery->condition($offerQuery->orConditionGroup()->isNull('expires_at')->condition('expires_at', $this->time->getRequestTime(), '>'))
+      ->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $row['private_offer'] = $offer ?: NULL;
     $stagingReceipt = json_decode((string) ($row['staging_receipt_json'] ?? ''), TRUE);
     $row['staging_preview'] = ($row['staging_status'] ?? '') === 'deployed' && is_array($stagingReceipt)
@@ -1745,6 +1749,9 @@ final class CustomerPortalService {
       }
     }
     else {
+      if (!empty($row['commerce_order_id']) && !(new OfflinePrepaymentService())->permitsSelectedStaging($row)) {
+        throw new \RuntimeException('A paid request cannot start pre-payment staging.');
+      }
       $direction = strtolower((string) ($input['direction'] ?? ''));
       if (!in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE)) throw new \InvalidArgumentException('Choose one available website direction.');
       $exists = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)->condition('campaign_id', (int) $row['proof_campaign_id'])->condition('direction_id', $direction)->count()->execute();
@@ -1758,7 +1765,9 @@ final class CustomerPortalService {
       try {
         $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', (int) $row['id'])->forUpdate()->execute()->fetchAssoc();
         if (!$row || (int) $row['customer_id'] !== $customerId || (int) $row['proof_campaign_id'] !== (int) $campaign->id() || !in_array($row['proof_review_status'], ['customer_ready', 'notified', 'selected'], TRUE)) throw new \InvalidArgumentException('The available proof selection changed. Refresh before choosing.');
-        if (!empty($row['commerce_order_id'])) throw new \RuntimeException('A paid request cannot start pre-payment staging.');
+        // Re-read the exact prepaid exception under the selection row lock.
+        // Do not override later source/receipt gates or convert a held purchase.
+        if (!empty($row['commerce_order_id']) && !(new OfflinePrepaymentService())->permitsSelectedStaging($row)) throw new \RuntimeException('A paid request cannot start pre-payment staging.');
         if (($row['proof_review_status'] ?? '') === 'selected' && ($row['selected_proof_direction'] ?? '') === $direction) {
           $this->prepareSelectedProofStaging($row, $variant, $direction);
           unset($transaction);
@@ -1813,7 +1822,7 @@ final class CustomerPortalService {
     $transaction = $this->database->startTransaction();
     try {
       $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', (int) $row['id'])->forUpdate()->execute()->fetchAssoc();
-      if (!$row || !empty($row['commerce_order_id']) || empty($row['selected_proof_direction'])) throw new \InvalidArgumentException('Only unpaid selected-site revisions use this continuation.');
+      if (!$row || (!empty($row['commerce_order_id']) && !(new OfflinePrepaymentService())->permitsSelectedStaging($row)) || empty($row['selected_proof_direction'])) throw new \InvalidArgumentException('Selected-site revisions require an unconverted request or reconciled prepaid exception.');
       $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
       $history = $intake['selected_site_revision_requests'] ?? [];
       if ($history && (end($history)['notes'] ?? '') === $notes && in_array(($row['staging_status'] ?? ''), ['queued', 'planning', 'planning_blocked'], TRUE)) {

@@ -55,4 +55,15 @@ final class PrepaymentStagingContractTest extends UnitTestCase {
     $this->assertStringContainsString('staging preview required before checkout opens', $portal);
   }
 
+  public function testIntegratedSelectionAndRevisionRetainTheExactPrepaidPolicy(): void {
+    $portal = file_get_contents(dirname(__DIR__, 3) . '/src/Service/CustomerPortalService.php');
+    $selection = substr($portal, strpos($portal, 'public function decideWebsiteRequestProof('), strpos($portal, 'public function assertCurrentSelectedStagingPacket(') - strpos($portal, 'public function decideWebsiteRequestProof('));
+    $revision = substr($portal, strpos($portal, 'private function queueSelectedSiteRevision('), strpos($portal, 'private function prepareSelectedProofStaging(') - strpos($portal, 'private function queueSelectedSiteRevision('));
+    // Initial guard and locked re-read both retain Rawls' financial reconciliation.
+    self::assertSame(2, substr_count($selection, '(new OfflinePrepaymentService())->permitsSelectedStaging($row)'));
+    self::assertStringContainsString('(new OfflinePrepaymentService())->permitsSelectedStaging($row)', $revision);
+    self::assertStringContainsString('->forUpdate()', $selection);
+    self::assertStringContainsString('->forUpdate()', $revision);
+  }
+
 }

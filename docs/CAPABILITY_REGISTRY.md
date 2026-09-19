@@ -14,7 +14,6 @@ Fresh canonical lifecycle passed00:00:11Z with fixture27ab74fa: real installed
 Drupal/SQLite, authenticated customer HTTP, signed synthetic hosting receipt,
 receipt-bound acceptance, memory email/payment, fixture DNS and local deployment.
 No real hosting, merchant, cloud or laptop-unavailable proof is implied.
-
 ## 2026-09-18 — Independent QA proof release, locally proven
 
 Trusted service operation atomically retains automated QA/research and reveals
@@ -22,6 +21,13 @@ three account-bound proofs with one personalized standard/v2 outbox. Fifteen
 real SQLite/filesystem tests pass (64 assertions); entity lookup is mocked.
 Not deployed, SMTP-proven or unattended scheduling. See the automated proof release plan.
 
+## 2026-09-18 — Bounded offline-prepayment source
+
+Locally tested: request-bound native manual receipt operation, replay guards,
+hashed same-purchase completion and private conversation reuse; 18 tests/95
+assertions include existing durable messaging. Not a new payment provider,
+launch authority or deployed completion UI. Live recording and module release
+are separate in `docs/plans/REQUEST17_OFFLINE_PREPAYMENT_2026-09-18.md`.
 ## 2026-09-18 — Branded operational email: owner proof accepted
 
 Live follow-up: backend `3f1169ae` deployed at 18:54:55Z. Signed-in People redirect
@@ -380,6 +386,17 @@ or acceptance report; do not upgrade a classification from confidence alone.
 Backend `0cd25c48` is production-deployed with update8062 and no pending updates. Final frontend `d1b939f6` is deployed, including explicit-entry routing; see `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md`. The live generated site key resolves to the existing verified Shay account, active membership and converted request. Thirty production diagnostic assertions passed (owner/cross-account controller reads and rollback-only appointment lifecycle); five separate-process synthetic-lock assertions passed. No customer or test appointment rows were committed by QA and no test customer notifications were sent.
 
 Classification: production-deployed and production smoke-tested, NOT a claim that Shay's personal password sign-in, real customer acceptance/email delivery, simultaneous business transactions or external calendar integration were proven. Two requested owner instruction emails have Gmail SENT receipts. Quick start: `docs/OWNER_DESK_QUICK_START.md`.
+
+## 2026-09-18 — Bounded offline prepayment evidence
+
+Request17 native manual receipt is production-recorded and replay-proven:
+order21/payment5, $200 received/$0 outstanding, held unplaced purchase, no
+fulfillment or email side effects. Request16's $199 private one-time scope is
+recorded/replay-proven without an order or charge. Private project conversations
+are durably bound and support-case assigned to Fritz. Completion/placement guards
+and paid-selection bridge are source-tested but not module-deployed by this lane;
+scope-exact reunion checkout and completion UI are not yet proven. See
+`docs/plans/REQUEST17_OFFLINE_PREPAYMENT_2026-09-18.md`.
 # 2026-09-17 evidence addendum: protected selected-site review
 
 One controlled static Pros In Training review is hosted and browser-verified on
