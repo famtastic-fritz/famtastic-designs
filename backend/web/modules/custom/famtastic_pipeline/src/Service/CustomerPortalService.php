@@ -578,9 +578,9 @@ final class CustomerPortalService {
     if (in_array($row['status'], ['submitted', 'checkout_started'], TRUE) && $clean['status'] === 'draft') {
       $clean['status'] = $row['status'];
     }
-    // Customer edits may change the brief, but never erase the durable record
-    // of an included reset or edit round. Research is retained in its own
-    // proof-campaign table below for the same reason.
+    // Customer edits may change answers, never server-authored audit metadata.
+    // Original staff-assisted intake bytes remain in the immutable event ledger;
+    // do not copy that ledger into the editable intake or trust echoed audit keys.
     $existingIntake = json_decode((string) $row['intake_data'], TRUE) ?: [];
     $submission = SelectedRequestContent::record($input, $customerId, $rawInput);
     $clean['intake']['request_submission'] = ['raw_json' => $rawInput, 'sha256' => $rawInput === NULL ? NULL : hash('sha256', $rawInput)];
@@ -590,7 +590,8 @@ final class CustomerPortalService {
     if (isset($existingIntake['authored_content']) && $existingIntake['authored_content'] !== $clean['intake']['authored_content']) {
       $clean['intake']['authored_content_history'] = [...($existingIntake['authored_content_history'] ?? []), $existingIntake['authored_content']];
     } elseif (isset($existingIntake['authored_content_history'])) $clean['intake']['authored_content_history'] = $existingIntake['authored_content_history'];
-    foreach (['proof_design_reset_requests', 'proof_edit_round_requests', 'proof_revision_request'] as $protectedKey) {
+    foreach (['proof_design_reset_requests', 'proof_edit_round_requests', 'proof_revision_request', 'staff_assisted_brief', 'selected_site_revision_requests'] as $protectedKey) {
+      unset($clean['intake'][$protectedKey]);
       if (array_key_exists($protectedKey, $existingIntake)) {
         $clean['intake'][$protectedKey] = $existingIntake[$protectedKey];
       }
