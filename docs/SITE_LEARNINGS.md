@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Read-only credential capability is narrower than payment proof
+
+Repository-named famtastic-sandbox-auth existed alongside a different defaultprofile.
+Require explicit expected profile/account and strip ambient credentials/proxies/hooks
+from child processes. Check test-mode balance and identity twice, never log raw CLI
+errors or key material. Still do not infer native payment/callback/fulfillment or
+future authority from a read receipt; profiles can also hold live credentials.
+Test wrapper output as well as the module: prepended diagnostics invalidate a
+JSON receipt. Keep diagnostics on stderr and test sanitized subprocess failures.
+
 ## 2026-09-19 — Distinguish allowed checkout entry from provider completion
 
 Add positive native-route coverage beside denial tests. The41-check extension

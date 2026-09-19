@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-09-19 — Safe read-only Stripe preflight (tooling only)
+
+- Added explicit profile/account preflight, fixed read-only CLI commands, child-env
+  allowlist, expiry/mode/identity checks and sanitized failures;45 unit tests pass.
+- Added `stripe-provider-e2e.sh --preflight` without enabling the scaffold's write
+  path. Actual dedicated-profile test balance read passed; absent binding refused.
+- Captured existing dedicated-profile discovery and remaining native-provider gates.
+  No app source, deployment, checkout activation, objects, credentials or mail changed.
+- Independent review found diagnostic text breaking wrapper JSON stdout; routed it
+  to stderr and tested actual refusal/success JSON plus subprocess error redaction.
+
 ## 2026-09-19 — Test the allowed native checkout path (source tests only)
 
 - Expanded private HTTP coverage38→41: owner reaches native order information,

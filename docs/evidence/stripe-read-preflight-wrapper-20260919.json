@@ -1,0 +1,29 @@
+{
+  "schema": "famtastic.stripe-read-preflight.v1",
+  "status": "read_only_preflight_passed",
+  "profile": "famtastic-sandbox-auth",
+  "account_id": "acct_1TqwE9DDGtWR2WVN",
+  "observed_at": "2026-09-19T07:03:47.404Z",
+  "test_mode_read_verified": true,
+  "test_credential_expires_on": "2026-11-09",
+  "live_credential_available": true,
+  "secret_values_read_or_exported": false,
+  "provider_mutations": 0,
+  "checkout_activated": false,
+  "e2e_proven": false,
+  "limits": [
+    "Three read-only CLI invocations, not key isolation or future mutation authority.",
+    "No runtime, gateway, signed callback, native payment or fulfillment execution.",
+    "Profile may also contain live credentials; never copy its whole configuration.",
+    "Recheck exact account/test mode at execution time; this receipt is not an authorization token."
+  ],
+  "source_parent_sha": "34a02eee81a9942bb755a7c106ae0498cf93d58a",
+  "wrapper_stdout_valid_json": true,
+  "wrapper_diagnostics_on_stderr": true,
+  "offline_unit_tests_passed": 45,
+  "tested_source_sha256": {
+    "scripts/stripe-provider-preflight.mjs": "76a1c37613fa9b06ff584c0895505236ce05fc84312e0d46cd0c4fd6d27b70cf",
+    "scripts/test-stripe-provider-preflight.mjs": "653fd997bc941938fec1f51a1bb8f40dfcefb93c2fa6e24819d743e3ae435e27",
+    "scripts/stripe-provider-e2e.sh": "4d29c42cb6e50447c863d35935c8f830eeba75ffca10f6c5ebd71b630fde8fa7"
+  }
+}

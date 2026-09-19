@@ -2,6 +2,15 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+# Separate read-only capability path; success is NOT an E2E payment receipt.
+if [[ "${1:-}" == --preflight && "$#" == 1 ]]; then
+  node "$repo_root/scripts/validate-stripe-provider-e2e-matrix.mjs" >&2
+  exec node "$repo_root/scripts/stripe-provider-preflight.mjs"
+fi
+if [[ "$#" != 0 ]]; then
+  echo 'Usage: stripe-provider-e2e.sh [--preflight]' >&2
+  exit 2
+fi
 node "$repo_root/scripts/validate-stripe-provider-e2e-matrix.mjs"
 
 if [[ "${FAMTASTIC_STRIPE_PROVIDER_E2E:-0}" != "1" ]]; then

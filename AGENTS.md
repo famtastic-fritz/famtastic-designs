@@ -174,6 +174,9 @@ updated, say so explicitly in the session report rather than skipping silently.
   not prove checkout. Provider execution remains separately gated; see
   `docs/plans/PRIVATE_PURCHASE_PROVIDER_BOUNDARY_2026-09-19.md`. Never export the
   offline account-mirroring fixture into provider objects or enable its transports.
+  For Stripe capability checks use the explicit read-only preflight in
+  `docs/plans/STRIPE_READ_PREFLIGHT_2026-09-19.md`; never dump CLI config/keys or
+  adopt the current profile implicitly. A test balance read is not checkout proof.
 
 - Sign future agent-authored customer correspondence as **Shay** or **Shay-Shay**.
   The canonical full spelling is **Shay-Shay**. Preserve an approved template's

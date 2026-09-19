@@ -1,5 +1,12 @@
 # Private purchase: native entry versus provider evidence
 
+07:00UTC follow-up: the existing repository-named `famtastic-sandbox-auth` profile
+was found and successfully checked through the new read-only exact-account
+preflight. No new account/key or AlreadyBuilt-profile adoption. Full provider
+execution still unfinished; checkoutOFF. See
+[read-only preflight](STRIPE_READ_PREFLIGHT_2026-09-19.md). Older discovery below is
+historical, not a claim that only the AlreadyBuilt-labelled profile exists.
+
 ## September19 06:33Z checkpoint
 
 Source-only test extension on `codex/private-purchase-integration-20260919`, parent

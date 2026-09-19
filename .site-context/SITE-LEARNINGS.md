@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Discover named test profiles before declaring auth missing
+
+Observation: default Stripe CLI profile belonged to another workstream, but existing
+repo scripts already named a dedicated authenticated FAMtastic sandbox profile.
+Guidance: verify that exact profile/account with read-only metadata and test-mode
+balance, sanitize the subprocess environment and never dump keys/config. Both modes
+may exist in a profile; a successful read is not isolated mutation authority.
+Keep preflight success distinct from the unfinished native-provider runner.
+Wrapper diagnostics belong on stderr; parse the actual wrapper's stdout in a
+subprocess regression test, not just the directly invoked JSON-producing module.
+
 ## 2026-09-19 — Denial coverage is not allowed-path coverage
 
 Observation:38 passing HTTP assertions stopped after the private form's redirect

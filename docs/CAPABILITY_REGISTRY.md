@@ -1,5 +1,13 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Dedicated Stripe profile test-mode read observed
+
+Explicit `famtastic-sandbox-auth`/account preflight passed an actual test-mode balance
+read07:00:23Z;45 final offline refusal/sanitization/wrapper tests pass. No key exported or provider
+objects created. The profile also has live credentials; this is NOT test-only
+credential isolation, native payment/callback/refund or E2E readiness. Mutating runner
+remains scaffold-only. CheckoutOFF. See plans/STRIPE_READ_PREFLIGHT_2026-09-19.md.
+
 ## 2026-09-19 — Native private checkout entry (locally proven only)
 
 41 HTTP checks include actual allowed owner checkout302→order_information200,
