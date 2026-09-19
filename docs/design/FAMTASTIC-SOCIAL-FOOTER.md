@@ -118,6 +118,14 @@ If the page already ends with a project CTA, omit a second footer CTA band. Reus
 
 ## 5. Motion specification
 
+September19 owner refinement: a separate decorative footer-background layer may
+slowly fade short cursive phrases; it must have pause and reduced-motion support.
+The table below continues to govern the social badges themselves. Mobile utility
+links keep44px targets with smaller inter-row gaps; Company uses two columns and
+a full-width email row. No links are removed. The owner cancelled the Fritz
+character: faint red/gold/blue CSS light pools replace it, behind all content,
+with a 32s opacity cycle and the same pause/reduced-motion safeguards.
+
 | State | Appearance / behavior |
 | --- | --- |
 | Idle | Static materials and reflections. No timed loop, orbit, pulse or glitter |

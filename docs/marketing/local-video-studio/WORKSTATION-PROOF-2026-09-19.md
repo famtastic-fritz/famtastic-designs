@@ -11,6 +11,17 @@ Status: workstation composition, native MoneyPrinterTurbo draft and cache proof 
 - Isolated worktree: `/Users/famtastic-fritz/Documents/ChatGPT/famtastic-video-proof`. Review branch: `codex/local-video-studio-proof`. Existing checkouts and dirty work were preserved.
 - Three user-requested cheaper `gpt-5.6-luna` agents handled core review, installed MoneyPrinterTurbo and hardware/ComfyUI, with bounded independent review. Heavy native jobs were serialized.
 
+A later fetch found three new footer/documentation commits on `origin/main`,
+ending at `8a79aa8e49bdd9c6355e17912aeba13702675ced`. They were reconciled by
+merge, preserving the exact imported implementation in history. All eight incoming
+files outside the three shared documentation files match that main commit
+byte-for-byte; both sets of independent documentation entries were retained.
+The incoming footer's focused suite passed **6/6 on Node 22.23.2**, using the
+existing dependency installation with verified identical lockfile and dependency
+declarations. An isolated module-link overlay keeps its cache local. The first
+test invocation lacked Vite and ran no test cases; this setup failure is retained.
+Video implementation hashes are unchanged by the reconciliation.
+
 ## Final validation and repairs
 
 The complete Python suite passed **78/78 in 9.880 s** (9.986 s process wall time).

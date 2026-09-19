@@ -16,6 +16,12 @@ Workstation results and remaining runtime/creative limits:
 `docs/marketing/local-video-studio/WORKSTATION-PROOF-2026-09-19.md`.
 No paid providers, publishing or production deployment were activated.
 
+## 2026-09-19 — Mobile footer spacing and atmosphere (local)
+
+- Tightened mobile footer grid and two-column Company navigation, retaining44px targets.
+- Added separate subtle cursive fade with pause/reduced-motion support; no platform-mark animation.
+- Fritz character remains pending approved artwork. No production deployment.
+
 ## 2026-09-19 — Approved social footer deployed
 
 Owner approved release. Footer commit `49ce5033` is live on apex/www through the
@@ -3732,3 +3738,23 @@ Final independent parent code review passed 1,022 tests/99 files in77.73s with a
 - Added FAMtastic creative examples, current primary-source research and a workstation proof handoff at `docs/marketing/local-video-studio/`; no deployment or publishing.
 
 - Remote write access rejected the feature push; supplied a verified Git bundle for owner-side CLI import instead of claiming a pushed branch.
+
+## September 19, 2026 — compact footer atmosphere release candidate
+
+Owner authorized deployment. Mobile Company links are compact with 44px targets;
+subtle cursive and red/gold/blue light stay behind content, with pause and static
+reduced-motion support. Fritz character cancelled. Six tests, Node22 build,
+canonical assets and 390px browser checks pass. Production receipt is tracked in
+docs/design/social-footer/SPACING-ATMOSPHERE-2026-09-19.md; do not equate a push
+with a verified deployment.
+## Verified production receipt — September 19, 2026
+
+Footer runtime commit: 6d54d542af2cc59cb729cfa320467a0715272f00.
+Canonical frontend deployment completed at 2026-09-19T14:18:35Z on Node22.23.2;
+release marker read back exactly. Backup:
+/home/xrdj7j99xhzt/backups/famtastic-frontend-20260919T141438Z-6d54d542af2cc59cb729cfa320467a0715272f00.tgz.
+Apex390px and www1280px browser checks rendered real CMS links, the new background,
+and working pause. Six Company links remained44px; no horizontal overflow or
+captured console errors. Compiled JS/CSS returned200 with correct MIME types.
+320px local fixture also passed. Reduced-motion CSS contract tested; no OS-level
+reduced-motion browser emulation claimed. This is footer-only release evidence.

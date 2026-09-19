@@ -46,6 +46,9 @@ test('rendered React footer retains CMS limits, empty fallbacks, safe labels and
     for(const href of ['/services','/packages','/blog','/about','/work','/faq','/contact','/privacy-policy','/terms-of-service']) assert.ok(html.includes(`href="${href}"`));
     for(const href of ['/services','/packages'])assert.ok(render().includes(`href="${href}"`));
     assert.match(html,/CMS &amp; Title/);assert.match(html,/famtastic-designs-logo-v1.png/);
+    assert.match(html,/class="v1-footer__atmosphere" aria-hidden="true"/);
+    assert.match(html,/aria-pressed="false"[^>]*>Pause background motion/);
+    assert.match(html,/v1-footer__company/);
     assert.ok(html.includes(String(new Date().getFullYear())));
     assert.equal((html.match(/class="v1-social-signal"/g)||[]).length,1);
     assert.equal((html.match(/class="fam-social-badge"/g)||[]).length,6);
@@ -60,7 +63,7 @@ test('rendered React footer retains CMS limits, empty fallbacks, safe labels and
     }
   } finally {await vite.close();}
 });
-test('no continuous motion, hover requests, prevented navigation, or obsolete orbit styling',()=>{
+test('social badges retain static idle marks and safe navigation',()=>{
   const read=p=>readFileSync(new URL(p,import.meta.url),'utf8');
   const code=read('../src/components/v1/SocialBadge.jsx');
   assert.doesNotMatch(code,/preventDefault|setTimeout|setInterval|fetch\(|onMouse|onPointer|useState/);
@@ -68,4 +71,17 @@ test('no continuous motion, hover requests, prevented navigation, or obsolete or
   assert.match(css,/prefers-reduced-motion/);assert.match(css,/:focus-visible/);assert.match(css,/:active/);
   assert.doesNotMatch(css,/infinite|@keyframes/);
   assert.doesNotMatch(read('../src/index.css'),/v1-social-orbit|v1-social-node-float|v1-social-signal__orbit/);
+});
+test('background-only slow fade is pausable, reduced-motion safe, and adds no image guess',()=>{
+  const css=readFileSync(new URL('../src/components/v1/footer-atmosphere.css',import.meta.url),'utf8');
+  assert.match(css,/24s ease-in-out/);
+  assert.match(css,/32s ease-in-out/);
+  assert.match(css,/radial-gradient/);
+  assert.match(css,/::before \{ animation-play-state: paused/);
+  assert.match(css,/::before \{ animation: none !important/);
+  assert.match(css,/pointer-events: none/);
+  assert.match(css,/animation-play-state: paused/);
+  assert.match(css,/prefers-reduced-motion: reduce/);
+  assert.match(css,/animation: none !important/);
+  assert.doesNotMatch(css,/url\(|filter:|setInterval/);
 });

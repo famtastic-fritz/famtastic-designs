@@ -16,6 +16,13 @@ audio are not subjective listening or two-original-movie acceptance. No ComfyUI
 model was installed on the memory/storage-constrained Mac; record absence honestly.
 See `docs/marketing/local-video-studio/WORKSTATION-PROOF-2026-09-19.md`.
 
+## 2026-09-19 — Compact utility navigation without smaller targets
+
+Observation:44px mobile targets plus grid gaps and a full-width single Company
+column make a footer unnecessarily tall. Reduce gaps and use two columns before
+shrinking targets or removing links. Keep background motion separately pausable
+and reduced-motion safe; never animate official social marks or guess a portrait.
+
 ## 2026-09-19 — Bind visual approval to source and live evidence
 
 The owner approved the social footer and explicitly requested commit/push/live.
@@ -2742,3 +2749,23 @@ Observation: cached video bytes alone do not prove retained source/evidence is i
 Observation: HyperFrames' native animation example needs the runtime's `data-no-timeline` root contract; compact captioned formats can overflow despite a valid vertical render. Guidance: run real checks and render representative aspects; never weaken checks to conceal missing motion or overflowing copy. See the local-video-studio proof and handoff.
 
 Observation: repository metadata reported push permissions but the connected integration rejected Git-object writes. Guidance: actual write authorization must be verified; provide a verified bundle and clearly label local-only commits when remote publication is blocked.
+
+## September 19, 2026 — compact footer atmosphere release candidate
+
+Owner authorized deployment. Mobile Company links are compact with 44px targets;
+subtle cursive and red/gold/blue light stay behind content, with pause and static
+reduced-motion support. Fritz character cancelled. Six tests, Node22 build,
+canonical assets and 390px browser checks pass. Production receipt is tracked in
+docs/design/social-footer/SPACING-ATMOSPHERE-2026-09-19.md; do not equate a push
+with a verified deployment.
+## Verified production receipt — September 19, 2026
+
+Footer runtime commit: 6d54d542af2cc59cb729cfa320467a0715272f00.
+Canonical frontend deployment completed at 2026-09-19T14:18:35Z on Node22.23.2;
+release marker read back exactly. Backup:
+/home/xrdj7j99xhzt/backups/famtastic-frontend-20260919T141438Z-6d54d542af2cc59cb729cfa320467a0715272f00.tgz.
+Apex390px and www1280px browser checks rendered real CMS links, the new background,
+and working pause. Six Company links remained44px; no horizontal overflow or
+captured console errors. Compiled JS/CSS returned200 with correct MIME types.
+320px local fixture also passed. Reduced-motion CSS contract tested; no OS-level
+reduced-motion browser emulation claimed. This is footer-only release evidence.

@@ -776,5 +776,31 @@
       "wall_seconds": 0.045,
       "output": "PASS: Build DNA video-20260919T142257-38615398d3\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/workstation-cache-proof-20260919T142257Z-b76062ae/build-dna.json\n"
     }
-  ]
+  ],
+  "reconciliation": {
+    "origin_main": "8a79aa8e49bdd9c6355e17912aeba13702675ced",
+    "method": "merge preserving imported commit",
+    "incoming_files_outside_shared_docs_match_main": 8,
+    "shared_doc_additions": "both retained",
+    "video_implementation_hashes_unchanged": true,
+    "focused_footer_tests": 6,
+    "check": {
+      "check": "incoming-footer-after-reconciliation",
+      "command": [
+        "fnm",
+        "exec",
+        "--using",
+        "v22.23.2",
+        "node",
+        "--test",
+        "frontend/scripts/test-social-footer.mjs"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.516,
+      "dependency_source": "/Users/famtastic-fritz/Development/FAMtastic/sites/site-famtastic-designs/frontend/node_modules",
+      "lockfile_and_dependency_declarations_match": true,
+      "local_overlay_has_separate_cache_directory": true,
+      "initial_failure": "vite absent in isolated worktree; no test cases ran"
+    }
+  }
 }
