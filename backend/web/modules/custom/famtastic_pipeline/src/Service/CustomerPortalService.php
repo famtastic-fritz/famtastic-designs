@@ -1676,12 +1676,29 @@ final class CustomerPortalService {
       throw new \RuntimeException('A complete Safe/Wild/OMG set or six-direction showcase set is required.');
     }
     $campaignEntityId = (int) $campaign->id();
+    // Callback retries still repair filesystem protection, but must never
+    // undo a later QA release, notification, customer choice or revision.
+    $advancedStates = ['customer_ready', 'notified', 'selected', 'revision_requested'];
+    if ((int) ($row['proof_campaign_id'] ?? 0) === $campaignEntityId
+      && in_array((string) $row['proof_review_status'], $advancedStates, TRUE)) return;
     $now = $this->time->getRequestTime();
-    $this->database->update('famtastic_project_request')->fields([
+    $update = $this->database->update('famtastic_project_request')->fields([
       'proof_campaign_id' => $campaignEntityId,
       'proof_review_status' => 'owner_review',
       'changed' => $now,
-    ])->condition('id', $requestId)->execute();
+    ])->condition('id', $requestId)->condition('proof_review_status', $row['proof_review_status']);
+    if ($row['proof_campaign_id'] === NULL) $update->isNull('proof_campaign_id');
+    else $update->condition('proof_campaign_id', $row['proof_campaign_id']);
+    if ((int) $update->execute() !== 1) {
+      $current = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+      if ($current && (int) $current['proof_campaign_id'] === $campaignEntityId
+        && in_array((string) $current['proof_review_status'], $advancedStates, TRUE)) return;
+      // Some drivers report zero for an already-identical owner-review row.
+      if (!$current || (int) $current['proof_campaign_id'] !== $campaignEntityId
+        || $current['proof_review_status'] !== 'owner_review') {
+        throw new \RuntimeException('Proof attachment changed concurrently; retry the same callback.');
+      }
+    }
     $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $count = count($directions);
     if ($count === 6) {

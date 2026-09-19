@@ -138,4 +138,16 @@ final class WebsiteRequestAuditPreservationTest extends UnitTestCase {
     self::assertSame($before, $this->intake());
   }
 
+  /** Selected-flow integration: keep authored history as well as the main fix. */
+  public function testAuthoredContentAndTrustedMetadataSurviveTheMergedWriter(): void {
+    $trusted = $this->trustedIntake();
+    $this->storeIntake($trusted);
+    $first = $this->update(['page_content' => [['page_name' => 'Home', 'body' => 'First']]])['intake']['authored_content'];
+    $second = $this->update(['page_content' => [['page_name' => 'Home', 'body' => 'Second']]])['intake']['authored_content'];
+    $this->update(['authored_content' => ['forged' => TRUE], 'authored_content_history' => [], 'selected_site_revision_requests' => []]);
+    self::assertSame($second, $this->intake()['authored_content']);
+    self::assertContains($first, $this->intake()['authored_content_history']);
+    foreach (self::KEYS as $key) self::assertSame($trusted[$key], $this->intake()[$key]);
+  }
+
 }
