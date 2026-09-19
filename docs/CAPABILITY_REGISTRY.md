@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Brother K proof scope verified, not a live owner backend
+
+Request8/campaign24 has three imported artifacts matching independent review.
+Native script-free service/owner demonstrations passed195parent and237independent
+browser assertions;45deployed proof-controller/asset checks passed with customer
+visibility intentionally held. The cited phone/growth plan is included in each proof.
+Branded proof email rendering passed20checks; recipient mismatch prevents release/send.
+No durable booking, payment, notification, merchant or social connection is promoted
+to implemented status. See `delivery/BROTHER-K-REQUEST8-2026-09-19.md` and the
+customer repository's immutable evidence. No new full synthetic journey pass is claimed.
+
 ## 2026-09-18 — Corrected proof notification acceptance
 
 Request17 correction outbox772 is SMTP-accepted once with the existing

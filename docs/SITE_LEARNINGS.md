@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Request8 identity exception is not an owner design gate
+
+Research and all three proofs proceeded while a recipient-address discrepancy remained
+unresolved. The exact verified account—not a guessed email—is the delivery binding.
+Keep local generation, protected import, independent QA, client reveal, SMTP acceptance
+and selected staging separate. Native proof controls do not establish a durable phone
+backend. See `delivery/BROTHER-K-REQUEST8-2026-09-19.md` for evidence and next action.
+
 ## 2026-09-18 — Branded does not prove usable email navigation
 
 Personal proof notices used standard/v2, whose autolinker printed raw URLs;

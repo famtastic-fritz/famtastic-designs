@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — A bold proof still needs a truthful delivery contract
+
+Observation: request8's verified recipient differed from the typed address; a locally
+interactive JavaScript prototype also exceeded the protected viewer's script-free contract.
+Guidance: confirm the actual recipient before queueing, preserve original customer taste
+separately from staff creative expansion, use native controls for protected proof interaction,
+and keep real phone-owner setup in the selected staging implementation. Independent review
+must check typography and overlay-composited disclosures, not just functional assertions.
+Evidence: `docs/delivery/BROTHER-K-REQUEST8-2026-09-19.md`. No customer email sent.
+
 ## 2026-09-18 — Test the email's entry point, not just protected proof bytes
 
 Observation: request17's branded personal notice exposed protected `/web/api`

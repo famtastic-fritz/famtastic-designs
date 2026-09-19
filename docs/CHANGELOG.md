@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-19 — Brother K request8 proof preparation
+
+- Recorded three imported, independently reviewed dog-first concepts in the customer's
+  independent repository; phone-first strategy and native protected-viewer demos included.
+- Preserved the verified-recipient mismatch as a send/release gate; no new client email,
+  payment, final site deployment or agency application release. Evidence:
+  `docs/delivery/BROTHER-K-REQUEST8-2026-09-19.md`.
+
 ## 2026-09-18 — Proof email correction and portal return
 
 - Sent one owner-authorized request17 correction through the existing branded
