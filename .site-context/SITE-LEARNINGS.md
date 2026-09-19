@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Final-row geometry and artifact continuity
+
+Pin critical logo dimensions inline: a cached stylesheet can otherwise expose the
+2172px intrinsic PNG even when the new source CSS is correct. Test fixed chat,
+consent and mobile navigation separately. An older selected proof receives a
+derived credited presentation with original/derived hashes, not regenerated pages
+or rewritten approval evidence. Verify the repository's actual default branch;
+legacy `dev` must not be mislabeled missing `main` or a deployment failure.
+
 ## 2026-09-18 — Credit retrofit provenance
 
 Observation: static showcase source carries historical approval/hash evidence,

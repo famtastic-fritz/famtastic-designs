@@ -50,8 +50,8 @@ preservation, complete backup, refusal to overwrite version, callback size limit
 beauty cohort JSON/CSV contracts; 86 mail presentation assertions; PHP lint; Python
 compile; 34 portal Design DNA source assertions; shell syntax; git diff checks.
 Earlier local standalone Playwright: 153 credit cases (51 routes ×320/390/1440),
-48 email responsive/images-disabled cases. Those occurred BEFORE the owner required
-CUA-only browser tests. No further standalone browser automation will be used. The
+48 email responsive/images-disabled cases. Those were earlier diagnostics; final
+browser verification uses CUA. No further standalone browser automation will be used. The
 mobile-clearance addition came afterward; CUA now verifies Alex owner at390×844:
 one loaded2172px original,180×60 image,204×84 link, link bottom651.83 versus
 fixed mobile navigation top782 (130px clear). No prototype state was changed. No actual mail
@@ -172,7 +172,9 @@ boundaries before classifying runtime outputs or preparing static deployment.
   Independent HTTPS requests to all66 direct paths returned403. These were not
   made public. Controller decoration occurs only after existing authorization.
 - Native Drupal /web/user/login: HTTP200, existing login form, exactly one credit div.
-  Authenticated admin visual QA remains pending with parent.
+  Parent subsequently verified authenticated `/web/admin` at390px: one original
+  180px image,84px target, centered and unobstructed with the navigation drawer
+  closed. Original toolbar preference restored. No admin operation performed.
 - Fresh friends check: Coastbound and South Shore return200 with original-logo
   filename and campaign attribution, delivered by concurrent lanes, not this one.
   Concierge Guru at0fcdf04d583ac82da77d83427616911440960b11 returned200 without credit:

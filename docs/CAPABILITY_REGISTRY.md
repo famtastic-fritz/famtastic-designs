@@ -1,5 +1,13 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Cross-repository credit evidence
+
+The dated [rollout audit](operations/creator-credit-rollout-2026-09-18.md)
+separates live customer patches, source/default-branch adoption, studio build
+guards and exclusions. Parent CUA additionally verifies live Kakes/Reckoning and
+authenticated native admin credit. This is not a claim that every historical
+media export or unlaunched site is published, nor a customer-delivery test.
+
 ## 2026-09-18 — Creator credit source implementation
 
 Agency credit pattern/build gates are tested and scoped existing-live deployment is

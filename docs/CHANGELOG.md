@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-18 — Cross-repository creator-credit rollout
+
+- MBSH96 released first; customer/site and studio lanes now carry the same exact
+  approved-logo final-row contract. Existing attribution and customer state remain.
+- Consolidated live receipts, source-only work, default-branch exceptions, tests,
+  browser evidence and remaining gaps in
+  `operations/creator-credit-rollout-2026-09-18.md`.
+- Verified live mobile Kakes and Reckoning final rows, plus authenticated agency
+  admin credit with its navigation drawer closed. No customer forms or mail sent.
+
 ## 2026-09-18 — Agency creator credit
 
 - Deployed222 existing frontend/static HTML at50a07d5e and six presentation PHP/theme
