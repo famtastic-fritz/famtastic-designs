@@ -7,6 +7,9 @@ unresolved. The exact verified account—not a guessed email—is the delivery b
 Keep local generation, protected import, independent QA, client reveal, SMTP acceptance
 and selected staging separate. Native proof controls do not establish a durable phone
 backend. See `delivery/BROTHER-K-REQUEST8-2026-09-19.md` for evidence and next action.
+Resolution: Fritz confirmed the verified record. Do not change the account or send
+to both addresses. One scoped notice775 reached SMTP acceptance; keep the earlier
+held receipts immutable and append the54-check post-release boundary evidence.
 
 ## 2026-09-18 — Branded does not prove usable email navigation
 

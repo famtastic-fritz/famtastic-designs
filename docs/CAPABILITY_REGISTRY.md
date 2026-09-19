@@ -10,6 +10,8 @@ Branded proof email rendering passed20checks. After Fritz confirmed the verified
 portal address, the unchanged set was released and exact outbox775 was SMTP-accepted
 once at2026-09-19T02:34:27Z; inbox/readership is not verified. The earlier45checks
 remain pre-release evidence, not proof of customer access after release.
+Fresh post-release controller/asset checks54/54 pass, including owner access and
+foreign/anonymous denial. Exact release replay keeps outbox775 at sent/attempts1.
 No durable booking, payment, notification, merchant or social connection is promoted
 to implemented status. See `delivery/BROTHER-K-REQUEST8-2026-09-19.md` and the
 customer repository's immutable evidence. No new full synthetic journey pass is claimed.
