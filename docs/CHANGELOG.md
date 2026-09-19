@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-09-19 — Private purchase integration checkpoint (local only)
+
+- Reconciled dc3eae6d onto current main as3b650349 without replacing the live
+  reliability release. No deployment, checkout activation, send or charge.
+- Bound private16 purchase/resume to actual current selection/source/scope/assets;
+  signed displayed terms reject stale or tampered forms while GET stays read-only.
+  Preserved private16 payment-after-direction and prepaid17 same-order exceptions.
+- 36 native installed Commerce checks pass (including rollback and fresh-process
+  persistence);339 PHP tests/2537 assertions, full synthetic journey/frontend build,
+  34 portal-DNA and86 email
+  presentation checks pass. Browser/provider/CSRF activation gates remain open.
+  Details and retained failures: plans/PRIVATE_PURCHASE_COMPLETION_2026-09-18.md.
+- Independent review exposed raw-hidden-input and saved-gateway resume gaps; both
+  source fixes are reviewed and native saved-disabled-gateway denial is verified.
+  Selected-staging regression passes85 checks; production choices/notices unchanged.
+
 ## 2026-09-18 — Reliability release and bounded scheduler smoke test
 
 - Deployed matching reviewed378c3d86 backend/frontend through canonical releases;

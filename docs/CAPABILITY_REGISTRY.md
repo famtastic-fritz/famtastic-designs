@@ -1,5 +1,17 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Private purchase native evidence (locally proven, disabled)
+
+36 installed Drupal Commerce assertions verify real custom-price order creation,
+rollback, replay, non-mutating GET, account-bound prepaid completion and durable
+reload without duplicate financial/delivery records. Signed scope tests reject
+stale/current-source mismatch and tampering.339 PHP tests/2537 assertions and the
+full synthetic journey/frontend build pass. This is not provider checkout, HTTP CSRF, browser/middleware, MySQL
+concurrency or activation proof. Production retains378c3d86; private checkout OFF.
+Saved disabled gateways are denied on resume;85 selected-staging regression checks
+pass. Independent source re-review clears its two identified fixes, not activation.
+See `plans/PRIVATE_PURCHASE_COMPLETION_2026-09-18.md` for source, receipts and limits.
+
 ## 2026-09-18 — Production release and observe-only cron proven
 
 Reviewed378c3d86 backend/frontend is deployed with apex/www browser smoke checks.

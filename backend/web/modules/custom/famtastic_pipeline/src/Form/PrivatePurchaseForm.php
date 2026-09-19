@@ -7,6 +7,7 @@ namespace Drupal\famtastic_pipeline\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Service\OfflinePrepaymentService;
 use Drupal\famtastic_pipeline\Service\PrivatePurchaseService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -31,9 +32,18 @@ final class PrivatePurchaseForm extends FormBase {
       $form['scope']['pending'] = ['#theme' => 'item_list', '#title' => $this->t('Still to confirm with you'), '#items' => array_map(static fn($text): array => ['#plain_text' => ucfirst((string) $text)], $scope['awaiting_customer_confirmation'])];
     }
     $form['back'] = ['#type' => 'link', '#title' => $this->t('Back to my project'), '#url' => Url::fromUri(\Drupal::request()->getSchemeAndHttpHost() . '/portal?section=projects&request=' . rawurlencode((string) $website_request))];
-    // Retain the exact displayed scope in server-side form state. POST must not
-    // silently accept a different scope from the one the customer reviewed.
-    if (!$form_state->has('private_scope')) $form_state->set('private_scope', ['request' => $website_request, 'version' => $scope['version'], 'hash' => $context['scope_hash']]);
+    // GET may not write Form API cache. Sign the displayed scope instead; the
+    // normal Form API CSRF token remains independently required on submission.
+    $snapshot = NULL;
+    if ($context['kind'] === 'reunion') {
+      try { $snapshot = PrivatePurchaseService::selection($context['request']); }
+      catch (\RuntimeException) { /* Unselected requests have no purchase action. */ }
+    }
+    $displayed = ['request' => $website_request, 'version' => $scope['version'], 'hash' => $context['scope_hash'],
+      'selection_snapshot' => $snapshot, 'uid' => (int) $this->currentUser()->id(), 'issued_at' => time()];
+    $form_state->set('private_scope', $displayed);
+    $encoded = rtrim(strtr(base64_encode(json_encode($displayed, JSON_THROW_ON_ERROR)), '+/', '-_'), '=');
+    $form['scope_snapshot'] = ['#type' => 'hidden', '#default_value' => $encoded . '.' . hash_hmac('sha256', 'private-purchase-form-v1|' . $encoded, Settings::getHashSalt())];
     if ($context['kind'] === 'prepaid') {
       $receipt = $context['receipt'];
       $form['status'] = ['#type' => 'html_tag', '#tag' => 'p', '#value' => $this->t('Order @number: $200.00 received by Zelle, $0.00 outstanding. Recorded from Fritz’s confirmation; the bank-transfer date was not supplied. This form cannot charge you again.', ['@number' => $receipt['order_number']])];
@@ -85,7 +95,11 @@ final class PrivatePurchaseForm extends FormBase {
         $flood->register('famtastic.prepaid_completion', 600, $key);
         OfflinePrepaymentService::assertCompletion($context['data'], (string) $form_state->getValue('completion_code'), $this->input($form_state), time());
       }
-      else { PrivatePurchaseService::selection($context['request']); }
+      else {
+        if (($this->input($form_state)['selection_snapshot'] ?? NULL) !== PrivatePurchaseService::selection($context['request'])) {
+          throw new \RuntimeException('private_scope_selection_changed');
+        }
+      }
     }
     catch (\Throwable) { $form_state->setErrorByName('accept_terms', $this->t('We could not verify the current scope, account, domain or completion code. Nothing was charged. Refresh this page or use your project conversation for help.')); }
   }
@@ -112,8 +126,24 @@ final class PrivatePurchaseForm extends FormBase {
   }
 
   private function input(FormStateInterface $state): array {
-    $displayed = $state->get('private_scope') ?: [];
+    // Hidden-element defaults are recomputed during POST reconstruction. Only
+    // the actual submitted string proves possession of the displayed snapshot.
+    $token = $state->getUserInput()['scope_snapshot'] ?? NULL;
+    if (!is_string($token) || $token === '') throw new \RuntimeException('private_scope_snapshot_invalid');
+    if (strlen($token) > 16000 || substr_count($token, '.') !== 1) throw new \RuntimeException('private_scope_snapshot_invalid');
+    [$encoded, $signature] = explode('.', $token, 2);
+    if (!preg_match('/^[A-Za-z0-9_-]+$/D', $encoded) || !preg_match('/^[a-f0-9]{64}$/D', $signature)
+      || !hash_equals(hash_hmac('sha256', 'private-purchase-form-v1|' . $encoded, Settings::getHashSalt()), $signature)) {
+      throw new \RuntimeException('private_scope_snapshot_invalid');
+    }
+    $displayed = json_decode(base64_decode(strtr($encoded, '-_', '+/'), TRUE), TRUE, 512, JSON_THROW_ON_ERROR);
+    if (!is_array($displayed) || ($displayed['uid'] ?? NULL) !== (int) $this->currentUser()->id()
+      || ($displayed['request'] ?? NULL) !== ($state->get('private_scope')['request'] ?? NULL)
+      || !is_int($displayed['issued_at'] ?? NULL) || $displayed['issued_at'] > time() + 60 || $displayed['issued_at'] < time() - 21600) {
+      throw new \RuntimeException('private_scope_snapshot_invalid');
+    }
     return ['accept_terms' => (bool) $state->getValue('accept_terms'), 'terms_version' => $displayed['version'] ?? '', 'scope_hash' => $displayed['hash'] ?? '',
-      'domain_choice' => (string) $state->getValue('domain_choice'), 'domain' => (string) $state->getValue('domain')];
+      'domain_choice' => (string) $state->getValue('domain_choice'), 'domain' => (string) $state->getValue('domain'),
+      'selection_snapshot' => $displayed['selection_snapshot'] ?? NULL];
   }
 }

@@ -1,5 +1,19 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Displayed purchase terms must survive a fresh POST
+
+Observation: rebuilt server form state can silently replace the version a customer
+saw; caching FormState on GET is explicitly forbidden by this Drupal release.
+Guidance: authenticate a short-lived displayed snapshot, separately keep native
+CSRF, compare actual current selection/source authority on create/resume/place,
+and preserve explicit private payment policy instead of requiring unrelated final
+acceptance. Native Commerce and fresh-process tests supplement, not replace,
+HTTP/provider/browser checks. Test fixture users invoke real customer/org hooks;
+do not create duplicate customer rows or weaken service identity checks for tests.
+Require raw submitted hidden input: normalized Form API defaults can otherwise
+replace an omitted snapshot. Revalidate an already-saved gateway on checkout resume;
+filtering newly discovered gateways alone does not cover native payment processing.
+
 ## 2026-09-18 — Prove the scheduler without draining the pipeline
 
 Reviewed378c3d86 is live. Exact-marker/hash-backed repair installed CLI PHP in

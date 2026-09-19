@@ -18,6 +18,17 @@ messages, new offers, additional paid services, domain purchases, or final
 public launches. Existing initial-proof delivery gates remain until their
 independent QA/policy replacement is implemented and proved.
 
+### Recorded private payment exceptions — September 18
+
+Request17's confirmed $200 Zelle receipt continues on the same native order/payment;
+no second sale or complimentary grant. Request16's exact $199 private alumni scope
+may be paid after authenticated direction selection, without waiting for completed
+staging acceptance. Both still require final client acceptance and launch checks.
+Ordinary customers retain the acceptance-first policy above. Private purchase
+binding and the still-disabled checkout activation gate are documented in
+`PRIVATE_PURCHASE_COMPLETION_2026-09-18.md`; an approved exception is not proof that
+its checkout is live.
+
 ## Required state and evidence
 
 | Stage | Advance when | Must not be inferred |

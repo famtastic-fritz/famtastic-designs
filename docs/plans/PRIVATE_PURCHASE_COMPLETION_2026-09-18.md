@@ -1,5 +1,73 @@
 # Private purchase completion — follow-up after e692d890
 
+## September 19 integration checkpoint — local, not activated
+
+Follow-up dc3eae6d was cherry-picked as 3b650349 onto current main ceee698a,
+preserving deployed378c3d86 and newer routing/service/doc changes. Work continues
+on `codex/private-purchase-integration-20260919`; no release or production code
+issuance, payment, email or customer state change is implied.
+
+Current implementation binds the producer's canonical scope/content/active assets,
+real campaign/variant/project, persisted selected-source revision, actual artifact
+hashes, source association and requested changes. A fresh form cannot silently
+rebase an old purchase. Missing order metadata cannot bypass the durable private
+offer guard at checkout/gateway/placement. Request16 still permits payment after
+direction selection, with staging `not_started`; no accepted receipt is invented.
+
+The form uses an account/request-bound HMAC-signed displayed-scope snapshot with
+a six-hour lifetime, separately from native Form API CSRF. GET remains non-mutating.
+Unconditional FormState caching is invalid on GET in this Drupal version; local
+tests caught and replaced that approach, not Drupal's safety check.
+
+Installed native Commerce evidence: **36/36 assertions**, fresh SQLite and a second
+PHP process, real custom-price order, injected late transaction rollback, retry
+reuse, read-only GET, unchanged prepaid receipt/completion and no new financial or
+delivery effects. Native Form API GET builds signed scope and CSRF controls, but
+this is **not authenticated HTTP POST/CSRF or browser evidence**.
+Receipt: `.artifacts/selected-staging-drupal/20260919T044014Z-76953/private-purchase.json`
+(includes tested file hashes and harness hash; HEAD alone precedes local edits).
+The sanitized native receipt is also retained in version control at
+`docs/evidence/private-purchase-native-20260919.json` for review across machines.
+
+Focused signed-snapshot/service/form tests now pass34 tests/973 assertions,
+including the final raw-input and saved-gateway regressions. Portal DNA34
+and existing email presentation86 pass. The full synthetic runner now passes:
+`.artifacts/selected-staging-drupal/20260919T043524Z-74021/canonical.json`, including
+the frontend production build/SEO shells and account/portal/payment-stub/lifecycle
+flow. The first strict-offline attempt refused public CMS reads; the next exposed an
+isolated settings override pointing at agency.example.test rather than loopback.
+Only canonical sandbox frontend settings were corrected. Production legacy
+checkout policy was not changed. Failed evidence is retained. The build reports
+an existing unresolved portal PNG reference and a large-chunk advisory; this is
+not browser or hosted visual approval. Only allowlisted public CMS GETs were
+permitted for SEO output; provider transactions and external mail stayed disabled.
+
+Final full module suite: **339 tests/2537 assertions**, exit0 in a fresh isolated runtime,
+`.artifacts/selected-staging-drupal/20260919T044446Z-77314/phpunit.xml`. It reports
+one deprecation and68 PHPUnit deprecations; these are not hidden as a clean-warning
+run. This evidence is for the tested worktree changes, not activation of checkout.
+
+Independent review caught two native-processing seams before that final rerun:
+normalized hidden-field defaults could replace an omitted snapshot, and a saved
+gateway could become disabled before resumed checkout. Fixed by requiring the raw
+submitted snapshot string and freshly validating saved gateway status/plugin on
+entry, gateway filtering and placement. The reviewer cleared those source fixes;
+native36 includes disabled-saved-gateway denial without provider invocation.
+The unchanged selected-staging suite also passed85 installed assertions at
+`.artifacts/selected-staging-drupal/20260919T043844Z-76608/evidence.json`.
+
+Read-only production refresh:8/16/17 remain customer_ready with no selected direction
+or staging start; outboxes772/773/775 remain sent/attempts1. Real04:35:03Z and04:40:03Z
+scheduled CLI ticks remain observe_only, zero queue mutations/reservations. No
+second notice, order/payment mutation or live source change occurred in this pass.
+
+Still unproven: native authenticated HTTP/CSRF and customer route middleware,
+browser/mobile rendering, gateway/webhook/3DS/uncertain-payment/refund, production
+MySQL concurrency and actual client transactions. Checkout remains **OFF**. The
+companion `/web/customer/private-purchase/` route must be verified as an allowed
+customer path through deployed middleware; do not email admin URLs or claim that
+source routing alone proves access.
+
 ## Source-only implementation
 
 This follows the completed bookkeeping lane, not a second record operation.
@@ -25,8 +93,8 @@ and updates the same order, with a no-charge action. No recurring authorization,
 new order, order placement, client site acceptance or launch is inferred.
 
 The existing staff-only issuance method remains the only code issuer. No code
-has been issued in production. Scope version/hash are retained in server-side
-form state and revalidated on POST. Codes stay out of URL/query strings.
+has been issued in production. Scope version/hash are HMAC-bound to the displayed
+form, account and request and revalidated on POST. Codes stay out of URL/query strings.
 
 ### Request16: exact $199 private scope
 

@@ -1,5 +1,18 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Private terms require current selection and displayed authority
+
+Use canonical producer scope/content/assets plus persisted selection revision and
+actual source hashes. Rebuilding a form on POST is not evidence of what its user
+saw. GET cannot cache FormState here; signed account/request/version snapshots
+with native CSRF provide separate checks. Real Commerce tests caught fixture hook
+assumptions and prove rollback/reuse; activation still needs actual HTTP/provider
+and browser tests. Canonical synthetic settings must keep the frontend loopback
+host, not accidentally exercise production-only legacy checkout restrictions.
+Independent review additionally caught missing raw hidden input inheriting new
+defaults and saved gateways escaping discovery-time checks. Validate raw submitted
+strings and freshly reload saved gateway status/plugin before native processing.
+
 ## 2026-09-18 — Separate scheduled health from autonomous fulfillment
 
 The broken CGI cron was replaced through exact hash/marker comparison and private

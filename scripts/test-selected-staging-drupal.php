@@ -76,7 +76,10 @@ JS
   );
   // The canonical runner uses a local server host as well as the CLI URI.
   chmod($sandbox . '/backend/web/sites/default/settings.php', 0600);
-  file_put_contents($sandbox . '/backend/web/sites/default/settings.php', "\n\$settings['trusted_host_patterns'][] = '^127\\.0\\.0\\.1$';\n", FILE_APPEND);
+  file_put_contents($sandbox . '/backend/web/sites/default/settings.php', "\n\$settings['trusted_host_patterns'][] = '^127\\.0\\.0\\.1$';\n"
+    // The canonical journey intentionally includes the local-only legacy stub.
+    // Keep its frontend host local; do not enable legacy checkout in production.
+    . "\$config['famtastic_pipeline.settings']['frontend_base_url'] = 'http://127.0.0.1';\n", FILE_APPEND);
   exit(0);
 }
 if ($phase === 'canonical-report') {

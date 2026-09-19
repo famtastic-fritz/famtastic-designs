@@ -1,0 +1,73 @@
+{
+  "schema": "famtastic.private-purchase-native-proof.v1",
+  "status": "passed",
+  "source_sha": "3b650349666538625da7fd98934f89ebec0ce49e",
+  "classification": "locally proven",
+  "php_version": "8.5.9",
+  "drupal_version": "11.4.5",
+  "checks": {
+    "isolated_installed_drupal_native_commerce_captured_mail_no_network": true,
+    "fresh_store_exact_binding": true,
+    "native_user_hook_fixture_identity_14": true,
+    "native_user_hook_fixture_identity_15": true,
+    "read_context_creates_no_order_or_payment": true,
+    "other_customer_context_rejected": true,
+    "native_form_api_get_builds_signed_scope_and_csrf_controls": true,
+    "native_form_api_get_creates_no_purchase_or_notification": true,
+    "late_event_failure_rejects_native_purchase": true,
+    "late_failure_rolls_back_real_order_item_and_side_effects": true,
+    "late_failure_restores_private_offer": true,
+    "native_custom_price_order_unpaid_199": true,
+    "custom_price_override_not_catalog_product": true,
+    "one_order_one_item_zero_payments": true,
+    "same_post_reuses_existing_purchase": true,
+    "financial_get_does_not_refresh_or_save_native_order": true,
+    "native_saved_enabled_gateway_allows_checkout_guard_without_invocation": true,
+    "native_disabled_saved_gateway_blocks_resumed_checkout": true,
+    "native_unassigned_gateway_allows_initial_checkout_guard": true,
+    "private_payment_exception_preserves_staging_and_no_acceptance": true,
+    "same_direction_changed_scope_rejects_stale_form": true,
+    "same_direction_changed_scope_rejects_checkout_resume": true,
+    "disabled_feature_cannot_resume_payment": true,
+    "native_manual_receipt_replay_has_same_order_payment": true,
+    "native_manual_payment_preserves_amount_and_unknown_bank_evidence": true,
+    "completion_rejects_wrong_account": true,
+    "completion_code_cannot_replay": true,
+    "completion_creates_no_order_payment_job_notification_or_entitlement": true,
+    "native_completion_is_not_acceptance_or_launch": true,
+    "no_side_effect_famtastic_job": true,
+    "no_side_effect_famtastic_notification_outbox": true,
+    "no_side_effect_famtastic_commerce_fulfillment": true,
+    "no_side_effect_famtastic_entitlement": true,
+    "new_process_reuses_same_native_order": true,
+    "new_process_does_not_create_payment_or_fulfillment": true,
+    "new_process_reloads_paid_completion_without_charge": true
+  },
+  "limits": [
+    "Disposable SQLite, not concurrent production MySQL.",
+    "Native entities/services, not browser or authenticated HTTP/CSRF proof.",
+    "Configured test-only Stripe gateway is never invoked. No Stripe, webhook, 3DS or external payment proof.",
+    "Synthetic manual receipt is not the production order21/payment5."
+  ],
+  "records": {
+    "reunion_order": 1,
+    "owner_uid": 2,
+    "stock_uid": 3,
+    "final_counts": {
+      "commerce_order": 2,
+      "commerce_order_item": 2,
+      "commerce_payment": 1,
+      "famtastic_job": 0,
+      "famtastic_notification_outbox": 0,
+      "famtastic_commerce_fulfillment": 0,
+      "famtastic_entitlement": 0
+    }
+  },
+  "tested_source_sha256": {
+    "Service/PrivatePurchaseService.php": "d2807a07210f28a741d1cdfcb053bfb269950297c156d24bb59dadfa23068dbc",
+    "Form/PrivatePurchaseForm.php": "fce0b0fe2446c552970edfe61ee22f09eba6fe2a2482a4a959f38560b2a0a1aa",
+    "EventSubscriber/PrivateScopeCheckoutGuard.php": "fbc8604237a33108219ca575afdc0ab9d76b6bf1323394ec56c26a8a166e0555",
+    "Service/OfflinePrepaymentService.php": "6a6f575537acca88b3b4b9dac7fd081c5310b4aece7cf4ee961b4316908db749"
+  },
+  "harness_sha256": "f325ba371b25f7e89c0a5cdfc1572b888d13f9cd987fedeb3aab673bbc332a51"
+}

@@ -159,6 +159,14 @@ updated, say so explicitly in the session report rather than skipping silently.
   not final launch. Read `docs/plans/CLIENT_SELECTED_BUILD_FLOW_2026-09-17.md`;
   its implementation checklist distinguishes policy from enabled automation.
 
+- Explicit commercial exceptions approved 2026-09-18: request17's $200 Zelle
+  receipt resumes the same paid order (never a new sale/grant); request16's exact
+  private $199 scope permits payment after authenticated direction selection,
+  without requiring staging acceptance first. Neither exception implies launch
+  approval. Keep current scope/source/revision binding, account isolation and
+  native checkout release tests; an inactive feature flag is not Fritz approval.
+  See `docs/plans/PRIVATE_PURCHASE_COMPLETION_2026-09-18.md`.
+
 - Sign future agent-authored customer correspondence as **Shay** or **Shay-Shay**.
   The canonical full spelling is **Shay-Shay**. Preserve an approved template's
   short or full form; do not invent an automatic formal/casual switching rule.

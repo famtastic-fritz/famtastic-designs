@@ -114,6 +114,17 @@ artifact is required before checkout; neither selection nor hosting is final
 acceptance. A changed build invalidates old acceptance. No final launch is
 authorized merely by review hosting. The plan records remaining runtime gaps.
 
+The ordinary acceptance-before-payment rule has two explicit owner-authorized
+exceptions (2026-09-18): request17 resumes its existing $200 paid Zelle purchase;
+request16 may pay its exact private $199 alumni scope after authenticated direction
+selection, before staging acceptance. Never turn either into a public coupon,
+second sale, recurring authorization or launch approval. The private purchase must
+bind the current source, scope, assets and selection revision, and fail closed on
+stale forms or changed authority. Its disabled native-checkout release gate remains
+until account/CSRF/gateway/webhook/failure/refund/browser tests pass. These specific
+exceptions take precedence over the ordinary checklist below, not over tenant
+isolation, consent or final acceptance/launch requirements.
+
 1. A customer owns reusable website requests inside their workspace.
 2. `website_discovery_v3` captures goals, audience, pages, content, brand,
    integrations, SEO, accessibility/legal context, ecommerce, booking, AI,
