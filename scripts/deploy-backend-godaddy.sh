@@ -701,6 +701,35 @@ expected_lifecycle_cron_line() {
   printf '*/5 * * * * cd %q && %q famtastic:lifecycle-run --limit=50 >/dev/null 2>&1' "$production_dir" "$drush"
 }
 
+# BEGIN OWNED_LIFECYCLE_CLASSIFIER (pure read-only contract; regression extracted)
+classify_owned_lifecycle_cron() {
+  local old_line bounded_line
+  old_line="$(printf '*/5 * * * * cd %q && %q famtastic:lifecycle-run --limit=50 >/dev/null 2>&1' "$production_dir" "$drush")"
+  bounded_line="$(printf '*/5 * * * * cd %q && /usr/local/bin/php %q famtastic:automation-tick' "$production_dir" "$production_dir/vendor/bin/drush.php")"
+  printf '%s\n' "$current_crontab" | awk -v old="$old_line" -v bounded="$bounded_line" -v cron_log="$deploy_dir/bounded-worker.log" '
+    BEGIN { legacy="# FAMTASTIC_LIFECYCLE_CRON_V1"; modern="# FAMTASTIC_BOUNDED_WORKER_CRON_V1"; count=0; active=0; bad=0; mode="none" }
+    { lines[NR]=$0 }
+    $0 == legacy || $0 == modern { count++; marker=$0; marker_line=NR; next }
+    /^[[:space:]]*#/ {
+      if ($0 ~ /FAMTASTIC_(LIFECYCLE|BOUNDED_WORKER)_CRON/) bad=1
+      next
+    }
+    /famtastic:(lifecycle-run|jobs-run|automation-tick)|drush(\.php)?[[:space:]].*(cron|fjr|flr|ev|php:eval|php:script)([[:space:]]|$)|automation[_:-]?worker/ { active++ }
+    END {
+      if (count > 1 || bad || (count == 0 && active != 0) || (count == 1 && active != 1)) exit 2
+      if (count == 1) {
+        line=lines[marker_line+1]
+        if (marker == legacy && line == old) mode="legacy"
+        else if (marker == modern && line == bounded " >>" cron_log " 2>&1") mode="bounded_observe"
+        else if (marker == modern && line == bounded " --dispatch >>" cron_log " 2>&1") mode="bounded_dispatch"
+        else exit 2
+      }
+      print mode
+    }
+  ' || { echo 'Lifecycle schedule is unknown, altered or duplicated; refuse automatic scheduler changes.' >&2; return 1; }
+}
+# END OWNED_LIFECYCLE_CLASSIFIER
+
 expected_drupal_cron_line() {
   printf '*/5 * * * * cd %q && %q cron >/dev/null 2>&1' "$production_dir" "$drush"
 }
@@ -990,7 +1019,11 @@ if [[ "$pilot_exact_dispatch_only" == "1" ]]; then
     echo "Pilot exact-dispatch-only preflight: durable Drupal lock is currently $pilot_dispatch_lock_before; apply will set and verify it as 1."
   fi
 else
-  echo "Ordinary deployment preflight: durable pilot lock is currently $pilot_dispatch_lock_before; an authorized apply will set and verify it as 0 before enabling lifecycle scheduling."
+  load_current_crontab
+  ordinary_cron_snapshot="$current_crontab"
+  ordinary_lifecycle_mode="$(classify_owned_lifecycle_cron)"
+  echo "Ordinary deployment preflight: lifecycle mode=$ordinary_lifecycle_mode; preserve its exact command. Deployment does not enroll work or install a broad scheduler."
+  echo "Durable pilot lock is currently $pilot_dispatch_lock_before; authorized apply clears it only after successful promotion."
 fi
 # A deployment must never land on (or silently leave) a maintenance-mode site.
 # Maintenance mode lives in STATE (not config) - Drupal core key.
@@ -1286,24 +1319,23 @@ else
   # the new code, database updates, and cache rebuild have all succeeded.
   # That makes this transition explicit, auditable, and reversible by the
   # next owner-approved pilot deployment.
-  set_pilot_dispatch_lock 0
-  # Ordinary deployments retain the independent lifecycle runner. Mailbox
-  # ingestion may fail without suppressing notification dispatch, proof jobs,
-  # protection, or heartbeats.
-  cron_marker='# FAMTASTIC_LIFECYCLE_CRON_V1'
-  cron_stage="$deploy_dir/tmp/famtastic-crontab-$timestamp"
-  crontab -l > "$cron_stage" 2>/dev/null || true
-  if ! grep -Fq "$cron_marker" "$cron_stage"; then
-    {
-      printf '\n%s\n' "$cron_marker"
-      printf '*/5 * * * * cd %q && %q famtastic:lifecycle-run --limit=50 >/dev/null 2>&1\n' "$production_dir" "$drush"
-    } >> "$cron_stage"
-    crontab "$cron_stage"
+  # Installing a bounded marker must not cause a later release to silently
+  # re-add the old broad queue/mail drain. Read/validate only; preserve mode.
+  load_current_crontab
+  lifecycle_mode="$(classify_owned_lifecycle_cron)"
+  if [[ "$current_crontab" != "$ordinary_cron_snapshot" || "$lifecycle_mode" != "$ordinary_lifecycle_mode" ]]; then
+    echo 'Lifecycle schedule changed during deployment; reconcile without overwriting it.' >&2
+    exit 1
   fi
-  rm -f "$cron_stage"
-  crontab -l | grep -F "$cron_marker" >/dev/null
-  lifecycle_cron_record='FAMTASTIC_LIFECYCLE_CRON_V1'
-  echo "Independent lifecycle scheduler verified."
+  set_pilot_dispatch_lock 0
+  case "$lifecycle_mode" in
+    legacy) lifecycle_cron_record='FAMTASTIC_LIFECYCLE_CRON_V1' ;;
+    bounded_observe) lifecycle_cron_record='FAMTASTIC_BOUNDED_WORKER_CRON_V1:observe_only' ;;
+    bounded_dispatch) lifecycle_cron_record='FAMTASTIC_BOUNDED_WORKER_CRON_V1:dispatch_one_enrolled' ;;
+    none) lifecycle_cron_record='none_not_activated' ;;
+    *) echo 'Unexpected lifecycle mode; no scheduler changed.' >&2; exit 1 ;;
+  esac
+  echo "Lifecycle schedule preserved: $lifecycle_cron_record. No automatic broad scheduler installation."
 fi
 
 {
