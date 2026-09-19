@@ -217,7 +217,7 @@ final class OfflinePrepaymentService {
       && ($data['scope']['version'] ?? '') === 'stockandship98-private-scope-v1'
       && hash_equals($scopeHash, (string) ($data['scope_hash'] ?? ''))
       && hash_equals($scopeHash, hash('sha256', json_encode($data['scope'] ?? [], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)))
-      && ($data['hold'] ?? '') === 'awaiting_customer_terms_domain_and_final_acceptance'
+      && in_array($data['hold'] ?? '', ['awaiting_customer_terms_domain_and_final_acceptance', 'awaiting_exact_staging_acceptance_and_launch_readiness'], TRUE)
       && array_key_exists('client_acceptance', $data) && $data['client_acceptance'] === NULL
       && ($data['evidence_source'] ?? '') === 'Fritz Medine explicit confirmation'
       && ($receipt['payment_state'] ?? '') === 'completed' && ($receipt['received'] ?? '') === '200.00'

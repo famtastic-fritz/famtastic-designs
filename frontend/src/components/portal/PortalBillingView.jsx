@@ -23,7 +23,9 @@ export default function PortalBillingView({ workspace, inbox, go }) {
     {isStaff && <div className="portal-billing-staff-links"><strong>Client work</strong><a href="/web/admin/famtastic/metric/website-requests">Website requests / proofs ↗</a>{inbox.admin_orders_url === '/web/admin/commerce/orders' && <a href={inbox.admin_orders_url}>Client orders ↗</a>}<button type="button" onClick={() => go('messages')}>Client messages</button></div>}
     {requests.length > 0 && <Panel eyebrow="Before and after purchase" title="Website requests & proofs" className="portal-billing-requests">
       <p>Your request and proof progress stay visible while a purchase is being prepared.</p>
-      <ul>{requests.map((request) => <li key={request.public_id}><div><strong>{request.project_name || request.business_name || 'Website request'}</strong><p>{request.proof_handoff?.label || 'Open the project for its current status.'}</p></div><a href={`/portal?tab=projects&request=${encodeURIComponent(request.public_id)}`}>Open project</a></li>)}</ul>
+      <ul>{requests.map((request) => <li key={request.public_id}><div><strong>{request.project_name || request.business_name || 'Website request'}</strong><p>{request.proof_handoff?.label || 'Open the project for its current status.'}</p>
+        {request.private_purchase_url === `/web/customer/private-purchase/${encodeURIComponent(request.public_id)}` && <a href={request.private_purchase_url}>Review private scope &amp; payment details</a>}
+      </div><a href={`/portal?tab=projects&request=${encodeURIComponent(request.public_id)}`}>Open project</a></li>)}</ul>
     </Panel>}
     <section className="portal-grid two">
       {orders.length ? (
@@ -43,7 +45,7 @@ export default function PortalBillingView({ workspace, inbox, go }) {
                 <dd>{title(purchase.payment_status)}</dd>
               </div>
               <div>
-                <dt>Date</dt>
+                <dt>Order recorded</dt>
                 <dd>{date(purchase.created)}</dd>
               </div>
             </dl>
@@ -57,8 +59,8 @@ export default function PortalBillingView({ workspace, inbox, go }) {
 
       <Panel eyebrow="Payment Security" title="Secure Billing &amp; Terms">
         <p>
-          Payment methods are processed securely through Stripe and Drupal Commerce. FAMtastic never
-          stores raw credit card numbers on-premises.
+          Card payments use Stripe and Drupal Commerce. Confirmed offline payments are recorded
+          separately. FAMtastic never stores raw credit card numbers on-premises.
         </p>
         <div
           style={{
@@ -72,11 +74,12 @@ export default function PortalBillingView({ workspace, inbox, go }) {
           }}
         >
           <strong style={{ color: '#fff', display: 'block', marginBottom: '0.2rem' }}>
-            Hosting Inclusions &amp; Renewal Policy
+            Standard Bundle Renewal Policy
           </strong>
           Web bundles include 365 days of managed cloud hosting. Month-13 renewals ($9.99/mo for Web
           Basics or $19.99/mo for Business Website) are billed only upon verified customer recurring
           authorization.
+          {' '}A separately agreed private scope uses its own recorded terms; these standard bundle renewals do not automatically apply.
         </div>
       </Panel>
     </section>

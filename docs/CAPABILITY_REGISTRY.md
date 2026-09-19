@@ -321,6 +321,12 @@ are durably bound and support-case assigned to Fritz. Completion/placement guard
 and paid-selection bridge are source-tested but not module-deployed by this lane;
 scope-exact reunion checkout and completion UI are not yet proven. See
 `docs/plans/REQUEST17_OFFLINE_PREPAYMENT_2026-09-18.md`.
+
+Follow-up: completion UI and exact reunion checkout integration are now
+source-implemented with 30 focused tests/247 assertions and 34 portal-DNA checks.
+This is local/mock-entity evidence, not native checkout/provider/HTTP proof.
+The reunion checkout release setting defaults OFF; the form discloses that state.
+See `docs/plans/PRIVATE_PURCHASE_COMPLETION_2026-09-18.md` for activation gates.
 # 2026-09-17 evidence addendum: protected selected-site review
 
 One controlled static Pros In Training review is hosted and browser-verified on

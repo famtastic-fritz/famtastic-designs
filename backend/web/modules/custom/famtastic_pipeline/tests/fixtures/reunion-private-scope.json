@@ -1,0 +1,30 @@
+{
+  "version": "class-of-2000-private-scope-v1",
+  "sku": "PRIVATE-REUNION16-199",
+  "title": "Class of 2000 — private alumni reunion website scope",
+  "amount_minor": 19900,
+  "currency": "USD",
+  "billing": "one_time",
+  "source": "Fritz Medine explicit owner instructions; not customer-supplied answers",
+  "included": [
+    "Three directions: Hi-Tide Legacy, Miami After Dark, Class of 2000: Then & Now",
+    "Selected-direction staging and agreed launch build",
+    "Event information, RSVP, tickets/sponsorship and alumni access",
+    "Dinner preferences, memories, memorial/time capsule, committee administration and help",
+    "Reuse verified components without Class of 1996 records, credentials or private assets",
+    "Reasonable launch work and costs to the agreed current-reunion functionality",
+    "Private project communication assigned to Fritz; no guaranteed instant replies"
+  ],
+  "awaiting_customer_confirmation": ["dates", "venue", "ticket prices", "photos", "committee details", "domain choice"],
+  "payment_policy": {
+    "exception": "Offer payment after direction selection toward confirmed domain/hosting provisioning and final live integrations",
+    "proofs_or_staging_require_domain_purchase": false,
+    "selection_is_acceptance_or_launch": false,
+    "ordinary_satisfaction_before_payment_policy_changed": false
+  },
+  "cost_boundary": "Existing services and standard-domain options first; unusual costs and paid subscriptions need explicit approval. Not unlimited future work.",
+  "renewal_terms": null,
+  "recurring_authorized": false,
+  "legacy_product_terms_inherited": false,
+  "checkout_activation": "not_enabled_by_offer_record; exact private scope checkout must be separately validated after selection"
+}

@@ -2524,3 +2524,7 @@ Keep the pre-purchase request's normal order field empty until final readiness;
 its audited private offer carries the prepaid binding. If compatibility requires
 an earlier binding, use exact reconciled exception evidence, never a general
 paid-request selection bypass. Scope hash, ownership and held status matter.
+Commerce draft-order `load()` may refresh and save. Private financial GET views
+use native `loadUnchanged()` to avoid hidden refresh side effects. Customer scope
+acknowledgment, checkout initiation, native payment and exact website acceptance
+remain four separate facts; no private scope inherits a convenient public SKU.

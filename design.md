@@ -101,6 +101,13 @@ website placements. RGB/gold logo colors do not replace existing action/surface 
 - **Domain:** intake supplies a proposed website address. The customer confirms
   or edits it; no availability, registration, DNS, hosting, or payment action
   is implied until it is actually approved.
+- **Private purchase details:** link from Projects Setup and Billing into an
+  account-bound native Commerce companion form. Preserve the customer theme and
+  plain sans form typography; show exact recorded scope, paid/unpaid truth and
+  one next action. An already-paid purchase offers “Save details — no charge,”
+  never a second checkout. Unknown/expired/unissued code and disabled payment
+  states are explicit. Scope acknowledgment is not finished-site acceptance;
+  standard bundle renewal copy never overrides a private one-time agreement.
 - **Clarification:** a blocking unknown becomes one plain question, a focused
   answer surface, and a versioned branded email. A nonblocking unknown is shown
   as an assumption in the research—not silently invented.

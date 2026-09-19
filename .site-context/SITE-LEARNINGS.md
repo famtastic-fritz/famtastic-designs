@@ -2502,3 +2502,7 @@ The exact private offer can bind an offline receipt without filling the request'
 normal order field and blocking proof selection. Any compatibility bridge must
 reconcile the native payment, immutable scope hash and held unaccepted order;
 source tests do not replace an actual ready-proof selection rehearsal.
+Observation: native draft order loading may save a refreshed entity. Use
+`loadUnchanged()` for read-only financial forms. A future private checkout must
+reuse its request-bound order, snapshot the exact special scope, and continue
+selected staging independently; never imply paid from a redirect or order state.

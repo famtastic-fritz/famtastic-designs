@@ -18,6 +18,7 @@ final class OfflinePrepaymentServiceTest extends TestCase {
     $p = ['order_id' => 21, 'payment_state' => 'completed', 'received' => '200.00', 'outstanding' => '0.00', 'currency' => 'USD', 'order_state' => 'draft', 'launch_authorized' => FALSE];
     self::assertTrue(OfflinePrepaymentService::matchesSelectedStagingEvidence($r, $o, $d, $p));
     self::assertTrue(OfflinePrepaymentService::matchesSelectedStagingEvidence(array_replace($r, ['commerce_order_id' => 21]), $o, $d, $p));
+    self::assertTrue(OfflinePrepaymentService::matchesSelectedStagingEvidence($r, $o, array_replace($d, ['hold' => 'awaiting_exact_staging_acceptance_and_launch_readiness']), $p));
     foreach ([['id' => 16], ['customer_id' => 14], ['organization_id' => 14], ['commerce_order_id' => 999], ['status' => 'converted']] as $bad) self::assertFalse(OfflinePrepaymentService::matchesSelectedStagingEvidence(array_replace($r, $bad), $o, $d, $p));
     foreach ([['payment_state' => 'pending'], ['received' => '199.00'], ['outstanding' => '1.00'], ['launch_authorized' => TRUE], ['order_id' => 999]] as $bad) self::assertFalse(OfflinePrepaymentService::matchesSelectedStagingEvidence($r, $o, $d, array_replace($p, $bad)));
     self::assertFalse(OfflinePrepaymentService::matchesSelectedStagingEvidence($r, array_replace($o, ['status' => 'revoked']), $d, $p));

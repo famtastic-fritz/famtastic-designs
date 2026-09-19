@@ -1275,6 +1275,7 @@ export default function PortalProjectsView({
                 <span>{activeRequest.existing_domain || activeRequest.intake?.desired_domains || `${String(activeRequest.project_name || '').toLowerCase().replace(/[^a-z0-9]+/g, '')}.com (confirm)`}</span>
               </summary>
               <div className="portal-project-simple-section">
+                {activeRequest.private_purchase_url === `/web/customer/private-purchase/${encodeURIComponent(activeRequest.public_id)}` && <p><a href={activeRequest.private_purchase_url}>Review your private scope, payment record and completion details</a>. This does not approve the finished website or place a new charge.</p>}
                 <p>We saved this from your intake as the proposed website address. You can correct it here before any domain is registered or connected.</p>
                 <ProjectDomainHostingManager request={activeRequest} busy={busy} onSave={onSaveWebsiteRequest} />
               </div>

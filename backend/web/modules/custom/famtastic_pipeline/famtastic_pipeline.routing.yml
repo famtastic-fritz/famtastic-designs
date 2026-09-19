@@ -1423,3 +1423,14 @@ famtastic_pipeline.ai_brief_synthesizer:
   methods: [POST]
   requirements:
     _access: 'TRUE'
+famtastic_pipeline.private_purchase:
+  path: '/customer/private-purchase/{website_request}'
+  methods: [GET, POST]
+  defaults:
+    _form: '\Drupal\famtastic_pipeline\Form\PrivatePurchaseForm'
+    _title: 'Your private purchase'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    website_request: '[0-9a-f-]{36}'
+  options:
+    no_cache: TRUE

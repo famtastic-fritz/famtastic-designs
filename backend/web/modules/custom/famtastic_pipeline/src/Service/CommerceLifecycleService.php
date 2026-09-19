@@ -31,6 +31,11 @@ final class CommerceLifecycleService {
    * Idempotently fulfills one completed Commerce order.
    */
   public function fulfill(OrderInterface $order): array {
+    // Private scope purchases must not run catalog fulfillment, regenerate
+    // proofs, infer final acceptance, or inherit another SKU's renewal terms.
+    if ($order->getData(PrivatePurchaseService::KEY)) {
+      return ['fulfilled' => FALSE, 'reason' => 'private_scope_selected_staging_and_final_acceptance_are_independent'];
+    }
     // Received funds do not imply client acceptance or permission to place an
     // offline-prepaid special scope into the normal SKU fulfillment workflow.
     if ($order->getData('famtastic_offline_prepayment')) {
@@ -282,6 +287,17 @@ final class CommerceLifecycleService {
     if (!method_exists($payment, 'getOrder') || !$payment->getOrder()) return;
     $order = $payment->getOrder();
     $state = (string) $payment->getState()->value;
+    if ($order->getData(PrivatePurchaseService::KEY)) {
+      // Native payment remains financial truth, including failures/refunds.
+      // No emails, catalog entitlements or builds are manufactured here.
+      \Drupal::service('famtastic_pipeline.operational_ledger')->recordEvent(
+        'private-scope:payment:' . $payment->id() . ':' . $state . ':' . $payment->getRefundedAmount()->getNumber(),
+        'commerce.private_scope_payment_state', ['order_id' => (int) $order->id(), 'payment_id' => (int) $payment->id(),
+          'state' => $state, 'amount' => $payment->getAmount()->getNumber(), 'currency' => $payment->getAmount()->getCurrencyCode(),
+          'refunded' => $payment->getRefundedAmount()->getNumber(), 'launch_authorized' => FALSE],
+        NULL, NULL, (int) $order->id());
+      return;
+    }
     if ($state === 'completed') {
       $this->fulfill($order);
       return;
