@@ -1,11 +1,14 @@
 #!/usr/bin/env node
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync as writeRaw, existsSync } from 'node:fs';
+import { addCreatorCredit } from '../../../scripts/creator-credit.mjs';
+const writeFileSync = (path, data) => writeRaw(path, String(path).endsWith('.html') ? addCreatorCredit(data) : data);
 import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const pilot = dirname(fileURLToPath(import.meta.url));
 const output = resolve(process.argv[2] || join(pilot, 'proof'));
+if (!process.argv[2] || existsSync(output)) throw new Error('Supply a new output directory; historical proof versions are immutable.');
 const scenario = JSON.parse(readFileSync(join(pilot, 'scenario.json'), 'utf8'));
 const directions = JSON.parse(readFileSync(join(pilot, 'directions.json'), 'utf8'));
 const sha256 = (value) => createHash('sha256').update(value).digest('hex');
@@ -41,7 +44,7 @@ for (const direction of directions) {
   copyFileSync(join(pilot, 'assets', direction.hero_asset), join(dir, 'assets', 'hero.png'));
   const html = pages[direction.slug]();
   writeFileSync(join(dir, 'index.html'), html);
-  manifest.push({...direction, entry:`${direction.slug}/index.html`, html_sha256:sha256(html), hero_sha256:sha256(readFileSync(join(dir,'assets','hero.png')))});
+  manifest.push({...direction, entry:`${direction.slug}/index.html`, html_sha256:sha256(addCreatorCredit(html)), hero_sha256:sha256(readFileSync(join(dir,'assets','hero.png')))});
 }
 const cards = manifest.map((d) => `<article class="proof ${d.mode}"><a href="${d.entry}" aria-label="Open ${esc(d.name)} working website"><img src="${d.slug}/assets/hero.png" alt="${esc(d.name)} fictional concept artwork"></a><div><p class="kicker">${d.mode.toUpperCase()} · ${d.famtastic_level}/10</p><h2>${esc(d.name)}</h2><p>${esc(d.strategy)}</p><a class="open" href="${d.entry}">Open working website ↗</a></div></article>`).join('');
 const hub = shell('Six-Proof Review','Six local working website proofs for Bossy Nails by Pri.',`:root{--black:#08070d;--paper:#f8f1e6;--pink:#ff3b93;--lime:#caff35}body{font-family:Arial,sans-serif;background:var(--black);color:#fff}.hub{padding:90px 0 60px;background:radial-gradient(circle at 80% 0,#7e1f78,#08070d 48%)}.hub h1{font:1000 clamp(62px,11vw,155px)/.72 Arial,sans-serif;letter-spacing:-.09em;margin:20px 0}.hub h1 span{color:var(--pink)}.hub p{max-width:730px;font-size:19px;line-height:1.7}.badges{display:flex;flex-wrap:wrap;gap:9px}.badges span{border:1px solid #fff4;padding:9px 13px;border-radius:99px;font-size:11px}.proofs{padding:60px 0}.proof{display:grid;grid-template-columns:1.15fr .85fr;margin:0 0 28px;background:#17151f;border:1px solid #ffffff25}.proof>a{min-height:420px}.proof img{width:100%;height:100%;object-fit:cover}.proof>div{padding:42px;display:flex;flex-direction:column;justify-content:center}.proof h2{font:800 clamp(40px,5vw,72px)/.88 Georgia,serif;margin:12px 0}.proof p{line-height:1.65;color:#d2ceda}.proof .kicker{color:var(--lime)}.proof.restrained .kicker{color:#ffcbb4}.proof.medium .kicker{color:#ff8ebd}.open{font-weight:900;margin-top:18px}.gate{padding:80px 0;background:var(--lime);color:#090b05}.gate h2{font:1000 clamp(42px,7vw,88px)/.85 Arial;margin:15px 0}@media(max-width:760px){.hub{padding:65px 0 40px}.proof{grid-template-columns:1fr}.proof>a{min-height:280px}.proof>div{padding:28px}}`,`${note}<main id="top"><header class="hub"><div class="wrap"><p class="kicker">WEBSITE.PREVIEW.V2 · REUSABLE CREATIVE BENCHMARK</p><h1>Six sets.<br><span>Zero basic.</span></h1><p>Bossy Nails by Pri is a fictional St. Lucie County nail studio used to prove that one system can make a restrained site, a medium-FAMtastic site, and four genuinely outrageous—but usable—website directions.</p><div class="badges"><span>Request · ${esc(scenario.request_id)}</span><span>Customer · ${esc(scenario.customer.email)}</span><span>1 restrained</span><span>1 medium</span><span>4 ultra</span><span>Local proof only</span></div></div></header><section class="proofs"><div class="wrap">${cards}</div></section><section class="gate"><div class="wrap"><p class="kicker">Human approval gate</p><h2>Every direction<br>stops here.</h2><p>No email, booking, payment, customer import, domain action, or production deployment is permitted from this benchmark.</p></div></section></main>`);

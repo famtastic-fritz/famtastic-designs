@@ -1,5 +1,20 @@
 # Agent Instructions
 
+## Owner mandate — creator credit (September 18, 2026)
+
+Preserve every existing footer/credit and append the final centered creator-credit
+row to every new agency-authored site, proof, prototype, lead demo and HTML output.
+Use only the exact approved PNG, linked to https://famtasticdesigns.com/, with an
+accessible name, responsive 160–220px image, >=44px target and compact obsidian
+backing where needed. No redraw, recolor, tracker, new cookie or tier exemption;
+lower-cost work is especially mandatory. Only explicit owner override can exempt
+an exact artifact. Attribution must use public non-PII slugs, never tokens/user IDs.
+Use `scripts/creator-credit.mjs` or React CreatorCredit; run the contract tests.
+Existing approved artifacts require new authored versions and fresh hashes; never
+rewrite historical evidence/approval hashes. Marketing HTML must pass the existing
+publication preflight. See `docs/design/CREATOR-CREDIT-2026-09-18.md` and the separate
+agency lane report. Browser verification uses CUA only going forward.
+
 ## September 18 — Customer email buttons and portal entry (mandatory)
 
 Customer proof emails must use the existing `customer_proof_ready/v4` adapter

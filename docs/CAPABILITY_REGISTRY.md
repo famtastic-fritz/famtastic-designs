@@ -6,10 +6,30 @@ Request8/campaign24 has three imported artifacts matching independent review.
 Native script-free service/owner demonstrations passed195parent and237independent
 browser assertions;45deployed proof-controller/asset checks passed with customer
 visibility intentionally held. The cited phone/growth plan is included in each proof.
-Branded proof email rendering passed20checks; recipient mismatch prevents release/send.
+Branded proof email rendering passed20checks. After Fritz confirmed the verified
+portal address, the unchanged set was released and exact outbox775 was SMTP-accepted
+once at2026-09-19T02:34:27Z; inbox/readership is not verified. The earlier45checks
+remain pre-release evidence, not proof of customer access after release.
 No durable booking, payment, notification, merchant or social connection is promoted
 to implemented status. See `delivery/BROTHER-K-REQUEST8-2026-09-19.md` and the
 customer repository's immutable evidence. No new full synthetic journey pass is claimed.
+
+## 2026-09-18 — Cross-repository credit evidence
+
+The dated [rollout audit](operations/creator-credit-rollout-2026-09-18.md)
+separates live customer patches, source/default-branch adoption, studio build
+guards and exclusions. Parent CUA additionally verifies live Kakes/Reckoning and
+authenticated native admin credit. This is not a claim that every historical
+media export or unlaunched site is published, nor a customer-delivery test.
+
+## 2026-09-18 — Creator credit source implementation
+
+Agency credit pattern/build gates are tested and scoped existing-live deployment is
+verified:222 frontend/static HTML,48 new legacy proof presentation versions, six
+PHP/theme files. All114 original proof hashes unchanged;66 protected direct URLs
+remain403. Parent CUA covers homepage/www/Palmera; lane CUA covers owner-nav clearance.
+Exact releases and pending linked app/private visual QA are recorded in the lane report.
+No ecosystem-wide, email-send or customer-acceptance capability upgrade is implied.
 
 ## 2026-09-18 — Corrected proof notification acceptance
 

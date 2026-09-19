@@ -2,6 +2,7 @@
 """Deterministic website.preview.v2 runner with correlated specialist traces."""
 from __future__ import annotations
 import argparse, datetime as dt, hashlib, html, json, pathlib, time, uuid
+from creator_credit import add_creator_credit
 from human_tester import evaluate_experience
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -89,7 +90,7 @@ def main():
     out=pathlib.Path(a.output).resolve(); out.mkdir(parents=True,exist_ok=True)
     runs=[execute(s) for s in json.loads(pathlib.Path(a.scenarios).read_text())]
     (out/"proof.css").write_text(CSS)
-    for run in runs: (out/f"{run['scenario']['id']}.html").write_text(render(run))
+    for run in runs: (out/f"{run['scenario']['id']}.html").write_text(add_creator_credit(render(run)))
     assertions={"three_scenarios":len(runs)==3,"all_qa_passed":all(all(r["qa"].values()) for r in runs),
       "three_directions_each":all(len(r["directions"])==3 for r in runs),"seven_traces_each":all(len(r["trace"])==7 for r in runs),
       "human_persona_controls":all(r["human_test"]["commercial_decisions_unchanged"] for r in runs),

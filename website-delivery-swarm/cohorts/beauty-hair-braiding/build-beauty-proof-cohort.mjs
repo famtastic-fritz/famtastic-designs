@@ -8,6 +8,7 @@
  */
 
 import { createHash } from 'node:crypto';
+import { addCreatorCredit, creatorCreditHtml } from '../../../scripts/creator-credit.mjs';
 import { deflateSync } from 'node:zlib';
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, relative, resolve } from 'node:path';
@@ -539,7 +540,9 @@ function qa(bundle, lead) {
     const checks = {
       one_h1: (html.match(/<h1\b/gi) || []).length === 1,
       noindex: /<meta name="robots" content="noindex,nofollow,noarchive">/i.test(html),
-      self_contained: !/(?:src|href)\s*=\s*"https?:\/\/|url\(\s*https?:\/\//i.test(html),
+      // The exact owner credit is the sole authorized hosted image/outbound link.
+      self_contained: !/(?:src|href)\s*=\s*"https?:\/\/|url\(\s*https?:\/\//i.test(html.replace(creatorCreditHtml(), '')),
+      creator_credit: html.includes(creatorCreditHtml()),
       no_active_content: !/<(script|iframe|object|embed|base)\b|\son[a-z]+\s*=|javascript\s*:/i.test(html),
       callback_size_limit: Buffer.byteLength(html, 'utf8') <= 500000,
       no_contact_email: !lead.contact_email || !html.toLowerCase().includes(lead.contact_email),
@@ -793,7 +796,7 @@ function leadBundle(lead, output, sourceHash, revision, createdAt, packageProfil
       'Avoid anatomy errors, duplicate fingers, distorted hands, price boards, availability claims, before-and-after claims, and generic stock-photo poses.',
       'Output: one original 1K landscape PNG or JPEG. Preview only; final production use requires rights and quality review.',
     ].join('\n');
-    writeFileSync(htmlPath, page(lead, direction, colors));
+    writeFileSync(htmlPath, addCreatorCredit(page(lead, direction, colors)));
     thumbnail(thumbPath, colors, direction, lead.fingerprint);
     writeFileSync(promptPath, prompt + '\n');
     writeJson(designPath, {
@@ -907,7 +910,7 @@ function leadBundle(lead, output, sourceHash, revision, createdAt, packageProfil
   });
   paths.push({ role: 'promotion-readiness', path: readinessPath, retention: 'restricted-local' });
   const hubPath = join(bundle, 'index.html');
-  writeFileSync(hubPath, hub(lead, directionSummary));
+  writeFileSync(hubPath, addCreatorCredit(hub(lead, directionSummary)));
   paths.push({ role: 'owner-review-hub', path: hubPath });
   const runReportPath = join(bundle, 'run-report.md');
   writeFileSync(runReportPath, '# Local Beauty / Hair / Braiding proof preparation\n\n- Business: ' + lead.business_name + '\n- Lead reference: ' + lead.lead_id + '\n- Contact reference: ' + lead.contact_reference + '\n- Campaign: ' + lead.campaign_id + '\n- Proof mix: Safe (a), Medium FAMtastic (b), Ultra FAMtastic (c)\n- Runtime binding: unbound local preparation. The local job/event IDs in this bundle are non-importable placeholders and cannot be finalized or registered until the canonical ingress supplies exact Drupal and callback identities.\n- Status: local preparation only; no provider call, Drupal write, publication, or email.\n- Review hub: index.html\n');

@@ -443,6 +443,8 @@ def write_guided_review_hub(output: pathlib.Path, intake: dict, directions: list
 </body>
 </html>'''
     (output / "index.html").write_text(page)
+    subprocess.run(["node", str(REPO / "scripts/credit-new-provider-output.mjs"), str(output),
+                    "index.html", *[f"{direction['slug']}/index.html" for direction in directions]], check=True)
 
 
 def build_manifest(output: pathlib.Path, intake: dict, directions: list[dict], prompts: list[dict]):

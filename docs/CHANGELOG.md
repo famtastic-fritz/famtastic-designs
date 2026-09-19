@@ -7,6 +7,31 @@
 - Preserved the verified-recipient mismatch as a send/release gate; no new client email,
   payment, final site deployment or agency application release. Evidence:
   `docs/delivery/BROTHER-K-REQUEST8-2026-09-19.md`.
+- Follow-up: Fritz confirmed the existing verified portal recipient. Released the
+  unchanged reviewed set and sent one customer_proof_ready/v4 portal-button email,
+  signed Shay: outbox775, one attempt, SMTP acceptance at2026-09-19T02:34:27Z.
+  No account change, payment, client selection, final launch or broad queue drain.
+
+## 2026-09-18 — Cross-repository creator-credit rollout
+
+- MBSH96 released first; customer/site and studio lanes now carry the same exact
+  approved-logo final-row contract. Existing attribution and customer state remain.
+- Consolidated live receipts, source-only work, default-branch exceptions, tests,
+  browser evidence and remaining gaps in
+  `operations/creator-credit-rollout-2026-09-18.md`.
+- Verified live mobile Kakes and Reckoning final rows, plus authenticated agency
+  admin credit with its navigation drawer closed. No customer forms or mail sent.
+
+## 2026-09-18 — Agency creator credit
+
+- Deployed222 existing frontend/static HTML at50a07d5e and six presentation PHP/theme
+  files plus48 immutable-original legacy presentation versions at7490f297.
+  Verified114 original hashes unchanged,48 public response hashes and66 protected403s.
+- Added exact-PNG final credit to agency React, static/lead proof builders, future
+  mail/stub rendering and marketing publication gates. Preserved existing footers.
+- Added new-version inventories and existing-files-only deploy modes; no state or
+  historical approval mutation. See operations/agency-creator-credit-lane-2026-09-18.md
+  for exact source, tests, rollout status and exclusions.
 
 ## 2026-09-18 — Proof email correction and portal return
 

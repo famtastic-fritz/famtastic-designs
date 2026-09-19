@@ -8,7 +8,25 @@ Guidance: confirm the actual recipient before queueing, preserve original custom
 separately from staff creative expansion, use native controls for protected proof interaction,
 and keep real phone-owner setup in the selected staging implementation. Independent review
 must check typography and overlay-composited disclosures, not just functional assertions.
-Evidence: `docs/delivery/BROTHER-K-REQUEST8-2026-09-19.md`. No customer email sent.
+Evidence: `docs/delivery/BROTHER-K-REQUEST8-2026-09-19.md`. Initially held; after
+Fritz confirmed the verified portal address, exact outbox775 was SMTP-accepted once.
+
+## 2026-09-18 — Final-row geometry and artifact continuity
+
+Pin critical logo dimensions inline: a cached stylesheet can otherwise expose the
+2172px intrinsic PNG even when the new source CSS is correct. Test fixed chat,
+consent and mobile navigation separately. An older selected proof receives a
+derived credited presentation with original/derived hashes, not regenerated pages
+or rewritten approval evidence. Verify the repository's actual default branch;
+legacy `dev` must not be mislabeled missing `main` or a deployment failure.
+
+## 2026-09-18 — Credit retrofit provenance
+
+Observation: static showcase source carries historical approval/hash evidence,
+and normal deployers promote broader files/state than a creator-credit retrofit.
+Guidance: author new output hashes, back up exact existing targets, exclude absent
+customer routes, and separate narrow release markers from full-site release claims.
+Fixed mobile owner/portal navigation needs clearance below the final credit row.
 
 ## 2026-09-18 — Test the email's entry point, not just protected proof bytes
 
@@ -2528,3 +2546,9 @@ The exact private offer can bind an offline receipt without filling the request'
 normal order field and blocking proof selection. Any compatibility bridge must
 reconcile the native payment, immutable scope hash and held unaccepted order;
 source tests do not replace an actual ready-proof selection rehearsal.
+# 2026-09-18 — Creator-credit release evidence
+
+Agency-only retrofit:222 existing static/React shells;114 runtime originals in31
+campaigns remain unchanged;48 direct-public new presentations and66 protected403s.
+Three friends PHP apps are symlink-backed separately versioned apps, not zero files.
+Exact releases, parent CUA receipts and pending targets are in the agency lane audit.
