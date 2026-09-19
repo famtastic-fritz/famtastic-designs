@@ -31,9 +31,17 @@ gate; scope/spend/rights/security/merchant authority/repeated QA failure escalat
 - Reunion outbox767, `website-request:16:proofs:57:qa-v1`, standard/v2,
   accepted once at1789776111. Redacted provider receipt is in its customer repo.
   Readership and an actual customer browser session are not claimed.
-- StockandShip proof source is in the private `site-stockandship98` repository.
-  C received dedicated texture/surface agent passes. Final local contrast review,
-  protected import and its notification are separate forthcoming receipts.
+- StockandShip proof source `1b34fe7` is pushed in private `site-stockandship98`.
+  C received dedicated texture/surface passes. Final independent QA passed all nine
+  gates; scores A8.30/B8.55/C8.55. Build DNA record42 is registered. Canonical import
+  created exactly three variants in campaign56. Deployed protected access passed42
+  controller/asset checks. Personal standard/v2 outbox769 was queued, not yet sent.
+- The post-release callback replay test discovered a real regression: duplicate
+  import preserved the three artifacts but reset `customer_ready` to `owner_review`.
+  Do not call that whole-lifecycle idempotency. The attachment writer now preserves
+  later states for the same campaign and uses compare-and-set against concurrent
+  QA/choice. Request17 requires exact audited reconciliation before notification;
+  never waive the QA gate or forge a client choice to repair this projection.
 
 The targeted integrated gate/payment/messaging suite passed34 tests177 assertions.
 The fresh canonical lifecycle initially found stale template and staging fixtures;
