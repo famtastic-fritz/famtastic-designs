@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-09-19 — Faster film revision and brand phonetics
+
+- Produced the owner-requested 72.8-second version two with the complete script, new faster local narration, explicit fam-TAS-tik phonemes, retimed scenes/captions and preserved v1 evidence.
+- Added a local narration runner with frozen inputs and a fail-closed pronunciation contract; 97 Video Studio regressions pass.
+- Prepared fixed-edition no-clobber media publication and a separate exact-key owner milestone notice. See `docs/marketing/local-video-studio/VIDEO-REVISION-V2-2026-09-19.md` for measured proof and current delivery state.
+
 ## 2026-09-19 — Original “What’s the catch?” film
 
 - Published the original 1:44 / 1080p film and offer-linked page at `/why-famtastic/`; verified live hashes, MIME, byte ranges, full playback, mobile layout and research CTA. Deployed `63114513` and verified one standard/v2 owner notice in Gmail (outbox 796).

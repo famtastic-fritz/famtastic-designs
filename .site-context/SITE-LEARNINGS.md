@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Owner listening overrides ASR pronunciation inference
+
+**Observation:** The owner found 0.78-speed narration too slow and title-case Famtastic still sounded wrong. The actual phonemizer output was `fæmtˈeɪstɪk` even when ASR wrote the intended name. **Guidance:** Keep captions verbatim, inject a tested explicit pronunciation (`fæmtˈæstɪk`), present a short audible sample, and treat human preference separately from transcription/content checks. Rebuild timing from the new speech rather than speeding picture/audio blindly.
+
+**Observation:** The supplied presenter reference conveys short steps, camera changes and gesture, not an unlimited reusable walk. **Guidance:** Separate source footage, newly authored composition, voice conversion, lip synchronization and new body-motion generation in every capability claim.
+
 ## 2026-09-19 — Original narrated film release
 
 **Verified outcome:** `/why-famtastic/` is live at frontend `63114513`, with full public playback, exact media hashes, proper WebVTT type and responsive page/CTA proof. One owner email reached Gmail; the read-only repeat preserves outbox 796 without resending. Render, voice and final release projections are rows 46–48. See `docs/marketing/local-video-studio/NO-CATCH-FILM-2026-09-19.md`.

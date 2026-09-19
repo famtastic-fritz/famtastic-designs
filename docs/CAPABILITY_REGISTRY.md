@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Owner-directed faster voice revision
+
+**Local v2 film technically proven; listening acceptance pending.** The complete script now renders at 72.8 seconds with 1.06-speed Kokoro speech, reduced gaps and an explicit `fæmtˈæstɪk` brand lexicon. The owner’s rejection supersedes the earlier claim that title-case spelling fixed pronunciation: the installed phonemizer actually emitted fam-TAY-stik. Current proof includes native motion/contrast checks, equal AAC/PCM master hashes, full unmuted CUA playback, loaded captions and 97 passing tests. This does not establish an owner voice clone or new generated presenter motion. Review/publication state is recorded in `docs/marketing/local-video-studio/VIDEO-REVISION-V2-2026-09-19.md`.
+
 ## 2026-09-19 — Full-script original local brand film
 
 **Original local film and owner-authorized website publication proven.** The owner’s supplied 21-line script now has eleven original motion-graphics scenes, new local Kokoro speech, phrase captions and canonical branding. A controlled pronunciation A/B exposed all-capital FAM being spoken as initials; title-case speech normalization preserves the written brand and corrects narration. The static film page has an accessible player, optional text track, complete transcript and explicit canonical offer terms. Video Studio suite: 93 passed. The 103.933-second 1080p result is live at `/why-famtastic/`, with exact public file hashes, range support, CUA full playback and a loaded optional caption track. One exact-key owner notice has both SMTP acceptance and a verified Gmail inbox receipt; a repeat preview confirms no resend. Runtime `63114513`; detailed delivery receipts are in the release report. This does not prove voice cloning, generated live-action footage, paid generation, social scheduling or human creative acceptance. See `docs/marketing/local-video-studio/NO-CATCH-FILM-2026-09-19.md`.
