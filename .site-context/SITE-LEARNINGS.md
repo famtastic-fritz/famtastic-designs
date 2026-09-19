@@ -2,6 +2,8 @@
 
 ## 2026-09-19 — Original narrated film release
 
+**Verified outcome:** `/why-famtastic/` is live at frontend `63114513`, with full public playback, exact media hashes, proper WebVTT type and responsive page/CTA proof. One owner email reached Gmail; the read-only repeat preserves outbox 796 without resending. Render, voice and final release projections are rows 46–48. See `docs/marketing/local-video-studio/NO-CATCH-FILM-2026-09-19.md`.
+
 **Observation:** GoDaddy served the hash-correct VTT as `text/plain`. **Guidance:** Ship the film-directory `AddType text/vtt .vtt` rule in canonical frontend source and verify the public header and browser track loading after deployment.
 **Observation:** Uppercase `FAMtastic` made the local narrator spell F.A.M.; cached Whisper caught it even though every word was present. A title-case pronunciation A/B fixed the speech while retaining exact source/caption spelling. **Guidance:** Preserve source spelling separately from a recorded TTS normalization map, audit names with short A/B clips, and retain failed/quiet masters instead of overwriting their evidence.
 

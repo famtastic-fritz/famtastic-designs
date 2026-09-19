@@ -37,9 +37,23 @@ Final v3 is a **103.933333-second, 1920×1080, 30 fps** H.264/yuv420p film with 
 - Render Build DNA validation passed: **6 stages, 31 artifact checksums**. Raw native audio, failed attempts, pronunciation trials, source snapshots, final audio-master comparison, cache receipt and CUA evidence are retained locally.
 - Final publication set is `artifacts/video-studio/no-catch-20260919/media-v3/`: MP4 above; JPEG SHA-256 `99bfb0baaf6083c68c3a9e502ec6dc98c7c5f4842792f038eae0b750417bdfce`; WebVTT SHA-256 `101db30c2a9149bad5e2a252ad2da4a9141a710025adb60bd4ad418f7c30c59d`. Publisher tests: **11 passed**.
 
-The local delivery copy is `~/Downloads/FAMtastic-Whats-The-Catch-20260919.mp4`. This source checkpoint is ready for the explicitly authorized release. Public upload hashes, deployed commit, live browser evidence and notification receipts are appended after those actions occur; this checkpoint does not claim publication or email delivery.
+The local delivery copy is `~/Downloads/FAMtastic-Whats-The-Catch-20260919.mp4`.
 
-The first public asset check passed MP4/JPEG hashes but caught the VTT being served as `text/plain`. The canonical frontend now includes a scoped film-directory `AddType text/vtt .vtt` rule. The failed HTTP check is retained; final MIME/browser results follow the repair release.
+## Published release and owner delivery
+
+- Live film page: **https://famtasticdesigns.com/why-famtastic/**. Discovery link verified from `/55-cents-a-day-website`; the page CTA opens `/start?option=web-basics` with the $199 research branch selected. No form was submitted by this acceptance check.
+- Original source commit `e4b591343bebc0cfece548ddea47a723ff782b5b`, branch `codex/famtastic-no-catch-film`, merged in [PR 24](https://github.com/famtastic-fritz/famtastic-designs/pull/24). The caption MIME repair `6dc66ddba52e0095534c259f92afc70d073c97c7` merged in [PR 25](https://github.com/famtastic-fritz/famtastic-designs/pull/25).
+- Final production frontend commit: **`63114513acf84ed0ae1b251c23f6f261d5ac5191`**, deployed at **2026-09-19T17:49:25Z** by the canonical server-side deployment on Node **22.23.2**. Build inventoried 219 HTML outputs and verified 217 route shells. Its JS/CSS bytes are the same as the first movie-page release; the repair adds only the scoped VTT mapping and documentation.
+- All three public media files return HTTP 200, their expected MIME (`video/mp4`, `image/jpeg`, `text/vtt`) and exact final SHA-256 above. Video byte-range request returned **206**, `bytes 0-1023/9326264`, with 1,024 bytes. No broad file synchronization or deletion was used for media.
+- Public apex playback reached its natural end at **103.933333 s**, unmuted, readyState 4, 1920×1080. CUA also verified the www page at 390px, no horizontal overflow, full transcript, loaded movie and canonical apex URL. The optional English track reached readyState **2 (loaded)** and `showing`; it was restored to `disabled` after testing because the movie already has burned captions. No browser console errors were observed in the final www check.
+- Final release Build DNA `video-20260919T172506-5c0f6e9753` passed **17 stages and 48 artifact checksum checks**, then registered as Drupal **row 48**. Its immutable manifest SHA-256 is `6c615b40e2519756f1540c9d881528caca5c8785f3ee684e91f78d1ac97e71ca`; prior failed checks remain in the history.
+- Canonical Drupal Build DNA projections: render **row 46**, build `video-20260919T172357-452c474769`; narration **row 47**, build `video-20260919T171432-cf7189b728`. The private JSON copies were hash-verified before registration.
+- One owner notice sent through existing **standard/v2** production SMTP to `fritz.medine@gmail.com`: outbox **796**, key `no-catch-film-20260919-owner-v1`, provider message ID `<UT5mz2FTL50fXEtmY1GzmdelliCaVkIwTGJjO0OU@default>`. Dispatch recorded one sent, zero failed and zero retried. Gmail inbox arrival was verified by exact Message-ID: message `1a0baccc997bb9d6`, labels `INBOX` / `IMPORTANT`, standard/v2 header, correct film link and matching plain text. Gmail recorded SPF, DKIM and DMARC passing. A read-only repeat returned `already_sent` / `resent: false`.
+- Hosted CI was **not executed**: PR 24 run `35458825037` and PR 25 run `35459054627` report that the account is locked due to a billing issue. Local tests/build/media evidence above support this release; no billing, checks or branch protection settings were changed.
+
+Private operational receipts, public HTTP checks, CUA JSON/screenshots, exact restoration receipt and release Build DNA are retained in `artifacts/video-studio/no-catch-20260919/release/` and the documented render/audio directories. Paid creative-provider charges: **$0**. This exact website release and one email are owner-authorized; no social scheduling or broader publication was activated.
+
+The first public asset check passed MP4/JPEG hashes but caught the VTT being served as `text/plain`. The canonical repair deployed a scoped film-directory `AddType text/vtt .vtt` rule. The failed check is retained alongside the successful final HTTP and browser results.
 
 ## Release mechanics
 
