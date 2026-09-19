@@ -31,6 +31,17 @@ VMs/agents, adopts their keys or claims their latest state from old records.
 
 ## What this source actually implements
 
+Normal request edits preserve stored `staff_assisted_brief`,
+`selected_site_revision_requests`, `proof_design_reset_requests`,
+`proof_edit_round_requests` and `proof_revision_request`. Customer input cannot
+create or overwrite these server audit keys. Class of 2000 original intake bytes
+and hash remain in the immutable event ledger. Source-only repair3c2dd9d4 has
+six real public-writer SQLite tests/117 assertions (no live request edits).
+
+Known follow-up, outside this repair: the customer selection notification still
+hardcodes `— FAMtastic Concierge` rather than the approved Shay signoff. It has
+been flagged to the delivery lane; no message body or sent history was changed.
+
 The existing new-request path is not a general creative worker:
 `AutomationWorker::generateProof()` reuses the request-bound campaign. When
 `SiteStudioProofClient` has a configured endpoint it submits a signed asynchronous
@@ -200,6 +211,12 @@ Node environment: `FAMTASTIC_WORKER_ID`, `FAMTASTIC_WORKER_API_BASE` (HTTPS `/we
 - No Cloud Run provider execution, production claim/nonce test, scheduler tick,
   automatic target allocation, ecommerce adapter or laptop-unavailable end-to-end
   execution has occurred. Laptop independence remains **unproven**.
+- Audit-preservation regression/full focused checks now total86 PHP tests/535
+  assertions; portal DNA34/34. Full synthetic lifecycle repeated at00:21:49Z on
+  source3c2dd9d4, receipt `fresh-customer-proof-20260919T002110Z-93045/evidence.json`.
+  Main owns the urgent same-campaign callback replay regression repair. Do not
+  activate worker code or merge an older main over that delivery fix. Reconcile
+  its final reviewed commit and rerun the shared integration before deployment.
 - Before enabling cloud delivery: prove bad signatures/replays, simultaneous Mac/cloud
   claim, worker interruption, stale token, lost callback/acknowledgement, exhausted
   budget and same immutable receipt after retry on an isolated synthetic target; then

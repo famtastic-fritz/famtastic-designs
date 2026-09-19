@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-09-18 — Retain trusted intake audit metadata (source-only)
+
+- `3c2dd9d4` preserves server-stored `staff_assisted_brief` and
+  `selected_site_revision_requests` during normal request edits, alongside the
+  three existing proof-revision keys. Customer input cannot create/replace them.
+- Six real-writer SQLite regressions /117 assertions cover the Class of 2000
+  staff-brief shape, repeated updates, forged/null/omitted input and tenant denial.
+  Original raw intake/hash stay in the immutable ledger, not copied into intake.
+- Full synthetic journey passed at00:21:49Z; no live records, mail, cron or worker
+  activation. Legacy selection-notice Concierge signoff is flagged, unchanged.
+
 ## 2026-09-18 — Preserve bounded cron on every later release (local)
 
 - Canonical deployer7bd14d79 now recognizes exact legacy/bounded modes, rejects

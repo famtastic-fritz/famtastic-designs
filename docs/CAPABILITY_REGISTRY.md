@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-18 — Trusted intake metadata preservation (locally proven)
+
+Actual public request-update writer passes six SQLite tests/117 assertions for
+staff-assisted brief and selected-revision history preservation, repeat saves,
+untrusted overwrite/create attempts and cross-account denial. Full focused suite:
+86 tests/535 assertions; portal DNA34/34. Fresh synthetic journey passed00:21:49Z
+at3c2dd9d4 (`fresh-customer-proof-20260919T002110Z-93045/evidence.json`). Not a
+live customer edit, production MySQL concurrency test or scheduler activation.
+
 ## 2026-09-18 — Bounded worker coordination, locally proven only
 
 Drupal ledger/lease/budget, HMAC/replay and one-shot static dispatch are covered

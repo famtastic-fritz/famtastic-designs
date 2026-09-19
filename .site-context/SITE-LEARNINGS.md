@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-18 — Customer edits must not replace staff audit data
+
+Observation: validated intake replacement retained only old proof-revision keys,
+dropping the staff-assisted brief and selected-site revision history. Guidance:
+explicitly preserve trusted stored audit keys under the existing write lock;
+ignore echoed customer values even when no stored value exists. The original
+staff-assisted raw intake/hash already lives in the immutable event ledger and
+must not be duplicated into editable intake. Test the actual writer across
+repeated saves, not only a merge helper or source-text assertion.
+
 ## 2026-09-18 — Scheduler repair must survive deployment
 
 Observation: the canonical deployer recognized only the legacy cron marker and

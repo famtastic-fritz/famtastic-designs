@@ -2608,6 +2608,15 @@ The canonical deployer now preserves an exact verified legacy/bounded mode and
 refuses unknown/duplicate commands. Observe-only installed CLI proof has no queue,
 mail, claim or budget mutations; synthetic lifecycle success is not cloud proof.
 
+## 2026-09-18 — Separate customer answers from trusted request history
+
+Replacing `intake_data` from validated customer input erased newer server audit
+fields. Preserve the existing `staff_assisted_brief` and
+`selected_site_revision_requests` together with the three older proof-revision
+keys; never promote an input value to trusted audit data. Keep original intake
+bytes/hash in their immutable event record. Regression must exercise repeated
+actual public-writer saves, including forged and absent values.
+
 # 2026-09-18 — Owner-confirmed offline receipts
 
 The legacy assumption that completed order = money received fails for prepaid
