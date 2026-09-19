@@ -2526,3 +2526,9 @@ The exact private offer can bind an offline receipt without filling the request'
 normal order field and blocking proof selection. Any compatibility bridge must
 reconcile the native payment, immutable scope hash and held unaccepted order;
 source tests do not replace an actual ready-proof selection rehearsal.
+# 2026-09-18 — Creator-credit release evidence
+
+Agency-only retrofit:222 existing static/React shells;114 runtime originals in31
+campaigns remain unchanged;48 direct-public new presentations and66 protected403s.
+Three friends PHP apps are symlink-backed separately versioned apps, not zero files.
+Exact releases, parent CUA receipts and pending targets are in the agency lane audit.

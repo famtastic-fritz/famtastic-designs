@@ -2,6 +2,9 @@
 
 ## 2026-09-18 — Agency creator credit
 
+- Deployed222 existing frontend/static HTML at50a07d5e and six presentation PHP/theme
+  files plus48 immutable-original legacy presentation versions at7490f297.
+  Verified114 original hashes unchanged,48 public response hashes and66 protected403s.
 - Added exact-PNG final credit to agency React, static/lead proof builders, future
   mail/stub rendering and marketing publication gates. Preserved existing footers.
 - Added new-version inventories and existing-files-only deploy modes; no state or

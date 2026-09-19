@@ -1,0 +1,1113 @@
+{
+  "backend_sha": "7490f297831ca1460f20ed2b40b73be812555c0b",
+  "frontend_sha": "50a07d5ec8b451dbfbcff34936ad4ae46a06f6ea",
+  "originals_unchanged": 114,
+  "originals": [
+    {
+      "path": "public_html/web/proofs/pc-ferrini-home-solutions-7fa2/a/index.html",
+      "original_sha256": "005b4a3b320f1b7d14c185447e5dad2bef6d4534029488b6d0c11ffabc3d84e8"
+    },
+    {
+      "path": "public_html/web/proofs/pc-ferrini-home-solutions-7fa2/c/index.html",
+      "original_sha256": "7e3d4814099dc1229ed63b4232afc9b5bbe163e557743471b243f79e9a107b54"
+    },
+    {
+      "path": "public_html/web/proofs/pc-ferrini-home-solutions-7fa2/b/index.html",
+      "original_sha256": "3c1bd5cfc7892bb7522ed2f86ed84c0bf881ef56ac1c109937248ba3b24191d6"
+    },
+    {
+      "path": "public_html/web/proofs/pc-kakes-by-kesline-72a526d3acc005c9/a/index.html",
+      "original_sha256": "2455edb02da3321776c9b3d2453612a0c13fde60c32b01516bfa26ad78e3895c"
+    },
+    {
+      "path": "public_html/web/proofs/pc-kakes-by-kesline-72a526d3acc005c9/c/index.html",
+      "original_sha256": "373463dee685509250f2d1a864f93518d86c8d25a088e8412b6bd35d4bfaffc0"
+    },
+    {
+      "path": "public_html/web/proofs/pc-kakes-by-kesline-72a526d3acc005c9/b/index.html",
+      "original_sha256": "ab679186e6c6bfc9f7dd0467152cb2055710e6d24e92678e42cddacd913df75b"
+    },
+    {
+      "path": "public_html/web/proofs/pc-gypsy-lash-1b1fcf1dda27f31e/a/index.html",
+      "original_sha256": "b80ad6ce5b65932ceb069545342466b3056783f332fcdf2f87648c11b3304b66"
+    },
+    {
+      "path": "public_html/web/proofs/pc-gypsy-lash-1b1fcf1dda27f31e/c/index.html",
+      "original_sha256": "1777e225c4b24e2c5b4b26ebce65f1955838dfaa7c917067714f554488b9ed8f"
+    },
+    {
+      "path": "public_html/web/proofs/pc-gypsy-lash-1b1fcf1dda27f31e/b/index.html",
+      "original_sha256": "233548b8d5cdc55de22d1a45e30023ab534aade8ddadf2cb9ec7bcdd25270cae"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-famu-corner-c221b733a582f1e1/a/index.html",
+      "original_sha256": "fbf509a465444f9f1eddb6c6476ecf737a58db244bc54019a125fc0dc90485c7"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-famu-corner-c221b733a582f1e1/c/index.html",
+      "original_sha256": "5800aa7c1746471f553316b0ec3c20991b621c838dc0ba43220220bd195cef57"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-famu-corner-c221b733a582f1e1/b/index.html",
+      "original_sha256": "3717832c8dc633378b7f9ccf08d16a3fec4701935207b36c249d799dd99ca1c4"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-famu-corner-c221b733a582f1e1/d/index.html",
+      "original_sha256": "428dde4bf48eab01dd3c7918c992c772a038ad713f86b8ba445e6aba9cca5228"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-famu-corner-c221b733a582f1e1/f/index.html",
+      "original_sha256": "c41ab639123f6a52ea006f6e72bdd4a592b5d5b0096bda701368543ab16c6873"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-famu-corner-c221b733a582f1e1/e/index.html",
+      "original_sha256": "ea20390177e85b3857d066c52ea1dd36a0ce33de7ecdf2733baf0d1a4c9bada4"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-beehive-studio-a73a89a91910db61/a/index.html",
+      "original_sha256": "5d23a0c10b971424d6aebe7188d1d2c93435c5442cb80fa90e44a1cbc844679e"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-beehive-studio-a73a89a91910db61/c/index.html",
+      "original_sha256": "04aa070e11b62798f63b3db5b30b972716d6183999e34b9f7781f191d2b773aa"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-beehive-studio-a73a89a91910db61/b/index.html",
+      "original_sha256": "009388af2f83ef723d2f980af55477b96863166be4085b398e5d3ab1ed2f5224"
+    },
+    {
+      "path": "public_html/web/proofs/pc-famtastic-v3-demo-proof-639c86d72ee363b9/a/index.html",
+      "original_sha256": "29452a49661ddd04191a10a5ce449a97d0a333c7bacdeb3aebb994a6279f5794"
+    },
+    {
+      "path": "public_html/web/proofs/pc-famtastic-v3-demo-proof-639c86d72ee363b9/c/index.html",
+      "original_sha256": "7ce240bde4e486baff6f36e24864a27eb154f22a6b0003c2bb8acda0d2352eeb"
+    },
+    {
+      "path": "public_html/web/proofs/pc-famtastic-v3-demo-proof-639c86d72ee363b9/b/index.html",
+      "original_sha256": "96e4c0330f1fea2dddfe5f4a215439b3289d8239985f37907d4aef53e55825f5"
+    },
+    {
+      "path": "public_html/web/proofs/pc-stockandship98-919df0f7f6c5cb6f/a/index.html",
+      "original_sha256": "7525220fdd926e877ba6316051f1757a2774653add5ff430cf17b451c43b980e"
+    },
+    {
+      "path": "public_html/web/proofs/pc-stockandship98-919df0f7f6c5cb6f/c/index.html",
+      "original_sha256": "d18db29b23977466f157551b801bba055d0b521b0b65724adb176197d85f01e7"
+    },
+    {
+      "path": "public_html/web/proofs/pc-stockandship98-919df0f7f6c5cb6f/b/index.html",
+      "original_sha256": "8e8632eff70f4420e655f6cc17db2d8d4cb6fa8c5885e9798f361cdfa67071f4"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-set-club-33cd280f4ca22f71/a/index.html",
+      "original_sha256": "323ee5e96d683dd6c6bcdef77b71d661e6357f246be0f8a275372c5d63be47b9"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-set-club-33cd280f4ca22f71/c/index.html",
+      "original_sha256": "bd799c13c9f682aad5c6332bb901495f00fedeb44827fec12a8950ac8ba7dbd2"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-set-club-33cd280f4ca22f71/b/index.html",
+      "original_sha256": "68c840b1b31c9ea9a4812c0ce2d011bb4f5906074aefc5f55c8df360e7bb967d"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-set-club-33cd280f4ca22f71/d/index.html",
+      "original_sha256": "6154ec422ad2f454a8b94b5e708c0fa58d385ff6660809c2d4790a9bbcfed7b9"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-set-club-33cd280f4ca22f71/f/index.html",
+      "original_sha256": "39a41817ac9504b05f5df75d07976edccd1f162ea765a640f40af6c4e88e327b"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-set-club-33cd280f4ca22f71/e/index.html",
+      "original_sha256": "97af4c0800df588be81783181dc489a504376e345dec2bed8e61ad245122697c"
+    },
+    {
+      "path": "public_html/web/proofs/pc-desert-blonde-studio-e6cdabb53a8ed835/a/index.html",
+      "original_sha256": "4cf2e8f9b0a65d85798dbf6493845ae9b6ef557bf323da97716cc98bf49e01db"
+    },
+    {
+      "path": "public_html/web/proofs/pc-desert-blonde-studio-e6cdabb53a8ed835/c/index.html",
+      "original_sha256": "38a8f2a51141121490caad75ac2c515fbcb1a29a30ea657804944a74826a82cf"
+    },
+    {
+      "path": "public_html/web/proofs/pc-desert-blonde-studio-e6cdabb53a8ed835/b/index.html",
+      "original_sha256": "7f68754f487b3c3984a7eecaf5e3fa03e3eeb0b9e8733e94db379b76baaf36a1"
+    },
+    {
+      "path": "public_html/web/proofs/pc-famtastic-portal-test-b9a55cc5147b23c6/a/index.html",
+      "original_sha256": "09260cf2632e4be3fab2ba3bf6c17286adb60426a71f0b8d9926f08b5bf5ef2c"
+    },
+    {
+      "path": "public_html/web/proofs/pc-famtastic-portal-test-b9a55cc5147b23c6/c/index.html",
+      "original_sha256": "b01a401d2e498c1886d9f90d5a35f13e4afae138fbe8596ceea068c8ca83fbac"
+    },
+    {
+      "path": "public_html/web/proofs/pc-famtastic-portal-test-b9a55cc5147b23c6/b/index.html",
+      "original_sha256": "9be9ffda39d544c7c7046226163890d4611675dc1a78676a01cc782cb192f94c"
+    },
+    {
+      "path": "public_html/web/proofs/pc-somaelite-wellness-1e2cf1e04e39d93a/a/index.html",
+      "original_sha256": "4dde030ee59c7d3212bb6cf72bb26fce2cc00d8f0863de25971dfa6a952c515f"
+    },
+    {
+      "path": "public_html/web/proofs/pc-somaelite-wellness-1e2cf1e04e39d93a/c/index.html",
+      "original_sha256": "77d84284867dbe68316c21b79ac7204c52772ae6671f3944acce9801dbc6a7f1"
+    },
+    {
+      "path": "public_html/web/proofs/pc-somaelite-wellness-1e2cf1e04e39d93a/b/index.html",
+      "original_sha256": "04e52a52d369d5b247c0a555e52234c9b0ea3f3cc8d7ca90278e1b97cc0085e4"
+    },
+    {
+      "path": "public_html/web/proofs/pc-prod-proof-test-co-afb7/a/index.html",
+      "original_sha256": "f2d4546565b3864bb9bc077d173d49582e7581fd9e4cc3d1bfecb914da446680"
+    },
+    {
+      "path": "public_html/web/proofs/pc-prod-proof-test-co-afb7/c/index.html",
+      "original_sha256": "7c3e32db3fb10f3979f13463d74b49373de458977ea25c38d5eedb9c26e6597f"
+    },
+    {
+      "path": "public_html/web/proofs/pc-prod-proof-test-co-afb7/b/index.html",
+      "original_sha256": "a3fe8846a733592ce52aeae7e4332676711f94d5de69dc3c0ff72c35523cc101"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-b88893a6c8816670/a/index.html",
+      "original_sha256": "a3663fdfe01ec22bb523e1664ecd1f20bee2c261ed4699ad141d765943e567c7"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-b88893a6c8816670/c/index.html",
+      "original_sha256": "a967885a9b7904049f2574a61054956e7fc7726430adf96da00c42a70110921f"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-b88893a6c8816670/b/index.html",
+      "original_sha256": "aa0c3cf348fbe7d9c49dfdf3a483b87f59d188b64b0b76802a81891eeb0dd455"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-0d934a00a7f0aad4/a/index.html",
+      "original_sha256": "298bdc77ef93e657f88c4393af8088a5a238809c1e403bbdbe7db3e3e698da59"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-0d934a00a7f0aad4/c/index.html",
+      "original_sha256": "64aed32e9903c57b58fac2a30fe0093a991ac7b2643ac775b25abd5604241ee3"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-0d934a00a7f0aad4/b/index.html",
+      "original_sha256": "093976a0cf2ac23999dfcd8f004b140814392db5c3a9a20de4f2ccc1e17fb639"
+    },
+    {
+      "path": "public_html/web/proofs/pc-culturelocs-4e20c4383be2d86c/a/index.html",
+      "original_sha256": "0c038922cb438372460d2e27679920e63b5d2584294b1a07984ddd605a2e13ae"
+    },
+    {
+      "path": "public_html/web/proofs/pc-culturelocs-4e20c4383be2d86c/c/index.html",
+      "original_sha256": "01fa588d4ddfefc5d7d14bad424bb9b799058ec9e385a5d7083d0adcd6eb4c45"
+    },
+    {
+      "path": "public_html/web/proofs/pc-culturelocs-4e20c4383be2d86c/b/index.html",
+      "original_sha256": "6c0c92a74f2967ff1aee34d6a18407cb58b5518e4e3cc7df6a8a41067d10bc96"
+    },
+    {
+      "path": "public_html/web/proofs/pc-rattler-football-fan-portal-7323201e5fea183a/a/index.html",
+      "original_sha256": "9b7bc29724c0b4ea1a4651011a31eae1577faf6ed31f488c47633ee0282c5879"
+    },
+    {
+      "path": "public_html/web/proofs/pc-rattler-football-fan-portal-7323201e5fea183a/c/index.html",
+      "original_sha256": "72554570ecf09d6043c0866abd58add819ec9d69ef9d9d14526360281c1d6c30"
+    },
+    {
+      "path": "public_html/web/proofs/pc-rattler-football-fan-portal-7323201e5fea183a/b/index.html",
+      "original_sha256": "a01187b4cef132a300eb8a7dfd8066bf99fde731cade491ff8ce5a19f37da88b"
+    },
+    {
+      "path": "public_html/web/proofs/pc-rattler-football-fan-portal-7323201e5fea183a/d/index.html",
+      "original_sha256": "d602466a34b9951f91962bf0a6a4495bf7abf104a061e19f7ac02ae83f51caa3"
+    },
+    {
+      "path": "public_html/web/proofs/pc-rattler-football-fan-portal-7323201e5fea183a/f/index.html",
+      "original_sha256": "475eda291033c1dc7066e729115114667ba22e9bed4e76eee080f90c5f98dc4d"
+    },
+    {
+      "path": "public_html/web/proofs/pc-rattler-football-fan-portal-7323201e5fea183a/e/index.html",
+      "original_sha256": "ec4bb3e9ce363fc668d3eac8281278fb7b14d4d6481d0ca248f43317338205ed"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-good-ole-candy-lady-shop-e616a624b352ab20/a/index.html",
+      "original_sha256": "99ca45c900c75655e2249ef340cd440da183fff0299a6bf133bf47da156a77ee"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-good-ole-candy-lady-shop-e616a624b352ab20/c/index.html",
+      "original_sha256": "13c3ddb5914382a5472e79f6023589d03bf02a995fb6b8eac12344742c2f3f65"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-good-ole-candy-lady-shop-e616a624b352ab20/b/index.html",
+      "original_sha256": "94cc84d108b3de1d2b4b68d205844343508c2b43001962cf24878457cb807c08"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-good-ole-candy-lady-shop-e616a624b352ab20/d/index.html",
+      "original_sha256": "886056a818d1e78f4da396d9cdfada53dfe864bf5eec6aa6254111756df49889"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-good-ole-candy-lady-shop-e616a624b352ab20/f/index.html",
+      "original_sha256": "33181e29e889e332310977e87dc2acf86fab25f5a3f6aa69f1a8fae451f7922b"
+    },
+    {
+      "path": "public_html/web/proofs/pc-the-good-ole-candy-lady-shop-e616a624b352ab20/e/index.html",
+      "original_sha256": "06dace4c11b332e7358e76a873a610f844dccd17e22386fcb12b719c234ec616"
+    },
+    {
+      "path": "public_html/web/proofs/pc-kim-chang-suk-hair-salon-c2329b708b789db8/a/index.html",
+      "original_sha256": "aa068616bc6b210a2963d60188b045dee712454cfc2745e1f64a3c03c7121735"
+    },
+    {
+      "path": "public_html/web/proofs/pc-kim-chang-suk-hair-salon-c2329b708b789db8/c/index.html",
+      "original_sha256": "0d6bd935f349095c66dc42a4cca160a12af5473c70c0c7b58b35675c64d5178e"
+    },
+    {
+      "path": "public_html/web/proofs/pc-kim-chang-suk-hair-salon-c2329b708b789db8/b/index.html",
+      "original_sha256": "b2b83759b366fdfd7209c9fe9182497ff88b86e220ecb29fbca90a815529515f"
+    },
+    {
+      "path": "public_html/web/proofs/pc-brewed-awakening-coffee-cafe-08a18f297d62142e/a/index.html",
+      "original_sha256": "b157bbbec8ca2949aa05b196d2e8df875ce74d453576f4d485bd32412acf5a6f"
+    },
+    {
+      "path": "public_html/web/proofs/pc-brewed-awakening-coffee-cafe-08a18f297d62142e/c/index.html",
+      "original_sha256": "c516d3d8f69ebd7aba0916af4d756d3dce98dbfa459d0aa693eeb2963a67a0d4"
+    },
+    {
+      "path": "public_html/web/proofs/pc-brewed-awakening-coffee-cafe-08a18f297d62142e/b/index.html",
+      "original_sha256": "551a0128077c6dccc209f4c3982702f75cef440c64ea1bcd44252c765c7f5a7a"
+    },
+    {
+      "path": "public_html/web/proofs/pc-crown-coast-fellowship-fictional-d33084994b9a937f/a/index.html",
+      "original_sha256": "3489f2241a7d040ca858ca2c59fd7dd3ac9fc50b59c311e60ed5278e6c698d49"
+    },
+    {
+      "path": "public_html/web/proofs/pc-crown-coast-fellowship-fictional-d33084994b9a937f/c/index.html",
+      "original_sha256": "223029db8253debdcc35f6abab1ed2950f8ff38f2ca5eaabc4cde0086fbded4a"
+    },
+    {
+      "path": "public_html/web/proofs/pc-crown-coast-fellowship-fictional-d33084994b9a937f/b/index.html",
+      "original_sha256": "3ade9accc5f975aa3c4a9a62e04fb9dbf5129191e484c6eef7b0802e87a73b81"
+    },
+    {
+      "path": "public_html/web/proofs/pc-crown-coast-fellowship-fictional-d33084994b9a937f/d/index.html",
+      "original_sha256": "9a4e0d93fa260230a9b43c6f2e51c995b4c1d597a598c91e0a4192ee0366ddfb"
+    },
+    {
+      "path": "public_html/web/proofs/pc-crown-coast-fellowship-fictional-d33084994b9a937f/f/index.html",
+      "original_sha256": "bc5c973bb09f87d2b12e3eaf27dd8076643de912c9b7d350e2aaa45f574a4dd2"
+    },
+    {
+      "path": "public_html/web/proofs/pc-crown-coast-fellowship-fictional-d33084994b9a937f/e/index.html",
+      "original_sha256": "087b7999d75bac381b46c12b417e64a9cd1cc612363883ff17910392e20ee45e"
+    },
+    {
+      "path": "public_html/web/proofs/pc-hydraulic-jack-rebuilders-948d055fef171305/a/index.html",
+      "original_sha256": "f745966b8daca3b7211c7031aeace65bc50a3761fc77d443efac9a5fdee0e9f5"
+    },
+    {
+      "path": "public_html/web/proofs/pc-hydraulic-jack-rebuilders-948d055fef171305/c/index.html",
+      "original_sha256": "5ab70f77d169c3ceac0c7c05d5a4aa08655a2d1afee64e5290566d3b40ebfcde"
+    },
+    {
+      "path": "public_html/web/proofs/pc-hydraulic-jack-rebuilders-948d055fef171305/b/index.html",
+      "original_sha256": "81779102d0708f9c66a9a60669f280855e478c36b3a409012cbc9d6892061aae"
+    },
+    {
+      "path": "public_html/web/proofs/pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44/a/index.html",
+      "original_sha256": "f0bc4a0ad9f6d89b209b0253bd5403dc27367fd99a3caeece64c0c9eb6f68687"
+    },
+    {
+      "path": "public_html/web/proofs/pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44/c/index.html",
+      "original_sha256": "b45dba5a8fb759a554fbb3860ae210d425159228ccf99af3fe37ee9804dee148"
+    },
+    {
+      "path": "public_html/web/proofs/pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44/b/index.html",
+      "original_sha256": "1e9bc657a37ec47df455a3b4945807d3256c4c003ac8a5ec957bba17d7f21057"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-94fccaa6d9aeba71/a/index.html",
+      "original_sha256": "178a4766774d0495f867533369017226d65edbf5734b17764d9b6f07d5a42f99"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-94fccaa6d9aeba71/c/index.html",
+      "original_sha256": "bbd834c2d28931c7357a86d58d5ff6224e760d09c8d01a0c58568e1bd8a2aec0"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-94fccaa6d9aeba71/b/index.html",
+      "original_sha256": "dcc60c2fbc70eebd5994ae30586d9e807a671d25ab35b97e3d3da1934020c7b1"
+    },
+    {
+      "path": "public_html/web/proofs/pc-starlight-skin-bar-90b494633105f463/a/index.html",
+      "original_sha256": "f984f21b47876a7602e681dff2255cd8f0e014adbe8c67eb1c5da7b772bb56c5"
+    },
+    {
+      "path": "public_html/web/proofs/pc-starlight-skin-bar-90b494633105f463/c/index.html",
+      "original_sha256": "b69b03674c32d96275fc71c372febfae71b66d6502df76a48b9164a7d79d4f43"
+    },
+    {
+      "path": "public_html/web/proofs/pc-starlight-skin-bar-90b494633105f463/b/index.html",
+      "original_sha256": "75f67ef37a5346c453de5b83b8af37eafbb6df67f9e8451b29e34796ab58c9e0"
+    },
+    {
+      "path": "public_html/web/proofs/pc-culturelocs-b6270434fa6d4198/a/index.html",
+      "original_sha256": "f29362aa44f8c2902c25b403e52fa2d1db7845d88cf7a0741ed1b6223df45304"
+    },
+    {
+      "path": "public_html/web/proofs/pc-culturelocs-b6270434fa6d4198/c/index.html",
+      "original_sha256": "21a3b6c426624b0c23b212e63b3026b7c94d27d366bef489a7e2797f8a11f46c"
+    },
+    {
+      "path": "public_html/web/proofs/pc-culturelocs-b6270434fa6d4198/b/index.html",
+      "original_sha256": "a72ef329a9c8872fd1385a991f69dddaf1a6a542c1e9c4c8cd09860d693d0316"
+    },
+    {
+      "path": "public_html/web/proofs/pc-public-request-8f25c9b3518e725c/a/index.html",
+      "original_sha256": "9be25b6112e57f4133277c413479647396ea3f36c69d0efa8cfededa70af4e75"
+    },
+    {
+      "path": "public_html/web/proofs/pc-public-request-8f25c9b3518e725c/c/index.html",
+      "original_sha256": "d2d2f0229c583315a75be11d786ccaf168a1e45c93f59de96a2b2316e6d00c71"
+    },
+    {
+      "path": "public_html/web/proofs/pc-public-request-8f25c9b3518e725c/b/index.html",
+      "original_sha256": "f9ac9f570ccab2ae54b02c28fe72f5173e882695ceb94821d2c8f90048465b9e"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locks-3eef819e6463947a/a/index.html",
+      "original_sha256": "cd982674243cbe44d3c63d1a19ccdee267c52628ebb53b310571ff5e05d6410b"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locks-3eef819e6463947a/c/index.html",
+      "original_sha256": "82725bec2870df1b53d7f24b28574953aff5aea9bd80caea13c2cccf369b5053"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locks-3eef819e6463947a/b/index.html",
+      "original_sha256": "55a1ac7be182072ca74a05616cbfdf72e347760031caccfc56b6c0053732c088"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locks-3eef819e6463947a/d/index.html",
+      "original_sha256": "c3f6fc65e9024da33af56f57b550d1002eacda1e1868a6dbe3b329ea73a73782"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locks-3eef819e6463947a/f/index.html",
+      "original_sha256": "ed2335603ccc7791c89ae7b0546d8c6455f8622370095652670597c1ef848a07"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locks-3eef819e6463947a/e/index.html",
+      "original_sha256": "2011ccaebeb9722e3911f1d16c6614b8187bcbd34d05c26e0740c9201e3fb3e4"
+    },
+    {
+      "path": "public_html/web/proofs/pc-bossy-nails-by-pri-4ce235eb105ab444/a/index.html",
+      "original_sha256": "414d60533f779b7dcbf6bdccaa7cb6bc2d8e5f9fa61b8bcadecae6fbc7b23fea"
+    },
+    {
+      "path": "public_html/web/proofs/pc-bossy-nails-by-pri-4ce235eb105ab444/c/index.html",
+      "original_sha256": "e94308ae73a8dcf6678cb64a5257258a1dc34d027636d44ac28c56cb9f5f3f2d"
+    },
+    {
+      "path": "public_html/web/proofs/pc-bossy-nails-by-pri-4ce235eb105ab444/b/index.html",
+      "original_sha256": "e7af06112bf5b37d6ecdea8ea32aeba8b40ce6240379f0c7ba6660daba0fc8e8"
+    },
+    {
+      "path": "public_html/web/proofs/pc-bossy-nails-by-pri-4ce235eb105ab444/d/index.html",
+      "original_sha256": "0171728a85bd2a6043f6dcfb9dc98f90d65eeb0b453a4660bc48d2aa70bf458f"
+    },
+    {
+      "path": "public_html/web/proofs/pc-bossy-nails-by-pri-4ce235eb105ab444/f/index.html",
+      "original_sha256": "0c93c6090eb3e15b752bf7f1311a684958c370571a080b39dfb524002cee759e"
+    },
+    {
+      "path": "public_html/web/proofs/pc-bossy-nails-by-pri-4ce235eb105ab444/e/index.html",
+      "original_sha256": "d6eb361e0f9b306607be977ee0c9f591ed74766e83a6aae40df8f300e25a11ac"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-28013746ca2b4271/a/index.html",
+      "original_sha256": "a3663fdfe01ec22bb523e1664ecd1f20bee2c261ed4699ad141d765943e567c7"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-28013746ca2b4271/c/index.html",
+      "original_sha256": "a967885a9b7904049f2574a61054956e7fc7726430adf96da00c42a70110921f"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-28013746ca2b4271/b/index.html",
+      "original_sha256": "aa0c3cf348fbe7d9c49dfdf3a483b87f59d188b64b0b76802a81891eeb0dd455"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-1d7c7b2e7a5a4480/a/index.html",
+      "original_sha256": "3ba1ecfdbc5fa3db8caaa2fd8ac2b352d97414ea73805b52e2d35e8dfcad1ac2"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-1d7c7b2e7a5a4480/c/index.html",
+      "original_sha256": "81d5f95fa635b17bd454ab12ccdfdb97f5b8c5995c91710344d28bbc2d8a7596"
+    },
+    {
+      "path": "public_html/web/proofs/pc-tighten-up-your-locs-1d7c7b2e7a5a4480/b/index.html",
+      "original_sha256": "5209629c7a5db40627b9e98ac3c97b08ce771d637353128e3f9731f0c70d3c1d"
+    },
+    {
+      "path": "public_html/web/proofs/pc-mike-s-motorcars-az-com-1ff67602590e52a2/a/index.html",
+      "original_sha256": "d1dad3a7ecf00f5273e343e095720261460f0c267cf8745e3d5c1c50cb3e8817"
+    },
+    {
+      "path": "public_html/web/proofs/pc-mike-s-motorcars-az-com-1ff67602590e52a2/c/index.html",
+      "original_sha256": "9a51f8fe4d90238933f3b59778f9f3d161cdd90ea141ed7710a7248c1070f87e"
+    },
+    {
+      "path": "public_html/web/proofs/pc-mike-s-motorcars-az-com-1ff67602590e52a2/b/index.html",
+      "original_sha256": "90d345c8a60b0ab2f9b05644fe85966afbf56e09aa15f56e7b1c79166f50ab36"
+    }
+  ],
+  "version_receipt": {
+    "commit": "7490f297831ca1460f20ed2b40b73be812555c0b",
+    "status": "new-presentation-versions-original-artifacts-unchanged",
+    "excluded": [
+      {
+        "campaign": "pc-bossy-nails-by-pri-4ce235eb105ab444",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-crown-coast-fellowship-fictional-d33084994b9a937f",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-kakes-by-kesline-72a526d3acc005c9",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-public-request-8f25c9b3518e725c",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-rattler-football-fan-portal-7323201e5fea183a",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-stockandship98-919df0f7f6c5cb6f",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-the-famu-corner-c221b733a582f1e1",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-the-good-ole-candy-lady-shop-e616a624b352ab20",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-the-set-club-33cd280f4ca22f71",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-tighten-up-your-locks-3eef819e6463947a",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-tighten-up-your-locs-0d934a00a7f0aad4",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-tighten-up-your-locs-1d7c7b2e7a5a4480",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-tighten-up-your-locs-28013746ca2b4271",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-tighten-up-your-locs-94fccaa6d9aeba71",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      },
+      {
+        "campaign": "pc-tighten-up-your-locs-b88893a6c8816670",
+        "reason": "campaign-access-policy-preserved-controller-presentation"
+      }
+    ],
+    "artifacts": [
+      {
+        "path": "pc-brewed-awakening-coffee-cafe-08a18f297d62142e/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "b157bbbec8ca2949aa05b196d2e8df875ce74d453576f4d485bd32412acf5a6f",
+        "presentation_sha256": "09fbe609b04500d91cd03fb351c00ccc89b3e7b13a236f1b38d135e0a580bce5"
+      },
+      {
+        "path": "pc-brewed-awakening-coffee-cafe-08a18f297d62142e/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "551a0128077c6dccc209f4c3982702f75cef440c64ea1bcd44252c765c7f5a7a",
+        "presentation_sha256": "8e06b6d23db56806f658edd723e1ad3b929222c901e066e2cecdd51bb8a01094"
+      },
+      {
+        "path": "pc-brewed-awakening-coffee-cafe-08a18f297d62142e/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "c516d3d8f69ebd7aba0916af4d756d3dce98dbfa459d0aa693eeb2963a67a0d4",
+        "presentation_sha256": "cfb0b51992fec79e2247ff7a706b336e1d5f344b74def704cb2423f5d167b412"
+      },
+      {
+        "path": "pc-culturelocs-4e20c4383be2d86c/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "0c038922cb438372460d2e27679920e63b5d2584294b1a07984ddd605a2e13ae",
+        "presentation_sha256": "cd9bb3c3e28cebccb00b2f47d40830e8cab7c77874b64a7344e2f8347e650a48"
+      },
+      {
+        "path": "pc-culturelocs-4e20c4383be2d86c/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "6c0c92a74f2967ff1aee34d6a18407cb58b5518e4e3cc7df6a8a41067d10bc96",
+        "presentation_sha256": "b6fc01ba85191ac4d9d564d84e83f7c98287a200288b8a156f47fc971d35caf3"
+      },
+      {
+        "path": "pc-culturelocs-4e20c4383be2d86c/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "01fa588d4ddfefc5d7d14bad424bb9b799058ec9e385a5d7083d0adcd6eb4c45",
+        "presentation_sha256": "9e0db0b438ac9fe5af3e128120721d4e2fa71f8cd053e1f3e4b64db08c5f1e67"
+      },
+      {
+        "path": "pc-culturelocs-b6270434fa6d4198/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "f29362aa44f8c2902c25b403e52fa2d1db7845d88cf7a0741ed1b6223df45304",
+        "presentation_sha256": "a7d668f63186f482868b4b6704d976be76f7f37a542d5afd76dd3d716b06c595"
+      },
+      {
+        "path": "pc-culturelocs-b6270434fa6d4198/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "a72ef329a9c8872fd1385a991f69dddaf1a6a542c1e9c4c8cd09860d693d0316",
+        "presentation_sha256": "f6d785976a43836aec825c1eeb39ec8eff1378bc98e0fe703c7026e75ca03e01"
+      },
+      {
+        "path": "pc-culturelocs-b6270434fa6d4198/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "21a3b6c426624b0c23b212e63b3026b7c94d27d366bef489a7e2797f8a11f46c",
+        "presentation_sha256": "ac035c3e913b828bfc8cd2133968305413c818c9be36b918d2c3066c385ef5f4"
+      },
+      {
+        "path": "pc-desert-blonde-studio-e6cdabb53a8ed835/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "4cf2e8f9b0a65d85798dbf6493845ae9b6ef557bf323da97716cc98bf49e01db",
+        "presentation_sha256": "2d8b759b0fe63b01540bd96c078a25b660827e2c4022a1e264224af7bb811625"
+      },
+      {
+        "path": "pc-desert-blonde-studio-e6cdabb53a8ed835/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "7f68754f487b3c3984a7eecaf5e3fa03e3eeb0b9e8733e94db379b76baaf36a1",
+        "presentation_sha256": "2cfdc773cbc49912db5fba7644ded9f2156894b3aadb66157bbbc12d7eea9889"
+      },
+      {
+        "path": "pc-desert-blonde-studio-e6cdabb53a8ed835/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "38a8f2a51141121490caad75ac2c515fbcb1a29a30ea657804944a74826a82cf",
+        "presentation_sha256": "01a6cd6d198352aba6f91289c8e33f4c591e43fa782bd14b6dc354fcfeeb1d29"
+      },
+      {
+        "path": "pc-famtastic-portal-test-b9a55cc5147b23c6/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "09260cf2632e4be3fab2ba3bf6c17286adb60426a71f0b8d9926f08b5bf5ef2c",
+        "presentation_sha256": "b9ae750eb39330f998d03e155aada2ad734ee9c99931f27d4ca0aaefa75f3d79"
+      },
+      {
+        "path": "pc-famtastic-portal-test-b9a55cc5147b23c6/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "9be9ffda39d544c7c7046226163890d4611675dc1a78676a01cc782cb192f94c",
+        "presentation_sha256": "ec2185b7c34faf019a12a4b16700a8af3f3dad9317c911a5fe6d58180bb64c32"
+      },
+      {
+        "path": "pc-famtastic-portal-test-b9a55cc5147b23c6/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "b01a401d2e498c1886d9f90d5a35f13e4afae138fbe8596ceea068c8ca83fbac",
+        "presentation_sha256": "fff98fc5c888b0cfda73d5891611c0fc3aa15d8464fc73394c783ff92aaaab81"
+      },
+      {
+        "path": "pc-famtastic-v3-demo-proof-639c86d72ee363b9/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "29452a49661ddd04191a10a5ce449a97d0a333c7bacdeb3aebb994a6279f5794",
+        "presentation_sha256": "22bd348c69e6392caa79c3de9b51ca416d582ad2991d7374b2e9ddd127498192"
+      },
+      {
+        "path": "pc-famtastic-v3-demo-proof-639c86d72ee363b9/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "96e4c0330f1fea2dddfe5f4a215439b3289d8239985f37907d4aef53e55825f5",
+        "presentation_sha256": "081d141a867881e5684e3c75baa1e345efe127c8ffb60e11277185b69edede76"
+      },
+      {
+        "path": "pc-famtastic-v3-demo-proof-639c86d72ee363b9/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "7ce240bde4e486baff6f36e24864a27eb154f22a6b0003c2bb8acda0d2352eeb",
+        "presentation_sha256": "03b62427210100445eaaf1602479e28218685b5aa0760a449aea9d5c3e759c73"
+      },
+      {
+        "path": "pc-ferrini-home-solutions-7fa2/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "005b4a3b320f1b7d14c185447e5dad2bef6d4534029488b6d0c11ffabc3d84e8",
+        "presentation_sha256": "05412b4c4c4407ea40c085d066865dc2b2c8f0fc95f322875ab2655d2d9fba2c"
+      },
+      {
+        "path": "pc-ferrini-home-solutions-7fa2/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "3c1bd5cfc7892bb7522ed2f86ed84c0bf881ef56ac1c109937248ba3b24191d6",
+        "presentation_sha256": "1291e3721126a54a579db0329380e6fab86b639bdd72d15f81458bb7abf919f5"
+      },
+      {
+        "path": "pc-ferrini-home-solutions-7fa2/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "7e3d4814099dc1229ed63b4232afc9b5bbe163e557743471b243f79e9a107b54",
+        "presentation_sha256": "5b3475683e5e11492d82bdc525abcf6fcf1c41e7802e13786fe5a95f34755b06"
+      },
+      {
+        "path": "pc-gypsy-lash-1b1fcf1dda27f31e/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "b80ad6ce5b65932ceb069545342466b3056783f332fcdf2f87648c11b3304b66",
+        "presentation_sha256": "d8312c9d444a64d0d0c9f694a05791e711275f19dcded01ae172616cb6b0ea5e"
+      },
+      {
+        "path": "pc-gypsy-lash-1b1fcf1dda27f31e/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "233548b8d5cdc55de22d1a45e30023ab534aade8ddadf2cb9ec7bcdd25270cae",
+        "presentation_sha256": "6a017e070c6ac269761e1b40cc6ca984706be51feccd12f97f36a1da4957c29e"
+      },
+      {
+        "path": "pc-gypsy-lash-1b1fcf1dda27f31e/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "1777e225c4b24e2c5b4b26ebce65f1955838dfaa7c917067714f554488b9ed8f",
+        "presentation_sha256": "f3195c5e639ef2563755b890edbeade003c09e274de6cca23a590ceadc8c3721"
+      },
+      {
+        "path": "pc-hydraulic-jack-rebuilders-948d055fef171305/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "f745966b8daca3b7211c7031aeace65bc50a3761fc77d443efac9a5fdee0e9f5",
+        "presentation_sha256": "ef7d008a48c62782f7d39fcec7f8f90ae3a21c6fb67981a698c341fd60a402b8"
+      },
+      {
+        "path": "pc-hydraulic-jack-rebuilders-948d055fef171305/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "81779102d0708f9c66a9a60669f280855e478c36b3a409012cbc9d6892061aae",
+        "presentation_sha256": "9e696599b2bd0ccf99955d25940e0f6899355e4a014a324c80ec43a71cd83b7f"
+      },
+      {
+        "path": "pc-hydraulic-jack-rebuilders-948d055fef171305/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "5ab70f77d169c3ceac0c7c05d5a4aa08655a2d1afee64e5290566d3b40ebfcde",
+        "presentation_sha256": "8e6ecbde259453d262d455f4b7875f442012a9423c838d585dfa61287a70a4ac"
+      },
+      {
+        "path": "pc-kim-chang-suk-hair-salon-c2329b708b789db8/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "aa068616bc6b210a2963d60188b045dee712454cfc2745e1f64a3c03c7121735",
+        "presentation_sha256": "d96b820254bb0aa53d54c0b2a0f99d36ca11918fdf81170e9724157dbde226b2"
+      },
+      {
+        "path": "pc-kim-chang-suk-hair-salon-c2329b708b789db8/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "b2b83759b366fdfd7209c9fe9182497ff88b86e220ecb29fbca90a815529515f",
+        "presentation_sha256": "0d90519daeb40d69fa08c22b4cc371f1e62be4d9721472efd3788b5c7e1a323a"
+      },
+      {
+        "path": "pc-kim-chang-suk-hair-salon-c2329b708b789db8/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "0d6bd935f349095c66dc42a4cca160a12af5473c70c0c7b58b35675c64d5178e",
+        "presentation_sha256": "055cf56158e711033c42e00f5862b6a47054f3addf5f199d61489ab4cd8f4fa7"
+      },
+      {
+        "path": "pc-mike-s-motorcars-az-com-1ff67602590e52a2/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "d1dad3a7ecf00f5273e343e095720261460f0c267cf8745e3d5c1c50cb3e8817",
+        "presentation_sha256": "1f265ebd3b335ffacefcf6a5042f45f0332259de7c7f371e90105493c613562a"
+      },
+      {
+        "path": "pc-mike-s-motorcars-az-com-1ff67602590e52a2/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "90d345c8a60b0ab2f9b05644fe85966afbf56e09aa15f56e7b1c79166f50ab36",
+        "presentation_sha256": "2e907f00b9da1762ba9fb02993812221c7dbf2435ee71361c11b68535e375e17"
+      },
+      {
+        "path": "pc-mike-s-motorcars-az-com-1ff67602590e52a2/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "9a51f8fe4d90238933f3b59778f9f3d161cdd90ea141ed7710a7248c1070f87e",
+        "presentation_sha256": "fe9c2eefd2bc49baa1b3b3a00a968562ff006581cf7088ddb543daae0c2850c6"
+      },
+      {
+        "path": "pc-prod-proof-test-co-afb7/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "f2d4546565b3864bb9bc077d173d49582e7581fd9e4cc3d1bfecb914da446680",
+        "presentation_sha256": "1578cbf9eb8c9d360f3bbdebc3f4df7038a46fe9080ed834351ab7427e1db0ff"
+      },
+      {
+        "path": "pc-prod-proof-test-co-afb7/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "a3fe8846a733592ce52aeae7e4332676711f94d5de69dc3c0ff72c35523cc101",
+        "presentation_sha256": "846801dadf980c0aca01baa8d8b2957fbd4f9570948dfd92b213546004bd0dc1"
+      },
+      {
+        "path": "pc-prod-proof-test-co-afb7/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "7c3e32db3fb10f3979f13463d74b49373de458977ea25c38d5eedb9c26e6597f",
+        "presentation_sha256": "767c7e30dc2a0a31082d3985acddf6303a906adbf3285832153fc5704710f6cf"
+      },
+      {
+        "path": "pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "f0bc4a0ad9f6d89b209b0253bd5403dc27367fd99a3caeece64c0c9eb6f68687",
+        "presentation_sha256": "b5f3086583a125d2734bef31ca2bf908c09bb5669ba119093102a19684889a15"
+      },
+      {
+        "path": "pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "1e9bc657a37ec47df455a3b4945807d3256c4c003ac8a5ec957bba17d7f21057",
+        "presentation_sha256": "b93538c37edac31f4daf96166108fdd621f99d7ef6bbdd7a68cb63fba368f2ac"
+      },
+      {
+        "path": "pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "b45dba5a8fb759a554fbb3860ae210d425159228ccf99af3fe37ee9804dee148",
+        "presentation_sha256": "ce84a52c275034fab105299b01d1e6b59c977c17fea1cb3f9f5fe1e03a013853"
+      },
+      {
+        "path": "pc-somaelite-wellness-1e2cf1e04e39d93a/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "4dde030ee59c7d3212bb6cf72bb26fce2cc00d8f0863de25971dfa6a952c515f",
+        "presentation_sha256": "2b6388429a7cb803970cb97c3a2b5f9deec1410b9a87ff57d9143a4255df4860"
+      },
+      {
+        "path": "pc-somaelite-wellness-1e2cf1e04e39d93a/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "04e52a52d369d5b247c0a555e52234c9b0ea3f3cc8d7ca90278e1b97cc0085e4",
+        "presentation_sha256": "3d13752c973c119de5b95968b48cd6085cb97475ed94aaeb78f4d9edd8c9bd07"
+      },
+      {
+        "path": "pc-somaelite-wellness-1e2cf1e04e39d93a/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "77d84284867dbe68316c21b79ac7204c52772ae6671f3944acce9801dbc6a7f1",
+        "presentation_sha256": "d482bf726f5635f15b1afe6685b0e6801eceeb1ae460ac0f0686952d2f46aaca"
+      },
+      {
+        "path": "pc-starlight-skin-bar-90b494633105f463/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "f984f21b47876a7602e681dff2255cd8f0e014adbe8c67eb1c5da7b772bb56c5",
+        "presentation_sha256": "4d91cdf7bb71ab5d58d4c1a7dc7e2a328d3d770931fec828c084fdafdc2df70c"
+      },
+      {
+        "path": "pc-starlight-skin-bar-90b494633105f463/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "75f67ef37a5346c453de5b83b8af37eafbb6df67f9e8451b29e34796ab58c9e0",
+        "presentation_sha256": "dc2d397a7312be67c3b9c1b929634ad7b35fb26092c10d7dcf708d4fc6c916c4"
+      },
+      {
+        "path": "pc-starlight-skin-bar-90b494633105f463/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "b69b03674c32d96275fc71c372febfae71b66d6502df76a48b9164a7d79d4f43",
+        "presentation_sha256": "413dab0a00550982986b730480f57245c22396dbe34b2c4455e5d4dae91f6652"
+      },
+      {
+        "path": "pc-the-beehive-studio-a73a89a91910db61/a",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "5d23a0c10b971424d6aebe7188d1d2c93435c5442cb80fa90e44a1cbc844679e",
+        "presentation_sha256": "27d6e09625319b0c73d83983dc7557771f232e718925e03d4fc0123c9832c685"
+      },
+      {
+        "path": "pc-the-beehive-studio-a73a89a91910db61/b",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "009388af2f83ef723d2f980af55477b96863166be4085b398e5d3ab1ed2f5224",
+        "presentation_sha256": "77d49f8029f670a60f72cbf32622b5bb4d7e3e984490b4f39199f122e2635bf1"
+      },
+      {
+        "path": "pc-the-beehive-studio-a73a89a91910db61/c",
+        "version": "index.creator-credit-7490f297831c.html",
+        "original_sha256": "04aa070e11b62798f63b3db5b30b972716d6183999e34b9f7781f191d2b773aa",
+        "presentation_sha256": "19093df652be04e5f5190531f261153d28ca50e75c06bdb9af7c5f9dcc909fbe"
+      }
+    ]
+  },
+  "public_http": [
+    {
+      "path": "pc-brewed-awakening-coffee-cafe-08a18f297d62142e/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-culturelocs-4e20c4383be2d86c/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-brewed-awakening-coffee-cafe-08a18f297d62142e/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-brewed-awakening-coffee-cafe-08a18f297d62142e/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-culturelocs-4e20c4383be2d86c/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-culturelocs-b6270434fa6d4198/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-culturelocs-4e20c4383be2d86c/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-culturelocs-b6270434fa6d4198/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-desert-blonde-studio-e6cdabb53a8ed835/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-desert-blonde-studio-e6cdabb53a8ed835/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-desert-blonde-studio-e6cdabb53a8ed835/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-culturelocs-b6270434fa6d4198/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-famtastic-v3-demo-proof-639c86d72ee363b9/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-famtastic-portal-test-b9a55cc5147b23c6/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-famtastic-portal-test-b9a55cc5147b23c6/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-famtastic-portal-test-b9a55cc5147b23c6/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-famtastic-v3-demo-proof-639c86d72ee363b9/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-ferrini-home-solutions-7fa2/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-famtastic-v3-demo-proof-639c86d72ee363b9/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-ferrini-home-solutions-7fa2/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-gypsy-lash-1b1fcf1dda27f31e/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-gypsy-lash-1b1fcf1dda27f31e/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-ferrini-home-solutions-7fa2/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-gypsy-lash-1b1fcf1dda27f31e/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-hydraulic-jack-rebuilders-948d055fef171305/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-kim-chang-suk-hair-salon-c2329b708b789db8/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-hydraulic-jack-rebuilders-948d055fef171305/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-hydraulic-jack-rebuilders-948d055fef171305/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-kim-chang-suk-hair-salon-c2329b708b789db8/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-mike-s-motorcars-az-com-1ff67602590e52a2/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-kim-chang-suk-hair-salon-c2329b708b789db8/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-mike-s-motorcars-az-com-1ff67602590e52a2/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-prod-proof-test-co-afb7/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-prod-proof-test-co-afb7/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-mike-s-motorcars-az-com-1ff67602590e52a2/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-prod-proof-test-co-afb7/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-somaelite-wellness-1e2cf1e04e39d93a/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-pros-in-training-aka-the-p-i-t-0c6c69ad2e639b44/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-somaelite-wellness-1e2cf1e04e39d93a/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-starlight-skin-bar-90b494633105f463/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-somaelite-wellness-1e2cf1e04e39d93a/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-starlight-skin-bar-90b494633105f463/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-the-beehive-studio-a73a89a91910db61/a",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-the-beehive-studio-a73a89a91910db61/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-starlight-skin-bar-90b494633105f463/c",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    },
+    {
+      "path": "pc-the-beehive-studio-a73a89a91910db61/b",
+      "status": 200,
+      "credit": 1,
+      "hash": true
+    }
+  ],
+  "protected_http": {
+    "checked": 66,
+    "status403": 66
+  }
+}

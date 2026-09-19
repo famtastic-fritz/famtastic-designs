@@ -2540,3 +2540,11 @@ Keep the pre-purchase request's normal order field empty until final readiness;
 its audited private offer carries the prepaid binding. If compatibility requires
 an earlier binding, use exact reconciled exception evidence, never a general
 paid-request selection bypass. Scope hash, ownership and held status matter.
+# 2026-09-18 — Creator-credit runtime inventory
+
+Regular-file-only inventory missed three symlink-backed PHP friends apps. Inspect
+release targets and persistent var symlinks; never flatten them into a static deploy.
+Stored proof bytes need not change for a footer: decorate authorized controller
+responses, and version48 legacy direct HTML presentations with exact original hashes.
+Keep66 protected direct URLs forbidden. Separate scoped release markers from normal
+full-release markers, and record source checks separately from authenticated visual QA.

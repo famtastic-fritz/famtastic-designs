@@ -2,8 +2,11 @@
 
 ## 2026-09-18 — Creator credit source implementation
 
-Agency credit pattern/build gates are locally tested. Live release and uncovered
-runtime surfaces remain separately recorded in the agency creator-credit lane report.
+Agency credit pattern/build gates are tested and scoped existing-live deployment is
+verified:222 frontend/static HTML,48 new legacy proof presentation versions, six
+PHP/theme files. All114 original proof hashes unchanged;66 protected direct URLs
+remain403. Parent CUA covers homepage/www/Palmera; lane CUA covers owner-nav clearance.
+Exact releases and pending linked app/private visual QA are recorded in the lane report.
 No ecosystem-wide, email-send or customer-acceptance capability upgrade is implied.
 
 ## 2026-09-18 — Corrected proof notification acceptance
