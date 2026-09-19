@@ -38,6 +38,14 @@ The existing private conversation is thread 20, public UUID `7c998b28-f920-4783-
 
 The commercial lane owns request-bound offer activation without generic checkout renewal leakage. The selected client direction must be preserved into its own staging implementation. Real RSVP/attendee access/tickets require tested backend components, merchant authority, confirmed event details and client acceptance before launch.
 
-## Storage and recoverability
+## Verified import closeout
+
+Source revision `ca144070d970a81bf41ce3b8ce755e03d691934d` was pushed to the private customer origin before canonical import. The exact canonical payload SHA is `7f6dfe475bad1e044f94dcb31894a6024494c630d87b8c8913cd9224bbdfbdcc`; the routine imported variants 109/110/111. Repeating the exact event returned `newly_processed: false` and still three variants. All stored HTML, thumbnail and asset hashes match the independent review/source. Original intake preservation and archived original SHA verified true.
+
+Build DNA `class-2000-request16-20260918-v1` is registered as database record 41. Raw manifest SHA is `188818b7ea3a4af98961e1dfd6790ff97715303c8fdd213939f2df7b4e33cfe8`; the database normalized JSON checksum is `fd60dfcaa7ced45e33f84e0c4cf8bb94b9f2617a66994a2f1d93690c326065af`. Local manifest and registration/readback receipts live in the customer repository. Manifest re-generation is blocked after registration unless a new build ID is created.
+
+As last observed by this lane, request 16 remains `submitted` with campaign 57; the lane has not revealed or notified the client. Unauthenticated account proof endpoints return 404; direct protected files/assets return 403. Main owns correct-account/cross-account verification, automated policy release and exactly-once branded notification key `website-request:16:proofs:57:qa-v1`. Main reports the commercial lane created private offer `5561e5d8-1b85-5858-a690-df186d47d57d`, $199, with no order/payment, and assigned thread 20's support case to staff owner 1. Do not substitute a generic checkout link.
+
+## Storage and recoverability details
 
 Only this lane's initial newly created unmodified checkout was removed after a disk-full expansion. It was recreated with narrow sparse paths. No original files, existing worktrees or other agents' artifacts were removed. No dependencies were installed; customer source/build is standalone and the optional Playwright QA explicitly uses an existing installation.
