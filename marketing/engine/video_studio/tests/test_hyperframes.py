@@ -12,7 +12,7 @@ class HyperFramesTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix='video adapter ')
         self.addCleanup(self.temp.cleanup)
-        self.path = Path(self.temp.name)
+        self.path = Path(self.temp.name).resolve()
         (self.path / 'index.html').write_text('<main data-composition-id="sample" data-width="640" data-height="360" data-duration="2"></main>')
         self.calls = []
 
@@ -88,6 +88,28 @@ class HyperFramesTests(unittest.TestCase):
         env = hyperframes._environment()
         for name in ('HYPERFRAMES_NO_TELEMETRY', 'HYPERFRAMES_NO_UPDATE_CHECK', 'HYPERFRAMES_NO_AUTO_INSTALL'):
             self.assertEqual(env[name], '1')
+
+    def test_quality_aliases_follow_existing_cli_help(self):
+        for advertised, requested, expected in [
+            ('draft, standard, high', 'delivery', 'high'),
+            ('draft, standard, high', 'looks', 'standard'),
+            ('draft, looks, delivery', 'delivery', 'delivery'),
+            ('draft, looks, delivery', 'high', 'delivery'),
+        ]:
+            with self.subTest(advertised=advertised, requested=requested):
+                with patch.object(hyperframes, '_run', return_value={
+                    'returncode': 0, 'timed_out': False,
+                    'stdout': '--quality=<quality> Quality: ' + advertised,
+                }):
+                    self.assertEqual(hyperframes._resolve_quality('/fake/hyperframes', requested), expected)
+
+    def test_unknown_quality_contract_is_not_silently_downgraded(self):
+        with patch.object(hyperframes, '_run', return_value={
+            'returncode': 0, 'timed_out': False,
+            'stdout': '--quality=<quality> Quality: draft, experimental',
+        }):
+            with self.assertRaisesRegex(RuntimeError, 'does not advertise'):
+                hyperframes._resolve_quality('/fake/hyperframes', 'delivery')
 
     def test_real_child_process_timeout_is_bounded(self):
         result = hyperframes._run([sys.executable, '-c', 'import time; time.sleep(30)'], timeout=.05)

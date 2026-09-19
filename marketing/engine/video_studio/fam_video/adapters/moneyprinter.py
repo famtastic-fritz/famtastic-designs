@@ -14,6 +14,7 @@ import shutil
 import subprocess
 import time
 import tomllib
+import uuid
 from pathlib import Path
 
 
@@ -21,7 +22,13 @@ class MoneyPrinterError(ValueError):
     """An unsupported or unsafe MoneyPrinterTurbo operation."""
 
 
-_REQUIRED_FLAGS = ("--batch-file", "--stop-at", "--custom-audio-file", "--video-source", "--voice-name")
+_BATCH_FLAGS = ("--batch-file", "--stop-at", "--custom-audio-file", "--video-source", "--voice-name")
+_SINGLE_FLAGS = (
+    "--video-subject", "--video-script", "--video-source", "--video-materials",
+    "--video-aspect", "--video-clip-duration", "--video-concat-mode", "--video-count",
+    "--custom-audio-file", "--voice-name", "--no-subtitle-enabled", "--bgm-type",
+    "--bgm-volume", "--n-threads", "--task-id", "--no-match-materials-to-script", "--stop-at",
+)
 _FORMATS = {"16:9", "9:16", "1:1"}
 _RESOLUTIONS = {"16:9": (1920, 1080), "9:16": (1080, 1920), "1:1": (1080, 1080)}
 _MEDIA_EXTENSIONS = {".png", ".jpg", ".jpeg", ".bmp", ".mp4", ".mov", ".mkv", ".webm"}
@@ -33,6 +40,7 @@ _FIXED = {
     "bgm_volume": 0, "n_threads": 2,
 }
 _FIELDS = set(_FIXED) | {"video_subject", "video_script", "video_materials", "custom_audio_file", "video_aspect", "video_clip_duration"}
+_SINGLE_SCHEMA_FIELDS = _FIELDS - {"video_fit_mode"}
 _LIMITATIONS = [
     "Draft montage only; scene layouts and exact individual scene durations are not reproduced.",
     "Subtitles and generated narration/music are disabled; supplied audio determines montage duration.",
@@ -46,6 +54,17 @@ def _hash(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _canonical_tasks_root(root: Path) -> Path:
+    root = Path(root).resolve()
+    candidate = root / "storage/tasks"
+    if candidate.is_symlink():
+        raise MoneyPrinterError("MoneyPrinter task storage cannot be a symlink.")
+    resolved = candidate.resolve()
+    if not resolved.is_relative_to(root):
+        raise MoneyPrinterError("MoneyPrinter task storage must remain inside its installation.")
+    return resolved
 
 
 def _local_file(value, extensions: set[str]) -> Path:
@@ -87,7 +106,11 @@ def _config(root: Path) -> dict:
         raise MoneyPrinterError("MoneyPrinter auto-upload is armed. Disable it in the existing installation before rendering drafts.")
     if not isinstance(app.get("upload_post_enabled", False), bool):
         raise MoneyPrinterError("MoneyPrinter publishing configuration is not a valid boolean.")
-    return {"auto_upload": False, "config_sha256": _hash(path)}
+    return {
+        "upload_post_enabled": app.get("upload_post_enabled", False),
+        "auto_upload": False,
+        "config_sha256": _hash(path),
+    }
 
 
 def inspect(root: Path, python_executable: str) -> dict:
@@ -98,6 +121,7 @@ def inspect(root: Path, python_executable: str) -> dict:
         if not (root / "cli.py").is_file():
             raise MoneyPrinterError("Native cli.py is missing; this installed version is unsupported.")
         report["publishing"] = _config(root)
+        _canonical_tasks_root(root)
         schema = root / "app/models/schema.py"
         try:
             tree = ast.parse(schema.read_text(encoding="utf-8"))
@@ -105,12 +129,26 @@ def inspect(root: Path, python_executable: str) -> dict:
             fields = {node.target.id for node in model.body if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name)}
         except (OSError, ValueError, SyntaxError, StopIteration):
             raise MoneyPrinterError("Installed VideoParams schema could not be verified; unsupported version.") from None
-        if not _FIELDS <= fields:
+        if not (_FIELDS <= fields or _SINGLE_SCHEMA_FIELDS <= fields):
             raise MoneyPrinterError("Installed VideoParams lacks required local-only fields; unsupported version.")
         argv = [str(python_executable), str(root / "cli.py"), "--help"]
         result = _command(argv, root, 20)
-        if result.returncode != 0 or not all(flag in result.stdout for flag in _REQUIRED_FLAGS):
-            raise MoneyPrinterError("Installed CLI lacks the required batch/local-audio interface; unsupported version.")
+        if result.returncode != 0:
+            raise MoneyPrinterError("Installed CLI help could not be inspected; unsupported version.")
+        help_text = result.stdout + result.stderr
+        if _FIELDS <= fields and all(flag in help_text for flag in _BATCH_FLAGS):
+            report["native_mode"] = "batch"
+        elif _SINGLE_SCHEMA_FIELDS <= fields and all(flag in help_text for flag in _SINGLE_FLAGS):
+            report["native_mode"] = "single_task"
+            report["limitations"] = list(report["limitations"]) + [
+                "Installed CLI has no explicit video_fit_mode field; native default media fitting is used."
+            ]
+        else:
+            raise MoneyPrinterError("Installed schema or CLI lacks the required local-only interface; unsupported version.")
+        python_result = _command([str(python_executable), "--version"], root, 10)
+        if python_result.returncode != 0:
+            raise MoneyPrinterError("Selected MoneyPrinter Python executable could not be verified.")
+        report["python_version"] = (python_result.stdout or python_result.stderr).strip()[:80]
         report["help_command"] = argv
         report["cli_sha256"] = _hash(root / "cli.py")
         report["schema_sha256"] = _hash(schema)
@@ -203,6 +241,114 @@ def _probe(path: Path, executable: str) -> dict:
     return {"duration_seconds": duration, "width": video["width"], "height": video["height"], "audio_present": True}
 
 
+def _managed_video_paths(raw_paths, root: Path, task_id: str) -> list[Path]:
+    if not isinstance(raw_paths, list) or len(raw_paths) != 1:
+        raise ValueError("expected one rendered file")
+    try:
+        normalized_id = str(uuid.UUID(task_id))
+    except (AttributeError, TypeError, ValueError):
+        raise ValueError("invalid task id") from None
+    if normalized_id != task_id:
+        raise ValueError("non-canonical task id")
+    tasks_root = _canonical_tasks_root(root)
+    task_dir_input = root / "storage/tasks" / normalized_id
+    if task_dir_input.is_symlink():
+        raise ValueError("task directory is a symlink")
+    task_dir = task_dir_input.resolve()
+    if not task_dir.is_relative_to(tasks_root):
+        raise ValueError("task directory escapes task storage")
+    videos = []
+    for raw in raw_paths:
+        if not isinstance(raw, str) or not raw:
+            raise ValueError("invalid output path")
+        path = Path(raw).resolve()
+        if not path.is_relative_to(task_dir) or path.suffix.lower() != ".mp4" or not path.is_file() or path.stat().st_size == 0:
+            raise ValueError("output is outside managed task storage")
+        videos.append(path)
+    return videos
+
+
+def _native_json(stdout: str, expected: str) -> dict:
+    """Extract the final task object while ignoring CLI notices around its JSON."""
+    decoder = json.JSONDecoder()
+    candidates = [stdout]
+    candidates.extend(line for line in reversed(stdout.splitlines()) if line.strip())
+    candidates.extend(stdout[index:] for index in reversed(range(len(stdout))) if stdout[index] == "{")
+    for candidate in candidates:
+        try:
+            data = json.loads(candidate)
+        except (TypeError, ValueError):
+            try:
+                start = candidate.find("{")
+                if start < 0:
+                    continue
+                data, end = decoder.raw_decode(candidate, start)
+                if candidate[end:].strip():
+                    continue
+            except (TypeError, ValueError):
+                continue
+        if not isinstance(data, dict):
+            continue
+        if expected == "batch" and {"total", "succeeded", "failed", "tasks"} <= data.keys():
+            return data
+        if expected == "single" and {"task_id", "result"} <= data.keys():
+            return data
+    raise ValueError("no native JSON result")
+
+
+def _legacy_material_paths(task: dict, output_dir: Path, task_index: int) -> list[str]:
+    """Avoid the legacy CLI's comma-separated path ambiguity with private copies."""
+    result = []
+    for media_index, media in enumerate(task["video_materials"], 1):
+        source = Path(media["url"])
+        if "," not in str(source):
+            result.append(str(source))
+            continue
+        safe_dir = output_dir / "native-inputs"
+        if "," in str(safe_dir):
+            raise MoneyPrinterError("Installed CLI cannot safely represent comma paths beneath this output directory.")
+        safe_dir.mkdir(exist_ok=True)
+        destination = safe_dir / f"media-{task_index:02d}-{media_index:02d}-{_hash(source)[:12]}{source.suffix.lower()}"
+        with source.open("rb") as stream, destination.open("xb") as target:
+            shutil.copyfileobj(stream, target)
+        result.append(str(destination))
+    return result
+
+
+def _single_task_command(root: Path, python_executable: str, task: dict, materials: list[str], task_id: str) -> list[str]:
+    """Build argv for releases that expose local inputs only as CLI arguments."""
+    argv = [
+        str(python_executable), str(root / "cli.py"),
+        f"--video-subject={task['video_subject']}",
+        f"--video-script={task['video_script']}",
+        "--video-source", "local",
+        f"--video-materials={','.join(materials)}",
+        "--custom-audio-file", task["custom_audio_file"],
+        "--voice-name", "no-voice",
+        "--video-aspect", task["video_aspect"],
+        "--video-clip-duration", str(task["video_clip_duration"]),
+        "--video-concat-mode", "sequential",
+        "--video-count", "1",
+        "--no-match-materials-to-script",
+        "--n-threads", "2",
+        "--no-subtitle-enabled",
+        "--bgm-type", "none",
+        "--bgm-volume", "0",
+        "--task-id", task_id,
+        "--stop-at", "video",
+    ]
+    if any("," in item for item in materials):
+        raise MoneyPrinterError("Installed CLI cannot safely represent a comma in a local media path.")
+    return argv
+
+
+def _existing_task_ids(root: Path) -> set[str]:
+    tasks_root = _canonical_tasks_root(root)
+    if not tasks_root.is_dir():
+        return set()
+    return {entry.name for entry in tasks_root.iterdir() if entry.is_dir()}
+
+
 def run(root: Path, batch_path: Path, python_executable: str, output_dir: Path, timeout=1800) -> dict:
     """Execute and verify an explicit batch, returning a credential-free receipt."""
     if isinstance(timeout, bool) or not isinstance(timeout, (float, int)) or not math.isfinite(timeout) or not 0 < timeout <= 86400:
@@ -238,34 +384,67 @@ def run(root: Path, batch_path: Path, python_executable: str, output_dir: Path, 
         json.dump(batch, stream, ensure_ascii=False, indent=2)
     if _config(root)["config_sha256"] != installation["publishing"]["config_sha256"]:
         raise MoneyPrinterError("MoneyPrinter configuration changed during preflight; inspect before retrying.")
-    command = [str(python_executable), str(root / "cli.py"), "--batch-file", str(frozen), "--stop-at", "video"]
+    videos = []
+    verified_task_ids = []
+    commands = []
     started = time.monotonic()
-    result = _command(command, root, timeout)
-    elapsed = time.monotonic() - started
-    # Never persist native stdout/stderr: dependency diagnostics can contain keys.
-    if result.returncode:
-        raise MoneyPrinterError(f"MoneyPrinter draft failed (exit {result.returncode}); native diagnostics were withheld to protect credentials.")
-    try:
-        summary = json.loads(result.stdout)
-        tasks = summary["tasks"]
-        if summary.get("total") != len(batch) or summary.get("succeeded") != len(batch) or summary.get("failed") != 0 or len(tasks) != len(batch):
-            raise ValueError
-        videos = []
-        tasks_root = (root / "storage/tasks").resolve()
-        for entry in tasks:
-            content = entry["result"]
-            if entry["status"] != "succeeded" or content.get("cross_post_state") is not None:
+    if installation["native_mode"] == "batch":
+        existing_task_ids = _existing_task_ids(root)
+        seen_task_ids = set()
+        command = [str(python_executable), str(root / "cli.py"), "--batch-file", str(frozen), "--stop-at", "video"]
+        commands.append(command)
+        result = _command(command, root, timeout)
+        # Never persist native stdout/stderr: dependency diagnostics can contain keys.
+        if result.returncode:
+            raise MoneyPrinterError(f"MoneyPrinter draft failed (exit {result.returncode}); native diagnostics were withheld to protect credentials.")
+        try:
+            summary = _native_json(result.stdout, "batch")
+            tasks = summary["tasks"]
+            if summary.get("total") != len(batch) or summary.get("succeeded") != len(batch) or summary.get("failed") != 0 or len(tasks) != len(batch):
                 raise ValueError
-            paths = content["videos"]
-            if not isinstance(paths, list) or len(paths) != 1:
-                raise ValueError
-            for raw in paths:
-                path = Path(raw).resolve()
-                if not path.is_relative_to(tasks_root) or path.suffix.lower() != ".mp4" or not path.is_file() or path.stat().st_size == 0:
+            for entry in tasks:
+                task_id = entry["task_id"]
+                if not isinstance(task_id, str) or task_id in existing_task_ids or task_id in seen_task_ids:
                     raise ValueError
-                videos.append(path)
-    except (ValueError, KeyError, TypeError, AttributeError):
-        raise MoneyPrinterError("Native result is invalid, incomplete, outside managed tasks, or indicates publishing.") from None
+                seen_task_ids.add(task_id)
+                content = entry["result"]
+                if entry["status"] != "succeeded" or content.get("cross_post_state") is not None:
+                    raise ValueError
+                paths = content["videos"]
+                if not isinstance(paths, list) or len(paths) != 1:
+                    raise ValueError
+                videos.extend(_managed_video_paths(paths, root, task_id))
+                verified_task_ids.append(task_id)
+        except (ValueError, KeyError, TypeError, AttributeError):
+            raise MoneyPrinterError("Native result is invalid, incomplete, outside managed tasks, or indicates publishing.") from None
+    else:
+        for task_index, task in enumerate(batch, 1):
+            if _config(root)["config_sha256"] != installation["publishing"]["config_sha256"]:
+                raise MoneyPrinterError("MoneyPrinter configuration changed during preflight; inspect before retrying.")
+            materials = _legacy_material_paths(task, output_dir, task_index)
+            task_id = str(uuid.uuid4())
+            if (root / "storage/tasks" / task_id).exists():
+                raise MoneyPrinterError("Generated MoneyPrinter task id already exists; inspect before retrying.")
+            command = _single_task_command(root, python_executable, task, materials, task_id)
+            commands.append(command)
+            result = _command(command, root, timeout)
+            if result.returncode:
+                raise MoneyPrinterError(f"MoneyPrinter draft failed (exit {result.returncode}); native diagnostics were withheld to protect credentials.")
+            try:
+                native_result = _native_json(result.stdout, "single")
+                if native_result["task_id"] != task_id:
+                    raise ValueError
+                content = native_result["result"]
+                paths = content["videos"]
+                if content.get("cross_post_state") is not None or not isinstance(paths, list) or len(paths) != 1:
+                    raise ValueError
+                videos.extend(_managed_video_paths(paths, root, task_id))
+                verified_task_ids.append(task_id)
+            except (ValueError, KeyError, TypeError, AttributeError):
+                raise MoneyPrinterError("Native result is invalid, incomplete, outside managed tasks, or indicates publishing.") from None
+            if _config(root)["config_sha256"] != installation["publishing"]["config_sha256"]:
+                raise MoneyPrinterError("MoneyPrinter configuration changed during rendering; inspect before retrying.")
+    elapsed = time.monotonic() - started
     artifacts = []
     for item in inputs:
         path = Path(item["path"])
@@ -280,8 +459,8 @@ def run(root: Path, batch_path: Path, python_executable: str, output_dir: Path, 
             shutil.copyfileobj(source, target)
         artifacts.append({"path": str(destination), "sha256": _hash(destination), "bytes": destination.stat().st_size, **metadata})
     receipt = {"schema": "famtastic.moneyprinter-draft.v1", "status": "rendered_draft", "draft_only": True,
-               "installation": installation, "command": command, "duration_seconds": elapsed,
-               "batch_sha256": _hash(frozen), "source_batch_sha256": source_batch_sha256, "inputs": inputs,
+               "installation": installation, "command": commands if len(commands) > 1 else commands[0], "duration_seconds": elapsed,
+               "native_task_ids": verified_task_ids, "batch_sha256": _hash(frozen), "source_batch_sha256": source_batch_sha256, "inputs": inputs,
                "outputs": artifacts, "provider": "moneyprinterturbo_local", "model": None,
                "cost": {"external_provider_spend_usd": 0, "status": "local_inputs_only_by_contract", "electricity_cost": "unmeasured"},
                "network_monitoring": "not_measured", "approval_state": "unreviewed", "limitations": list(_LIMITATIONS)}

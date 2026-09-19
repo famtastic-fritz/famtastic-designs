@@ -29,7 +29,7 @@ class CampaignTests(unittest.TestCase):
         a=Path(self.tmp.name)/'plate.png';a.write_bytes(b'fixture')
         self.c['scenes'][0].update(media='plate.png',media_kind='image')
         with self.assertRaises(CampaignError):self.load()
-        self.c['scenes'][0]['rights']='owned';self.assertEqual(self.load()['scenes'][0]['media'],str(a))
+        self.c['scenes'][0]['rights']='owned';self.assertEqual(self.load()['scenes'][0]['media'],str(a.resolve()))
     def test_fractional_frame_rejected(self):
         self.c['scenes'][0]['duration']=1.011
         with self.assertRaises(CampaignError):self.load()

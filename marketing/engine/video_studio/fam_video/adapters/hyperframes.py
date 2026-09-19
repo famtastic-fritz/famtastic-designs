@@ -114,6 +114,28 @@ def _checked(result: dict, log_path: Path, label: str) -> None:
         raise RuntimeError(f"{label} {status}. Log: {log_path}\n{result['stdout'][-2500:]}")
 
 
+def _resolve_quality(executable: str, requested: str) -> str:
+    """Bind semantic presets to the selected CLI, without upgrading it.
+
+    Older installations advertise standard/high; newer ones use looks/delivery.
+    Never silently let an unknown preset fall back to the CLI default.
+    """
+    if requested == "draft":
+        return requested
+    help_result = _run([executable, "render", "--help"], timeout=20)
+    if help_result["returncode"] or help_result["timed_out"]:
+        raise RuntimeError("Cannot inspect installed HyperFrames quality presets")
+    lines = [line for line in help_result["stdout"].splitlines()
+             if "quality" in line.lower() and "draft" in line.lower()]
+    advertised = set(re.findall(r"\b(?:draft|looks|delivery|standard|high)\b", " ".join(lines)))
+    equivalents = {"looks": ("looks", "standard"), "standard": ("standard", "looks"),
+                   "delivery": ("delivery", "high"), "high": ("high", "delivery")}
+    for candidate in equivalents[requested]:
+        if candidate in advertised:
+            return candidate
+    raise RuntimeError(f"Installed HyperFrames does not advertise a compatible {requested} quality preset")
+
+
 def _html_metadata(project_dir: Path) -> dict:
     source = (project_dir / "index.html").read_text(encoding="utf-8")
     root = re.search(r'<[^>]+\bdata-composition-id\s*=\s*[\"\'][^>]+>', source)
@@ -159,6 +181,7 @@ def render(
     version_result = _run([resolved, "--version"], cwd=project_dir, timeout=20)
     if version_result["returncode"] != 0 or version_result["timed_out"]:
         raise RuntimeError("HyperFrames --version failed")
+    resolved_quality = _resolve_quality(resolved, quality)
     output.parent.mkdir(parents=True, exist_ok=True)
     start = time.monotonic()
     check = _run([resolved, "check", str(project_dir), "--json"], cwd=project_dir, timeout=min(timeout, 240))
@@ -173,7 +196,7 @@ def render(
     with tempfile.TemporaryDirectory(prefix=".hyperframes-", dir=output.parent) as staging:
         staged_output = Path(staging) / "output.mp4"
         command = [resolved, "render", str(project_dir), "--output", str(staged_output),
-                   "--fps", str(fps), "--quality", quality, "--strict", "--workers", "1"]
+                   "--fps", str(fps), "--quality", resolved_quality, "--strict", "--workers", "1"]
         rendered = _run(command, cwd=project_dir, timeout=timeout)
         _checked(rendered, project_dir / "hyperframes-render.log", "HyperFrames render")
         if not staged_output.is_file() or staged_output.stat().st_size == 0:
@@ -202,6 +225,7 @@ def render(
     return {
         "status": "rendered", "provider": "hyperframes_local", "output": str(output),
         "version": version_result["stdout"].strip(), "command": command,
+        "requested_quality": quality, "resolved_quality": resolved_quality,
         "sha256": digest, "bytes": byte_count, "width": video["width"], "height": video["height"],
         "duration": measured_duration, "fps": measured_fps, "has_audio": has_audio,
         "elapsed_seconds": round(time.monotonic() - start, 3),

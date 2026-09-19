@@ -1,0 +1,780 @@
+{
+  "purpose": "Portable index of local workstation proof; canonical per-run Build DNA remains the authoritative evidence.",
+  "date": "2026-09-19",
+  "review_branch": "codex/local-video-studio-proof",
+  "package_sha256": "760ec2e8520abe1d8ef1dc459738f26acdf3ed44c3fd85bc68b6f43d5d52263e",
+  "imported_commit": "f24eec09d3a08a667a80463670f188f49f641f5d",
+  "required_base": "076261ebb8ede3d60a7eb54ada44aa449794fafa",
+  "hardware": {
+    "chip": "Apple M5",
+    "logical_cpu_cores": 10,
+    "unified_memory_gib": 16
+  },
+  "tool_versions": {
+    "hyperframes": "0.8.29",
+    "moneyprinterturbo_project": "1.3.4",
+    "moneyprinter_python": "3.11.15",
+    "ffmpeg_ffprobe": "9.0",
+    "python": "3.14.7",
+    "node": "24.19.0",
+    "npm": "11.17.0"
+  },
+  "checks": [
+    {
+      "check": "unittest",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "marketing/engine/video_studio/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 9.986,
+      "log": "artifacts/video-studio/workstation-proof/final-checks/unittest.log"
+    },
+    {
+      "check": "brand",
+      "command": [
+        "node",
+        "scripts/sync-brand-assets.cjs",
+        "--check"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.023,
+      "log": "artifacts/video-studio/workstation-proof/final-checks/brand.log"
+    },
+    {
+      "check": "creator-credit",
+      "command": [
+        "node",
+        "--test",
+        "scripts/test-creator-credit.mjs"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.267,
+      "log": "artifacts/video-studio/workstation-proof/final-checks/creator-credit.log"
+    }
+  ],
+  "python_test_count": 78,
+  "creator_credit_test_count": 5,
+  "compositions": [
+    {
+      "kind": "first-render",
+      "format": "9:16",
+      "video": "artifacts/video-studio/business-has-an-address-20260919T140416Z-d3d2063b/video.mp4",
+      "sha256": "132584d63d16482d7d82e30380fd8d9277278537087834de3e4e0801294ba4e8",
+      "build_dna": "artifacts/video-studio/business-has-an-address-20260919T140416Z-d3d2063b/build-dna.json",
+      "build_dna_sha256": "393f793ff943c0db1bdd989034ba3376998886900707de34eaaae71e576459ec",
+      "validation_exit": 0,
+      "width": 540,
+      "height": 960,
+      "duration": 12.0,
+      "fps": 30.0,
+      "has_audio": true,
+      "render_seconds_including_check": 23.881,
+      "resolved_quality": "draft",
+      "bytes": 700221
+    },
+    {
+      "kind": "four-formats",
+      "format": "9:16",
+      "video": "artifacts/video-studio/business-has-an-address-20260919T140605Z-f156f1c3/video.mp4",
+      "sha256": "20906fcc9aa0fa54d4c322cc3b8f48942fb1c8585529276a05d7404c29b42ef6",
+      "build_dna": "artifacts/video-studio/business-has-an-address-20260919T140605Z-f156f1c3/build-dna.json",
+      "build_dna_sha256": "1c17c4d6a26a32c387298c792f4c2a3b3a8e95a1c843585bdd597ccf049bb5c8",
+      "validation_exit": 0,
+      "width": 1080,
+      "height": 1920,
+      "duration": 12.0,
+      "fps": 30.0,
+      "has_audio": true,
+      "render_seconds_including_check": 26.724,
+      "resolved_quality": "high",
+      "bytes": 2849163
+    },
+    {
+      "kind": "four-formats",
+      "format": "4:5",
+      "video": "artifacts/video-studio/business-has-an-address-20260919T140634Z-2d51372c/video.mp4",
+      "sha256": "ffc4a4b21085f431c2a5254722279ae4815c74628469727563a59656049ec922",
+      "build_dna": "artifacts/video-studio/business-has-an-address-20260919T140634Z-2d51372c/build-dna.json",
+      "build_dna_sha256": "8fca986a32ace71e91c9af35d8767f061406bb78b06aba0e203a10238d0ec08a",
+      "validation_exit": 0,
+      "width": 1080,
+      "height": 1350,
+      "duration": 12.0,
+      "fps": 30.0,
+      "has_audio": true,
+      "render_seconds_including_check": 22.153,
+      "resolved_quality": "high",
+      "bytes": 2323655
+    },
+    {
+      "kind": "four-formats",
+      "format": "1:1",
+      "video": "artifacts/video-studio/business-has-an-address-20260919T140657Z-9db468b9/video.mp4",
+      "sha256": "740b3c65a0164f61f9a10a12d4ae4f6466979beaabe1b2d96892f398f101111a",
+      "build_dna": "artifacts/video-studio/business-has-an-address-20260919T140657Z-9db468b9/build-dna.json",
+      "build_dna_sha256": "fbe1661c951fa34c2b9b0bbdd231bc82b8404e9f61f794d8f58ba29ec67c76b4",
+      "validation_exit": 0,
+      "width": 1080,
+      "height": 1080,
+      "duration": 12.0,
+      "fps": 30.0,
+      "has_audio": true,
+      "render_seconds_including_check": 22.052,
+      "resolved_quality": "high",
+      "bytes": 2068743
+    },
+    {
+      "kind": "four-formats",
+      "format": "16:9",
+      "video": "artifacts/video-studio/business-has-an-address-20260919T140721Z-aedbce7e/video.mp4",
+      "sha256": "31bff954934086df19c699bb84abdcd09560531d296116c42b91e1ca38d85aa1",
+      "build_dna": "artifacts/video-studio/business-has-an-address-20260919T140721Z-aedbce7e/build-dna.json",
+      "build_dna_sha256": "72fb2c65984251e6cc95514dc6db0abe3e8ae58fcf46effdbce14689e56baead",
+      "validation_exit": 0,
+      "width": 1920,
+      "height": 1080,
+      "duration": 12.0,
+      "fps": 30.0,
+      "has_audio": true,
+      "render_seconds_including_check": 25.611,
+      "resolved_quality": "high",
+      "bytes": 2782114
+    },
+    {
+      "kind": "imported-formats",
+      "format": "9:16",
+      "video": "artifacts/video-studio/imported-media-proof-20260919T141044Z-2b56d89a/video.mp4",
+      "sha256": "8384ec41062a0a1baa1e863fdd0c9ef0ffcd8b687c437ca0ebc4229d954b8e44",
+      "build_dna": "artifacts/video-studio/imported-media-proof-20260919T141044Z-2b56d89a/build-dna.json",
+      "build_dna_sha256": "2d47d7e0dd0a3bd6e50af90df7902be16db1a65f3c237af65d484980973f72a0",
+      "validation_exit": 0,
+      "width": 1080,
+      "height": 1920,
+      "duration": 4.0,
+      "fps": 30.0,
+      "has_audio": true,
+      "render_seconds_including_check": 14.107,
+      "resolved_quality": "high",
+      "bytes": 1529152
+    },
+    {
+      "kind": "imported-formats",
+      "format": "4:5",
+      "video": "artifacts/video-studio/imported-media-proof-20260919T141100Z-8dce9e14/video.mp4",
+      "sha256": "5a4c95a7c0523520ea32f25b69078fa50e5533d38683d87b6dbb6a303ccded51",
+      "build_dna": "artifacts/video-studio/imported-media-proof-20260919T141100Z-8dce9e14/build-dna.json",
+      "build_dna_sha256": "89880f550ab2494bd43f18ba754e86bcd38d3d20edad88f848de2580adfb468f",
+      "validation_exit": 0,
+      "width": 1080,
+      "height": 1350,
+      "duration": 4.0,
+      "fps": 30.0,
+      "has_audio": true,
+      "render_seconds_including_check": 12.999,
+      "resolved_quality": "high",
+      "bytes": 1564927
+    },
+    {
+      "kind": "imported-formats",
+      "format": "1:1",
+      "video": "artifacts/video-studio/imported-media-proof-20260919T141115Z-78cd7c2c/video.mp4",
+      "sha256": "436b3a228243df9ce9908be826b83ec4f364e89188bbf662172d56f7278e4c2e",
+      "build_dna": "artifacts/video-studio/imported-media-proof-20260919T141115Z-78cd7c2c/build-dna.json",
+      "build_dna_sha256": "a11dd71ce17787ad855f721a07f997b6b2958c017ca5c15d43f48c3ce3e2a207",
+      "validation_exit": 0,
+      "width": 1080,
+      "height": 1080,
+      "duration": 4.0,
+      "fps": 30.0,
+      "has_audio": true,
+      "render_seconds_including_check": 12.751,
+      "resolved_quality": "high",
+      "bytes": 1452443
+    },
+    {
+      "kind": "imported-formats",
+      "format": "16:9",
+      "video": "artifacts/video-studio/imported-media-proof-20260919T141129Z-495b5216/video.mp4",
+      "sha256": "d758f22bb5e39c9746cd51d0a6ff31a346628c44897b0fb5acb5036dadf8aa52",
+      "build_dna": "artifacts/video-studio/imported-media-proof-20260919T141129Z-495b5216/build-dna.json",
+      "build_dna_sha256": "ff3bc3b9dbdc93cdf823d91c71aab32e1428e579287e87d3156cde0c428e1b61",
+      "validation_exit": 0,
+      "width": 1920,
+      "height": 1080,
+      "duration": 4.0,
+      "fps": 30.0,
+      "has_audio": true,
+      "render_seconds_including_check": 12.806,
+      "resolved_quality": "high",
+      "bytes": 2164508
+    }
+  ],
+  "batch_wall_seconds": {
+    "four-formats": 103.079,
+    "imported-formats": 58.942
+  },
+  "audio": {
+    "demos": [
+      {
+        "format": "9:16",
+        "source_samples": 288000,
+        "decoded_samples": 288000,
+        "cosine_correlation": 0.99997866,
+        "decoded_peak_dbfs": -18.568,
+        "status": "measured_audio_matches_supplied_pulse",
+        "subjective_listening": "not_performed_audio_tool_input_unsupported"
+      },
+      {
+        "format": "4:5",
+        "source_samples": 288000,
+        "decoded_samples": 288000,
+        "cosine_correlation": 0.99997866,
+        "decoded_peak_dbfs": -18.568,
+        "status": "measured_audio_matches_supplied_pulse",
+        "subjective_listening": "not_performed_audio_tool_input_unsupported"
+      },
+      {
+        "format": "1:1",
+        "source_samples": 288000,
+        "decoded_samples": 288000,
+        "cosine_correlation": 0.99997866,
+        "decoded_peak_dbfs": -18.568,
+        "status": "measured_audio_matches_supplied_pulse",
+        "subjective_listening": "not_performed_audio_tool_input_unsupported"
+      },
+      {
+        "format": "16:9",
+        "source_samples": 288000,
+        "decoded_samples": 288000,
+        "cosine_correlation": 0.99997866,
+        "decoded_peak_dbfs": -18.568,
+        "status": "measured_audio_matches_supplied_pulse",
+        "subjective_listening": "not_performed_audio_tool_input_unsupported"
+      }
+    ],
+    "imports": [
+      {
+        "format": "9:16",
+        "duration_expected_seconds": 4,
+        "decoded_samples": 96000,
+        "correlation_to_first_four_seconds_of_pulse": 0.99994268
+      },
+      {
+        "format": "4:5",
+        "duration_expected_seconds": 4,
+        "decoded_samples": 96000,
+        "correlation_to_first_four_seconds_of_pulse": 0.99994268
+      },
+      {
+        "format": "1:1",
+        "duration_expected_seconds": 4,
+        "decoded_samples": 96000,
+        "correlation_to_first_four_seconds_of_pulse": 0.99994268
+      },
+      {
+        "format": "16:9",
+        "duration_expected_seconds": 4,
+        "decoded_samples": 96000,
+        "correlation_to_first_four_seconds_of_pulse": 0.99994268
+      }
+    ]
+  },
+  "cache": [
+    {
+      "test": "initial_native_render",
+      "wall_seconds": 14.556,
+      "cache_hit": false,
+      "video": "artifacts/video-studio/workstation-cache-proof-20260919T142217Z-d845beef/video.mp4",
+      "sha256": "e346b59e73d515ea4bdd181d0fb1198ec0b327db88bad6b21a04fc16c4c972f2",
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142217Z-d845beef/build-dna.json",
+      "build_dna_sha256": "a8bd7ca4c610c35b067eaa18b4cdf192cc11e4a1b3e78da6916aa9746a5558c8"
+    },
+    {
+      "test": "same_campaign_reuse",
+      "wall_seconds": 0.586,
+      "cache_hit": true,
+      "video": "artifacts/video-studio/workstation-cache-proof-20260919T142217Z-d845beef/video.mp4",
+      "sha256": "e346b59e73d515ea4bdd181d0fb1198ec0b327db88bad6b21a04fc16c4c972f2",
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142217Z-d845beef/build-dna.json",
+      "build_dna_sha256": "a8bd7ca4c610c35b067eaa18b4cdf192cc11e4a1b3e78da6916aa9746a5558c8"
+    },
+    {
+      "test": "changed_copy_new_version",
+      "wall_seconds": 12.448,
+      "cache_hit": false,
+      "video": "artifacts/video-studio/workstation-cache-proof-20260919T142232Z-80c51ed3/video.mp4",
+      "sha256": "72fa38677cf63aef247a7fd33b69bd4494ada86dba2b13aaa0cee1b8c3adda7a",
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142232Z-80c51ed3/build-dna.json",
+      "build_dna_sha256": "cdead9a594e2edd456985cf2f1b7bcb759224c047ced4885bee36014ad937a34"
+    },
+    {
+      "test": "tampered_evidence_rebuild",
+      "wall_seconds": 12.646,
+      "cache_hit": false,
+      "video": "artifacts/video-studio/workstation-cache-proof-20260919T142244Z-2c3c703a/video.mp4",
+      "sha256": "e346b59e73d515ea4bdd181d0fb1198ec0b327db88bad6b21a04fc16c4c972f2",
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142244Z-2c3c703a/build-dna.json",
+      "build_dna_sha256": "4aabd9d1ea830e7b0be6969cdd37508b431ec404f520afae0ee7b359ac6b4a27"
+    },
+    {
+      "test": "missing_evidence_rebuild",
+      "wall_seconds": 12.397,
+      "cache_hit": false,
+      "video": "artifacts/video-studio/workstation-cache-proof-20260919T142257Z-b76062ae/video.mp4",
+      "sha256": "e346b59e73d515ea4bdd181d0fb1198ec0b327db88bad6b21a04fc16c4c972f2",
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142257Z-b76062ae/build-dna.json",
+      "build_dna_sha256": "b76207aecde1c481c7a43e3bac3a6de8f90a2e4bc7ba152f2f39da6a7a73e46e"
+    }
+  ],
+  "cache_ledger_validation": [
+    {
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142217Z-d845beef/build-dna.json",
+      "exit": 0,
+      "output": "PASS: Build DNA video-20260919T142217-d9f3bf3ca7\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/workstation-cache-proof-20260919T142217Z-d845beef/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142232Z-80c51ed3/build-dna.json",
+      "exit": 0,
+      "output": "PASS: Build DNA video-20260919T142232-08238440f3\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/workstation-cache-proof-20260919T142232Z-80c51ed3/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142244Z-2c3c703a/build-dna.json",
+      "exit": 0,
+      "output": "PASS: Build DNA video-20260919T142244-b20b3fc5ec\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/workstation-cache-proof-20260919T142244Z-2c3c703a/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142257Z-b76062ae/build-dna.json",
+      "exit": 0,
+      "output": "PASS: Build DNA video-20260919T142257-38615398d3\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/workstation-cache-proof-20260919T142257Z-b76062ae/build-dna.json\n"
+    }
+  ],
+  "browser_playback": {
+    "observed_via": "CUA in-app browser read-only video element state",
+    "recorded_at": "2026-09-19T14:23:08.880582+00:00",
+    "entries": [
+      {
+        "src": "http://127.0.0.1:8764/business-has-an-address-20260919T140605Z-f156f1c3/video.mp4",
+        "duration": 12.0,
+        "currentTime": 12.0,
+        "ended": true,
+        "muted": false,
+        "width": 1080,
+        "height": 1920
+      },
+      {
+        "src": "http://127.0.0.1:8764/business-has-an-address-20260919T140634Z-2d51372c/video.mp4",
+        "duration": 12.0,
+        "currentTime": 12.0,
+        "ended": true,
+        "muted": false,
+        "width": 1080,
+        "height": 1350
+      },
+      {
+        "src": "http://127.0.0.1:8764/business-has-an-address-20260919T140657Z-9db468b9/video.mp4",
+        "duration": 12.0,
+        "currentTime": 12.0,
+        "ended": true,
+        "muted": false,
+        "width": 1080,
+        "height": 1080
+      },
+      {
+        "src": "http://127.0.0.1:8764/business-has-an-address-20260919T140721Z-aedbce7e/video.mp4",
+        "duration": 12.0,
+        "currentTime": 12.0,
+        "ended": true,
+        "muted": false,
+        "width": 1920,
+        "height": 1080
+      },
+      {
+        "src": "http://127.0.0.1:8764/imported-media-proof-20260919T141044Z-2b56d89a/video.mp4",
+        "duration": 4.0,
+        "currentTime": 4.0,
+        "ended": true,
+        "muted": false,
+        "width": 1080,
+        "height": 1920
+      },
+      {
+        "src": "http://127.0.0.1:8764/imported-media-proof-20260919T141100Z-8dce9e14/video.mp4",
+        "duration": 4.0,
+        "currentTime": 4.0,
+        "ended": true,
+        "muted": false,
+        "width": 1080,
+        "height": 1350
+      },
+      {
+        "src": "http://127.0.0.1:8764/imported-media-proof-20260919T141115Z-78cd7c2c/video.mp4",
+        "duration": 4.0,
+        "currentTime": 4.0,
+        "ended": true,
+        "muted": false,
+        "width": 1080,
+        "height": 1080
+      },
+      {
+        "src": "http://127.0.0.1:8764/imported-media-proof-20260919T141129Z-495b5216/video.mp4",
+        "duration": 4.0,
+        "currentTime": 4.0,
+        "ended": true,
+        "muted": false,
+        "width": 1920,
+        "height": 1080
+      }
+    ],
+    "audio_subjective_review": "not_performed",
+    "visual_review": "sampled screenshots and decoded frames; playback completion checked for each video"
+  },
+  "moneyprinter": {
+    "command": [
+      "python3",
+      "scripts/famtastic-video.py",
+      "mpt-draft",
+      "/Users/famtastic-fritz/Documents/ChatGPT/famtastic-video-proof/artifacts/video-studio/workstation-proof/mpt/campaign-derived.json",
+      "--mpt-root",
+      "/Users/famtastic-fritz/MoneyPrinterTurbo",
+      "--mpt-python",
+      "/Users/famtastic-fritz/MoneyPrinterTurbo/.venv/bin/python",
+      "--timeout",
+      "900"
+    ],
+    "exit_code": 0,
+    "duration_seconds": 22.042,
+    "status": "rendered_draft",
+    "draft_only": true,
+    "native_task_ids": [
+      "61d4ee9b-c1ee-4f9b-8569-4f3396aa0826"
+    ],
+    "outputs": [
+      {
+        "path": "artifacts/video-studio/mpt-workstation-proof-20260919-derived-mpt-20260919T143214Z-68d25869/output/moneyprinter-draft-01.mp4",
+        "sha256": "18555a0e94ed88efd3a8d42335fca0f4a97b1556f5e5548b327a5ec42ea509da",
+        "bytes": 3179907,
+        "duration_seconds": 12.0,
+        "width": 1920,
+        "height": 1080,
+        "audio_present": true
+      }
+    ],
+    "installation": {
+      "version": "1.3.4",
+      "revision": null,
+      "python_version": "Python 3.11.15",
+      "native_mode": "single_task",
+      "draft_only": true,
+      "limitations": [
+        "Draft montage only; scene layouts and exact individual scene durations are not reproduced.",
+        "Subtitles and generated narration/music are disabled; supplied audio determines montage duration.",
+        "Human creative review is required; this adapter has no publishing authority.",
+        "Installed CLI has no explicit video_fit_mode field; native default media fitting is used."
+      ]
+    },
+    "canonical_run_dir": "artifacts/video-studio/mpt-workstation-proof-20260919-derived-mpt-20260919T143214Z-68d25869",
+    "finished_utc_epoch": 1789828356.672
+  },
+  "moneyprinter_browser_playback": {
+    "observed_via": "CUA in-app browser read-only video element state",
+    "src": "http://127.0.0.1:8764/mpt-workstation-proof-20260919-derived-mpt-20260919T143214Z-68d25869/output/moneyprinter-draft-01.mp4",
+    "duration": 12,
+    "currentTime": 12,
+    "ended": true,
+    "muted": false,
+    "width": 1920,
+    "height": 1080,
+    "error": null,
+    "subjective_listening": "not_performed"
+  },
+  "generation": {
+    "comfyui_found_in_checked_locations": false,
+    "native_inference_performed": false,
+    "model_downloads": 0,
+    "sampled_free_disk_gib": 11,
+    "documented_wan_workflow_model_files_gb_decimal": 18.15
+  },
+  "boundaries": {
+    "paid_provider_requests": 0,
+    "published": false,
+    "production_deployed": false,
+    "subjective_listening_performed": false,
+    "two_original_movies_supplied": false,
+    "creative_acceptance": "pending",
+    "electricity_and_network_traffic": "not_metered"
+  },
+  "source_sha256": {
+    "marketing/engine/video_studio/fam_video/__init__.py": "421e63bf053df61427b36d29ca465e3a8f386ff39a8f39a4e2f9ee6d7c7184f7",
+    "marketing/engine/video_studio/fam_video/adapters/__init__.py": "5643f088301113aa50cf2db7e3004bc830cc2d28c3e848b998a40f256da2fbac",
+    "marketing/engine/video_studio/fam_video/adapters/comfy.py": "5b8e22d8314dcd19218fa2ba9e88e020e33087909f874cf20fbfcc8b0bc7c2ba",
+    "marketing/engine/video_studio/fam_video/adapters/hyperframes.py": "08469491c76ac11c02513a665d3b0c307ea5242b2a55374f4b0f3bbe02dcc072",
+    "marketing/engine/video_studio/fam_video/adapters/moneyprinter.py": "551d2cd6ff7493390ded02e0d5a3576c532824898a421cd989bbb6bd572ae145",
+    "marketing/engine/video_studio/fam_video/audio.py": "4c9ca61e5e7043ffda2e2bdf681625554e8fc9381884f04572356c85b9989675",
+    "marketing/engine/video_studio/fam_video/campaign.py": "e265f2611fbad8da52f429989d2481afc9916bfd651e671543a927d3322e6171",
+    "marketing/engine/video_studio/fam_video/cli.py": "f3890340c9c7121c643ad5fd4957d1b81b39d394a92d6149aceff9df451ab006",
+    "marketing/engine/video_studio/fam_video/composition.py": "f3645ee219e8cc66f34530dd33542cf671d4c12e69f83b16eb4ab9232be347be",
+    "marketing/engine/video_studio/fam_video/doctor.py": "d5f51dd17469048d38c4ab48f9780974ae165e242411fd5a9734618922d932b5",
+    "marketing/engine/video_studio/fam_video/evidence.py": "27bab4ad8ddf3c750226b6b45cfb5f36522b1c6c55071a639f02f469353d2ac7",
+    "marketing/engine/video_studio/fam_video/verify.py": "83bd3622ae0037c39172ebdc08ed96f7d208eb9527a9690e0c033272e587a7fa"
+  },
+  "moneyprinter_checks": {
+    "schema": "famtastic.mpt-workstation-proof.v1",
+    "date": "2026-09-19",
+    "status": "rendered_draft_review_pending",
+    "installation": {
+      "path": "/Users/famtastic-fritz/MoneyPrinterTurbo",
+      "version": "1.3.4",
+      "revision": null,
+      "python": "3.11.15",
+      "uv": "0.12.2",
+      "ffmpeg": "9.0",
+      "native_mode": "single_task",
+      "moviepy_distribution": "2.2.1",
+      "moviepy_module": "2.1.2"
+    },
+    "source_media": [
+      {
+        "file": "inputs/source-fixture.mp4",
+        "sha256": "0404486d5844b7bc84cfc3e93a66f7a27763c4006bbf36f92b2da4bcbe457650",
+        "bytes": 398859,
+        "width": 640,
+        "height": 360,
+        "duration_seconds": 4
+      },
+      {
+        "file": "inputs/source-fixture.png",
+        "sha256": "97e6219e09cfa1182712b1dfd7c5a018a3868fe4fd9a740bf493729c7648ad68",
+        "bytes": 51127,
+        "width": 640,
+        "height": 360
+      },
+      {
+        "file": "inputs/pulse.wav",
+        "sha256": "2731e0faf089666b4a66d021ad0c89f1c0d076638271ff5823ce9e5595474d73",
+        "bytes": 576044,
+        "channels": 1,
+        "sample_rate": 24000,
+        "duration_seconds": 12
+      }
+    ],
+    "native_original_media_failure": {
+      "run": "artifacts/video-studio/mpt-workstation-proof-20260919-mpt-20260919T141300Z-5a6b62ef",
+      "status": "failed",
+      "stage": "materials",
+      "safe_message": "no valid local video materials were found",
+      "cause": "MPT 1.3.4 has a nominal 480 px minimum for both dimensions with 10 px tolerance (effective cutoff 470 px); supplied visuals are 640x360."
+    },
+    "derived_media": [
+      {
+        "file": "derived/source-fixture-854x480.mp4",
+        "sha256": "c6ef53c095141de2d8764219971651df55dacfd770fc4671565d800439812712",
+        "bytes": 843632,
+        "width": 854,
+        "height": 480,
+        "duration_seconds": 4,
+        "method": "local ffmpeg scale=854:480:flags=lanczos; H.264 CRF 18; audio removed"
+      },
+      {
+        "file": "derived/source-fixture-854x480.png",
+        "sha256": "84a65fa0453069def3bc5e2fb4db84a66cd0662f0e0900f1b07756a5c729f980",
+        "bytes": 96706,
+        "width": 854,
+        "height": 480,
+        "method": "local ffmpeg scale=854:480:flags=lanczos"
+      }
+    ],
+    "materials_probe": {
+      "task_id": "a39fb4d6-154d-426a-b25a-bd29710aa12f",
+      "status": "passed",
+      "duration_seconds": 2.291,
+      "prepared_material_count": 2,
+      "stage": "--stop-at materials"
+    },
+    "render": {
+      "run": "artifacts/video-studio/mpt-workstation-proof-20260919-derived-mpt-20260919T143214Z-68d25869",
+      "duration_seconds": 21.780589040834457,
+      "status": "rendered_draft",
+      "draft_only": true,
+      "native_task_ids": [
+        "61d4ee9b-c1ee-4f9b-8569-4f3396aa0826"
+      ],
+      "native_task_video": "/Users/famtastic-fritz/MoneyPrinterTurbo/storage/tasks/61d4ee9b-c1ee-4f9b-8569-4f3396aa0826/final-1.mp4",
+      "output": {
+        "path": "/Users/famtastic-fritz/Documents/ChatGPT/famtastic-video-proof/artifacts/video-studio/mpt-workstation-proof-20260919-derived-mpt-20260919T143214Z-68d25869/output/moneyprinter-draft-01.mp4",
+        "sha256": "18555a0e94ed88efd3a8d42335fca0f4a97b1556f5e5548b327a5ec42ea509da",
+        "bytes": 3179907,
+        "duration_seconds": 12.0,
+        "width": 1920,
+        "height": 1080,
+        "audio_present": true
+      },
+      "build_dna_status": "gated",
+      "build_dna_integrity": "passed",
+      "review_status": "review_pending"
+    },
+    "audio_waveform_check": {
+      "method": "100 ms RMS envelope correlation after decoding output AAC to mono 24 kHz",
+      "source_windows": 120,
+      "output_windows": 120,
+      "pearson_r": 0.999998,
+      "alignment_lag_windows": 0,
+      "subjective_listening": "not_performed"
+    },
+    "browser_playback": {
+      "observed_via": "CUA in-app browser read-only video element state",
+      "src": "http://127.0.0.1:8764/mpt-workstation-proof-20260919-derived-mpt-20260919T143214Z-68d25869/output/moneyprinter-draft-01.mp4",
+      "duration": 12,
+      "currentTime": 12,
+      "ended": true,
+      "muted": false,
+      "width": 1920,
+      "height": 1080,
+      "error": null,
+      "subjective_listening": "not_performed"
+    },
+    "publishing_flags": {
+      "upload_post_enabled": false,
+      "upload_post_auto_upload": false
+    },
+    "cost_and_network": {
+      "external_provider_spend_usd": 0,
+      "basis": "local inputs only by contract",
+      "electricity": "unmeasured",
+      "network_monitoring": "not_measured"
+    },
+    "limitations": [
+      "Draft montage only; scene layouts and exact individual scene durations are not reproduced.",
+      "Subtitles and generated narration/music are disabled; supplied audio determines montage duration.",
+      "Human creative review is required; this adapter has no publishing authority.",
+      "No creative approval or rights review is implied.",
+      "Installed CLI has no explicit video_fit_mode option; its native fit behavior was used.",
+      "MoviePy distribution metadata and imported module version disagree."
+    ],
+    "unit_tests": {
+      "suite": "marketing.engine.video_studio.tests.test_moneyprinter",
+      "passed": 15,
+      "failed": 0
+    },
+    "final_wrapper_execution": {
+      "entry_point": "stock scripts/famtastic-video.py",
+      "pythonpath_observer_loaded": false,
+      "sitecustomize_loaded": false
+    },
+    "contact_sheet": {
+      "path": "artifacts/video-studio/workstation-proof/mpt/mpt-contact-sheet.jpg",
+      "sha256": "c50f21566ac2f6152cfe558d8f1cc3761287cc5085e6f201076bd0ea4860a0c7",
+      "sample_seconds": [
+        0,
+        4,
+        8
+      ],
+      "inspected": true
+    }
+  },
+  "final_canonical_ledgers": [
+    {
+      "build_dna": "artifacts/video-studio/business-has-an-address-20260919T140416Z-d3d2063b/build-dna.json",
+      "build_dna_sha256": "393f793ff943c0db1bdd989034ba3376998886900707de34eaaae71e576459ec",
+      "exit_code": 0,
+      "wall_seconds": 0.164,
+      "output": "PASS: Build DNA video-20260919T140416-b01956f96e\nPASS: 5 stage records and 11 artifact checksums\nEvidence: artifacts/video-studio/business-has-an-address-20260919T140416Z-d3d2063b/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/business-has-an-address-20260919T140605Z-f156f1c3/build-dna.json",
+      "build_dna_sha256": "1c17c4d6a26a32c387298c792f4c2a3b3a8e95a1c843585bdd597ccf049bb5c8",
+      "exit_code": 0,
+      "wall_seconds": 0.037,
+      "output": "PASS: Build DNA video-20260919T140605-f3e5c5a360\nPASS: 5 stage records and 11 artifact checksums\nEvidence: artifacts/video-studio/business-has-an-address-20260919T140605Z-f156f1c3/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/business-has-an-address-20260919T140634Z-2d51372c/build-dna.json",
+      "build_dna_sha256": "8fca986a32ace71e91c9af35d8767f061406bb78b06aba0e203a10238d0ec08a",
+      "exit_code": 0,
+      "wall_seconds": 0.031,
+      "output": "PASS: Build DNA video-20260919T140634-bf3a0c6d25\nPASS: 5 stage records and 11 artifact checksums\nEvidence: artifacts/video-studio/business-has-an-address-20260919T140634Z-2d51372c/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/business-has-an-address-20260919T140657Z-9db468b9/build-dna.json",
+      "build_dna_sha256": "fbe1661c951fa34c2b9b0bbdd231bc82b8404e9f61f794d8f58ba29ec67c76b4",
+      "exit_code": 0,
+      "wall_seconds": 0.031,
+      "output": "PASS: Build DNA video-20260919T140657-ee9e471725\nPASS: 5 stage records and 11 artifact checksums\nEvidence: artifacts/video-studio/business-has-an-address-20260919T140657Z-9db468b9/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/business-has-an-address-20260919T140721Z-aedbce7e/build-dna.json",
+      "build_dna_sha256": "72fb2c65984251e6cc95514dc6db0abe3e8ae58fcf46effdbce14689e56baead",
+      "exit_code": 0,
+      "wall_seconds": 0.032,
+      "output": "PASS: Build DNA video-20260919T140721-fd29340425\nPASS: 5 stage records and 11 artifact checksums\nEvidence: artifacts/video-studio/business-has-an-address-20260919T140721Z-aedbce7e/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/imported-media-proof-20260919T141044Z-2b56d89a/build-dna.json",
+      "build_dna_sha256": "2d47d7e0dd0a3bd6e50af90df7902be16db1a65f3c237af65d484980973f72a0",
+      "exit_code": 0,
+      "wall_seconds": 0.035,
+      "output": "PASS: Build DNA video-20260919T141044-54ccaeb861\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/imported-media-proof-20260919T141044Z-2b56d89a/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/imported-media-proof-20260919T141100Z-8dce9e14/build-dna.json",
+      "build_dna_sha256": "89880f550ab2494bd43f18ba754e86bcd38d3d20edad88f848de2580adfb468f",
+      "exit_code": 0,
+      "wall_seconds": 0.032,
+      "output": "PASS: Build DNA video-20260919T141100-5f8877ccfd\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/imported-media-proof-20260919T141100Z-8dce9e14/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/imported-media-proof-20260919T141115Z-78cd7c2c/build-dna.json",
+      "build_dna_sha256": "a11dd71ce17787ad855f721a07f997b6b2958c017ca5c15d43f48c3ce3e2a207",
+      "exit_code": 0,
+      "wall_seconds": 0.039,
+      "output": "PASS: Build DNA video-20260919T141115-c6cc2a901c\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/imported-media-proof-20260919T141115Z-78cd7c2c/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/imported-media-proof-20260919T141129Z-495b5216/build-dna.json",
+      "build_dna_sha256": "ff3bc3b9dbdc93cdf823d91c71aab32e1428e579287e87d3156cde0c428e1b61",
+      "exit_code": 0,
+      "wall_seconds": 0.035,
+      "output": "PASS: Build DNA video-20260919T141129-4b7bf7278c\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/imported-media-proof-20260919T141129Z-495b5216/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/mpt-workstation-proof-20260919-derived-mpt-20260919T143214Z-68d25869/build-dna.json",
+      "build_dna_sha256": "f34744822f2664d16ef3a0ff84cd36b3d16f1d66b54447dcd1dc9209a1df2b56",
+      "exit_code": 0,
+      "wall_seconds": 0.033,
+      "output": "PASS: Build DNA video-20260919T143214-a6fa37c645\nPASS: 2 stage records and 7 artifact checksums\nEvidence: artifacts/video-studio/mpt-workstation-proof-20260919-derived-mpt-20260919T143214Z-68d25869/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142217Z-d845beef/build-dna.json",
+      "build_dna_sha256": "a8bd7ca4c610c35b067eaa18b4cdf192cc11e4a1b3e78da6916aa9746a5558c8",
+      "exit_code": 0,
+      "wall_seconds": 0.035,
+      "output": "PASS: Build DNA video-20260919T142217-d9f3bf3ca7\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/workstation-cache-proof-20260919T142217Z-d845beef/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142232Z-80c51ed3/build-dna.json",
+      "build_dna_sha256": "cdead9a594e2edd456985cf2f1b7bcb759224c047ced4885bee36014ad937a34",
+      "exit_code": 0,
+      "wall_seconds": 0.032,
+      "output": "PASS: Build DNA video-20260919T142232-08238440f3\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/workstation-cache-proof-20260919T142232Z-80c51ed3/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142244Z-2c3c703a/build-dna.json",
+      "build_dna_sha256": "4aabd9d1ea830e7b0be6969cdd37508b431ec404f520afae0ee7b359ac6b4a27",
+      "exit_code": 0,
+      "wall_seconds": 0.039,
+      "output": "PASS: Build DNA video-20260919T142244-b20b3fc5ec\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/workstation-cache-proof-20260919T142244Z-2c3c703a/build-dna.json\n"
+    },
+    {
+      "build_dna": "artifacts/video-studio/workstation-cache-proof-20260919T142257Z-b76062ae/build-dna.json",
+      "build_dna_sha256": "b76207aecde1c481c7a43e3bac3a6de8f90a2e4bc7ba152f2f39da6a7a73e46e",
+      "exit_code": 0,
+      "wall_seconds": 0.045,
+      "output": "PASS: Build DNA video-20260919T142257-38615398d3\nPASS: 5 stage records and 13 artifact checksums\nEvidence: artifacts/video-studio/workstation-cache-proof-20260919T142257Z-b76062ae/build-dna.json\n"
+    }
+  ]
+}

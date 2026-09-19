@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import shutil
 import subprocess
 import tempfile
@@ -62,7 +63,8 @@ def verify_video(path: Path, expected: dict | None = None) -> dict:
                          "sample_rate": _number(item.get("sample_rate")), "duration_seconds": _number(item.get("duration"))}
                         for item in streams if item.get("codec_type") == "audio"]
     # Prefer the selected video stream duration for video-specific acceptance.
-    duration = video["duration_seconds"] or _number(raw.get("format", {}).get("duration"))
+    video_duration = video["duration_seconds"]
+    duration = video_duration if video_duration is not None else _number(raw.get("format", {}).get("duration"))
     result["duration_seconds"] = duration
     result["container_duration_seconds"] = _number(raw.get("format", {}).get("duration"))
     result["size_bytes"] = path.stat().st_size
@@ -107,6 +109,8 @@ def contact_sheet(video: Path, destination: Path, times: list[float]) -> dict:
         raise ValueError("Contact-sheet destination must be PNG or JPEG.")
     if destination == video:
         raise ValueError("Contact-sheet output cannot replace the source video.")
+    if destination.exists():
+        raise FileExistsError(f"Contact-sheet destination already exists: {destination}")
     media = verify_video(video)
     if not media["passed"]:
         raise ValueError("Cannot create contact sheet: " + "; ".join(media["failures"]))
@@ -137,6 +141,8 @@ def contact_sheet(video: Path, destination: Path, times: list[float]) -> dict:
         process = subprocess.run(command, capture_output=True, text=True, timeout=60, check=False)
         if process.returncode or not temporary_output.is_file():
             raise RuntimeError("Contact-sheet tiling failed: " + process.stderr.strip()[:400])
-        temporary_output.replace(destination)
+        # A contact sheet is retained review evidence. Link into the destination
+        # atomically so a concurrent or existing artifact can never be replaced.
+        os.link(temporary_output, destination)
     return {"status": "passed", "path": str(destination), "frame_times_seconds": times,
             "columns": columns, "rows": rows, "commands": commands, "review": "review_pending"}

@@ -1,5 +1,11 @@
 # Pull, inspect and prove the local video studio
 
+Owner workstation continuation: the exact bundle has now been imported into
+`codex/local-video-studio-proof` in an isolated worktree. See
+[WORKSTATION-PROOF-2026-09-19.md](WORKSTATION-PROOF-2026-09-19.md) for current
+measurements, repairs and review-branch state. The original remote-write failure
+below describes package delivery, not the later workstation continuation.
+
 This is the next CLI agent's execution brief. Repository: `famtastic-fritz/famtastic-designs`. Handoff branch: `feat/famtastic-local-video-studio`. Work only in a clean isolated worktree; preserve ongoing work. Read root `AGENTS.md` before changing anything.
 
 ## Assignment

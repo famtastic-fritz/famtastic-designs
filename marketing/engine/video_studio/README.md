@@ -4,6 +4,23 @@ A working local production CLI: authored campaign → designed HyperFrames compo
 
 **Start here:** [setup and proof handoff](../../../docs/marketing/local-video-studio/CLI-HANDOFF.md). [Why this architecture](../../../docs/marketing/local-video-studio/DECISIONS.md). [Generation setup](../../../docs/marketing/local-video-studio/LOCAL-GENERATION.md).
 
+## Workstation continuation
+
+The imported implementation and its Mac proof are recorded in
+[WORKSTATION-PROOF-2026-09-19.md](../../../docs/marketing/local-video-studio/WORKSTATION-PROOF-2026-09-19.md).
+The existing HyperFrames 0.8.29 installation renders all four formats on the M5 Mac.
+Use `--hyperframes` with the executable recorded there; the wrapper never silently
+installs it. Semantic quality aliases follow the selected CLI's own help:
+`looks` maps to `standard` and `delivery` to `high` on older releases; newer names
+remain unchanged when advertised. The optional pinned dependency is preserved.
+
+The existing MoneyPrinterTurbo 1.3.4 installation also passed a native local
+draft through its older single-task CLI, using its prepared Python 3.11.15
+environment. See the [native proof and limitations](../../../docs/marketing/local-video-studio/WORKSTATION-MPT-2026-09-19.md).
+This installed version uses a nominal 480-pixel minimum on both axes, with a
+10-pixel tolerance; the proof uses explicit 854×480 copies and preserves originals.
+It does not reproduce designed layouts or captions, and does not support 4:5.
+
 ## Quick start from repository root
 
 Requires Python 3.11+, Node 22+, FFmpeg/FFprobe, and an installed HyperFrames executable.

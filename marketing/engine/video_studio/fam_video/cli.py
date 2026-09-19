@@ -21,14 +21,26 @@ def executable_default(root):
 
 def valid_cached_evidence(hit,root):
     try:
+        root=Path(root).resolve()
         p=Path(hit['build_dna']).resolve()
         if not p.is_relative_to(root) or not p.is_file() or sha256(p)!=hit.get('build_dna_sha256'):return False
         dna=read_json(p)
-        for a in dna.get('artifacts',[]):
+        if not isinstance(dna,dict) or dna.get('schema')!='famtastic.build-dna.v1':return False
+        completion=dna.get('completion')
+        if not isinstance(completion,dict) or completion.get('status') not in {'gated','passed'} or completion.get('integrity')!='passed':return False
+        stages=dna.get('stages')
+        if not isinstance(stages,list) or not stages or any(
+            not isinstance(stage,dict) or not isinstance(stage.get('result'),dict) or stage['result'].get('status')!='passed'
+            for stage in stages
+        ):return False
+        artifacts=dna.get('artifacts')
+        if not isinstance(artifacts,list) or not artifacts:return False
+        for a in artifacts:
+            if not isinstance(a,dict):return False
             asset=(root/a['path']).resolve()
             if not asset.is_relative_to(root) or not asset.is_file() or sha256(asset)!=a['sha256']:return False
-        return bool(dna.get('artifacts')) and dna.get('completion',{}).get('status')!='failed'
-    except (KeyError,OSError,ValueError):return False
+        return True
+    except (KeyError,OSError,TypeError,ValueError):return False
 
 def build(c,brand,root,args):
     from .composition import compile_project

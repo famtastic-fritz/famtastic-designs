@@ -24,6 +24,31 @@ class VerificationFailureTests(unittest.TestCase):
         self.assertEqual(devices[0]["dedicated_vram_bytes"], 16 * 1024 ** 3)
         self.assertEqual(devices[0]["memory_type"], "dedicated")
 
+    def test_explicit_zero_video_duration_does_not_fall_back_to_container_duration(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            video = Path(temporary) / "zero-duration.mp4"
+            video.write_bytes(b"fixture")
+            report = {"streams": [{"codec_type": "video", "codec_name": "h264", "width": 320,
+                                   "height": 240, "avg_frame_rate": "24/1", "duration": "0"}],
+                      "format": {"duration": "10"}}
+            process = subprocess.CompletedProcess([], 0, json.dumps(report), "")
+            with patch("fam_video.verify.shutil.which", return_value="/fake/ffprobe"), \
+                    patch("fam_video.verify.subprocess.run", return_value=process):
+                result = verify_video(video, {"duration_seconds": 10})
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["duration_seconds"], 0)
+        self.assertIn("No positive video duration was reported.", result["failures"])
+
+    def test_contact_sheet_preserves_existing_destination(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "contact.png"
+            destination.write_bytes(b"historical review evidence")
+            with patch("fam_video.verify.verify_video") as probe:
+                with self.assertRaises(FileExistsError):
+                    contact_sheet(Path(temporary) / "video.mp4", destination, [0.5])
+            probe.assert_not_called()
+            self.assertEqual(destination.read_bytes(), b"historical review evidence")
+
     def test_apple_unified_memory_is_not_fabricated_dedicated_vram(self):
         with patch("fam_video.doctor.shutil.which", return_value=None), \
                 patch("fam_video.doctor.platform.system", return_value="Darwin"), \

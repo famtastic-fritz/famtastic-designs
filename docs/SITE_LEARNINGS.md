@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Prove the installed video toolchain and retained evidence
+
+The installed HyperFrames 0.8.29 names quality presets differently from the
+packaged 0.8.50 contract. Negotiate against that executable's help and record the
+resolved preset; do not silently upgrade a working installation. Mac temporary
+paths can resolve from `/var` to `/private/var`, so compare canonical paths.
+
+A playable cache entry also needs intact terminal Build DNA and every evidence
+artifact. Missing/tampered contact sheets now force a fresh run; test faults on
+copies and preserve original evidence. Explicit zero video duration cannot fall
+back to a valid container duration. Sampled frames, browser playback and waveform
+correlation establish different facts from human listening or owner acceptance.
+Measure actual memory and disk before optional model installation. See the dated
+Local Video Studio workstation report and two-movie acceptance procedure.
+
 ## 2026-09-19 — Separate immutable review from live acceptance
 
 Footer approval authorized the existing implementation release, not unrelated

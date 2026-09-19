@@ -1,5 +1,21 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Keep native video proof tied to the actual workstation
+
+Observation: the existing HyperFrames CLI uses `standard/high`, the package uses
+`looks/delivery`, and MoneyPrinterTurbo exposes an older single-task interface.
+Guidance: inspect advertised flags/schema, negotiate only verified equivalents,
+bind every output to its new native task, and preserve installed source/config.
+Local media and supplied audio remain separate from generation or publication.
+
+Four-format native composition, imported footage, captions and cache fault tests
+now have hashes, canonical Build DNA, timing and sampled visual evidence. Require
+all successful retained evidence before cache reuse. Keep broken fault copies
+labeled; never replace an existing review sheet. Browser playback and measured
+audio are not subjective listening or two-original-movie acceptance. No ComfyUI
+model was installed on the memory/storage-constrained Mac; record absence honestly.
+See `docs/marketing/local-video-studio/WORKSTATION-PROOF-2026-09-19.md`.
+
 ## 2026-09-19 — Bind visual approval to source and live evidence
 
 The owner approved the social footer and explicitly requested commit/push/live.

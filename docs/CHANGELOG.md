@@ -1,5 +1,21 @@
 # Product changelog
 
+## 2026-09-19 — Local Video Studio workstation proof and repairs
+
+Imported the exact packaged implementation into isolated branch
+`codex/local-video-studio-proof`, preserving existing work. The M5/16 GiB Mac
+rendered all four full-resolution formats with supplied audio/captions and four
+additional imported-video/still proofs. Native cache reuse, changed-input misses,
+and missing/tampered-evidence recovery pass with retained originals and timings.
+
+Repaired installed HyperFrames quality negotiation, macOS path handling,
+zero-duration verification and contact-sheet preservation. Cache hits now require
+intact successful canonical evidence. The existing MoneyPrinterTurbo CLI receives
+an explicit compatibility path with local inputs and exact new-task output binding.
+Workstation results and remaining runtime/creative limits:
+`docs/marketing/local-video-studio/WORKSTATION-PROOF-2026-09-19.md`.
+No paid providers, publishing or production deployment were activated.
+
 ## 2026-09-19 — Approved social footer deployed
 
 Owner approved release. Footer commit `49ce5033` is live on apex/www through the
