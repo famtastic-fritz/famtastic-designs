@@ -1,0 +1,4 @@
+# Caption tracks in this film directory must use the WebVTT media type.
+<IfModule mod_mime.c>
+  AddType text/vtt .vtt
+</IfModule>

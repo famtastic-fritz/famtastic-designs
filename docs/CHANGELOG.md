@@ -2,6 +2,7 @@
 
 ## 2026-09-19 — Original “What’s the catch?” film
 
+- Added a scoped WebVTT MIME mapping after the production asset check exposed the host's `text/plain` fallback for captions.
 - Built the complete owner-supplied script into an original local HyperFrames film, with new Kokoro narration, real cue timing, captions, canonical branding and recorded pronunciation/loudness repair.
 - Added `/why-famtastic/`, a film player, full transcript, explicit $199 scope/renewal terms, SEO shell/sitemap and a discovery link from the existing offer page.
 - Added a bounded three-asset publication primitive and an exact-key, one-owner standard/v2 notice script; both default to dry-run. See `docs/marketing/local-video-studio/NO-CATCH-FILM-2026-09-19.md` for validation and actual release status.

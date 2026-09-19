@@ -2,6 +2,7 @@
 
 ## 2026-09-19 — Script-to-film pronunciation and release boundaries
 
+- **What happened:** The exact published VTT bytes returned `text/plain` on GoDaddy. **Root cause:** The host's default extension mapping did not include WebVTT. **Rule:** Keep a scoped `AddType text/vtt .vtt` rule in the canonical frontend film directory, release it through the normal frontend deployment, and verify the public MIME and a loaded caption track before delivery.
 - **What happened:** Local synthesis read FAM as individual letters and the first master measured about -23.4 LUFS. **Root cause:** Display capitalization is not a phonetic contract; a successful AAC export/ASR word sequence does not establish brand pronunciation or comfortable web loudness. **Rule:** Retain original written copy, compare bounded pronunciation variants, log the speech-only normalization, regenerate only affected utterances under a new run, and measure final loudness/peak after mastering.
 - **What happened:** The film page points to generated assets that are deliberately not in Git. **Root cause:** Production builds exact clean source remotely, so locally staged `public/` files are absent there. **Rule:** Hash and promote an explicit versioned media set independently without delete/overwrite, then deploy the canonical frontend and verify live MIME, range, player, caption and transcript behavior. Send the owner notice only after this proof, using one immutable content-bound outbox key.
 
