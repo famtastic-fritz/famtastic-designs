@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — One link for mobile film review
+
+**Observation:** Individual MP4 links were technically playable but inconvenient for reviewing three revisions on a phone. **Guidance:** Provide one canonical page with explicitly labeled editions, native inline controls and direct-file fallbacks. Use on-demand loading and pause other players when playback starts. Verify the narrow layout and public page after the canonical release.
+
 ## 2026-09-19 — Continuation and voice-conversion evidence
 
 A supplied-performance continuation can retain original dialogue-to-picture timing while inserting separately identified narration. Verify the assembled PCM against independently decoded source excerpts, strip audio from the visual-only VP9 matte, and accept Matroska alpha metadata keys case-insensitively. New acting and lip synchronization require separate proof.

@@ -1,6 +1,7 @@
 /** Owner approved propagation from Web Basics. Explicit existing routes only. */
 export const CONTENT_SYSTEM_VERSION = '1.1.0';
 export const CONTENT_ROUTES = {
+  '/video-review': 'video-review',
   '/packages': 'packages-hub',
   '/packages/199-quick-start': 'package-detail',
   '/packages/499-site-upgrade': 'package-detail',
@@ -21,6 +22,7 @@ export const CONTENT_ROUTES = {
 };
 export const CONTENT_PREVIEW_ROUTES = Object.keys(CONTENT_ROUTES);
 export const CONTENT_RECIPES = {
+  'video-review': { intensity: 2, character: 'cinematic', sections: ['intro', 'video-index', 'walking', 'faster-ad', 'voice-test'] },
   'package-detail': { intensity: 2, character: 'commercial', sections: ['offer', 'features', 'fit', 'addons', 'pricing', 'education', 'finale'] },
   'packages-hub': { intensity: 2, character: 'comparison', sections: ['intro', 'comparison', 'finale'] },
   'solution-detail': { intensity: 2, character: 'engineered', sections: ['intro', 'problem', 'system', 'process', 'proof', 'deliverables', 'faq', 'education', 'start', 'finale'] },

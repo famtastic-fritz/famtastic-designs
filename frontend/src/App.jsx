@@ -47,6 +47,7 @@ import WebsiteOptionsPage from './pages/WebsiteOptionsPage.jsx';
 import PaymentHandoffPage from './pages/PaymentHandoffPage.jsx';
 import AppointmentProposalPage from './pages/AppointmentProposalPage.jsx';
 import WhyFamtasticPage from './pages/WhyFamtasticPage.jsx';
+import VideoReviewPage from './pages/VideoReviewPage.jsx';
 
 export default function App() {
   return (
@@ -98,6 +99,7 @@ export default function App() {
           <Route path="/intake/:serviceSlug" element={<SpecializedIntakePage />} />
           <Route path="/55-cents-a-day-website" element={<FiftyFiveCentWebsitePage />} />
           <Route path="/why-famtastic" element={<WhyFamtasticPage />} />
+          <Route path="/video-review" element={<VideoReviewPage />} />
           <Route path="/website-options" element={<WebsiteOptionsPage />} />
           <Route path="/pay/:organization/:siteKey" element={<PaymentHandoffPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
