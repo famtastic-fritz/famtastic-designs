@@ -528,3 +528,8 @@ module, verified five widths and real click/keyboard analytics-failure navigatio
 Reduced-motion rule simulation and CSS 200% zoom pass; OS media emulation, physical
 touch and cross-browser QA remain unproven. Source/QA: `docs/design/social-footer/REVIEW.md`.
 Not production-proven; no release occurred.
+
+
+## 2026-09-19 — Local video studio implementation
+
+A new reusable CLI lives at `scripts/famtastic-video.py` with provider-neutral code in `marketing/engine/video_studio/` and injected FAMtastic examples/brand configuration. Deterministic HyperFrames rendering has fresh local media proof; optional MoneyPrinterTurbo and ComfyUI adapters have contract tests, not native runtime/model proof on the owner's Mac. The owner reports both MoneyPrinterTurbo and HyperFrames installed; that report does not upgrade the historical MoneyPrinter runtime receipt. See `docs/marketing/local-video-studio/PROOF.md` for measured formats, timing, tests and limitations. No publishing, conversion, live generation quality or two-movie recreation acceptance is asserted.

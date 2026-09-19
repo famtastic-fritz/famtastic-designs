@@ -2715,3 +2715,12 @@ data, and YouTube's PNG export included transparent padding that made it too sma
 Guidance: use the official PNG at an appropriate pixel size; preserve mark geometry
 and measure visible artwork, export padding and compressed asset size independently.
 Keep material/interaction layers separate from official symbols.
+
+
+## 2026-09-19 — Local video production and machine truth
+
+Observation: the uploaded discussion treated16GB as dedicated GPU VRAM, while `marketing/local-models.json` documents Apple Silicon16GB unified memory. Guidance: use deterministic local composition as the dependable baseline; benchmark optional generation on the actual host before claiming fit or speed.
+
+Observation: cached video bytes alone do not prove retained source/evidence is intact. Guidance: verify the cached ledger and all referenced artifact hashes, and include source bytes, code, brand dependencies and stable tool version in invalidation.
+
+Observation: HyperFrames' native animation example needs the runtime's `data-no-timeline` root contract; compact captioned formats can overflow despite a valid vertical render. Guidance: run real checks and render representative aspects; never weaken checks to conceal missing motion or overflowing copy. See the local-video-studio proof and handoff.

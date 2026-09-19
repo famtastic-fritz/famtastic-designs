@@ -2705,3 +2705,8 @@ data, and YouTube's PNG export included transparent padding that made it too sma
 Guidance: use the official PNG at an appropriate pixel size; preserve mark geometry
 and measure visible artwork, export padding and compressed asset size independently.
 Keep material/interaction layers separate from official symbols.
+
+
+## 2026-09-19 — Reusable local video lane
+
+The source plan assumed NVIDIA-like16GB video generation; the repo confirms16GB Apple unified memory. The new engine therefore defaults to local HyperFrames composition/reuse, with explicit optional shot generation. Existing MPT configuration can auto-upload after rendering, so the wrapper rejects an armed switch before invoking it. Actual upstream checks also exposed a required WAAPI root annotation and compact-format overflow; both are handled in the compositor, with test and real-render evidence in `docs/marketing/local-video-studio/PROOF.md`. Preserve zero-provider-fee versus unmeasured electricity/time, and contract-tested versus native-proven distinctions.

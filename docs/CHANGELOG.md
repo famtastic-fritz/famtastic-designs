@@ -3707,3 +3707,10 @@ Final independent parent code review passed 1,022 tests/99 files in77.73s with a
 - Replaced the existing SocialSignal orbit with reusable smoked-metal/enamel social badges and one approved-profile configuration inside SiteFooter; preserved canonical logo, CMS navigation, legal/year/signature and native click events.
 - Added ten-platform local gallery, official-asset provenance, Design MD/Site DNA and focused tests. Desktop social height 368px → 157.45px; five responsive widths fit. Build, seven footer/analytics tests, five credit tests, public-flow and brand checks pass.
 - Source only on `famtastic/social-footer-v1`; Fritz visual review pending. No push, merge, deployment or customer send. See `docs/design/social-footer/REVIEW.md` for exact limits, commands and screenshots.
+
+
+## 2026-09-19 — Local video production studio
+
+- Added the local campaign video CLI, four-format HyperFrames composition, exact brand/caption/audio support and source-aware cache under `marketing/engine/video_studio/`.
+- Added explicit MoneyPrinterTurbo draft and local ComfyUI workflow/resume adapters, canonical Build DNA, media checks and recreation comparison tooling.
+- Added FAMtastic creative examples, current primary-source research and a workstation proof handoff at `docs/marketing/local-video-studio/`; no deployment or publishing.

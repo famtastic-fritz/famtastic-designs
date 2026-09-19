@@ -1,0 +1,17 @@
+{
+  "schema":"video-studio.campaign.v1",
+  "id":"business-has-an-address",
+  "title":"Your business deserves an address",
+  "mode":"motion_graphics",
+  "format":"9:16",
+  "fps":30,
+  "audience":"Businesses already serving customers with no owned web presence",
+  "status":"draft",
+  "claim_basis":["BRAND.md: educate and grow businesses; owned presence"],
+  "scenes":[
+    {"id":"signal","duration":3,"layout":"signal","eyebrow":"YOU BUILT SOMETHING REAL","headline":"Business is happening.","body":"Give people one place to find it.","accent":"#D9A441","background":"#17120D"},
+    {"id":"address","duration":3,"layout":"split","eyebrow":"A PLACE THAT IS YOURS","headline":"Give it an address.","body":"What you do. How to reach you. One clear next step.","accent":"#FF7A1A","background":"#0D1117"},
+    {"id":"ordinary","duration":3,"layout":"monument","eyebrow":"ORDINARY BUSINESS. EXTRAORDINARY PRESENCE.","headline":"Built to be found.","body":"A clear home for the business you already run.","accent":"#E8B4B8","background":"#1A1013"},
+    {"id":"resolve","duration":3,"layout":"resolve","eyebrow":"FAMTASTIC DESIGNS","headline":"Stand apart on purpose.","body":"See what your business could become.","accent":"#7CFC00","background":"#070907"}
+  ]
+}
