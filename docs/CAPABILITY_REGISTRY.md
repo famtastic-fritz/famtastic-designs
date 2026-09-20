@@ -2,7 +2,7 @@
 
 ## 2026-09-19 — Connect FAM with crown app icon
 
-Locally verified: the owner-selected FAM with crown family is wired to every Connect icon consumer; opaque maskable artwork fits the full safe circle. Build, mobile install preview and all 16 existing contracts pass. Production publication and physical Android installation remain separate checks. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.
+Production verified at `95735502`: the owner-selected FAM with crown family is served to every Connect icon consumer on both domains; opaque maskable artwork fits the full safe circle. Build, mobile install preview, live video/QR/main-site checks and all 16 existing contracts pass. Physical Android installation and existing-device icon refresh remain untested. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.
 
 ## 2026-09-19 — Connect canonical app icon
 
