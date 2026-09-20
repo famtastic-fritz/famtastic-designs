@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Recover the owner-selected icon family
+
+The owner pointed to prior logo work and selected the existing FAM plus crown avatar. Search session content and retained exported artwork before substituting another brand derivative. Keep the approved master, record the scoped app-icon selection, measure the final mask-safe crop and version all consumers without changing manifest identity. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.
+
 ## 2026-09-19 — Imported app icons need brand review
 
 **Observation:** A technically valid migrated install icon still used the source's generic green F; the owner rejected its appearance. **Guidance:** Inspect manifest, Apple, favicon and install-preview artwork together. Reuse the canonical compact brand family, preserve manifest identity during artwork updates, and measure mask-safe padding. Browser proof does not prove an existing device has refreshed its installed icon. See `docs/plans/CONNECT_ICON_2026-09-19.md`.

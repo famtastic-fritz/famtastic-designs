@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Connect FAM with crown app icon
+
+Locally verified: the owner-selected FAM with crown family is wired to every Connect icon consumer; opaque maskable artwork fits the full safe circle. Build, mobile install preview and all 16 existing contracts pass. Production publication and physical Android installation remain separate checks. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.
+
 ## 2026-09-19 — Connect canonical app icon
 
 Production verified at `728b00a4`: the Connect icon family reuses the canonical crown, with an opaque maskable variant whose entire artwork fits the safe circle. Both domains serve exact icon bytes, mobile install-preview rendering and all 16 existing contracts pass. Actual Android installation and existing-device icon refresh remain untested. See `docs/plans/CONNECT_ICON_2026-09-19.md`.

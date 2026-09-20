@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-19 — Connect FAM with crown selection
+
+Replaced Connect app icons and install preview with the owner-selected original-pixel FAM plus crown from the existing social profile kit. Preserved the source master and mask-safe padding, and versioned icon URLs without changing app identity. Local build, mobile preview and 16 contracts pass; production verification is pending. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.
+
 ## 2026-09-19 — Connect app icon correction
 
 - Replaced the imported generic F with the canonical FAMtastic crown across Android, Apple, favicon and install preview; added a mask-safe variant and versioned icon URLs while preserving app identity. Production verified at `728b00a4`: both domains serve exact icon bytes; mobile install preview, main-site checks, local build and all 16 contracts pass. Release receipt: `docs/plans/CONNECT_ICON_2026-09-19.md`.
