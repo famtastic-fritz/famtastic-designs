@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-19 — Connect app icon correction
+
+- Replaced the imported generic F with the canonical FAMtastic crown across Android, Apple, favicon and install preview; added a mask-safe variant and versioned icon URLs while preserving app identity. Local build, mobile browser review and all 16 contracts pass. Release status: `docs/plans/CONNECT_ICON_2026-09-19.md`.
+
 ## 2026-09-19 — FAMtastic Connect production migration
 
 **Production verified:** `3f5c8474` is live at `/connect/`; all 17 apex/www files match the build, both QR formats decode exactly, mobile CUA/video/contact/install fallback and main-site checks pass. Physical Android installation remains untested. See `docs/evidence/connect-production/release.json`.

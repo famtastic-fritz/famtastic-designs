@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Imported app icons need brand review
+
+**Observation:** A technically valid migrated install icon still used the source's generic green F; the owner rejected its appearance. **Guidance:** Inspect manifest, Apple, favicon and install-preview artwork together. Reuse the canonical compact brand family, preserve manifest identity during artwork updates, and measure mask-safe padding. Browser proof does not prove an existing device has refreshed its installed icon. See `docs/plans/CONNECT_ICON_2026-09-19.md`.
+
 ## 2026-09-19 — Installed card launch and migration boundaries
 
 **Observation:** The finished source has relative manifest fields, no service-worker registration and a timed full-logo intro. A reported black screen with the green F icon does not establish an intro failure; the affected Android install was unavailable. The fetched source HTML also included hosting-injected challenge code.

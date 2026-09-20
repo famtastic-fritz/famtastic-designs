@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-19 — Connect canonical app icon
+
+Local proof: the Connect icon family now reuses the canonical crown, with an opaque maskable variant whose entire artwork fits the safe circle. Mobile install-preview rendering and all 16 existing contracts pass. Live publication is pending the canonical release; actual Android installation remains untested. See `docs/plans/CONNECT_ICON_2026-09-19.md`.
+
 ## 2026-09-19 — FAMtastic Connect card migration
 
 **Production verified:** `3f5c8474` is live at `/connect/`; all 17 apex/www files match the build, both QR formats decode exactly, mobile CUA/video/contact/install fallback and main-site checks pass. Physical Android installation remains untested. See `docs/evidence/connect-production/release.json`.
