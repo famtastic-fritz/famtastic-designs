@@ -1,0 +1,55 @@
+{
+  "card": {
+    "url": "https://famtasticdesigns.com/connect/",
+    "viewports": [
+      [
+        390,
+        844
+      ],
+      [
+        320,
+        568
+      ]
+    ],
+    "horizontal_overflow": false,
+    "install_preview": {
+      "icon": "/connect/icons/icon-192.png?v=fam-crown-1",
+      "natural_width": 192,
+      "fully_loaded": true,
+      "artwork": "FAM plus crown",
+      "manual_instructions_visible": true
+    },
+    "console_errors": [],
+    "video": {
+      "duration": 30.041667,
+      "ended": true,
+      "ready_state": 4,
+      "paused_after_close": true,
+      "dialog_closed": true
+    },
+    "qr": {
+      "direct_url": "https://famtasticdesigns.com/connect/#qr",
+      "loaded": true,
+      "horizontal_overflow": false,
+      "tap_returns_to_card": true,
+      "open_this_card_returns_to_card": true
+    }
+  },
+  "main_sites": [
+    {
+      "requested_url": "https://famtasticdesigns.com/",
+      "final_url": "https://famtasticdesigns.com/",
+      "root_text_length": 5454,
+      "h1": "Agentic AI Business Solutions Engineering Studio",
+      "console_errors": []
+    },
+    {
+      "requested_url": "https://www.famtasticdesigns.com/",
+      "final_url": "https://www.famtasticdesigns.com/",
+      "root_text_length": 5454,
+      "h1": "Agentic AI Business Solutions Engineering Studio",
+      "console_errors": []
+    }
+  ],
+  "method": "Real browser through CUA. Mobile viewport checks used desktop host browser, not a physical Android device."
+}

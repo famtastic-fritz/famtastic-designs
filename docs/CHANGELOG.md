@@ -2,7 +2,7 @@
 
 ## 2026-09-19 — Connect FAM with crown selection
 
-Replaced Connect app icons and install preview with the owner-selected original-pixel FAM plus crown from the existing social profile kit. Preserved the source master and mask-safe padding, and versioned icon URLs without changing app identity. Local build, mobile preview and 16 contracts pass; production verification is pending. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.
+Replaced Connect app icons and install preview with the owner-selected original-pixel FAM plus crown from the existing social profile kit. Preserved the source master and mask-safe padding, and versioned icon URLs without changing app identity. Production verified at `95735502`: exact icon bytes on both domains, mobile preview, full commercial playback, QR/routing, main-site checks, local build and 16 contracts pass. Physical Android installation remains untested. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.
 
 ## 2026-09-19 — Connect app icon correction
 

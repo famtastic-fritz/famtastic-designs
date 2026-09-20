@@ -1,0 +1,87 @@
+{
+  "verified_at": "2026-09-20T01:53:29.982452+00:00",
+  "qr": [
+    {
+      "host": "fam-crown-apex",
+      "png_decodes_to": "https://famtasticdesigns.com/connect/",
+      "svg_decodes_to": "https://famtasticdesigns.com/connect/"
+    },
+    {
+      "host": "fam-crown-www",
+      "png_decodes_to": "https://famtasticdesigns.com/connect/",
+      "svg_decodes_to": "https://famtasticdesigns.com/connect/"
+    }
+  ],
+  "http_contracts": [
+    {
+      "url": "https://famtasticdesigns.com/connect",
+      "status": 301,
+      "content_type": "text/html; charset=iso-8859-1",
+      "location": "https://famtasticdesigns.com/connect/",
+      "content_disposition": null
+    },
+    {
+      "url": "https://famtasticdesigns.com/connect/absent-icon-check.png",
+      "status": 404,
+      "content_type": "text/html; charset=iso-8859-1",
+      "location": null,
+      "content_disposition": null
+    },
+    {
+      "url": "https://famtasticdesigns.com/connect/fritz-famtastic.vcf",
+      "status": 200,
+      "content_type": "text/vcard",
+      "location": null,
+      "content_disposition": "attachment; filename=\"Fritz-FAMtastic-Designs.vcf\""
+    },
+    {
+      "url": "https://famtasticdesigns.com/assets/index-BINlMZsi.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "location": null,
+      "content_disposition": null
+    },
+    {
+      "url": "https://famtasticdesigns.com/assets/index-DMOYzV8m.css",
+      "status": 200,
+      "content_type": "text/css",
+      "location": null,
+      "content_disposition": null
+    },
+    {
+      "url": "https://www.famtasticdesigns.com/connect",
+      "status": 301,
+      "content_type": "text/html; charset=iso-8859-1",
+      "location": "https://www.famtasticdesigns.com/connect/",
+      "content_disposition": null
+    },
+    {
+      "url": "https://www.famtasticdesigns.com/connect/absent-icon-check.png",
+      "status": 404,
+      "content_type": "text/html; charset=iso-8859-1",
+      "location": null,
+      "content_disposition": null
+    },
+    {
+      "url": "https://www.famtasticdesigns.com/connect/fritz-famtastic.vcf",
+      "status": 200,
+      "content_type": "text/vcard",
+      "location": null,
+      "content_disposition": "attachment; filename=\"Fritz-FAMtastic-Designs.vcf\""
+    },
+    {
+      "url": "https://www.famtasticdesigns.com/assets/index-BINlMZsi.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "location": null,
+      "content_disposition": null
+    },
+    {
+      "url": "https://www.famtasticdesigns.com/assets/index-DMOYzV8m.css",
+      "status": 200,
+      "content_type": "text/css",
+      "location": null,
+      "content_disposition": null
+    }
+  ]
+}
