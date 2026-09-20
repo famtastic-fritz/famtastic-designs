@@ -1,0 +1,38 @@
+{
+  "verified_at": "2026-09-20T01:30:48.265126+00:00",
+  "method": "CUA browser",
+  "card": {
+    "url": "https://famtasticdesigns.com/connect/",
+    "mobile_viewports": [
+      [
+        390,
+        844
+      ],
+      [
+        320,
+        568
+      ]
+    ],
+    "horizontal_overflow": false,
+    "install_preview": "Canonical crown visible; natural width 192; version crown-1 URL",
+    "install_fallback": "Manual instructions visible; dialog closes",
+    "qr": "/connect/#qr opens at 320px; Open this card returns to /connect/",
+    "favicon_and_apple": "Versioned crown URLs in live DOM",
+    "errors": []
+  },
+  "main_sites": [
+    {
+      "url": "https://famtasticdesigns.com/",
+      "root_characters": 5758,
+      "heading": "Agentic AI Business Solutions Engineering Studio",
+      "errors": []
+    },
+    {
+      "url": "https://www.famtasticdesigns.com/",
+      "root_characters": 5758,
+      "heading": "Agentic AI Business Solutions Engineering Studio",
+      "errors": []
+    }
+  ],
+  "limits": "Browser viewports are not physical Android installation or installed-icon cache tests"
+}

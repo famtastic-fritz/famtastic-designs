@@ -1,0 +1,40 @@
+{
+  "verified_at": "2026-09-20T01:27:32.878442+00:00",
+  "icons": [
+    {
+      "url": "https://famtasticdesigns.com/connect/icons/icon-192.png?v=crown-1",
+      "status": 200,
+      "content_type": "image/png",
+      "sha256": "818da02fb95cd1d0d8747471e7d892d0ae8bad9cc425e88d7ed6c66aa3e70770",
+      "matches_build": true
+    },
+    {
+      "url": "https://famtasticdesigns.com/connect/icons/icon-512.png?v=crown-1",
+      "status": 200,
+      "content_type": "image/png",
+      "sha256": "6dfd5f9cd99c5eaad35b34f0a4e8113b9912de38ae3af499fe396cdc02fd0bae",
+      "matches_build": true
+    },
+    {
+      "url": "https://famtasticdesigns.com/connect/icons/icon-maskable-512.png?v=crown-1",
+      "status": 200,
+      "content_type": "image/png",
+      "sha256": "e73da89a411624798696df5a760399d4ea6323e85289356280b226e294e9122f",
+      "matches_build": true
+    },
+    {
+      "url": "https://famtasticdesigns.com/connect/icons/apple-touch-icon.png?v=crown-1",
+      "status": 200,
+      "content_type": "image/png",
+      "sha256": "bfecd20ca2653e000d13e0d4b3a59b71b059e205d414601811755edc1cd48fd6",
+      "matches_build": true
+    },
+    {
+      "url": "https://famtasticdesigns.com/connect/icons/favicon-32.png?v=crown-1",
+      "status": 200,
+      "content_type": "image/png",
+      "sha256": "f850e13e79d70a042b8d80fb8cd2f2b5076108d68a04ec858d266d7324459b29",
+      "matches_build": true
+    }
+  ]
+}
