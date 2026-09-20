@@ -1,0 +1,9 @@
+utc=2026-09-20T01:48:05Z
+obsolete_sha=5499d20264eeef787791c370d9caca5756b8cdcd
+verified=expected SHA; no tracked, untracked or ignored changes; ancestor of main; not live; no symlink
+size_kib=1078424
+result=clean obsolete private checkout removed without force; Git history, parent release records, runtime and backups retained
+commit=728b00a4e21eb544126194fad10f069c3f79c1c6
+deployed_at=2026-09-20T01:27:03Z
+node=v22.23.2
+backup=/home/xrdj7j99xhzt/backups/famtastic-frontend-20260920T012559Z-728b00a4e21eb544126194fad10f069c3f79c1c6.tgz

@@ -47,6 +47,12 @@ reads well; use an original-pixel FAM plus canonical crown composite for small
 avatars. This does not replace the crown-only website favicon or authorize a new
 master/redraw. See [social profile kit](SOCIAL-PROFILE-KIT.md) for exports/provenance.
 
+Connect app exception approved September 19: the owner selected the existing
+original-pixel FAM with crown profile artwork for `/connect/` Android, Apple,
+favicon and install-preview icons. Reuse the retained master with mask-safe
+padding; do not redraw it or change the main website favicon. Provenance and
+release state: [Connect FAM with crown](../plans/CONNECT_FAM_CROWN_2026-09-19.md).
+
 React: `frontend/src/components/BrandLogo.jsx` and `frontend/src/lib/brand.js`.
 Use the component rather than page-specific logo copies. No fake variants API.
 `decorative` is only for a link/container with an explicit equivalent accessible

@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Recover the owner-selected icon family
+
+The owner pointed to prior logo work and selected the existing FAM plus crown avatar. Search session content and retained exported artwork before substituting another brand derivative. Keep the approved master, record the scoped app-icon selection, measure the final mask-safe crop and version all consumers without changing manifest identity. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.
+
 ## 2026-09-19 — Imported app icon correction
 
 The migration preserved a generic green F icon that did not match the canonical brand. The owner rejected it. Reuse the website's original-derived crown across every card icon consumer, measure the mask-safe circle and version icon URLs without changing app identity. Existing installed-icon caching and actual Android installation remain device-level checks; replacing artwork does not diagnose a launch failure. Evidence: `docs/plans/CONNECT_ICON_2026-09-19.md`.

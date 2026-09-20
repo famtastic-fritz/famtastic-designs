@@ -1,0 +1,102 @@
+{
+  "date": "2026-09-19",
+  "request": "Owner selected existing FAM with crown artwork after reviewing the prior social profile kit",
+  "source_session": {
+    "title": "deploy-pipline",
+    "thread_id": "01a0ad44-696a-7ff2-85ca-6e0f2d71e38a",
+    "kit_created": "2026-09-17"
+  },
+  "artwork": "Original-pixel red F, gold A, blue M and canonical lime crown on obsidian",
+  "source": "docs/design/assets/famtastic-connect-fam-crown-1080.png",
+  "source_sha256": "7d474e928778ef678061e48132fbe1b7c344b680caa16a78e71663b9428b12bf",
+  "source_size": [
+    1080,
+    1080
+  ],
+  "method": "Unchanged approved 1080 PNG embedded in a 512 SVG canvas, exported to 512/192/180/32 PNG with CairoSVG 2.8.2; public SVG containers embed the resulting 512 PNG. No generated artwork or redraw.",
+  "maskable": {
+    "source": "frontend/public/connect/icons/icon-512.png",
+    "artwork_box": [
+      66,
+      66,
+      380,
+      380
+    ],
+    "canvas": [
+      512,
+      512
+    ],
+    "background": "#070907",
+    "safe_circle_radius": 204.8,
+    "farthest_non_background_pixel_radius": 194.48007610035532,
+    "within_safe_circle": true
+  },
+  "manifest_identity": "/connect/",
+  "icon_url_version": "fam-crown-1",
+  "files": [
+    {
+      "path": "frontend/public/connect/icons/apple-touch-icon.png",
+      "bytes": 20514,
+      "sha256": "8cf7a224a03c4fac876551230c26a98a335891c55f89a1561662851f5bb407a1",
+      "size": [
+        180,
+        180
+      ],
+      "opaque": true
+    },
+    {
+      "path": "frontend/public/connect/icons/favicon-32.png",
+      "bytes": 1234,
+      "sha256": "b79636fd89698c893494ec55cd96072b940f79917576b9815462e7ced22f6fed",
+      "size": [
+        32,
+        32
+      ],
+      "opaque": true
+    },
+    {
+      "path": "frontend/public/connect/icons/icon-192.png",
+      "bytes": 22877,
+      "sha256": "743f4e9919e0a5fcc18e42a59ff7a7542f43c6f41b0211701c63de7bf7b0a2d7",
+      "size": [
+        192,
+        192
+      ],
+      "opaque": true
+    },
+    {
+      "path": "frontend/public/connect/icons/icon-512.png",
+      "bytes": 123333,
+      "sha256": "b5fed7993596878de0b41ee1d5be1620bdb86d84770e495585353c7e56f06eb9",
+      "size": [
+        512,
+        512
+      ],
+      "opaque": true
+    },
+    {
+      "path": "frontend/public/connect/icons/icon-maskable-512.png",
+      "bytes": 75111,
+      "sha256": "08fee56d2b03603b983c6fb644bedfba9348a4ef0cb53b77da2aaec8c46cf679",
+      "size": [
+        512,
+        512
+      ],
+      "opaque": true
+    },
+    {
+      "path": "frontend/public/connect/icons/icon-maskable.svg",
+      "bytes": 164701,
+      "sha256": "d598e888493451ba1ba50382de519b1e00232046c8276e1bf57f9ceef9a8ca9a"
+    },
+    {
+      "path": "frontend/public/connect/icons/icon.svg",
+      "bytes": 164699,
+      "sha256": "c4aa3d2da0c0ae2b0d5f4556e37d787da795d3b88ee7f0cf9aaeb90dda2a454a"
+    }
+  ],
+  "references": [
+    "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons",
+    "https://web.dev/articles/manifest-updates"
+  ]
+}
