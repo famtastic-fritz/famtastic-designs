@@ -1,0 +1,30 @@
+{
+  "commit": "728b00a4e21eb544126194fad10f069c3f79c1c6",
+  "deployed_at": "2026-09-20T01:27:03Z",
+  "node": "v22.23.2",
+  "backup": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260920T012559Z-728b00a4e21eb544126194fad10f069c3f79c1c6.tgz",
+  "status": "production_verified",
+  "pull_request": "https://github.com/famtastic-fritz/famtastic-designs/pull/36",
+  "command": "./scripts/deploy-frontend-godaddy.sh --apply",
+  "build_seconds": 21.86,
+  "route_shells_verified": 219,
+  "apex_assets_exact": 17,
+  "www_assets_exact": 17,
+  "versioned_icon_urls_exact_per_host": 5,
+  "local_checks": "16 Node contracts; Node 22 build; shared-brand parity; git diff --check; mask-safe and opaque image inspection",
+  "ci": {
+    "status": "not_started",
+    "reason": "The job was not started because your account is locked due to a billing issue.",
+    "run": "https://github.com/famtastic-fritz/famtastic-designs/actions/runs/35481174219",
+    "required_branch_checks": false,
+    "admin_bypass_used": false
+  },
+  "quota_recovery": {
+    "first_attempt": "npm dependency install hit account quota before promotion; production remained 3f5c8474",
+    "removed_private_clean_checkout": "31a92fe4b9335c0f94557b8dec294f6301eb36f9",
+    "reclaimed_kib": 1078180,
+    "guards": "Expected HEAD; no tracked, untracked or ignored changes; ancestor of main; not live; non-force git worktree remove; Git commit and parent release records retained",
+    "preserved": "Production files, recent builds, backups and Git mirror/history"
+  },
+  "android": "Physical installation and existing-device icon refresh not tested; icon replacement does not diagnose old-origin launch failure"
+}
