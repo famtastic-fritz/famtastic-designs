@@ -1,0 +1,96 @@
+{
+  "date": "2026-09-19",
+  "request": "Owner rejected generic green F app icon",
+  "artwork": "Existing canonical original-derived crown on obsidian",
+  "method": "Exact copies of the existing website PNG icons; self-contained SVG containers embed unchanged source PNG bytes; maskable SVG is rendered by CairoSVG 2.8.2",
+  "copied_from": {
+    "icon-192.png": "android-chrome-192x192.png",
+    "icon-512.png": "android-chrome-512x512.png",
+    "apple-touch-icon.png": "apple-touch-icon.png",
+    "favicon-32.png": "favicon-32x32.png"
+  },
+  "maskable": {
+    "source": "frontend/public/brand/famtastic-crown-flat.png",
+    "source_sha256": "3fae5fa449af4d800af891460d6f52c46ada61c9c6bb08c3654f9e9079555d4d",
+    "artwork_box": [
+      280,
+      283.34661354581675
+    ],
+    "canvas": [
+      512,
+      512
+    ],
+    "background": "#070907",
+    "safe_circle_radius": 204.8,
+    "farthest_non_background_pixel_radius": 169.05768246370823,
+    "within_safe_circle": true
+  },
+  "manifest_identity": "/connect/",
+  "icon_url_version": "crown-1",
+  "files": [
+    {
+      "path": "frontend/public/connect/icons/apple-touch-icon.png",
+      "bytes": 17440,
+      "sha256": "bfecd20ca2653e000d13e0d4b3a59b71b059e205d414601811755edc1cd48fd6",
+      "size": [
+        180,
+        180
+      ],
+      "opaque": true
+    },
+    {
+      "path": "frontend/public/connect/icons/favicon-32.png",
+      "bytes": 1468,
+      "sha256": "f850e13e79d70a042b8d80fb8cd2f2b5076108d68a04ec858d266d7324459b29",
+      "size": [
+        32,
+        32
+      ],
+      "opaque": true
+    },
+    {
+      "path": "frontend/public/connect/icons/icon-192.png",
+      "bytes": 19393,
+      "sha256": "818da02fb95cd1d0d8747471e7d892d0ae8bad9cc425e88d7ed6c66aa3e70770",
+      "size": [
+        192,
+        192
+      ],
+      "opaque": true
+    },
+    {
+      "path": "frontend/public/connect/icons/icon-512.png",
+      "bytes": 85271,
+      "sha256": "6dfd5f9cd99c5eaad35b34f0a4e8113b9912de38ae3af499fe396cdc02fd0bae",
+      "size": [
+        512,
+        512
+      ],
+      "opaque": true
+    },
+    {
+      "path": "frontend/public/connect/icons/icon-maskable-512.png",
+      "bytes": 17479,
+      "sha256": "e73da89a411624798696df5a760399d4ea6323e85289356280b226e294e9122f",
+      "size": [
+        512,
+        512
+      ],
+      "opaque": true
+    },
+    {
+      "path": "frontend/public/connect/icons/icon-maskable.svg",
+      "bytes": 8340,
+      "sha256": "f16c5afc62dbeb2c62dad7e9a10a440e7463b38dfab9adc739da94cea9c98a70"
+    },
+    {
+      "path": "frontend/public/connect/icons/icon.svg",
+      "bytes": 113858,
+      "sha256": "14f6714373716396030c6921b198ed4453806d529c30d7bfb43ddb2c669fe39c"
+    }
+  ],
+  "references": [
+    "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons",
+    "https://web.dev/articles/manifest-updates"
+  ]
+}

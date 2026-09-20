@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-19 — Imported app icon correction
+
+The migration preserved a generic green F icon that did not match the canonical brand. The owner rejected it. Reuse the website's original-derived crown across every card icon consumer, measure the mask-safe circle and version icon URLs without changing app identity. Existing installed-icon caching and actual Android installation remain device-level checks; replacing artwork does not diagnose a launch failure. Evidence: `docs/plans/CONNECT_ICON_2026-09-19.md`.
+
 ## 2026-09-19 — Installed card launch and migration boundaries
 
 **Observation:** The finished source has relative manifest fields, no service-worker registration and a timed full-logo intro. A reported black screen with the green F icon does not establish an intro failure; the affected Android install was unavailable. The fetched source HTML also included hosting-injected challenge code.

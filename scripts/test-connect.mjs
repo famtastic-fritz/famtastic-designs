@@ -11,7 +11,7 @@ const read = name => readFileSync(new URL(name, root), 'utf8');
 
 test('every supplied file is tracked and available to a clean server build', () => {
   const rows = JSON.parse(readFileSync(new URL('../docs/evidence/connect-production/source-downloads.json', import.meta.url)));
-  execFileSync('git', ['ls-files', '--error-unmatch', '--', ...rows.map(row => `frontend/public/connect/${row.path}`)], { cwd: new URL('../', import.meta.url), stdio: 'pipe' });
+  execFileSync('git', ['ls-files', '--error-unmatch', '--', ...rows.map(row => `frontend/public/connect/${row.path}`), 'frontend/public/connect/icons/favicon-32.png'], { cwd: new URL('../', import.meta.url), stdio: 'pipe' });
 });
 
 function fixture({ standalone = false, reduced = false, hash = '', ua = 'Android Chrome', script = 'app.js' } = {}) {
@@ -71,7 +71,7 @@ test('manifest launches the exact card, with all icons confined to /connect/', (
 
 test('source media and contact are byte-preserved; injected hosting script is absent', () => {
   const receipts = JSON.parse(readFileSync(new URL('../docs/evidence/connect-production/source-downloads.json', import.meta.url)));
-  for (const name of ['logo.png', 'commercial.mp4', 'commercial-poster.jpg', 'fritz-famtastic.vcf', ...receipts.filter(row => row.path.startsWith('icons/')).map(row => row.path)]) {
+  for (const name of ['logo.png', 'commercial.mp4', 'commercial-poster.jpg', 'fritz-famtastic.vcf']) {
     assert.equal(createHash('sha256').update(readFileSync(new URL(name, root))).digest('hex'), receipts.find(row => row.path === name).sha256, name);
   }
   assert.doesNotMatch(read('index.html'), /cdn-cgi|__CF\$|nineoo/);
