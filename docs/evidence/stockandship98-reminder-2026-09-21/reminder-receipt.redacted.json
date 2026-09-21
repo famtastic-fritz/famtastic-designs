@@ -1,0 +1,33 @@
+{
+    "id": "842",
+    "notification_key": "website-request:17:proofs:56:owner-reminder-20260921-v1",
+    "subject": "Your StockandShip98 website concepts are ready to review",
+    "status": "sent",
+    "attempts": "1",
+    "max_attempts": "1",
+    "sent_at": "1790017603",
+    "provider_message_id": "<kDc3ug4P67A9TLQNd67tKoD0O7oCoYNjj42wQXok@famtasticdesigns.com>",
+    "template_id": "customer_proof_ready",
+    "template_version": "4",
+    "request_id": 17,
+    "customer_id": 15,
+    "campaign_id": 56,
+    "recipient": "[redacted verified customer 15]",
+    "recipient_matches_verified_customer": true,
+    "body_sha256": "5e83cfb5bfaacc2214d42b4595fb4c693e5eabaf2817695e97aa54fe181a5f05",
+    "rendered_sha256": "d773ccfaabe4e6b6fc27e2734cfab8d055e2cc5b3d3a8ab9b84b10f95824b679",
+    "sent_at_utc": "2026-09-21T19:06:43+00:00",
+    "recorded_at": "2026-09-21T19:06:52+00:00",
+    "dispatch_result": {
+        "processed": 1,
+        "claimed": 1,
+        "sent": 1,
+        "failed": 0,
+        "retried": 0,
+        "recovered_claims": 0
+    },
+    "historical_outboxes_769_772_unchanged": true,
+    "request_unchanged": true,
+    "authorization": "Owner explicitly requested one new client proof-review reminder on 2026-09-21 after checking existing email standards.",
+    "inbox_or_readership_verified": false
+}

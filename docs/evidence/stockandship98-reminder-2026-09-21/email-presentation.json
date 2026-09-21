@@ -1,0 +1,23 @@
+{
+  "template": "customer_proof_ready/v4",
+  "rendered_sha256": "d773ccfaabe4e6b6fc27e2734cfab8d055e2cc5b3d3a8ab9b84b10f95824b679",
+  "browser": "Chrome via CUA",
+  "desktop": {
+    "width": 1920,
+    "horizontal_overflow": false,
+    "review_button_height": 58,
+    "creator_credit_height": 84,
+    "all_four_images_loaded": true
+  },
+  "phone": {
+    "width": 390,
+    "horizontal_overflow": false,
+    "review_button_height": 58,
+    "creator_credit_height": 84
+  },
+  "single_review_cta": true,
+  "html_visible_raw_urls": false,
+  "plain_text_fallback_present": true,
+  "approved_logo_sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+  "scope": "Exact production-rendered HTML inspected in a local browser; not actual email-client or inbox verification."
+}

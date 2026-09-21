@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 — Reconcile exact proof receipts before reminders
+
+**Observation:** StockandShip98's original handoff listed outbox 769 but omitted
+later correction 772, and the live staff UI still showed not queued. Both had
+immutable SMTP receipts. **Guidance:** Inspect current shared email standards and
+known exact request/campaign notification keys before sending. A newly authorized
+reminder gets a new immutable key and bounded dispatch; never mutate old delivered
+rows or treat an unmatched UI label as permission to retry. Reminder 842 is a new
+one-attempt SMTP receipt; customer selection and inbox/read are separate evidence.
+
 ## 2026-09-21 — Make in-person sharing discoverable
 
 **Observation:** The original QR lived behind an unlabeled footer icon, and the intro would conceal a page-load cue. Chromium can move focus into browser chrome at a native dialog boundary.

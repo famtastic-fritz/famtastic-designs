@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 — StockandShip98 exact reminder acceptance
+
+**SMTP acceptance verified, one notification.** Existing `customer_proof_ready/v4`
+sent owner-authorized reminder 842 for request 17/customer 15/campaign 56 after live
+ownership, research and proof checks. Forty-two controller checks passed and the
+exact rendered HTML was inspected at 1920/390px. Independent outbox readback confirms
+one attempt; original 769/correction 772 and request unchanged. Inbox/read/approval
+remain unverified; the staff delivery-label lookup defect remains. This is new
+delivery evidence, not a new mail implementation or deployment. See
+`docs/plans/STOCKANDSHIP98-REMINDER-2026-09-21.md`.
+
 ## 2026-09-21 — Connect QR discovery
 
 Production verified at `40ca506b`: prominent QR action, bounded/persisted pointer cue, accessible responsive scan dialog, and share/copy fallback. 23 contracts and 12 Chromium cases pass. QR asset bytes are preserved; QR repair/physical scan and actual OS sharing are not claimed. 24 live browser scenarios covered across apex/www, exact build bytes and main-site browser checks pass. GitHub hosted CI could not start due to billing. Evidence: `docs/evidence/connect-qr-discovery/`.

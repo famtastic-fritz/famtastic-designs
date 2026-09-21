@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-21 — StockandShip98 proof reminder
+
+- Sent one owner-requested reminder after checking current email standards and
+  verified customer ownership. Existing `customer_proof_ready/v4` and shared brand
+  shell; outbox 842 SMTP-accepted once. Historical 769/772 and request17 unchanged.
+  Reconciled the earlier omitted correction receipt and updated customer handoff.
+  See `docs/plans/STOCKANDSHIP98-REMINDER-2026-09-21.md` for scoped verification.
+
 ## 2026-09-21 — Connect QR discovery
 
 - Added the visible SHOW MY QR action, a three-bounce pointer after card reveal, persistent quiet repeat visits, and reduced-motion support.
