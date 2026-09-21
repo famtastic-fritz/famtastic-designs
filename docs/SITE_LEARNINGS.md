@@ -10,6 +10,19 @@ for every included v2 non-Home page, not just records a worker chooses to supply
 The legacy explicit-file-authority continuation remains fail-closed until all
 actual branded files have authority. See the selected creator-credit v2 contract.
 
+## 2026-09-21 - New claim roles must not widen old runners
+
+Observation: a registry with multiple capabilities could hand creative work to
+an unchanged static dispatcher if HTTP claim defaulted to every registry grant.
+Guidance: legacy requests stay static-only. A new adapter explicitly narrows
+the server grant to proof-creative-v1; renewal uses the stored profile. Keep
+creative costs absent by default and reject completion until an authoritative
+importer exists. Network-denied SQLite tests prove mechanics, not generation.
+
+Sparse-checkout caution: an absent path may still be tracked. Check `git ls-files`
+and `git show HEAD:<path>` before adding it. Final review caught and repaired an
+attempted learnings replacement here; historical content is preserved exactly.
+
 ## 2026-09-21 - Preserve the executed creative routine
 
 Recent delivered proofs used active agents, managed imagery, customer build

@@ -10,6 +10,15 @@
   byte parity pass; integration/publication are not claimed. See
   `docs/contracts/SELECTED-CREATOR-CREDIT-POLICY-V2.md`.
 
+## 2026-09-21 - Shared proof claim policy foundation only
+
+Add a separate 180/1800/1830 proof capability to the existing Drupal claims,
+with server-granted capability filtering and explicit reviewed cost inputs.
+Selected-static 90/300/330 behavior stays unchanged. No creative cost catalog,
+fresh-proof admission or completion/importer is enabled. 88 focused PHP tests
+(356 assertions) and 8 Node compatibility tests pass under network denial.
+See `contracts/SHARED-PROOF-CLAIMS-V1.md` for exact commands and remaining gates.
+
 ## 2026-09-21 - Autonomous integration contract and evidence boundaries
 
 Record the actual Mac creative workflow, required shared-claim adapter and

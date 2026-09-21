@@ -10,6 +10,15 @@ Existing v1 and explicit-file-authority boundaries remain intact. No provider,
 customer, first-association end-to-end, deployment or production claim. See
 `docs/contracts/SELECTED-CREATOR-CREDIT-POLICY-V2.md`.
 
+## 2026-09-21 - Shared proof claim groundwork (synthetic local only)
+
+Capability-specific Drupal claims, bounded renewal/generation and shared budget
+holds pass 88 focused PHP tests / 356 assertions plus 8 static Node tests.
+The proof cost catalog is empty, no fresh-proof caller exists, and completion
+is closed pending the authoritative importer. This is not connected creative
+automation, provider execution, MySQL concurrency, Commerce or cloud proof.
+See `docs/contracts/SHARED-PROOF-CLAIMS-V1.md`.
+
 ## 2026-09-21 - Fresh selected-static admission (local source only)
 
 Default-off, atomic fresh-job enrollment in the existing Drupal claim ledger is

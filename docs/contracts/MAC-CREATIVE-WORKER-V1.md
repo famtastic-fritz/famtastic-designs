@@ -3,6 +3,12 @@
 Status: proposed adapter contract backed by source and historical receipts;
 not an activated worker or unattended production proof.
 
+September 21 source checkpoint: `SHARED-PROOF-CLAIMS-V1.md` implements only
+capability-specific shared claim groundwork, tested with paused clocks and
+synthetic SQLite records. No production creative cost catalog, fresh-proof
+enrollment caller or authoritative completion/importer is wired. The stages
+below remain the integration contract, not collectively implemented behavior.
+
 The Mac remains a first-class capability. Cloud workers are additive and must
 claim the same Drupal job, not rediscover or regenerate existing work.
 

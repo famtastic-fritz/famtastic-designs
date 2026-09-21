@@ -16,7 +16,8 @@ final class WorkerCoordinator {
   public const MAX_RUN_SECONDS = 300;
   public const CAPABILITY = 'selected-static-dispatch-v1';
 
-  public function __construct(private readonly Connection $database, private readonly TimeInterface $time, private readonly LockBackendInterface $lock) {}
+  public function __construct(private readonly Connection $database, private readonly TimeInterface $time, private readonly LockBackendInterface $lock,
+    private readonly array $reviewedProofCostPolicies = []) {}
 
   /** Shared capability predicate; enrollment never upgrades a static consumer. */
   public static function supportsPayload(string $jobType, array $payload): bool {
@@ -32,27 +33,40 @@ final class WorkerCoordinator {
 
   /** Explicit exact-job admission. Does not run it, send mail or revive failures. */
   public function enroll(int $jobId, string $jobKey, string $payloadHash, int $reservationCents): array {
+    return $this->enrollCapability($jobId, $jobKey, $payloadHash, $reservationCents, self::CAPABILITY);
+  }
+
+  /** Trusted service seam only. No HTTP/CLI/fresh-admission caller or default cost. */
+  public function enrollProof(int $jobId, string $jobKey, string $payloadHash, int $reservationCents): array {
+    return $this->enrollCapability($jobId, $jobKey, $payloadHash, $reservationCents, WorkerCapabilityPolicy::PROOF);
+  }
+
+  private function enrollCapability(int $jobId, string $jobKey, string $payloadHash, int $reservationCents, string $capability): array {
     if ($reservationCents < 25 || $reservationCents > 250 || !preg_match('/^[a-f0-9]{64}$/', $payloadHash)) {
       throw new \InvalidArgumentException('Each attempt needs a conservative 25–250 cent reservation and immutable payload hash.');
     }
-    return $this->atomic(function () use ($jobId, $jobKey, $payloadHash, $reservationCents): array {
+    return $this->atomic(function () use ($jobId, $jobKey, $payloadHash, $reservationCents, $capability): array {
+      $profile = WorkerCapabilityPolicy::profile($capability);
       $job = $this->job($jobId);
-      if (!$job || $job['job_key'] !== $jobKey || $job['job_type'] !== 'site_studio_staging_prepare'
+      $type = $capability === self::CAPABILITY ? 'site_studio_staging_prepare' : 'proof.generate';
+      if (!$job || $job['job_key'] !== $jobKey || $job['job_type'] !== $type
         || !hash_equals(hash('sha256', (string) $job['payload']), $payloadHash)) {
-        throw new \InvalidArgumentException('Admission requires the exact selected-staging job and frozen payload.');
+        throw new \InvalidArgumentException('Admission requires the exact capability job and frozen payload.');
       }
+      if ($capability === WorkerCapabilityPolicy::PROOF) WorkerCapabilityPolicy::assertProof($job, $reservationCents, $this->reviewedProofCostPolicies);
       $existing = $this->claimRow($jobId);
       if ($existing) {
-        if ($existing['payload_sha256'] !== $payloadHash || (int) $existing['reservation_cents'] !== $reservationCents) throw new \RuntimeException('Enrollment is immutable.');
+        if ($existing['capability'] !== $capability || $existing['policy_version'] !== $profile['policy']
+          || $existing['payload_sha256'] !== $payloadHash || (int) $existing['reservation_cents'] !== $reservationCents) throw new \RuntimeException('Enrollment is immutable.');
         return ['status' => 'already_enrolled', 'job_id' => $jobId];
       }
       if ($job['status'] !== 'queued' || (int) $job['attempts'] !== 0) throw new \RuntimeException('Only fresh unattempted jobs may enroll; historical work requires separate reconciliation.');
-      if (!self::supportsPayload($job['job_type'], json_decode((string) $job['payload'], TRUE, flags: JSON_THROW_ON_ERROR))) {
+      if ($capability === self::CAPABILITY && !self::supportsPayload($job['job_type'], json_decode((string) $job['payload'], TRUE, flags: JSON_THROW_ON_ERROR))) {
         throw new \RuntimeException('Planning/ecommerce work requires an implementation capability, not static packaging.');
       }
       $this->database->insert('famtastic_worker_claim')->fields([
-        'job_id' => $jobId, 'policy_version' => self::POLICY, 'payload_sha256' => $payloadHash,
-        'capability' => self::CAPABILITY, 'reservation_cents' => $reservationCents, 'state' => 'pending', 'changed' => $this->now(),
+        'job_id' => $jobId, 'policy_version' => $profile['policy'], 'payload_sha256' => $payloadHash,
+        'capability' => $capability, 'reservation_cents' => $reservationCents, 'state' => 'pending', 'changed' => $this->now(),
       ])->execute();
       if ($this->database->update('famtastic_job')->fields(['status' => 'worker_queued', 'changed' => $this->now()])
         ->condition('id', $jobId)->condition('status', 'queued')->execute() !== 1) throw new \RuntimeException('A legacy worker already owns the job.');
@@ -60,10 +74,12 @@ final class WorkerCoordinator {
     });
   }
 
-  /** No enrollment means no work. The legacy worker cannot claim worker_queued. */
-  public function claim(string $worker): ?array {
+  /** Capabilities are trusted server grants, never raw worker-body data. */
+  public function claim(string $worker, array $authorizedCapabilities = [self::CAPABILITY]): ?array {
     $this->assertWorker($worker);
-    return $this->atomic(function () use ($worker): ?array {
+    $capabilities = WorkerCapabilityPolicy::claimCapabilities($authorizedCapabilities);
+    if (!$capabilities) return NULL;
+    return $this->atomic(function () use ($worker, $capabilities): ?array {
       $now = $this->now();
       $this->recoverExpired($now);
       // A lost heartbeat is not proof a process stopped. Fence its full runtime.
@@ -72,12 +88,15 @@ final class WorkerCoordinator {
       $query = $this->database->select('famtastic_worker_claim', 'c');
       $query->join('famtastic_job', 'j', 'j.id = c.job_id');
       $row = $query->fields('c')->condition('c.state', 'pending')->condition('j.status', 'worker_queued')
+        ->condition('c.capability', $capabilities, 'IN')
         ->condition('j.available_at', $now, '<=')->orderBy('c.job_id')->range(0, 1)->execute()->fetchAssoc();
       if (!$row) return NULL;
       $job = $this->job((int) $row['job_id']);
       if (!hash_equals($row['payload_sha256'], hash('sha256', (string) $job['payload']))) throw new \RuntimeException('Enrolled payload changed; exception review required.');
+      $profile = $this->storedProfile($row);
+      if ($row['capability'] === WorkerCapabilityPolicy::PROOF) WorkerCapabilityPolicy::assertProof($job, (int) $row['reservation_cents'], $this->reviewedProofCostPolicies);
       $attempt = (int) $row['attempt'] + 1;
-      if ($attempt > min(3, (int) $job['max_attempts'])) throw new \RuntimeException('Retry bound exceeded.');
+      if ($attempt > min($profile['attempts'], (int) $job['max_attempts'])) throw new \RuntimeException('Retry bound exceeded.');
       $month = gmdate('Y-m', $now);
       $used = $this->reserved($month);
       // Unknown previous-month usage remains held in that month; no refund or reset of a job.
@@ -89,24 +108,26 @@ final class WorkerCoordinator {
       ])->execute();
       $this->database->update('famtastic_worker_claim')->fields([
         'state' => 'leased', 'worker_id' => $worker, 'token_hash' => hash('sha256', $token),
-        'lease_until' => $now + self::LEASE_SECONDS, 'attempt_deadline' => $now + self::MAX_RUN_SECONDS + 30,
+        'lease_until' => $now + $profile['lease'], 'attempt_deadline' => $now + $profile['execution'] + $profile['grace'],
         'attempt' => $attempt, 'changed' => $now,
       ])->condition('job_id', $job['id'])->execute();
       if ($this->database->update('famtastic_job')->fields(['status' => 'worker_running', 'locked_at' => $now, 'changed' => $now])
         ->condition('id', $job['id'])->condition('status', 'worker_queued')->execute() !== 1) throw new \RuntimeException('Queue state changed.');
       return [
         'job_id' => (int) $job['id'], 'job_key' => $job['job_key'], 'attempt' => $attempt, 'lease_token' => $token,
-        'lease_until' => $now + self::LEASE_SECONDS, 'execution_deadline' => $now + self::MAX_RUN_SECONDS,
-        'payload_sha256' => $row['payload_sha256'], 'payload_wire' => $job['payload'], 'capability' => self::CAPABILITY,
-        'reservation_cents' => (int) $row['reservation_cents'], 'policy_version' => self::POLICY,
+        'lease_until' => $now + $profile['lease'], 'execution_deadline' => $now + $profile['execution'],
+        'heartbeat_seconds' => $profile['heartbeat'],
+        'payload_sha256' => $row['payload_sha256'], 'payload_wire' => $job['payload'], 'capability' => $row['capability'],
+        'reservation_cents' => (int) $row['reservation_cents'], 'policy_version' => $profile['policy'],
       ];
     });
   }
 
-  public function renew(int $jobId, string $worker, string $token): array {
-    return $this->atomic(function () use ($jobId, $worker, $token): array {
-      $row = $this->owned($jobId, $worker, $token);
-      $until = min($this->now() + self::LEASE_SECONDS, (int) $row['attempt_deadline'] - 30);
+  public function renew(int $jobId, string $worker, string $token, array $authorizedCapabilities = [self::CAPABILITY], ?int $attempt = NULL): array {
+    return $this->atomic(function () use ($jobId, $worker, $token, $authorizedCapabilities, $attempt): array {
+      $row = $this->owned($jobId, $worker, $token, $authorizedCapabilities, $attempt);
+      $profile = $this->storedProfile($row);
+      $until = min($this->now() + $profile['lease'], (int) $row['attempt_deadline'] - $profile['grace']);
       if ($until <= $this->now()) throw new \RuntimeException('Execution deadline reached.');
       $this->database->update('famtastic_worker_claim')->fields(['lease_until' => $until, 'changed' => $this->now()])->condition('job_id', $jobId)->execute();
       return ['lease_until' => $until];
@@ -114,15 +135,19 @@ final class WorkerCoordinator {
   }
 
   /** Completion proves dispatch only; signed staging callbacks remain separate. */
-  public function finish(int $jobId, string $worker, string $token, array $result): array {
-    return $this->atomic(function () use ($jobId, $worker, $token, $result): array {
+  public function finish(int $jobId, string $worker, string $token, array $result, array $authorizedCapabilities = [self::CAPABILITY], ?int $attempt = NULL): array {
+    return $this->atomic(function () use ($jobId, $worker, $token, $result, $authorizedCapabilities, $attempt): array {
       $wire = json_encode($result, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
       $hash = hash('sha256', $wire);
       $row = $this->claimRow($jobId);
+      if ($row) {
+        $this->assertCapability($row, $authorizedCapabilities);
+        if ($row['capability'] !== self::CAPABILITY) throw new \RuntimeException('Proof completion requires the future authoritative importer.');
+      }
       if ($row && $row['state'] === 'handoff_completed' && $row['worker_id'] === $worker && hash_equals($row['token_hash'], hash('sha256', $token)) && hash_equals($row['result_sha256'], $hash)) {
         return ['status' => 'handoff_completed', 'duplicate' => TRUE];
       }
-      $this->owned($jobId, $worker, $token);
+      $this->owned($jobId, $worker, $token, $authorizedCapabilities, $attempt);
       $job = $this->job($jobId);
       $packet = json_decode($job['payload'], TRUE, flags: JSON_THROW_ON_ERROR)['packet'];
       if (($result['status'] ?? '') !== 'accepted_waiting_callback' || empty($result['receipt_id'])
@@ -134,9 +159,9 @@ final class WorkerCoordinator {
     });
   }
 
-  public function fail(int $jobId, string $worker, string $token): array {
-    return $this->atomic(function () use ($jobId, $worker, $token): array {
-      $row = $this->owned($jobId, $worker, $token);
+  public function fail(int $jobId, string $worker, string $token, array $authorizedCapabilities = [self::CAPABILITY], ?int $attempt = NULL): array {
+    return $this->atomic(function () use ($jobId, $worker, $token, $authorizedCapabilities, $attempt): array {
+      $row = $this->owned($jobId, $worker, $token, $authorizedCapabilities, $attempt);
       return $this->retry($row, $this->now());
     });
   }
@@ -164,7 +189,7 @@ final class WorkerCoordinator {
 
   private function retry(array $row, int $now): array {
     $job = $this->job((int) $row['job_id']);
-    $exhausted = (int) $row['attempt'] >= min(3, (int) $job['max_attempts']);
+    $exhausted = (int) $row['attempt'] >= min($this->storedProfile($row)['attempts'], (int) $job['max_attempts']);
     $this->database->update('famtastic_worker_claim')->fields(['state' => $exhausted ? 'exception' : 'pending', 'token_hash' => '', 'lease_until' => 0, 'changed' => $now])->condition('job_id', $row['job_id'])->execute();
     $this->database->update('famtastic_job')->fields(['status' => $exhausted ? 'failed' : 'worker_queued', 'attempts' => $row['attempt'], 'locked_at' => NULL,
       'available_at' => max((int) $row['attempt_deadline'], $now + 30 * (2 ** ((int) $row['attempt'] - 1))),
@@ -172,16 +197,35 @@ final class WorkerCoordinator {
     return ['status' => $exhausted ? 'exception' : 'retry', 'attempt' => (int) $row['attempt']];
   }
 
-  private function owned(int $id, string $worker, string $token): array {
+  private function owned(int $id, string $worker, string $token, array $authorizedCapabilities, ?int $attempt): array {
     $this->assertWorker($worker);
     $row = $this->claimRow($id);
     $job = $this->job($id);
+    if ($row) {
+      $this->assertCapability($row, $authorizedCapabilities);
+      if ($row['capability'] === WorkerCapabilityPolicy::PROOF) {
+        if ($attempt !== (int) $row['attempt']) throw new \RuntimeException('Proof attempt generation mismatch.');
+        if ($this->now() >= (int) $row['attempt_deadline'] - $this->storedProfile($row)['grace']) throw new \RuntimeException('Proof execution deadline reached.');
+        if ($job) WorkerCapabilityPolicy::assertProof($job, (int) $row['reservation_cents'], $this->reviewedProofCostPolicies);
+      }
+    }
     if (!$row || $row['state'] !== 'leased' || $row['worker_id'] !== $worker || (int) $row['lease_until'] <= $this->now()
       || !preg_match('/^[a-f0-9]{64}$/', $token) || !hash_equals($row['token_hash'], hash('sha256', $token))
       || !$job || $job['status'] !== 'worker_running' || !hash_equals($row['payload_sha256'], hash('sha256', $job['payload']))) {
       throw new \RuntimeException('Lease lost, foreign worker, expired token or changed payload.');
     }
     return $row;
+  }
+
+  private function storedProfile(array $row): array {
+    $profile = WorkerCapabilityPolicy::profile($row['capability']);
+    if ($row['policy_version'] !== $profile['policy']) throw new \RuntimeException('Stored worker policy mismatch.');
+    return $profile;
+  }
+
+  private function assertCapability(array $row, array $authorizedCapabilities): void {
+    $this->storedProfile($row);
+    if (!in_array($row['capability'], WorkerCapabilityPolicy::claimCapabilities($authorizedCapabilities), TRUE)) throw new \RuntimeException('Worker capability rejected.');
   }
 
   private function reserved(string $month): int {

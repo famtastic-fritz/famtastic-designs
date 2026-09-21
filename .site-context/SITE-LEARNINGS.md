@@ -13,6 +13,15 @@ and preserve legacy v1 asset restrictions and explicit file authority. Evidence:
 `docs/contracts/SELECTED-CREATOR-CREDIT-POLICY-V2.md`. Drive mirroring is deferred
 because this isolated milestone prohibits network activity.
 
+## 2026-09-21 - Shared worker policy is not connected automation
+
+Observation: proof generation needs a separate bounded claim profile without
+changing the existing selected-static worker. Guidance: default claims remain
+static-only, proof cost profiles require explicit reviewed source and proof
+completion stays closed until authoritative import exists. See
+`docs/contracts/SHARED-PROOF-CLAIMS-V1.md` for synthetic local evidence and gaps.
+No Drive mirror was written outside the assigned isolated checkout.
+
 ## 2026-09-21 - Automatic-workflow integration remains additive
 
 Read docs/contracts/MAC-CREATIVE-WORKER-V1.md before extending intake claims.
