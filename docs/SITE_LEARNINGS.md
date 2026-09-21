@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Separate complete-source fixtures from proof callback ingress
+
+A finalized-source adoption test needs authoritative bytes and explicit rights
+for every exported file, including the creator PNG. Use the existing confined
+complete-source manifest for that fixture; do not raise general proof-asset limits
+or waive file authority to repair an outdated Home-only test. Derive fixture
+hashes from materialized bytes, keep one identity and retain numeric wire tests.
+
 ## 2026-09-21 - Freeze attribution authority independently of output
 
 An approved original hash cannot describe a later mandatory-credit derivative.

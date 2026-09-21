@@ -124,3 +124,20 @@ later runs. Bounded metadata wire plus private immutable original archive remain
 subsequent hardening, not a newly imposed prerequisite or a claimed traced bug.
 Drive mirror/fetch/full-journey checks are deferred under the owner's isolated,
 no-network, low-disk scope; repository docs and local learnings are updated.
+
+## Completed-source fixture follow-through
+
+The legacy export fixture now optionally accepts `complete_source_files`, a list
+of at most one `{path, content_base64}` entry for the exact canonical PNG path.
+It materializes bounded actual bytes and computes `selected_build_artifacts`
+hashes/lengths independently of export metadata. The Node fixture supplies fully
+branded Home, pinned original PNG and explicit authority/rights for both files,
+starting from an unassociated normal pipeline result. The real confined source
+and `SelectedFinalizedSource` checks remain untouched. This is not callback asset
+ingress: `ProofAssetContract` still has its original 2 MB cap and all other limits.
+
+The paired one-file Node roundtrip passes adoption, receipt/retry and negative
+duplicate/account/missing-rights/changed-bytes cases plus existing raw numeric
+JSON wire cases. The PHP three-case default harness and syntax checks pass.
+No full suite or production activation; Drive sync remains deferred. Temporary
+fixture cleanup names only its own exact files/directories, including failures.

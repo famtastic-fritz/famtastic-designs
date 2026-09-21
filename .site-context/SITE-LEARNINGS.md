@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Completed-source fixture authority
+
+Observation: the legacy export fixture omitted the required PNG and selected old
+Home bytes against a branded export. Guidance: materialize complete authoritative
+bytes through the existing confined source manifest, with explicit rights for each
+file. Keep callback asset caps and finalized-source checks unchanged. The paired
+offline roundtrip and default PHP harness pass; Drive mirroring remains deferred.
+
 ## 2026-09-21 - Signed original-to-credit projection
 
 Observation: deterministic creator attribution changes the approved Home hash;

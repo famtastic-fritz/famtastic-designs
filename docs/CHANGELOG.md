@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-21 - Complete-source fixture authority repair
+
+- Extend only the legacy PHP export fixture to materialize the bounded system PNG
+  through existing `selected_build_artifacts`. The paired Studio roundtrip and
+  existing three-case PHP harness pass. Production asset caps and finalized-source
+  guards are unchanged; see the selected creator-credit v2 contract follow-through.
+
 ## 2026-09-21 - Pinned signed selected creator-credit policy (source only)
 
 - Add independently computed PHP v2 creator-credit grants and exact Home/PNG

@@ -42,14 +42,37 @@ namespace {
   $input = ($argv[1] ?? '') === '--export-packet' ? json_decode(stream_get_contents(STDIN), TRUE, 512, JSON_THROW_ON_ERROR) : NULL;
   $tmp = sys_get_temp_dir() . '/selected-intent-' . bin2hex(random_bytes(6));
   mkdir($tmp); mkdir($tmp . '/web'); mkdir($tmp . '/proofs');
+  $cleanup = static function() use ($tmp): void {
+    if (!is_dir($tmp)) return;
+    foreach (['/proofs/assets/brand/famtastic-designs-logo-v1.png', '/proofs/index.html'] as $file) if (is_file($tmp . $file)) unlink($tmp . $file);
+    foreach (['/proofs/assets/brand', '/proofs/assets', '/proofs', '/web', ''] as $dir) if (is_dir($tmp . $dir)) rmdir($tmp . $dir);
+  };
+  register_shutdown_function($cleanup);
   Drupal::$dir = $tmp;
   $html = $input ? base64_decode($input['html_base64'], TRUE) : '<!doctype html><html><body><h1>Selected concept</h1></body></html>';
+  if ($html === FALSE || $html === '' || strlen($html) > 500000) throw new \InvalidArgumentException('synthetic_complete_source_html_invalid');
   file_put_contents($tmp . '/proofs/index.html', $html);
   $dna = ['proof_id' => 'proof-a', 'direction_id' => 'a', 'direction_name' => 'Selected',
     'spec_snapshot' => ['site_name' => 'Synthetic Café 雪', 'pages' => ['index.html'], 'small_numeric' => 1e-7, 'large_numeric' => 1e30, 'empty_list' => []],
     'style_fingerprint' => 'original', 'font_pairing' => 'original',
     'media_fulfillment' => ['status' => 'not_needed', 'assets' => []],
     'content_verification' => ['valid' => TRUE], 'asset_manifest' => []];
+  // Completed-source fixture only, not callback ingress. Materialize actual
+  // independently supplied bytes, then let the real confined complete-source
+  // manifest and explicit file-authority checks validate the exported source.
+  // Never feed the 2,020,725-byte system PNG through the 2 MB proof-asset lane.
+  $sourceFiles = $input['complete_source_files'] ?? [];
+  if (!is_array($sourceFiles) || !array_is_list($sourceFiles) || count($sourceFiles) > 1) throw new \InvalidArgumentException('synthetic_complete_source_files_invalid');
+  foreach ($sourceFiles as $file) {
+    if (!is_array($file) || ($file['path'] ?? '') !== 'assets/brand/famtastic-designs-logo-v1.png' || !is_string($file['content_base64'] ?? NULL)
+      || strlen($file['content_base64']) > 2694300) throw new \InvalidArgumentException('synthetic_complete_source_file_invalid');
+    $bytes = base64_decode($file['content_base64'], TRUE);
+    if ($bytes === FALSE || $bytes === '' || strlen($bytes) > 2020725) throw new \InvalidArgumentException('synthetic_complete_source_bytes_invalid');
+    mkdir($tmp . '/proofs/assets'); mkdir($tmp . '/proofs/assets/brand');
+    $path = 'proofs/' . $file['path'];
+    file_put_contents($tmp . '/' . $path, $bytes);
+    $dna['selected_build_artifacts'][] = ['path' => $path, 'sha256' => hash('sha256', $bytes), 'bytes' => strlen($bytes)];
+  }
   $project = new \Drupal\famtastic_pipeline\Entity\Project();
   $variant = new class($dna) {
     public function __construct(private array $dna) {}
@@ -128,5 +151,5 @@ namespace {
       echo json_encode(['wire' => $http->wire, 'jobs' => $jobs]); return;
     }
     echo ($argv[1] ?? '') === '--intent' ? json_encode($intent, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) : "PASS: real portal selection seam preserves source, requested scope, distinct consent, pending revisions, immutable history and retry identity (3 cases).\n";
-  } finally { unlink($tmp . '/proofs/index.html'); rmdir($tmp . '/proofs'); rmdir($tmp . '/web'); rmdir($tmp); }
+  } finally { $cleanup(); }
 }
