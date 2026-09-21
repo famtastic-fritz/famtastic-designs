@@ -2,6 +2,20 @@
 
 Status: local repairs and verification; no live activation.
 
+## Current four-milestone status
+
+| Milestone | Implemented/verified locally | Still required |
+| --- | --- | --- |
+| 1. Phase 2 | Mac YAML, source/security repairs, executable entrypoints and filtered-container closure; synthetic verification | Safe provisioning implementation, Linux image/provenance and real concurrency/canary evidence; no activation |
+| 2. Existing Mac workflow | Default-off fresh admission, shared claims, managed retry isolation, real selected-static CLI | Existing creative-tool adapter, durable paid-operation recovery and fenced artifact import; no fresh creative trigger enabled |
+| 3. Complete customer journey | Legacy controlled journey and actual selected-static continuation fixtures | New unattended fresh-artifact/QA/portal/captured-notice/selection/one-staging journey; no customer send or live site proof |
+| 4. Additive cloud | Shared Drupal capability/ownership protocol; isolated Phase 2 shadow source | Existing project/sign-in, safe provisioning, real shared-claim execution and laptop-unavailable proof |
+
+Routine green delivery must not wait for Fritz. These are unfinished engineering
+and release gates, not new per-client owner approval requirements. GitHub's
+account billing lock remains a separate hosted-CI blocker. Source tests do not
+remove the ordinary client acceptance/settlement/final-launch boundary.
+
 ## Latest integrated source checkpoint
 
 The complete pipeline module unit directory also passes locally against
