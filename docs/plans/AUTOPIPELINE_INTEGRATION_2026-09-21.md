@@ -18,6 +18,32 @@ remove the ordinary client acceptance/settlement/final-launch boundary.
 
 ## Latest integrated source checkpoint
 
+Private artifact preparation is integrated as `44caa869e1b48d16c1c56b295083f8eda13612a5`.
+The legacy validator extraction preserves behavior; preparation is unregistered,
+private and explicitly not deliverable. Independent review found test masking
+and shallow-history dependencies; both are repaired. Frozen source now lives
+outside the document root with exact byte/hash provenance. The deliberately
+disabled DNA validator fails all nine targeted cases. File fsync does not claim
+directory/power-loss durability or authoritative completion.
+
+Parent full-module verification: **591 PHP tests / 3,094 assertions**, zero
+failures/skips and the same 68 pre-existing PHPUnit deprecations. PHP 8.5.9 /
+PHPUnit 11.5.56; suite 1.584 seconds, guarded command 2.014 seconds, 50 MiB peak.
+Receipt: `designs-full-unit-artifacts.l3lWwV`. Paired Studio source
+`17a645b48cb7f84aacbf6bdf58c185abcc7c3db0` passes **1,588 tests / 135 files**,
+zero failed/skipped, both lints and both synthetic execution proofs. Suite
+253.88 seconds, guarded command 255.320 seconds; receipt
+`complete-artifact-container-regression.0Ng9Fg`. All paired harnesses were enabled,
+and both protected Studio data inventories remain unchanged. Exact commands and
+outputs are retained under `/tmp/famtastic-phase2-review.NVAfPl/`.
+
+These are separate overlapping verification layers, not a sum of distinct tests.
+They supersede the earlier full-run source receipts below. Neither is installed
+MySQL contention, live email, cloud deployment or the new unattended journey.
+Root-transaction mutex/current-read/CAS hardening is now in a separate worktree,
+not included in these totals or integrated source. Creative adapter, paid-operation
+recovery and fenced importer remain unfinished; no activation was performed.
+
 Cloud project discovery is now resolved by live read-only Console inspection:
 FAMtastic Site Studio, `gen-lang-client-0744578052`, project number `207847737018`.
 Its service/job inventories are empty; its one VM is stopped. CLI auth remains

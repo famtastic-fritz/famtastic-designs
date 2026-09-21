@@ -20,6 +20,10 @@ proof generation. Atomically bind fresh request/campaign/job admission, preserve
 legacy jobs, freeze current rights, fence generic import bypasses and verify
 independent QA before any automatic client release. Never infer delivery or
 remote acceptance from an allocated job ID alone.
+For artifact preparation, read `docs/contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`.
+Private prepared files and their hashes are not import, QA, completion or release
+authority. Keep generic managed imports closed until the fenced importer exists.
+Preserve validator parity and keep frozen executable test data outside the webroot.
 
 ## September 18 — Embedded build instructions must cover the current request
 
