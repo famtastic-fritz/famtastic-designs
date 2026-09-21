@@ -9,7 +9,7 @@ Status: local repairs and verification; no live activation.
 | 1. Phase 2 | Mac YAML, source/security repairs, executable entrypoints and filtered-container closure; synthetic verification | Safe provisioning implementation, Linux image/provenance and real concurrency/canary evidence; no activation |
 | 2. Existing Mac workflow | Default-off fresh admission, shared claims, managed retry isolation, real selected-static CLI | Existing creative-tool adapter, durable paid-operation recovery and fenced artifact import; no fresh creative trigger enabled |
 | 3. Complete customer journey | Legacy controlled journey and actual selected-static continuation fixtures | New unattended fresh-artifact/QA/portal/captured-notice/selection/one-staging journey; no customer send or live site proof |
-| 4. Additive cloud | Shared Drupal capability/ownership protocol; isolated Phase 2 shadow source | Existing project/sign-in, safe provisioning, real shared-claim execution and laptop-unavailable proof |
+| 4. Additive cloud | Shared Drupal capability/ownership protocol; isolated Phase 2 shadow source; existing project verified in Console | CLI authorization, safe provisioning, real shared-claim execution and laptop-unavailable proof |
 
 Routine green delivery must not wait for Fritz. These are unfinished engineering
 and release gates, not new per-client owner approval requirements. GitHub's
@@ -17,6 +17,13 @@ account billing lock remains a separate hosted-CI blocker. Source tests do not
 remove the ordinary client acceptance/settlement/final-launch boundary.
 
 ## Latest integrated source checkpoint
+
+Cloud project discovery is now resolved by live read-only Console inspection:
+FAMtastic Site Studio, `gen-lang-client-0744578052`, project number `207847737018`.
+Its service/job inventories are empty; its one VM is stopped. CLI auth remains
+unset; no Cloud Shell, SSH, credential, API enablement or resource change occurred.
+The paired Studio receipt is `docs/evidence/EXISTING-CLOUD-PROJECT-2026-09-21.md`.
+Do not restart retired agents or infer cloud readiness from browser access.
 
 The complete pipeline module unit directory also passes locally against
 `3bc4e9baf`: 482 PHP tests / 2,631 assertions, 68 existing PHPUnit deprecations,
@@ -120,7 +127,7 @@ No synthetic cost fixture constitutes authorization for real model spending.
 Still required: the actual Mac creative adapter and fenced import; unattended
 QA/portal/notification/selection/staging proof; real additive
 cloud execution and laptop-unavailable proof. The four-step goal is not complete.
-Disk headroom and GCP project/sign-in remain external prerequisites. No production
+Disk headroom and CLI authorization remain external prerequisites. No production
 job, service, customer message, payment or cloud resource has changed in this pass.
 
 Earlier sections below are dated evidence history, not current release claims.
