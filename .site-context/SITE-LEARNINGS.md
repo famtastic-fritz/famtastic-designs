@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Freeze parity evidence, not a dependency on Git history
+
+Observation: default shallow CI has no pre-extraction ancestor. Guidance: use the
+byte-exact 63,318-byte old service as bounded/hash-pinned non-autoload test data,
+with provenance. Actual old/new callbacks still run; the child environment proves
+Git unavailable and keeps argv bounded. 106 tests / 414 assertions pass under the
+watch guard; protected data unchanged. Retain the first probe failure, not a skip.
+File fsync does not include directory fsync or promise power-loss durability.
+Preparation is private source groundwork, never fenced import authority. Drive
+mirroring remains deferred to the parent under the isolated/offline scope.
+
 ## 2026-09-21 - Keep artifact preparation separate from import authority
 
 Observation: filesystem replacement is not rolled back with Drupal records.

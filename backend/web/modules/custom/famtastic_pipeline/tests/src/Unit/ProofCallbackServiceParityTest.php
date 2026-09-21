@@ -11,14 +11,39 @@ require_once __DIR__ . '/Fixtures/ProofArtifactInputs.php';
 /** Executes the actual old/new public callback using the same isolated doubles. */
 final class ProofCallbackServiceParityTest extends TestCase {
   private const BASE = '3bc4e9baf0368db35d454ae8922c149430a866b4';
+  private const BASE_BYTES = 63318;
+  private const BASE_SHA256 = '549273b904ff05a263f2b3db5bc182f4b11e7fa2779ba3a69491eded1810e890';
+  private const MAX_FIXTURE_BYTES = 65536;
+  private const NO_GIT_PATH = '/nonexistent/famtastic-parity-no-executables';
 
   #[DataProvider('callbacks')]
-  public function testActualCallbackAgainstPreExtractionCommit(array $variants): void {
+  public function testActualCallbackAgainstFrozenPreExtractionService(array $variants): void {
     $repo = dirname(__DIR__, 8);
     $path = 'backend/web/modules/custom/famtastic_pipeline/src/Service/ProofCampaignService.php';
-    [$status, $old, $errors] = $this->process(['git', '-C', $repo, 'show', self::BASE . ':' . $path]);
-    self::assertSame(0, $status, $errors);
-    self::assertSame($this->runCallback($repo, $old, $variants), $this->runCallback($repo, file_get_contents($repo . '/' . $path), $variants));
+    $fixture = __DIR__ . '/Fixtures/ProofCampaignService.pre-extraction.fixture';
+    self::assertFileExists($fixture);
+    self::assertFalse(is_link($fixture));
+    $old = file_get_contents($fixture, FALSE, NULL, 0, self::MAX_FIXTURE_BYTES + 1);
+    self::assertIsString($old);
+    self::assertLessThanOrEqual(self::MAX_FIXTURE_BYTES, strlen($old));
+    self::assertSame(self::BASE_BYTES, strlen($old), 'Frozen source size from ' . self::BASE);
+    self::assertSame(self::BASE_SHA256, hash('sha256', $old), 'Never regenerate the old baseline from current source.');
+    self::assertSame($this->runCallback($repo, $fixture, $variants), $this->runCallback($repo, $repo . '/' . $path, $variants));
+  }
+
+  public function testCallbackChildCannotLookUpGitHistory(): void {
+    // Same child launch environment as every old/new callback below. Absolute
+    // PHP_BINARY still runs, but an accidental Git subprocess cannot resolve.
+    $probe = <<<'PHP'
+    $p = @proc_open(['git', '--version'], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+    if ($p === FALSE) exit(73);
+    fclose($pipes[0]); stream_get_contents($pipes[1]); stream_get_contents($pipes[2]);
+    fclose($pipes[1]); fclose($pipes[2]);
+    exit(proc_close($p) === 0 ? 0 : 73);
+PHP;
+    [$status, $out] = $this->process([PHP_BINARY, '-r', $probe]);
+    self::assertSame(73, $status, 'Git must be unavailable in the actual callback child environment.');
+    self::assertSame('', $out);
   }
 
   public static function callbacks(): iterable {
@@ -32,7 +57,7 @@ final class ProofCallbackServiceParityTest extends TestCase {
     yield 'wrong direction count' => [[Input::variants()[0]]];
   }
 
-  private function runCallback(string $repo, string $service, array $variants): array {
+  private function runCallback(string $repo, string $serviceFile, array $variants): array {
     $fixture = file_get_contents($repo . '/scripts/test-normal-selected-records.php');
     // Retain that fixture's actual callback + duplicate and its exact temp cleanup.
     // Do not enter its later selection/build flow or introduce a replacement DB.
@@ -52,10 +77,14 @@ PHP;
     $fixture = substr($fixture, 0, $cut) . $capture . substr($fixture, $finally);
     $needle = "require \$root . \$class . '.php';";
     self::assertSame(1, substr_count($fixture, $needle));
-    $fixture = str_replace($needle, "(\$class === 'ProofCampaignService') ? eval('?>' . base64_decode('" . base64_encode($service) . "')) : require \$root . \$class . '.php';", $fixture);
+    // Trusted test-owned paths only. Do not embed the full service in argv: the
+    // double-base64 old-service argument exceeded 134 KB on the first harness.
+    $fixture = str_replace($needle, "(\$class === 'ProofCampaignService') ? require " . var_export($serviceFile, TRUE) . " : require \$root . \$class . '.php';", $fixture);
     $fixture = str_replace('dirname(__DIR__)', var_export($repo, TRUE), $fixture);
     $callback = Input::input(); unset($callback['schema']); $callback['variants'] = $variants;
-    [$status, $output, $errors] = $this->process([PHP_BINARY, '-r', "eval('?>' . base64_decode('" . base64_encode($fixture) . "'));"], Input::wire(['installation' => [], 'raw_callback' => Input::wire($callback)]));
+    $code = "eval('?>' . base64_decode('" . base64_encode($fixture) . "'));";
+    self::assertLessThan(65536, strlen($code), 'Keep each callback child argument bounded for CI.');
+    [$status, $output, $errors] = $this->process([PHP_BINARY, '-r', $code], Input::wire(['installation' => [], 'raw_callback' => Input::wire($callback)]));
     self::assertSame(0, $status, $errors);
     self::assertSame('', $errors);
     $result = json_decode($output, TRUE, flags: JSON_THROW_ON_ERROR);
@@ -66,7 +95,8 @@ PHP;
   }
 
   private function process(array $command, string $input = ''): array {
-    $p = proc_open($command, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+    $p = proc_open($command, [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes,
+      __DIR__ . '/Fixtures', ['PATH' => self::NO_GIT_PATH]);
     self::assertIsResource($p); fwrite($pipes[0], $input); fclose($pipes[0]);
     $out = stream_get_contents($pipes[1]); $err = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
     return [proc_close($p), $out, $err];

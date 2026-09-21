@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Differential tests cannot require shallow-clone ancestors
+
+Observation: the old-service callback comparison used a Git ancestor absent from
+the default CI checkout. Guidance: freeze the exact reviewed source as bounded,
+hash-pinned non-autoload data with provenance, retaining actual callback execution.
+Run with Git unavailable and small child arguments, not broader history or skips.
+The first no-Git probe incorrectly assumed proc_open returns a resource for a
+missing executable; handle false or nonzero exit explicitly, keeping callbacks
+strict. Final three-file run: 106 tests / 414 assertions, protected data unchanged.
+Separately, file fsync alone does not persist directory entries or establish
+power-loss durability; private preparation never establishes import authority.
+
 ## 2026-09-21 - File preparation is not a database transaction
 
 Observation: canonical callbacks replace HTML/media paths before final DB and

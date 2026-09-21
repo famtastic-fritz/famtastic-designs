@@ -1,9 +1,10 @@
 # Managed proof artifact preparation v1
 
 September 21, 2026. Source groundwork only, based on `3bc4e9baf`.
-Focused runtime verification: 105 tests / 362 assertions PASS after the test-helper
-rename below. The original disk pause and failed receipts are retained. This is
-not an importer, producer or deliverable proof.
+Focused runtime verification: 106 tests / 414 assertions PASS with Git unavailable
+and bounded callback child arguments. The earlier helper repair, original disk
+pause and failed receipts are retained below. This is not an importer, producer
+or deliverable proof.
 
 ## Scope and unchanged authority
 
@@ -55,11 +56,15 @@ authenticated producer/claim binding remain future importer work.
 
 At most 22 content files plus manifest are possible; aggregate preparation is
 bounded to 40 MiB. All files use exclusive creation, verified full writes, flush,
-fsync, owner-only read permissions and rechecked hashes/lengths. The complete
+file fsync, owner-only read permissions and rechecked hashes/lengths. The complete
 inventory is verified again before manifest creation. The returned manifest hash
 is not a completion/QA receipt. Every manifest says private_preparation_only and
 deliverable=false. Preparation tests deliberately omit creator credit and are
 NOT deliverable customer artifacts.
+
+There is no directory fsync. File fsync does not guarantee that directory entries
+or the manifest survive a crash or power loss; no such durability or atomic
+filesystem/DB publication is claimed. Preparation is never import authority.
 
 Every invocation allocates a new random server directory. Existing directories,
 files, symlinks or conflicting bytes reject; no overwrite, automatic adoption,
@@ -87,7 +92,55 @@ Script/event-handler/iframe/object/embed/base restrictions remain unchanged. The
 legacy regex is not a complete HTML sanitizer or functionality proof. Static/demo
 HTML preparation does not prove live forms, commerce or an actual creative run.
 
-## Focused verification command and receipt
+## Shallow-checkout portability repair and current receipt
+
+The old differential required `git show 3bc4e9baf:...` at test runtime, but the
+actual acceptance workflow uses actions/checkout's default shallow history. Keep
+the public-callback differential, not a skip or broader fetch. The committed
+`tests/src/Unit/Fixtures/ProofCampaignService.pre-extraction.fixture` is the full
+old service, byte-identical to commit `3bc4e9baf0368db35d454ae8922c149430a866b4`,
+path `backend/web/modules/custom/famtastic_pipeline/src/Service/ProofCampaignService.php`.
+Provenance is in the adjacent `.provenance.json`:
+
+- Git blob: `92a491c408ae8493afc0f7a40c7759f43078afeb`.
+- Bytes: 63,318; enforced maximum: 65,536.
+- SHA256: `549273b904ff05a263f2b3db5bc182f4b11e7fa2779ba3a69491eded1810e890`.
+
+The non-PHP-autoload extension is explicit test data, never registered as a
+service. Every differential case checks its size and hash before executing old
+and new actual public callbacks and duplicate retries through the same existing
+manual fixture. Trusted test-owned file paths avoid double-encoding the entire
+old service into argv; each child code argument is asserted below 65,536 bytes.
+The earlier argument exceeded 134 KB, an unnecessary CI portability risk.
+No production source or guards changed in this repair.
+
+All callback children receive an unusable PATH; a dedicated child probe proves
+Git cannot run in that same environment. The entire PHPUnit invocation below
+also has that PATH. PHP uses its absolute executable path. There is no runtime
+history lookup or skip, and no workflow/fetch-depth change. This is local macOS /
+PHP 8.5.9 verification, not a hosted Actions or PHP 8.3 execution receipt.
+
+Only the same three focused files ran serially under the existing 200 MiB watch
+guard: **106 tests / 414 assertions**, 0.829 seconds, 12 MiB, no failures, skips,
+warnings or deprecations. Wrapper elapsed 1.189 seconds, exit 0, stoppedFor=null,
+protectedDataUnchanged=true. Evidence:
+`/tmp/famtastic-phase2-review.NVAfPl/managed-artifact-preparation-git-free-bounded.m2cENk`.
+Disk was 275,680 KiB available immediately after the run. Exact command:
+
+```sh
+node /tmp/famtastic-phase2-review.NVAfPl/run-integration-check.mjs managed-artifact-preparation-git-free-bounded "cd /tmp/famtastic-fresh-admission.k98Gm4/designs && /usr/bin/env PATH=/nonexistent/famtastic-parity-no-executables FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor /opt/homebrew/bin/php /Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor/phpunit/phpunit/phpunit --bootstrap scripts/automation-test-bootstrap.php --no-configuration --do-not-cache-result backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackArtifactsTest.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ManagedProofArtifactStoreTest.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackServiceParityTest.php"
+```
+
+Retained portability receipts, both protected inventories unchanged:
+
+- `managed-artifact-preparation-git-free.ygXHy6`: exit 1, 106 tests / 398 assertions,
+  one failure and warning. Missing Git correctly made proc_open return false,
+  but the first probe assumed a resource. Handle both missing-executable forms
+  in that probe; keep actual callback process creation strict. No skip.
+- `managed-artifact-preparation-git-free-repaired.lwLQVC`: exit 0, 106 tests /
+  400 assertions, 0.819 seconds, before the subsequent argv-bound assertions.
+
+## Historical focused verification command and receipt
 
 The existing vendor's composer.json and composer.lock match this checkout.
 Only the three new test files ran serially through the parent's existing wrapper:
@@ -110,10 +163,11 @@ DB, provider, cloud, send or activation. Exact executed command:
 node /tmp/famtastic-phase2-review.NVAfPl/run-integration-check.mjs managed-artifact-preparation-focused "cd /tmp/famtastic-fresh-admission.k98Gm4/designs && FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor php /Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor/phpunit/phpunit/phpunit --bootstrap scripts/automation-test-bootstrap.php --no-configuration --do-not-cache-result backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackArtifactsTest.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ManagedProofArtifactStoreTest.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackServiceParityTest.php"
 ```
 
-The frozen validator fixture is the pre-extraction block. The service differential
-also reads the actual `3bc4e9baf` service via git show, then executes old and new
-public callback plus duplicate through the same manual legacy fixture, stopping
-before its selected-build flow. Compare outputs, mutations, hashes and failures.
+The frozen validator fixture is the pre-extraction block. This historical service
+differential read `3bc4e9baf` via git show; the current frozen service fixture above
+removes that runtime dependency. Both execute old and new public callback plus
+duplicate through the same manual legacy fixture, stopping before its selected-build
+flow. Compare outputs, mutations, hashes and failures.
 No production guard is mocked away; that fixture rejects seeded managed events.
 Store cases cover unknown/sensitive wire fields, raw/normalized mismatch, caps,
 complete manifests, path escape, roots, symlinks, existing files, short writes,

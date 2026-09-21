@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-09-21 - Callback parity without repository history
+
+- Replace runtime historical Git lookup with a 63,318-byte hash-pinned, bounded
+  non-autoload fixture; preserve actual old/new callbacks and duplicate comparison.
+- Prove Git unavailable in callback children and bound their argv; only the three
+  focused files ran, 106 tests / 414 assertions pass, protected data unchanged.
+  Retain the failed first no-Git probe. Production guards/source are unchanged.
+- Document file fsync without directory fsync or power-loss guarantees; private
+  preparation remains unregistered and is not import authority. Exact receipts:
+  `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`.
+
 ## 2026-09-21 - Private artifact preparation groundwork, synthetic verification
 
 - Extract callback validation without changing legacy limits, errors or policy.

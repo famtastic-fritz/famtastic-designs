@@ -3,9 +3,10 @@
 ## 2026-09-21 - Artifact preparation, synthetic local verification only
 
 Pure legacy validator extraction and an unregistered private create-only store
-are source groundwork only. 105 focused tests / 362 assertions pass under the
-200 MiB watch guard; protected inventories unchanged. Retained initial fixture
-failure required a helper rename, not production changes. No provider/production
+are source groundwork only. 106 focused tests / 414 assertions pass under the
+200 MiB watch guard with Git unavailable and a hash-pinned historical service
+fixture; protected inventories unchanged. Prior failures and receipts are retained.
+File fsync is not directory fsync or a power-loss guarantee. No provider/production
 capability promotion; no authoritative importer, producer, QA or delivery exists.
 See `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md` for bounds and open gates.
 
