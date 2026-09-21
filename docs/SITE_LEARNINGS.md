@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Freeze attribution authority independently of output
+
+An approved original hash cannot describe a later mandatory-credit derivative.
+Freeze a signed versioned owner policy and independently compute only the exact
+Home projection from confined original proof bytes. A worker receipt or current
+build is not the original authority. Keep v1 assetless; require authored evidence
+for every included v2 non-Home page, not just records a worker chooses to supply.
+The legacy explicit-file-authority continuation remains fail-closed until all
+actual branded files have authority. See the selected creator-credit v2 contract.
+
 ## 2026-09-21 - Preserve the executed creative routine
 
 Recent delivered proofs used active agents, managed imagery, customer build

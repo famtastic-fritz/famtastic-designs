@@ -1,5 +1,18 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Signed original-to-credit projection
+
+Observation: deterministic creator attribution changes the approved Home hash;
+trusting a current build or worker receipt as its own original would erase the
+source boundary. Iterating supplied authored records also misses omitted pages.
+
+Guidance: freeze the canonical owner policy in v2 grants; independently recompute
+the exact Home projection from confined original proof bytes. Permit only the
+exact system PNG, require one authored record/evidence per included non-Home page,
+and preserve legacy v1 asset restrictions and explicit file authority. Evidence:
+`docs/contracts/SELECTED-CREATOR-CREDIT-POLICY-V2.md`. Drive mirroring is deferred
+because this isolated milestone prohibits network activity.
+
 ## 2026-09-21 - Automatic-workflow integration remains additive
 
 Read docs/contracts/MAC-CREATIVE-WORKER-V1.md before extending intake claims.

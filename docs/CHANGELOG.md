@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-21 - Pinned signed selected creator-credit policy (source only)
+
+- Add independently computed PHP v2 creator-credit grants and exact Home/PNG
+  association gates; preserve v1 behavior and the general credit presenter.
+- Permit narrowly proven mapped credit continuation, require every included v2
+  non-Home authored page's evidence, and retain explicit-file-authority fail-closed
+  behavior in the alternate continuation path. Local focused tests and cross-language
+  byte parity pass; integration/publication are not claimed. See
+  `docs/contracts/SELECTED-CREATOR-CREDIT-POLICY-V2.md`.
+
 ## 2026-09-21 - Autonomous integration contract and evidence boundaries
 
 Record the actual Mac creative workflow, required shared-claim adapter and

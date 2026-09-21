@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace Drupal\famtastic_pipeline\Service;
+require_once __DIR__ . '/SelectedCreatorCreditProjection.php';
 
 /** Derives internal recipe/permission records from normal saved inputs. */
 final class SelectedRecordResolver {
@@ -44,11 +45,25 @@ final class SelectedRecordResolver {
     if (!isset($pages['index.html'])) self::issue('selected_home_scope_missing');
     $existing = ['index.html' => $selected];
     foreach ($sourceAssets as $path => $asset) $existing[$path] = $asset['artifact'];
+    $credit = NULL;
     if ($completed) {
       $home = array_values(array_filter($completed['files'], static fn(array $f): bool => $f['path'] === 'index.html'));
-      if (count($home) !== 1 || $home[0]['sha256'] !== $selected['sha256']) self::issue('source_changed_requires_edit_recipe');
+      if (count($home) !== 1) self::issue('source_changed_requires_edit_recipe');
+      $logo = array_filter($completed['files'], static fn(array $f): bool => $f['path'] === SelectedCreatorCreditProjection::ASSET_PATH);
+      if ($home[0]['sha256'] !== $selected['sha256'] || $home[0]['bytes'] !== $selected['bytes'] || $logo || isset($mapping['creator_credit_projection'])) {
+        // V1-associated sources never acquire a new asset/derivative capability.
+        if (!empty($mapping['association_id']) && !isset($mapping['creator_credit_projection'])) self::issue('source_changed_requires_edit_recipe');
+        foreach (['project_id', 'customer_id', 'request_id'] as $key) {
+          $expected = $key === 'request_id' ? (string) $row['public_id'] : (string) $row[$key];
+          if (($mapping[$key] ?? '') !== $expected || ($intent[$key] ?? '') !== $expected) self::issue('source_mapping_identity_mismatch');
+        }
+        $credit = SelectedCreatorCreditProjection::fromStorage($storageRoot, $selected);
+        if (isset($mapping['creator_credit_projection'])) SelectedCreatorCreditProjection::assertProjection($mapping['creator_credit_projection'], $credit);
+        SelectedCreatorCreditProjection::assertHomeAndLogo($completed['files'], $credit);
+        if (isset($sourceAssets[SelectedCreatorCreditProjection::ASSET_PATH])) self::issue('system_asset_authority_conflict');
+      }
       foreach ($completed['files'] as $file) {
-        if (!isset($pages[$file['path']]) && !isset($sourceAssets[$file['path']])) self::issue('existing_page_removal_requires_edit_recipe');
+        if (!isset($pages[$file['path']]) && !isset($sourceAssets[$file['path']]) && !($credit && $file['path'] === SelectedCreatorCreditProjection::ASSET_PATH)) self::issue('existing_page_removal_requires_edit_recipe');
         $existing[$file['path']] = $file;
       }
     }
@@ -74,6 +89,13 @@ final class SelectedRecordResolver {
     foreach ($sourceAssets as $path => $asset) $files[] = ['path' => $path, 'source_path' => $asset['artifact']['path'], 'url' => $url($asset['artifact']['sha256']), 'rights' => $asset['rights']];
     foreach ($existing as $path => $file) {
       if (isset($sourceAssets[$path])) continue;
+      if ($credit && $path === SelectedCreatorCreditProjection::ASSET_PATH) {
+        $sourcePath = 'next-source/' . $completed['run_id'] . '/' . $path;
+        $artifacts[] = ['role' => 'source_material', 'path' => $sourcePath, 'sha256' => $file['sha256'], 'bytes' => $file['bytes']];
+        $files[] = ['path' => $path, 'source_path' => $sourcePath, 'source_origin' => 'mapped_repository',
+          'rights' => ['status' => 'approved', 'scope' => 'creator_attribution_only', 'evidence_ref' => 'owner-creator-credit:' . $credit['policy_sha256'], 'publication_authorized' => FALSE]];
+        continue;
+      }
       $saved = array_values(array_filter($intake['authored_content']['pages'] ?? [], static fn(array $p): bool => strtolower($p['text']['page_name']) === strtolower($pages[$path])));
       if ($saved && ($mapping['content_records'][$path] ?? '') !== $saved[0]['record_id']) self::issue('existing_page_copy_requires_edit_recipe:' . $path);
       if (!$saved && isset($mapping['content_records'][$path])) self::issue('existing_page_copy_removed_requires_review:' . $path);

@@ -1,5 +1,15 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Signed creator-credit projection (local source only)
+
+PHP independently computes the pinned owner-credit Home derivative from confined
+original proof bytes and validates v2 grant/mapping, exact system PNG and complete
+authored-page evidence. 89 focused dependency-free assertions, three existing
+portal-selection cases and five exact PHP/Node JSON-byte parity fixtures pass.
+Existing v1 and explicit-file-authority boundaries remain intact. No provider,
+customer, first-association end-to-end, deployment or production claim. See
+`docs/contracts/SELECTED-CREATOR-CREDIT-POLICY-V2.md`.
+
 ## 2026-09-21 - Fresh selected-static admission (local source only)
 
 Default-off, atomic fresh-job enrollment in the existing Drupal claim ledger is
