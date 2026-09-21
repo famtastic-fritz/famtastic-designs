@@ -17,6 +17,14 @@
   CLI through the paired Studio signed-ingress fixture. Nine Node tests and two
   cross-repository cases pass; authority/hosting are synthetic, not live.
 
+## 2026-09-21 - Keep managed proof reconciliation out of login (source only)
+
+- Return the existing owned managed request during deep-dive resume, without
+  queue/reuse or input writes; preserve strict explicit resend and all auth gates.
+- Project changed asset rights as attention, without write locking read-only
+  status. 243 focused PHP tests / 1,427 assertions pass, including real-controller
+  login regressions with session doubles. Original failure retained in contract.
+
 ## 2026-09-21 - Canonical fresh-proof campaign namespace (source only)
 
 - Allocate new managed campaigns with `pc-` plus unchanged random hex, matching

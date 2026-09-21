@@ -17,6 +17,16 @@ uses preserve-symlinks-main. Retain a subprocess test requiring the actual
 configuration failure, plus a silent-import assertion. The paired Studio test
 exercises its signed ingress and one static build, not actual cloud execution.
 
+## 2026-09-21 - Optional workflow repair must not become authentication
+
+Observation: strict managed-proof reuse in deep-dive resume ran before login
+finalization and rejected valid sign-in after brief/rights changes. Guidance:
+after existing account/ownership checks, return the managed request unchanged;
+do not retry its proof or swallow generic auth/system exceptions. Keep explicit
+resend strict and project current brief/asset reconciliation as attention. Test
+the real controller, not merely the service. 243 focused PHP tests pass with
+in-memory records and a finalization double; no real sessions or mail are used.
+
 ## 2026-09-21 - Validate allocated IDs at their downstream boundary
 
 Observation: an inert admission campaign used `proof-*`, but canonical asset

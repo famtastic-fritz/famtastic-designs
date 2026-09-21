@@ -16,9 +16,11 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 require_once dirname(__DIR__, 3) . '/famtastic_pipeline.install';
+require_once __DIR__ . '/Fixtures/FreshProofLoginControllerCases.php';
 
 /** Real writers, coordinator and SQLite transactions; entity storage is doubled. */
 final class FreshProofAdmissionTest extends UnitTestCase {
+  use FreshProofLoginControllerCases;
   private Connection $db;
   private TimeInterface $clock;
   private EntityTypeManagerInterface $entities;
@@ -63,7 +65,10 @@ final class FreshProofAdmissionTest extends UnitTestCase {
     $this->install();
   }
 
-  protected function tearDown(): void { new Settings([]); parent::tearDown(); }
+  protected function tearDown(): void {
+    \Drupal\famtastic_pipeline\Controller\PortalLoginSessionDouble::$finalize = NULL;
+    new Settings([]); parent::tearDown();
+  }
   private function uuid(): string { return '00000000-0000-0000-0000-' . str_pad((string) ++$this->uuidCounter, 12, '0', STR_PAD_LEFT); }
   private function enable(): void { new Settings(['famtastic_fresh_proof_admission_enabled' => TRUE]); }
 
@@ -79,6 +84,8 @@ final class FreshProofAdmissionTest extends UnitTestCase {
     $uuid->method('generate')->willReturnCallback(fn() => $this->uuid());
     $preview = (new \ReflectionClass(PublicPreviewDeliveryService::class))->newInstanceWithoutConstructor();
     (new \ReflectionProperty($preview, 'database'))->setValue($preview, $this->db);
+    (new \ReflectionProperty($preview, 'time'))->setValue($preview, $this->clock);
+    (new \ReflectionProperty($preview, 'ledger'))->setValue($preview, new OperationalLedger($this->db, $this->clock, $this->coordinator));
     $packets = (new \ReflectionClass(SiteStudioBuildPacketService::class))->newInstanceWithoutConstructor();
     $this->portal = new CustomerPortalService($this->db, $this->entities, $this->clock, $uuid,
       $this->getConfigFactoryStub(['famtastic_pipeline.settings' => ['frontend_base_url' => 'https://example.test', 'notification_to_email' => 'operator@example.test']]),
@@ -547,20 +554,22 @@ final class FreshProofAdmissionTest extends UnitTestCase {
     $this->db->update('famtastic_project_request')->fields(['proof_campaign_id' => NULL])->condition('id', 1)->execute();
     $before = $this->proofRecords();
     // The public deep-dive entry delegates to the actual existing-request helper.
-    $this->reject(fn() => $this->portal->createWebsiteRequestFromDeepDive(1, ['status' => 'claimed', 'website_request_id' => 1]), 'admission evidence changed');
+    self::assertSame(1, $this->portal->createWebsiteRequestFromDeepDive(1, ['status' => 'claimed', 'website_request_id' => 1]));
+    self::assertSame('needs_attention', $this->portal->websiteRequestProofHandoff(1)['state']);
     self::assertSame($before, $this->proofRecords());
     self::assertSame(1, $this->campaignCreates);
   }
 
   #[DataProvider('flags')]
-  public function testManagedDeepDiveResumeReusesWithoutNormalizingFrozenInput(bool $enabled): void {
+  public function testManagedDeepDiveResumeReturnsOwnedRequestWithoutProofRetry(bool $enabled): void {
     $this->enable(); $request = $this->create(); new Settings(['famtastic_fresh_proof_admission_enabled' => $enabled]);
     $before = $this->proofRecords();
     self::assertSame(1, $this->portal->createWebsiteRequestFromDeepDive(1, ['status' => 'claimed', 'website_request_id' => 1]));
     self::assertSame($before, $this->proofRecords());
     $this->portal->updateWebsiteRequest(1, $request['public_id'], ['primary_goal' => 'Changed submitted brief'] + $this->input());
     $before = $this->proofRecords();
-    $this->reject(fn() => $this->portal->createWebsiteRequestFromDeepDive(1, ['status' => 'claimed', 'website_request_id' => 1]), 'differs from current input');
+    self::assertSame(1, $this->portal->createWebsiteRequestFromDeepDive(1, ['status' => 'claimed', 'website_request_id' => 1]));
+    self::assertSame('needs_attention', $this->portal->websiteRequestProofHandoff(1)['state']);
     self::assertSame($before, $this->proofRecords());
     self::assertFalse($this->db->inTransaction());
   }
