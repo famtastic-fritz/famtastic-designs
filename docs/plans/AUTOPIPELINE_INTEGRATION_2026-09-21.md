@@ -7,10 +7,14 @@ Status: local repairs and verification; no live activation.
 Fresh proof admission is now implemented in isolated source through 81ff57ee:
 default-off, atomic fresh request/campaign/job/claim identity, strict managed
 resend isolation, canonical `pc-*` campaign IDs, and denial of generic managed
-imports. The production cost catalog remains empty. Parent verification passes
-227 PHP tests / 1,185 assertions and nine bounded-worker Node tests in
-`fresh-admission-integrated-final.1tGszs`. A review-discovered login coupling
-regression is being repaired; these totals do not prove that boundary yet.
+imports. The production cost catalog remains empty. The login regression is
+repaired in `eadc9a7`, integrated as `2785725f7`, and independently reviewed.
+Managed deep-dive resume returns the existing owned request without retrying
+proof work; explicit resend stays strict. Current parent verification passes
+243 PHP tests / 1,427 assertions and nine bounded-worker Node tests in
+`managed-login-integrated-final.PToRbb`. Credential/session finalization are
+doubles, not installed-browser authentication. Two existing PHPUnit deprecations
+remain; there are no test failures or skips in that focused run.
 
 The newer combined run against Studio 2da81fa / Designs 81ff57ee reports
 1,551 passed / 20 failed out of 1,571 tests in 134 files, plus 12 cascading
@@ -22,6 +26,14 @@ request lookup, and rejects nonempty managed-event data rather than pretending
 to model it. All 20 affected tests in three files pass in 118.447 seconds:
 `legacy-fresh-binding-fixture.f9NJV0`. Both protected data inventories remain
 unchanged. Production guards were not weakened; a new full rerun is required.
+
+That full rerun is now green: Studio `2da81faf84f52d293758b7e0bb4715a46742dffd`
+with Designs `2785725f7950ccdf1830c9eb95083029939725bd` passes 1,571 tests in
+134 files, zero failed/skipped, both lints, both synthetic execution proofs and
+whitespace checks. Suite: 249.12 seconds; guarded command: 250.572 seconds.
+Evidence: `complete-integrated-repair-final.oVambR`. All paired fixtures were
+enabled and both protected data inventories remain unchanged. This supersedes
+the red run above for those source commits, not its retained diagnostic history.
 
 The real bounded worker executable now survives macOS symlink paths instead of
 silently exiting zero. Nine Node tests plus two companion Studio CLI/ingress
@@ -80,8 +92,7 @@ default-off source wiring; proof completion remains closed pending the
 authoritative importer.
 No synthetic cost fixture constitutes authorization for real model spending.
 
-Still required: finish the login regression repair and combined suite; actual
-Mac creative adapter and fenced import; unattended
+Still required: the actual Mac creative adapter and fenced import; unattended
 QA/portal/notification/selection/staging proof; real additive
 cloud execution and laptop-unavailable proof. The four-step goal is not complete.
 Disk headroom and GCP project/sign-in remain external prerequisites. No production
