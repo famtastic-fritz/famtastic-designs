@@ -7,7 +7,10 @@ delivery work. DB rollback cannot undo those overwrites. Extract validation only
 prepare new immutable bytes privately, with no overwrite/adoption/cleanup, then
 require a separate authoritative receipt before any consumer can use them.
 The exact logo exceeds the generic image cap by 20,725 bytes; do not weaken caps.
-Runtime regression execution is pending the 200 MiB disk guard, not a pass.
+After the low-disk pause, 105 tests / 362 assertions pass with protected inventories
+unchanged. The initial fatal exposed a helper named result, a final PHPUnit method.
+Use descriptive helper names; lint alone cannot load/check the inherited runner
+API. Retain the failure and run the actual fixture before claiming verification.
 
 ## 2026-09-21 - New production guards need real fixture dependencies
 

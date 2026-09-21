@@ -8,7 +8,8 @@ Read SHARED-PROOF-CLAIMS-V1.md and MAC-CREATIVE-WORKER-V1.md together.
 
 The later narrow `MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md` checkpoint extracts
 legacy artifact validation and adds unregistered private create-only preparation.
-Runtime tests are pending disk headroom. It does not implement or open import,
+Its 105 focused tests / 362 assertions pass after a test-helper naming repair.
+It does not implement or open import,
 completion, Build DNA authority, QA, delivery or provider activation.
 
 ## Sign-in is not a managed proof retry (source only)

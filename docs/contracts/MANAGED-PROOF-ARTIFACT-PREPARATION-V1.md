@@ -1,8 +1,9 @@
 # Managed proof artifact preparation v1
 
 September 21, 2026. Source groundwork only, based on `3bc4e9baf`.
-Runtime verification is PENDING: disk fell below the 200 MiB guard before tests.
-Syntax checks passed. This is not an importer, producer or deliverable proof.
+Focused runtime verification: 105 tests / 362 assertions PASS after the test-helper
+rename below. The original disk pause and failed receipts are retained. This is
+not an importer, producer or deliverable proof.
 
 ## Scope and unchanged authority
 
@@ -86,22 +87,27 @@ Script/event-handler/iframe/object/embed/base restrictions remain unchanged. The
 legacy regex is not a complete HTML sanitizer or functionality proof. Static/demo
 HTML preparation does not prove live forms, commerce or an actual creative run.
 
-## Focused verification commands and pending receipt
+## Focused verification command and receipt
 
 The existing vendor's composer.json and composer.lock match this checkout.
-No install, full suite, build, authoritative DB or provider is required. Execute
-serially only above the guard, using real temporary files and existing fixture
-doubles, not an installed Drupal kernel or concurrent MySQL proof:
+Only the three new test files ran serially through the parent's existing wrapper:
+PHP 8.5.9, PHPUnit 11.5.56, 105 tests / 362 assertions, 0.878 seconds, 12 MiB peak,
+no failures, skips or deprecations. Wrapper elapsed 1.217 seconds, exit 0,
+stoppedFor=null, protectedDataUnchanged=true. Evidence:
+`/tmp/famtastic-phase2-review.NVAfPl/managed-artifact-preparation-focused.58jjE3`.
+Source is checkpoint `82a04160` plus only the fixture helper rename; production
+source is unchanged from that checkpoint. Nine PHP syntax checks and whitespace
+checks pass. Disk was roughly 394-403 MiB during this verification.
+
+The wrapper checks 200 MiB initially and every 500 ms, terminates the child process
+group on low space, excludes protected DB/credential reads/writes from tests, and
+compares both protected-data inventories before/after. Its existing network policy
+denies external network but retains localhost allowances for other parent tests;
+these three tests use no network. No installs, full suites, builds, authoritative
+DB, provider, cloud, send or activation. Exact executed command:
 
 ```sh
-test "$(df -k . | awk 'NR==2 {print $4}')" -ge 204800 && \
-FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor \
-sandbox-exec -p '(version 1)(allow default)(deny network*)' \
-php /Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor/phpunit/phpunit/phpunit \
-  --bootstrap scripts/automation-test-bootstrap.php --no-configuration --do-not-cache-result \
-  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackArtifactsTest.php \
-  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ManagedProofArtifactStoreTest.php \
-  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackServiceParityTest.php
+node /tmp/famtastic-phase2-review.NVAfPl/run-integration-check.mjs managed-artifact-preparation-focused "cd /tmp/famtastic-fresh-admission.k98Gm4/designs && FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor php /Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor/phpunit/phpunit/phpunit --bootstrap scripts/automation-test-bootstrap.php --no-configuration --do-not-cache-result backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackArtifactsTest.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ManagedProofArtifactStoreTest.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackServiceParityTest.php"
 ```
 
 The frozen validator fixture is the pre-extraction block. The service differential
@@ -111,9 +117,23 @@ before its selected-build flow. Compare outputs, mutations, hashes and failures.
 No production guard is mocked away; that fixture rejects seeded managed events.
 Store cases cover unknown/sensitive wire fields, raw/normalized mismatch, caps,
 complete manifests, path escape, roots, symlinks, existing files, short writes,
-wrong sizes/hashes and retained unfinished preparation. No runtime pass is claimed
-until these commands actually succeed. Parent's earlier 482-test / 2631-assertion
-baseline and full Studio green checkpoint do not verify this new source.
+wrong sizes/hashes and retained unfinished preparation. Real temporary filesystem
+operations and actual callback code use isolated fixture persistence, not installed
+Drupal kernel or concurrent MySQL proof. Parent's earlier 482-test / 2631-assertion
+baseline and Studio green checkpoint are separate, not added to these totals.
+
+Retained failures (both inventories unchanged):
+
+- Parent `managed-artifact-preparation-first.7Tnf7P`, exit 255: PHPUnit's final
+  TestCase::result method conflicts with the new private helper name. Rename only
+  that helper/callers to captureNormalizationOutcome; do not change assertions.
+- `managed-artifact-preparation-rename.DczFpF`, exit 71: attempted nested sandbox
+  was refused before PHPUnit ran. Use the parent's existing sandbox wrapper once;
+  do not call this attempt a test failure or silently relax its exclusions.
+
+The initial 82a04160 source checkpoint was correctly labeled untested because disk
+fell below 200 MiB. Main recovered tracked campaign-asset sparse-view space without
+deleting Git history or owner files. No assets were rehydrated for these tests.
 
 ## Still required before completion or activation
 

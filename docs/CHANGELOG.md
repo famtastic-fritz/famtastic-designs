@@ -1,12 +1,14 @@
 # Product changelog
 
-## 2026-09-21 - Private artifact preparation groundwork, verification pending
+## 2026-09-21 - Private artifact preparation groundwork, synthetic verification
 
 - Extract callback validation without changing legacy limits, errors or policy.
 - Add unregistered/default-unconfigured private create-only preparation, strict
-  credential-free envelope shape and complete hashed file inventory; no importer.
-- Add frozen-source differential and filesystem fault regressions. Runtime tests
-  paused below 200 MiB; syntax checks pass. Receipt and remaining gates:
+  bounded envelope shape and complete hashed file inventory; no importer.
+- Frozen-source differential and filesystem fault regressions pass: 105 tests /
+  362 assertions. Rename a helper conflicting with PHPUnit's final result method;
+  retain the red receipt and original low-disk pause. Syntax/whitespace pass.
+  Guarded run leaves both protected inventories unchanged. Receipt and open gates:
   `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`. Nothing is activated.
 
 ## 2026-09-21 - Keep the legacy cross-repository fixture honest

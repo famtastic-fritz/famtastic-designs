@@ -11,15 +11,15 @@ require_once __DIR__ . '/Fixtures/LegacyProofCallbackArtifacts.php';
 require_once __DIR__ . '/Fixtures/ProofArtifactInputs.php';
 
 final class ProofCallbackArtifactsTest extends TestCase {
-  private static function result(callable $call): array {
+  private static function captureNormalizationOutcome(callable $call): array {
     try { return ['value' => $call()]; }
     catch (\Throwable $e) { return ['exception' => $e::class, 'message' => $e->getMessage()]; }
   }
 
   #[DataProvider('cases')]
   public function testFrozenLegacyValidationParity(array $variants, array $directions = Input::DIRECTIONS, bool $signed = FALSE): void {
-    self::assertSame(self::result(fn() => LegacyProofCallbackArtifacts::normalize($variants, $directions, $signed)),
-      self::result(fn() => ProofCallbackArtifacts::normalize($variants, $directions, $signed)));
+    self::assertSame(self::captureNormalizationOutcome(fn() => LegacyProofCallbackArtifacts::normalize($variants, $directions, $signed)),
+      self::captureNormalizationOutcome(fn() => ProofCallbackArtifacts::normalize($variants, $directions, $signed)));
   }
 
   public static function cases(): iterable {

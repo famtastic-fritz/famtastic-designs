@@ -5,8 +5,10 @@
 Observation: filesystem replacement is not rolled back with Drupal records.
 Guidance: reuse pure validation, prepare create-only private bytes and require a
 later fenced DB receipt. No default root, producer credentials in raw envelopes,
-automatic adoption or generic cap exception for the 2,020,725-byte logo. New
-regressions are written but runtime verification is paused below 200 MiB free.
+automatic adoption or generic cap exception for the 2,020,725-byte logo. After
+the low-disk pause, 105 tests / 362 assertions pass with inventories unchanged.
+Retain the initial PHPUnit final-method collision: syntax checks alone did not
+expose it. Rename only the helper and run the actual tests under the watch guard.
 
 ## 2026-09-21 - Legacy fixtures must not bypass managed admission guards
 

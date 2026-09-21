@@ -1,10 +1,12 @@
 # FAMtastic Designs capability registry
 
-## 2026-09-21 - Artifact preparation source, runtime verification pending
+## 2026-09-21 - Artifact preparation, synthetic local verification only
 
 Pure legacy validator extraction and an unregistered private create-only store
-are source groundwork only. Runtime tests paused below 200 MiB free; no capability
-promotion. No authoritative importer, producer, QA, delivery or activation exists.
+are source groundwork only. 105 focused tests / 362 assertions pass under the
+200 MiB watch guard; protected inventories unchanged. Retained initial fixture
+failure required a helper rename, not production changes. No provider/production
+capability promotion; no authoritative importer, producer, QA or delivery exists.
 See `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md` for bounds and open gates.
 
 ## 2026-09-21 - Login independent of managed proof retry (synthetic source only)
