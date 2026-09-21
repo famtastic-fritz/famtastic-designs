@@ -2,6 +2,39 @@
 
 Status: local repairs and verification; no live activation.
 
+## Latest integrated source checkpoint
+
+The earlier selected-route merge conflict is resolved in the isolated Studio
+integration, preserving the Phase 1 mock firewall and separate real consumer.
+Phase 2's independent review repairs pass 362 targeted tests; Phase 1 passes 42.
+Seven normal continuation cases and 11 first-association cases pass across
+the actual PHP/Node implementations, including interrupted callbacks and reuse
+of completed pages. Signed creator attribution preserves original selections.
+These are separate focused runs, not a new combined full-suite total.
+
+Designs 7529dacdd integrates shared proof claim groundwork. Parent review read
+the full production diff and tests; parent verification independently passes
+88 PHP tests / 356 assertions and eight static Node worker tests. Evidence:
+/tmp/famtastic-phase2-review.NVAfPl/shared-proof-claims-integrated.kKM80Q.
+Both protected Studio data inventories remain unchanged. Four documentation
+merge conflicts retained both histories; production source merged without conflict.
+
+The existing Drupal coordinator owns both capability profiles. Selected-static
+defaults and limits stay unchanged. Proof claims require explicit server grants,
+an immutable account-bound input and a reviewed cost policy. The production
+creative cost catalog is deliberately empty, fresh creative admission is not
+connected, and proof completion remains closed pending the authoritative importer.
+No synthetic cost fixture constitutes authorization for real model spending.
+
+Still required: remaining complete-source compatibility and combined suite;
+atomic fresh proof/campaign admission, actual Mac creative adapter and fenced
+import; unattended QA/portal/notification/selection/staging proof; real additive
+cloud execution and laptop-unavailable proof. The four-step goal is not complete.
+Disk headroom and GCP project/sign-in remain external prerequisites. No production
+job, service, customer message, payment or cloud resource has changed in this pass.
+
+Earlier sections below are dated evidence history, not current release claims.
+
 ## September 21 autonomous-goal checkpoint
 
 The owner authorized resolving all four milestones autonomously. The earlier
@@ -115,7 +148,7 @@ enabled admission/shared claims are separately tested against in-memory SQLite.
 The full fresh canonical journey also passes with the new service wiring in
 fresh-customer-proof-20260921T183653Z-20885.
 
-## Integration stop and next decision
+## Earlier integration stop (resolved in isolated source; activation still closed)
 
 A read-only Studio merge-tree check against selected consumer 9d0f6a2 reports
 conflicts in server/modules/pipeline/index.js and two documentation files. It
