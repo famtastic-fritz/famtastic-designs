@@ -1,0 +1,38 @@
+{
+  "status": "production_verified",
+  "source_commit": "86d07d8587e1edd7cca614121a8c0f6d52d66c80",
+  "deployed_commit": "40ca506b693e75b02e004326158ca772b1a25886",
+  "pull_request": "https://github.com/famtastic-fritz/famtastic-designs/pull/40",
+  "checked_at": "2026-09-21T06:11:31.323100+00:00",
+  "node": "22.23.2",
+  "deployment": "scripts/deploy-frontend-godaddy.sh --apply",
+  "backup": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20260921T060437Z-40ca506b693e75b02e004326158ca772b1a25886.tgz",
+  "qr_artwork": "Unchanged in Git and identical to pre-release production hashes. Repair belongs to ChatWeb. No new decoding or physical scan claim.",
+  "browser_results": {
+    "local": "12/12 passed",
+    "apex": "12/12 passed",
+    "www": "6/6 mobile passed in initial run; 6/6 desktop passed on isolated rerun",
+    "www_initial_interruption": "One desktop navigation and context teardown timed out; stopped that test-owned browser session and reran the full desktop project successfully. No runtime changes were made.",
+    "main_sites": "Both roots and headings rendered with zero captured page/console errors."
+  },
+  "contracts": "23/23 passed, plus public-flow, audit (0 vulnerabilities), build and diff checks",
+  "http": "20 checks passed, including exact Connect build bytes, both slash redirects, main JS/CSS MIME; see live-http.json",
+  "ci": {
+    "run": "https://github.com/famtastic-fritz/famtastic-designs/actions/runs/35566586030",
+    "status": "jobs_not_started",
+    "reason": "The job was not started because your account is locked due to a billing issue.",
+    "protection": "No required main branch protection or rules. Normal PR merge; no admin override."
+  },
+  "recovery": {
+    "initial_failure": "Full private checkout exceeded hosting quota before build or promotion; Git automatically removed the failed checkout. Previous live release remained 95735502.",
+    "resolution": "Prepared a clean, exact-SHA sparse private worktree containing frontend, scripts and the required marketing narration source (225652 KiB), then reran the unchanged canonical release script. No historical release, backup, customer, or runtime files were deleted.",
+    "opportunity": "Consider a separately reviewed frontend-only checkout mode in the canonical release primitive."
+  },
+  "limitations": [
+    "QR repair and physical scanning outside scope",
+    "No physical app installation or Safari/Firefox test",
+    "Native share/copy permission failures covered by deterministic mocks; no real recipient message sent",
+    "CUA extension became unavailable during live review; live acceptance and screenshots completed in isolated automated Chrome sessions"
+  ],
+  "deployed_at": "2026-09-21T06:05:57Z"
+}

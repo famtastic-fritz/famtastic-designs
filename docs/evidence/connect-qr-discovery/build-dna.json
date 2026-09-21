@@ -1,12 +1,13 @@
 {
   "schema": "famtastic.build-dna.v1",
   "build_id": "connect-qr-discovery-20260921",
-  "classification": "locally_proven_release_pending",
+  "classification": "production_verified",
   "created_at": "2026-09-21T05:49:58.359190+00:00",
   "repository": {
     "name": "famtastic-designs",
     "revision": "19ad376a659a764df422a3075840c9d443e9426f",
-    "worktree_state": "isolated sparse worktree"
+    "worktree_state": "isolated sparse worktree",
+    "deployed_revision": "40ca506b693e75b02e004326158ca772b1a25886"
   },
   "recipe": {
     "routine": "connect-discovery-maintenance",
@@ -46,13 +47,41 @@
         "review_type": "author review with browser and automated evidence",
         "production": "pending"
       }
+    },
+    {
+      "stage_id": "release-verification",
+      "attempt": 1,
+      "capability": "canonical production release and browser verification",
+      "execution": {
+        "provider": {
+          "id": "local-tools-and-godaddy",
+          "transport": "canonical SSH release and Chromium"
+        },
+        "model": {
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "partial",
+          "ended_at": "2026-09-21T06:11:31.323100+00:00"
+        },
+        "cost": {
+          "status": "not_reported_by_runtime"
+        }
+      },
+      "result": {
+        "status": "passed",
+        "review_type": "author review with automated live browser evidence",
+        "deployed_commit": "40ca506b693e75b02e004326158ca772b1a25886",
+        "ci": "billing-blocked",
+        "qr_scope": "artwork unchanged"
+      }
     }
   ],
   "artifacts": [
     {
       "role": "source_or_evidence",
       "path": "docs/plans/CONNECT_QR_DISCOVERY_2026-09-21.md",
-      "sha256": "7ca01149163c2b028afd74efe605f5167489b1ed8e0bf46955bcbe6740642ced",
+      "sha256": "29937ab2bfa7900be3d349ad7171aa2d9c3a2c8c4f465c8607af6928ea2e5983",
       "rights": "owner-authorized maintenance; no customer data"
     },
     {
@@ -143,6 +172,120 @@
       "role": "source_or_evidence",
       "path": "docs/evidence/connect-qr-discovery/local/mobile-chromium-scan-sheet.png",
       "sha256": "e1765670a432fdc34d0b0fa1b9519c86328ace27dad0f4d6b0bfb27118dc94b3",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-http.json",
+      "sha256": "0f38420eec22f7d60668f1174ce505cd866464e8dfb9cb0da56d4507179e018d",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/release.json",
+      "sha256": "da633e1858e75a0427c4bd028ca771057a922b60bdc3347ccdd3e5c13efc9ed0",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/main-site-browser.json",
+      "sha256": "18f1a3ed727578f706a7db8f6857a65cdbd73f04c85d2f34f881b3f6f6e4cf7a",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-www/mobile-chromium-scan-sheet.png",
+      "sha256": "e1765670a432fdc34d0b0fa1b9519c86328ace27dad0f4d6b0bfb27118dc94b3",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-www/mobile-chromium-scan-568.png",
+      "sha256": "94182e5438fdad80e0b4c2168396b1a50bce1bfaf58b16757ffc5cbdd14ed024",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-www/desktop-chromium-scan-568.png",
+      "sha256": "94182e5438fdad80e0b4c2168396b1a50bce1bfaf58b16757ffc5cbdd14ed024",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-www/desktop-chromium-scan-sheet.png",
+      "sha256": "aa81cbab328ea88e67547cf4111704691db18b923c226e112770fdbfd93f0cdc",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-www/desktop-chromium-scan-320.png",
+      "sha256": "cd2078f9525b1f976c0e1f91f074646163f5523e9030af8b8204de0989a77f95",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-www/mobile-chromium-scan-320.png",
+      "sha256": "cd2078f9525b1f976c0e1f91f074646163f5523e9030af8b8204de0989a77f95",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-www/desktop-chromium-card.png",
+      "sha256": "019761a5c5e538fe22640c50eeb055cd5f5917afecdc943ee634e62997cdba48",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-www/mobile-chromium-card.png",
+      "sha256": "40ce610cb3a8a9fd30a88bbe1d994104ef866c5ecc2875474a27b0ae992342f0",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-apex/mobile-chromium-scan-sheet.png",
+      "sha256": "e1765670a432fdc34d0b0fa1b9519c86328ace27dad0f4d6b0bfb27118dc94b3",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-apex/mobile-chromium-scan-568.png",
+      "sha256": "94182e5438fdad80e0b4c2168396b1a50bce1bfaf58b16757ffc5cbdd14ed024",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-apex/desktop-chromium-scan-568.png",
+      "sha256": "94182e5438fdad80e0b4c2168396b1a50bce1bfaf58b16757ffc5cbdd14ed024",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-apex/desktop-chromium-scan-sheet.png",
+      "sha256": "aa81cbab328ea88e67547cf4111704691db18b923c226e112770fdbfd93f0cdc",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-apex/desktop-chromium-scan-320.png",
+      "sha256": "cd2078f9525b1f976c0e1f91f074646163f5523e9030af8b8204de0989a77f95",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-apex/mobile-chromium-scan-320.png",
+      "sha256": "cd2078f9525b1f976c0e1f91f074646163f5523e9030af8b8204de0989a77f95",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-apex/desktop-chromium-card.png",
+      "sha256": "019761a5c5e538fe22640c50eeb055cd5f5917afecdc943ee634e62997cdba48",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/live-apex/mobile-chromium-card.png",
+      "sha256": "40ce610cb3a8a9fd30a88bbe1d994104ef866c5ecc2875474a27b0ae992342f0",
       "rights": "owner-authorized maintenance; no customer data"
     }
   ],

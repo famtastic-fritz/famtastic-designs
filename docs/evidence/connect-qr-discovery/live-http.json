@@ -1,0 +1,153 @@
+{
+  "checked_at": "2026-09-21T06:07:34.573371+00:00",
+  "checks": [
+    {
+      "host": "famtasticdesigns.com",
+      "path": "index.html",
+      "status": 200,
+      "mime": "text/html",
+      "sha256": "7599f6068eaff2e4b1fa11ffd01e9bb00e126254feeeb1e39fc9c4cbe9dba4b2",
+      "matches_build": true
+    },
+    {
+      "host": "famtasticdesigns.com",
+      "path": "app.js",
+      "status": 200,
+      "mime": "text/javascript",
+      "sha256": "dd5cec267f221bdbcde39cded9353e9c4efa801a5ca31ac0606067ed99bf8d2c",
+      "matches_build": true
+    },
+    {
+      "host": "famtasticdesigns.com",
+      "path": "style.css",
+      "status": 200,
+      "mime": "text/css",
+      "sha256": "a42279e2a3877525912dc7c32c4bb2879386e90cce251c34f18a23c0ba056e8e",
+      "matches_build": true
+    },
+    {
+      "host": "famtasticdesigns.com",
+      "path": "qr.svg",
+      "status": 200,
+      "mime": "image/svg+xml",
+      "sha256": "dde091d4741fb27e5fda13720d9ec91e02644622a729c245a2deba2f98ae7fbf",
+      "matches_build": true
+    },
+    {
+      "host": "famtasticdesigns.com",
+      "path": "FAMtastic-Connect-QR.png",
+      "status": 200,
+      "mime": "image/png",
+      "sha256": "fcfb9945199a342866eb317cee9ae8704aec3ec5b22de826e09e2e82df4e9899",
+      "matches_build": true
+    },
+    {
+      "host": "famtasticdesigns.com",
+      "path": "install.js",
+      "status": 200,
+      "mime": "text/javascript",
+      "sha256": "c66ca3a4c375254603ef4f862fb681a37374cf286727d458d89710abe7a1a22e",
+      "matches_build": true
+    },
+    {
+      "host": "famtasticdesigns.com",
+      "path": "manifest.webmanifest",
+      "status": 200,
+      "mime": "application/manifest+json",
+      "sha256": "686d03360d3180002c6a0ddc47750c80cb4728332960cd5db461ce0f9f39b281",
+      "matches_build": true
+    },
+    {
+      "host": "famtasticdesigns.com",
+      "path": "/connect",
+      "final_url": "https://famtasticdesigns.com/connect/",
+      "status": 200
+    },
+    {
+      "host": "famtasticdesigns.com",
+      "path": "/assets/index-BINlMZsi.js",
+      "status": 200,
+      "mime": "text/javascript"
+    },
+    {
+      "host": "famtasticdesigns.com",
+      "path": "/assets/index-DMOYzV8m.css",
+      "status": 200,
+      "mime": "text/css"
+    },
+    {
+      "host": "www.famtasticdesigns.com",
+      "path": "index.html",
+      "status": 200,
+      "mime": "text/html",
+      "sha256": "7599f6068eaff2e4b1fa11ffd01e9bb00e126254feeeb1e39fc9c4cbe9dba4b2",
+      "matches_build": true
+    },
+    {
+      "host": "www.famtasticdesigns.com",
+      "path": "app.js",
+      "status": 200,
+      "mime": "text/javascript",
+      "sha256": "dd5cec267f221bdbcde39cded9353e9c4efa801a5ca31ac0606067ed99bf8d2c",
+      "matches_build": true
+    },
+    {
+      "host": "www.famtasticdesigns.com",
+      "path": "style.css",
+      "status": 200,
+      "mime": "text/css",
+      "sha256": "a42279e2a3877525912dc7c32c4bb2879386e90cce251c34f18a23c0ba056e8e",
+      "matches_build": true
+    },
+    {
+      "host": "www.famtasticdesigns.com",
+      "path": "qr.svg",
+      "status": 200,
+      "mime": "image/svg+xml",
+      "sha256": "dde091d4741fb27e5fda13720d9ec91e02644622a729c245a2deba2f98ae7fbf",
+      "matches_build": true
+    },
+    {
+      "host": "www.famtasticdesigns.com",
+      "path": "FAMtastic-Connect-QR.png",
+      "status": 200,
+      "mime": "image/png",
+      "sha256": "fcfb9945199a342866eb317cee9ae8704aec3ec5b22de826e09e2e82df4e9899",
+      "matches_build": true
+    },
+    {
+      "host": "www.famtasticdesigns.com",
+      "path": "install.js",
+      "status": 200,
+      "mime": "text/javascript",
+      "sha256": "c66ca3a4c375254603ef4f862fb681a37374cf286727d458d89710abe7a1a22e",
+      "matches_build": true
+    },
+    {
+      "host": "www.famtasticdesigns.com",
+      "path": "manifest.webmanifest",
+      "status": 200,
+      "mime": "application/manifest+json",
+      "sha256": "686d03360d3180002c6a0ddc47750c80cb4728332960cd5db461ce0f9f39b281",
+      "matches_build": true
+    },
+    {
+      "host": "www.famtasticdesigns.com",
+      "path": "/connect",
+      "final_url": "https://www.famtasticdesigns.com/connect/",
+      "status": 200
+    },
+    {
+      "host": "www.famtasticdesigns.com",
+      "path": "/assets/index-BINlMZsi.js",
+      "status": 200,
+      "mime": "text/javascript"
+    },
+    {
+      "host": "www.famtasticdesigns.com",
+      "path": "/assets/index-DMOYzV8m.css",
+      "status": 200,
+      "mime": "text/css"
+    }
+  ]
+}
