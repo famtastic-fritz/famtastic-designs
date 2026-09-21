@@ -1,0 +1,70 @@
+{
+  "verified_at": "2026-09-21T22:37:26.460084+00:00",
+  "authorization_or_cookie_headers_used": false,
+  "all_three_passed": true,
+  "proofs": [
+    {
+      "direction": "a",
+      "name": "The Exchange",
+      "anonymous_http_status": 200,
+      "html_sha256": "1d79113ae722e2b295b5e2bb2ac8c774c3afa9e066905666d286ca81a2facef3",
+      "content_type": "text/html; charset=UTF-8",
+      "redirected": false,
+      "x_robots_tag": "noindex, nofollow, noarchive",
+      "images": [
+        {
+          "status": 200,
+          "mime": "image/jpeg",
+          "sha256": "fc24db36993bee3b170428cae92404347896c01581b15a4390a196da75e41409"
+        },
+        {
+          "status": 200,
+          "mime": "image/png",
+          "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950"
+        }
+      ]
+    },
+    {
+      "direction": "b",
+      "name": "Curated Finds",
+      "anonymous_http_status": 200,
+      "html_sha256": "a32c3667bd2cb9c7028fb08c09ff48b22f67740fb19c446ba536bfc39ba6648f",
+      "content_type": "text/html; charset=UTF-8",
+      "redirected": false,
+      "x_robots_tag": "noindex, nofollow, noarchive",
+      "images": [
+        {
+          "status": 200,
+          "mime": "image/jpeg",
+          "sha256": "fc24db36993bee3b170428cae92404347896c01581b15a4390a196da75e41409"
+        },
+        {
+          "status": 200,
+          "mime": "image/png",
+          "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950"
+        }
+      ]
+    },
+    {
+      "direction": "c",
+      "name": "The Drop",
+      "anonymous_http_status": 200,
+      "html_sha256": "0658331338184e8a027cc1fc48862a3bcc78b1c72312ad0f04230d57e7019bd9",
+      "content_type": "text/html; charset=UTF-8",
+      "redirected": false,
+      "x_robots_tag": "noindex, nofollow, noarchive",
+      "images": [
+        {
+          "status": 200,
+          "mime": "image/jpeg",
+          "sha256": "fc24db36993bee3b170428cae92404347896c01581b15a4390a196da75e41409"
+        },
+        {
+          "status": 200,
+          "mime": "image/png",
+          "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950"
+        }
+      ]
+    }
+  ]
+}

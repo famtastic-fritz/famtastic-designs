@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 — Public proof sharing for urgent review
+
+**Observation:** Account-bound links and a phone walkthrough did not resolve the
+reported access confusion. Existing public sharing was disabled. **Guidance:**
+When explicitly authorized, use the existing revocable share service and retain
+its private-reference guards. Verify anonymous HTML and assets, email named links,
+and distinguish provider send/owner inbox proof from customer access or approval.
+Keep signed links out of Git. This is an access workaround, not a portal UX fix.
+
 ## 2026-09-21 — Connect sharing discovery
 
 **Observation:** A footer-only QR icon was easy to miss. The intro masks early hints, and native dialog boundaries needed explicit keyboard wrapping in Chromium.

@@ -1,0 +1,29 @@
+{
+  "request_id": 17,
+  "customer_id": 15,
+  "campaign_id": 56,
+  "sent_at_utc": "2026-09-21T22:41:29+00:00",
+  "gmail_message_id": "1a0c621a69be9679",
+  "gmail_thread_id": "1a0c621a69be9679",
+  "provider_message_id": "<CAC5m-1+OZDb8fwmBudcrJXgJqSn7f31FzcFaHPdoTeRidjfrXA@mail.gmail.com>",
+  "subject": "Your StockandShip98 concepts \u2014 direct links, no sign-in",
+  "verified_customer_to": true,
+  "verified_owner_cc": true,
+  "owner_inbox_verified": true,
+  "gmail_labels": [
+    "UNREAD",
+    "SENT",
+    "INBOX"
+  ],
+  "plain_text_direct_link_count": 3,
+  "html_direct_link_count": 3,
+  "all_three_names_in_both_parts": true,
+  "shay_signature_in_both_parts": true,
+  "html_sha256": "3a083dfb8a74a4f36f542cf9822d6053e00cbddee3f6fc2738d3d3d189898513",
+  "plain_sha256": "d148ec6f349078cf9b4179381ccbcf2aeb188d9362e01d88424926c71742a850",
+  "presentation": "Existing deployed BrandedEmail shell with three named public-proof buttons and canonical footer logo.",
+  "authorization": "Owner explicitly requested public direct links and email to both customer and owner.",
+  "customer_inbox_or_read_status": "unverified",
+  "browser_evidence": "All three live public HTML pages opened in the in-app browser without a customer login. Phone-width C image and overflow check passed. No physical iPhone/Safari claim.",
+  "secrets_and_contacts": "Omitted. Signed URLs retained in private operational storage and authorized email only."
+}

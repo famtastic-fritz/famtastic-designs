@@ -1,0 +1,16 @@
+{
+    "request_id": 17,
+    "customer_id": 15,
+    "campaign_id": 56,
+    "enabled": true,
+    "previously_enabled": false,
+    "proof_share_version": 1,
+    "changed_at_utc": "2026-09-21T22:36:36+00:00",
+    "public_concept_count": 3,
+    "selection_unchanged": true,
+    "proof_review_status_unchanged": true,
+    "actor_uid": 0,
+    "authorization": "Owner explicitly requested public direct proof links emailed to the verified customer and owner on 2026-09-21.",
+    "boundary": "Existing revocable unlisted view-only proof-sharing service; private-reference guards retained.",
+    "bearer_links": "Retained only in private operational records and the authorized email."
+}

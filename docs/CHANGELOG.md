@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-21 — StockandShip98 public proof links
+
+- Enabled existing view-only sharing at the owner's explicit request. Verified
+  three anonymous HTML pages and six image requests; emailed direct buttons to
+  customer with owner copied, with provider and owner inbox receipts. See
+  `docs/plans/STOCKANDSHIP98-PUBLIC-PROOF-LINKS-2026-09-21.md`.
+
 ## 2026-09-21 — StockandShip98 iPhone support walkthrough
 
 - Sent one owner-authorized customer support email with four inline screenshots

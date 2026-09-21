@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 — Exact public proof access and email verified
+
+**Production-proven for StockandShip98 request 17 only.** Existing revocable share
+service enabled and all three public concept HTML pages/assets fetched without
+authentication; live browser entry verified. One branded Gmail support message
+and the owner inbox copy are verified. Customer inbox/read/approval and portal UX
+repair remain unproven. No new sharing implementation or automatic notification
+producer. See `docs/plans/STOCKANDSHIP98-PUBLIC-PROOF-LINKS-2026-09-21.md`.
+
 ## 2026-09-21 — Customer screenshot support delivery
 
 **Provider send and owner inbox copy verified.** Sent a StockandShip98
