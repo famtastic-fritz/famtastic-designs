@@ -1,5 +1,49 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Non-autoload fixture names do not prevent source disclosure
+
+Observation: installed Drupal's `.htaccess` does not deny `.fixture` or the whole
+custom-module tests tree. Guidance: keep frozen raw service code and provenance
+outside `backend/web`, at `backend/tests/fixtures/managed-proof/`, preserving hashes.
+Use the outside-docroot path in actual parity tests, not an assumed server rule.
+One post-move three-file run passes 109 tests / 463 assertions, protected data
+unchanged. Prior mutation evidence remains valid; no production source changed.
+
+## 2026-09-21 - Reject for the guard the test claims to exercise
+
+Observation: default expected normalization made changed-DNA cases reject at
+raw/normalized mismatch even if the DNA guard were absent. Guidance: normalize
+the same DNA input outside the rejection assertion, prove legacy acceptance,
+assert the exact store guard message, and add a nondefault positive roundtrip.
+Do not normalize malformed assets before the store and count that as store proof.
+Only the three focused files pass, 109 tests / 463 assertions. A test-only
+in-memory mutant removes DNA guards and all nine targeted cases fail on missing
+rejection, not bootstrap errors; retain this red receipt. Production unchanged.
+
+## 2026-09-21 - Differential tests cannot require shallow-clone ancestors
+
+Observation: the old-service callback comparison used a Git ancestor absent from
+the default CI checkout. Guidance: freeze the exact reviewed source as bounded,
+hash-pinned non-autoload data with provenance, retaining actual callback execution.
+Run with Git unavailable and small child arguments, not broader history or skips.
+The first no-Git probe incorrectly assumed proc_open returns a resource for a
+missing executable; handle false or nonzero exit explicitly, keeping callbacks
+strict. Final three-file run: 106 tests / 414 assertions, protected data unchanged.
+Separately, file fsync alone does not persist directory entries or establish
+power-loss durability; private preparation never establishes import authority.
+
+## 2026-09-21 - File preparation is not a database transaction
+
+Observation: canonical callbacks replace HTML/media paths before final DB and
+delivery work. DB rollback cannot undo those overwrites. Extract validation only;
+prepare new immutable bytes privately, with no overwrite/adoption/cleanup, then
+require a separate authoritative receipt before any consumer can use them.
+The exact logo exceeds the generic image cap by 20,725 bytes; do not weaken caps.
+After the low-disk pause, 105 tests / 362 assertions pass with protected inventories
+unchanged. The initial fatal exposed a helper named result, a final PHPUnit method.
+Use descriptive helper names; lint alone cannot load/check the inherited runner
+API. Retain the failure and run the actual fixture before claiming verification.
+
 ## 2026-09-21 - New production guards need real fixture dependencies
 
 A dependency-free PHP harness manually loads services, unlike Drupal's autoloader.

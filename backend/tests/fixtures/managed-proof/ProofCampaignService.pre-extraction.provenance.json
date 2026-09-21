@@ -1,0 +1,12 @@
+{
+  "purpose": "Frozen pre-extraction source for actual public-callback differential tests only; never autoload or deploy as a service",
+  "source_commit": "3bc4e9baf0368db35d454ae8922c149430a866b4",
+  "source_path": "backend/web/modules/custom/famtastic_pipeline/src/Service/ProofCampaignService.php",
+  "git_blob": "92a491c408ae8493afc0f7a40c7759f43078afeb",
+  "fixture": "ProofCampaignService.pre-extraction.fixture",
+  "bytes": 63318,
+  "sha256": "549273b904ff05a263f2b3db5bc182f4b11e7fa2779ba3a69491eded1810e890",
+  "maximum_fixture_bytes": 65536,
+  "extraction": "Byte-identical local git show of the source commit/path, with no modifications or regeneration",
+  "runtime_history_dependency": false
+}

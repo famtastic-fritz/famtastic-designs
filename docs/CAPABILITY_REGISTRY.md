@@ -1,5 +1,18 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Artifact preparation, synthetic local verification only
+
+Pure legacy validator extraction and an unregistered private create-only store
+are source groundwork only. 109 focused tests / 463 assertions pass under the
+200 MiB watch guard with Git unavailable and a hash-pinned historical service
+fixture outside the docroot with its provenance; protected inventories unchanged.
+The post-move three-file run preserves those totals. Same-input DNA cases assert exact guard
+errors; an in-memory DNA mutant fails all nine cases as intended. Prior failures
+and receipts are retained. This test repair changes no production code.
+File fsync is not directory fsync or a power-loss guarantee. No provider/production
+capability promotion; no authoritative importer, producer, QA or delivery exists.
+See `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md` for bounds and open gates.
+
 ## 2026-09-21 - Login independent of managed proof retry (synthetic source only)
 
 Managed deep-dive resume preserves the owned request without attempting work;

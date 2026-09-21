@@ -1,5 +1,46 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Frozen raw source belongs outside the webroot
+
+Observation: `.fixture` avoids autoloading, not HTTP disclosure under Drupal's
+installed rules. Guidance: store both old service and provenance outside the
+docroot in `backend/tests/fixtures/managed-proof/`. Their hashes remain unchanged;
+the single post-move three-file run passes 109 tests / 463 assertions. Protected
+data unchanged, earlier mutation/red receipts retained, no production change.
+Drive mirroring stays deferred to the parent under the isolated/offline scope.
+
+## 2026-09-21 - Independent DNA rejection needs matching normalized input
+
+Observation: a default normalized fixture masked missing DNA guards by causing
+an unrelated mismatch. Guidance: normalize the same DNA-only input first, assert
+the exact guard error and verify valid nondefault DNA roundtrips. Invalid assets
+must still enter the store before normalization. Three focused files pass,
+109 tests / 463 assertions. The subprocess-only DNA mutant executes all nine
+targeted cases and fails each for missing rejection. Keep that intentional red
+receipt separate from earlier bootstrap failures. Production and protected data
+unchanged; Drive mirror remains deferred under the isolated/offline scope.
+
+## 2026-09-21 - Freeze parity evidence, not a dependency on Git history
+
+Observation: default shallow CI has no pre-extraction ancestor. Guidance: use the
+byte-exact 63,318-byte old service as bounded/hash-pinned non-autoload test data,
+with provenance. Actual old/new callbacks still run; the child environment proves
+Git unavailable and keeps argv bounded. 106 tests / 414 assertions pass under the
+watch guard; protected data unchanged. Retain the first probe failure, not a skip.
+File fsync does not include directory fsync or promise power-loss durability.
+Preparation is private source groundwork, never fenced import authority. Drive
+mirroring remains deferred to the parent under the isolated/offline scope.
+
+## 2026-09-21 - Keep artifact preparation separate from import authority
+
+Observation: filesystem replacement is not rolled back with Drupal records.
+Guidance: reuse pure validation, prepare create-only private bytes and require a
+later fenced DB receipt. No default root, producer credentials in raw envelopes,
+automatic adoption or generic cap exception for the 2,020,725-byte logo. After
+the low-disk pause, 105 tests / 362 assertions pass with inventories unchanged.
+Retain the initial PHPUnit final-method collision: syntax checks alone did not
+expose it. Rename only the helper and run the actual tests under the watch guard.
+
 ## 2026-09-21 - Legacy fixtures must not bypass managed admission guards
 
 Load the real new binding dependencies in the manual PHP bootstrap. Permit only

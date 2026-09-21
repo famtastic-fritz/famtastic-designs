@@ -1,5 +1,46 @@
 # Product changelog
 
+## 2026-09-21 - Keep frozen callback source outside the docroot
+
+- Move frozen service and provenance to `backend/tests/fixtures/managed-proof/`;
+  preserve both files byte-for-byte and update the parity test path. Do not rely
+  on `.fixture` being denied by Drupal's webserver rules.
+- One post-move three-file run passes 109 tests / 463 assertions; protected data
+  unchanged. Prior mutation/red receipts retained. No production code changed.
+  Exact receipt: `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`.
+
+## 2026-09-21 - Isolate artifact DNA guard regressions
+
+- Use the same input's legacy normalization for DNA-only rejection cases, assert
+  exact guard errors, and verify nondefault DNA bytes/hashes roundtrip. Keep
+  invalid assets entering the store without pre-normalization.
+- Only three focused files pass, 109 tests / 463 assertions. A separate in-memory
+  DNA mutant fails all nine targeted cases for missing rejection; retain that
+  intentional red receipt. Protected data and production source are unchanged.
+  Commands/limits: `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`.
+
+## 2026-09-21 - Callback parity without repository history
+
+- Replace runtime historical Git lookup with a 63,318-byte hash-pinned, bounded
+  non-autoload fixture; preserve actual old/new callbacks and duplicate comparison.
+- Prove Git unavailable in callback children and bound their argv; only the three
+  focused files ran, 106 tests / 414 assertions pass, protected data unchanged.
+  Retain the failed first no-Git probe. Production guards/source are unchanged.
+- Document file fsync without directory fsync or power-loss guarantees; private
+  preparation remains unregistered and is not import authority. Exact receipts:
+  `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`.
+
+## 2026-09-21 - Private artifact preparation groundwork, synthetic verification
+
+- Extract callback validation without changing legacy limits, errors or policy.
+- Add unregistered/default-unconfigured private create-only preparation, strict
+  bounded envelope shape and complete hashed file inventory; no importer.
+- Frozen-source differential and filesystem fault regressions pass: 105 tests /
+  362 assertions. Rename a helper conflicting with PHPUnit's final result method;
+  retain the red receipt and original low-disk pause. Syntax/whitespace pass.
+  Guarded run leaves both protected inventories unchanged. Receipt and open gates:
+  `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`. Nothing is activated.
+
 ## 2026-09-21 - Keep the legacy cross-repository fixture honest
 
 - Load the real fresh-proof binding dependencies in the manually bootstrapped
