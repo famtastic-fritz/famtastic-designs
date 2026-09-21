@@ -4,7 +4,7 @@
 
 - Added the visible SHOW MY QR action, a three-bounce pointer after card reveal, persistent quiet repeat visits, and reduced-motion support.
 - Updated the existing QR dialog with scan instructions, a visible Close control, focus wrapping/restoration, and truthful Share Link fallbacks; retained the footer shortcut and unchanged QR files.
-- Locally verified: 23 contracts, 12 browser cases, public-flow checks, dependency audit and production build. Owner authorized live deployment; receipt pending. See `docs/plans/CONNECT_QR_DISCOVERY_2026-09-21.md`.
+- Locally verified: 23 contracts, 12 browser cases, public-flow checks, dependency audit and production build. Production verified at `40ca506b` on both hostnames with all 24 live browser scenarios covered; main sites and exact asset bytes pass. GitHub CI remains billing-blocked. See `docs/plans/CONNECT_QR_DISCOVERY_2026-09-21.md`.
 
 ## 2026-09-19 — Connect FAM with crown selection
 
