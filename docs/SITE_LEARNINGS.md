@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Freshness, immutable binding and import closure
+
+Observation: the proof queue helper also serves login repair, resend and revisions;
+generic callbacks trust event IDs and a legacy prospect fallback. An opaque job ID
+in a waiting campaign can incorrectly imply remote acceptance. Request locks alone
+also do not protect asset withdrawal.
+
+Guidance: admit only explicit trusted fresh writer events in their outer transaction;
+lock actual asset/account/resource rows, exclude history before campaign allocation,
+and use a direct unique job insert. Persist byte-bound admission evidence and deny
+generic imports before duplicate shortcuts. Project actual queue/lease facts and
+keep provider/import authority closed. New uploads or later rights changes require
+fresh checks before external work. Tests are SQLite with entity doubles, not MySQL
+or customer execution. See the fresh-proof admission/import contract for commands.
+
 ## 2026-09-21 - Separate complete-source fixtures from proof callback ingress
 
 A finalized-source adoption test needs authoritative bytes and explicit rights

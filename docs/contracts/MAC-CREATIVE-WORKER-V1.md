@@ -3,6 +3,13 @@
 Status: proposed adapter contract backed by source and historical receipts;
 not an activated worker or unattended production proof.
 
+Later September 21 source milestone: default-OFF fresh portal create/draft-submit
+admission and managed generic-import denial are now implemented. See
+FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md for the exact 177-test synthetic receipt.
+The production creative cost catalog remains empty; no producer, authoritative
+completion/importer or activation is installed. The claim-only checkpoint below
+is retained as history.
+
 September 21 source checkpoint: `SHARED-PROOF-CLAIMS-V1.md` implements only
 capability-specific shared claim groundwork, tested with paused clocks and
 synthetic SQLite records. No production creative cost catalog, fresh-proof

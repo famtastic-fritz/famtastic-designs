@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Fresh portal proof admission (synthetic local source only)
+
+Default-off create/draft-submit hooks atomically bind request, inert campaign,
+immutable input, same Drupal job and proof claim. Exact retries/history exclusions,
+rollback, tenant/rights checks, generic-import denial and truthful status projection
+pass focused tests: 177 PHP / 926 assertions, including 43 new / 286. SQLite and
+entity doubles are not installed-kernel/MySQL concurrency or customer delivery
+proof. No production recipe/cost catalog, creative adapter, fenced importer,
+provider, cloud or activation exists. Older claim-only entries are historical.
+See `docs/contracts/FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md`.
+
 ## 2026-09-21 - Signed creator-credit projection (local source only)
 
 PHP independently computes the pinned owner-credit Home derivative from confined

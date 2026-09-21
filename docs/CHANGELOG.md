@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-21 - Atomic fresh proof admission (source only, OFF)
+
+- Add reviewed-policy-only admission for new portal submissions and exact draft
+  submissions, atomically binding an inert campaign, frozen input, job and claim.
+- Preserve history, lock claimed asset authority, reject unfenced managed imports,
+  and project queue/lease facts without pretending an opaque ID is Studio acceptance.
+- 177 focused PHP tests / 926 assertions pass (43 new / 286), with one existing
+  PHPUnit deprecation. Empty production cost catalogs, importer and activation
+  remain closed. See `contracts/FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md`.
+
 ## 2026-09-21 - Complete-source fixture authority repair
 
 - Extend only the legacy PHP export fixture to materialize the bounded system PNG

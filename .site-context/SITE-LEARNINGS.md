@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Fresh proof admission is not completed proof generation
+
+Observation: enqueue callers include historical repairs, asset withdrawal is not
+serialized by a request lock alone, and legacy import/status inference can bypass
+a new worker claim. Guidance: use explicit fresh writer intent, an outer atomic
+request/campaign/job/enrollment transaction, actual asset locks and immutable
+event bytes; deny generic imports for managed campaigns and display actual claim
+facts. 177 focused PHP tests / 926 assertions pass using synthetic SQLite and
+entity doubles. Cost catalog, producer, fenced importer and activation stay closed.
+Full details: docs/contracts/FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md. Drive mirror
+and remote fetch are deferred to the integrating parent for this offline milestone.
+
 ## 2026-09-21 - Completed-source fixture authority
 
 Observation: the legacy export fixture omitted the required PNG and selected old

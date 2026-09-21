@@ -1,5 +1,12 @@
 # Shared proof claim groundwork v1
 
+Later source milestone: FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md now records
+default-OFF portal create/draft-submit admission, immutable bindings, generic
+import denial and actual-claim status projection. Its 177 focused PHP tests are
+synthetic source evidence. The original claim-only checkpoint below remains
+historical; production cost catalog, producer, fenced importer and activation
+remain absent/closed. Shared policy and selected behavior are unchanged.
+
 September 21, 2026. Source checkpoint based on `854463b62`.
 This implements claim policy only, not connected automation, creative generation,
 authoritative proof admission/import, provider authorization, QA or delivery.

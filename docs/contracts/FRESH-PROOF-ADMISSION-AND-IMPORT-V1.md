@@ -1,9 +1,135 @@
 # Fresh proof admission and fenced import
 
-Implementation design, September 21, 2026. This contract is not active code.
+Source milestone, September 21, 2026. Fresh portal admission is implemented but
+default OFF. The importer and creative adapter below remain design, not active code.
 It extends the established Mac creative process; it does not substitute static
 packaging or the fictional six-direction benchmark for customer proof creation.
 Read SHARED-PROOF-CLAIMS-V1.md and MAC-CREATIVE-WORKER-V1.md together.
+
+## Implemented admission checkpoint (source only)
+
+`FreshProofAdmission` is wired into `CustomerPortalService` for exactly two
+trusted writer events: newly submitted `createWebsiteRequest`, and locked
+`updateWebsiteRequest` when the prior status is exactly `draft`. The private
+queue helper receives writer-created source/prior-status/customer intent, never
+body authority. Other callers remain legacy and are not admitted by this switch.
+Freshness is recorded and hashed in the immutable request snapshot.
+
+Settings `famtastic_fresh_proof_admission_enabled` must be boolean TRUE, and
+both the admission service and coordinator must receive matching reviewed
+constructor-injected recipe/tool/cost policy. Both production constructor
+defaults remain EMPTY. No supplier cost catalog or Settings/body cost override
+was installed. Turning on the boolean alone fails closed and rolls back a fresh
+submission, rather than falling back to the legacy worker. Do not enable it.
+
+The enabled create wrapper owns an outer database transaction; update retains
+its existing transaction/request lock. Admission locks the request, verified
+customer, active organization/membership, prospect ownership map, actual
+prospect and claimed asset rows. Current locking reads exclude old jobs and
+campaigns before allocation. A direct unique job insert deliberately does not
+use the ledger's duplicate-swallowing helper. Inert campaign, request binding,
+max-three job, enrollment, and immutable event commit together. Any exception
+rolls back the writer, including its new prospect/request/outbox/activity rows.
+There is no provider or send inside this transaction, and no cost is reserved
+until the existing coordinator claims the job.
+
+The exact request snapshot includes numeric tenant/campaign identities, public
+request ID, project/business names, project type, domain fields, submitted time,
+request/review/selection state, commercial bindings and the entire normalized
+intake with authored content/consent. Asset rows are sorted by numeric ID and
+retain file ID, checksum/bytes, role, owner, status, timestamps and each distinct
+rights/likeness/AI consent field. Withdrawn records are retained as withdrawn;
+they are not permission to use bytes. Active records require ownership and valid
+integrity metadata. `FreshProofInput::wire` defines the JSON encoding used by
+both SHA256 snapshots. Snapshots live in the existing immutable event; the strict
+worker v1 payload carries their hashes, not extra unversioned top-level fields.
+
+Asset serialization uses `FOR UPDATE` on the actual rows, not an assumption
+that locking a request also locks withdrawal. A final locking reread rejects
+changed input. Concurrent new uploads are not automatically claimed: on engines
+without range locking they can arrive after the snapshot. Future provider and
+import boundaries MUST compare current full authority again, load actual private
+bytes and verify their hashes. These are admission-time database facts, not
+permanent rights, file-byte verification or provider authorization. No upload or
+withdrawal writer was broadened in this milestone.
+
+The event key is `proof-admission:request:<id>`, type `proof.fresh_admitted.v1`,
+with exact campaign/prospect columns, trusted freshness, both snapshots and exact
+job wire/hash. Exact service retries require unchanged event bytes/shape,
+request/assets, job/claim identity, reviewed policy and campaign callback ID.
+They return the original job without creating or enrolling anything. Malformed
+or conflicting evidence rejects. Historical jobs of any status, existing request
+bindings, and ANY prior same-prospect campaign fail closed before allocation.
+This intentionally also excludes claimed-preview prospects with old campaigns
+until their separate lane is reconciled. Existing historical rows are not changed.
+Idempotency is scoped to an exact request; this does not add a submission-token
+protocol for two separate HTTP create requests that allocate distinct requests.
+
+`FreshProofBinding::assertGenericImportAllowed` runs inside the shared callback
+service before duplicate events, latest-request fallback, artifact writes or
+delivery. It denies stored admission markers even when malformed or the feature
+flag is later off, including request-bound evidence with an inconsistent campaign
+column. This covers generic HTTP and CLI callers. No authoritative import escape
+was added; proof `finish` remains closed. Unmanaged legacy and verified-cold lanes
+retain their behavior.
+
+### Status projection contract
+
+New inert campaigns use `generation_status=queued`, not `waiting_callback`.
+An opaque `studio_job_id` is correlation only, never a remote acceptance receipt.
+The managed branch precedes all legacy inference and reads the immutable binding,
+exact job and actual claim. `worker_queued` + pending claim means `queued`;
+`worker_running` + live leased claim before its execution deadline means
+`preparing` / worker assigned, explicitly not confirmed generation/import. Expired,
+inconsistent, failed or allegedly completed records mean `needs_attention`.
+No managed record reaches Studio-accepted, owner-review or customer-ready through
+this milestone. A later importer must explicitly extend this projection.
+
+### Focused verification receipt
+
+177 PHPUnit tests / 926 assertions pass under OS network denial, including
+43 new admission tests / 286 assertions. PHP 8.5.9, PHPUnit 11.5.56; 24 MiB peak.
+One pre-existing doc-comment deprecation in VerifiedColdGenericLocalImportGuardTest.
+All seven changed PHP files pass syntax checks; git whitespace checks pass.
+Tests use real in-memory SQLite tables from the repository schema, real portal
+writers/coordinator/transactions, entity-storage doubles with transactional SQL
+persistence, and a mocked coordinator lock. Interleavings are deterministic
+single-connection injections, NOT concurrent MySQL or installed Drupal kernel
+proof. No fixture claims a complete customer journey, cloud execution or provider
+pricing. No install, full suite/build, network, authoritative DB or credentials.
+
+The existing vendor's composer.json and composer.lock matched this checkout.
+Run from this worktree; keep the disk guard and serial invocation:
+
+```sh
+test "$(df -k . | awk 'NR==2 {print $4}')" -ge 204800 && \
+FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor \
+sandbox-exec -p '(version 1)(allow default)(deny network*)' \
+php /Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor/phpunit/phpunit/phpunit \
+  --bootstrap scripts/automation-test-bootstrap.php --no-configuration --do-not-cache-result --display-phpunit-deprecations \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/FreshProofAdmissionTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/WebsiteRequestProofHandoffTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/WebsiteRequestAuditPreservationTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofAttachmentReplayTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/SharedProofWorkerClaimsTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/FreshSelectedJobAdmissionTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/VerifiedColdGenericLocalImportGuardTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/WorkerCoordinatorTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/WorkerCoordinatorControllerTest.php
+```
+
+Source inventory: new Service/FreshProofAdmission.php, FreshProofInput.php and
+FreshProofBinding.php; CustomerPortalService hooks/projection; shared
+ProofCampaignService deny guard; services wiring; FreshProofAdmissionTest and
+the handoff test's event-table fixture. All PHP paths are beneath
+backend/web/modules/custom/famtastic_pipeline. The coordinator/profile, selected
+90/300/330 behavior, budget accounting and production schema are unchanged.
+
+Disk stayed above the 200 MiB guard (roughly 1.1 GiB initially, 913 MiB at final
+tests). No cleanup occurred. Full builds and browser/kernel validation were not
+run. The portal-DNA script is sparse-omitted and no frontend changed; its execution
+is deferred to parent integration. Remote fetch and Drive mirroring are also
+deferred to the parent, keeping this source-only isolated milestone offline.
 
 ## Admission boundary
 
@@ -16,8 +142,8 @@ records under an outer transaction.
 | Caller | Initial managed eligibility |
 | --- | --- |
 | createWebsiteRequest | Newly submitted request from a verified account |
-| createWebsiteRequestFromDeepDive | New request; serialized invitation/request identity |
-| submitClaimedDeepDiveRequest | Proven first draft submission, never login/resume repair |
+| createWebsiteRequestFromDeepDive | NOT WIRED; later needs serialized invitation/request identity |
+| submitClaimedDeepDiveRequest | NOT WIRED; never infer freshness from login/resume repair |
 | updateWebsiteRequest | Locked draft-to-submitted transition only |
 | createWebsiteRequestFromProspectDiscovery | Preserve legacy path; registration is not verification |
 | sendWebsiteRequestToSiteStudio | Manual resend does not authorize new admission |
@@ -35,7 +161,7 @@ Inside the request writer's transaction:
 2. Check campaign binding and previous request jobs before allocating anything.
    Exact managed repeats return their binding unchanged. Legacy or ambiguous
    history is preserved and requires reconciliation, not another campaign.
-3. Create a non-dispatching request-bound campaign with opaque callback identity.
+3. Create a non-dispatching queued request-bound campaign with opaque callback identity.
 4. Freeze request/account/campaign, normalized brief and full authored scope,
    ordered asset authority, recipe, allowed tools and reviewed cost policy.
 5. Insert one canonical proof.generate job, bounded to three attempts, and enroll

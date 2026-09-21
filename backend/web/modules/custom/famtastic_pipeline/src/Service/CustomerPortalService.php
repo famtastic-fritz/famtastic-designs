@@ -42,6 +42,7 @@ final class CustomerPortalService {
     private readonly AttributionService $attribution,
     private readonly PublicPreviewDeliveryService $previews,
     private readonly ?WebformIntakeBridgeService $webformBridge = NULL,
+    private readonly ?FreshProofAdmission $freshProofAdmission = NULL,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -333,6 +334,17 @@ final class CustomerPortalService {
 
   /** Creates a draft or submitted request and its distinct Drupal lead record. */
   public function createWebsiteRequest(int $customerId, string $organizationPublicId, array $input, ?string $rawInput = NULL): array {
+    if (!FreshProofAdmission::enabled()) return $this->writeWebsiteRequestCreate($customerId, $organizationPublicId, $input, $rawInput);
+    $transaction = $this->database->startTransaction();
+    try {
+      $result = $this->writeWebsiteRequestCreate($customerId, $organizationPublicId, $input, $rawInput);
+      unset($transaction);
+      return $result;
+    }
+    catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
+  }
+
+  private function writeWebsiteRequestCreate(int $customerId, string $organizationPublicId, array $input, ?string $rawInput): array {
     $organization = $this->authorizedOrganization($customerId, $organizationPublicId);
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
     $clean = $this->validateWebsiteRequest($input);
@@ -366,12 +378,17 @@ final class CustomerPortalService {
       'intake_data' => json_encode($clean['intake'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
       'submitted_at' => $clean['status'] === 'submitted' ? $now : NULL, 'created' => $now, 'changed' => $now,
     ])->execute();
+    if (FreshProofAdmission::enabled()) {
+      $owner = $this->database->select('famtastic_customer_resource', 'r')->fields('r', ['organization_id'])
+        ->condition('resource_type', 'prospect')->condition('resource_id', (int) $prospect->id())->forUpdate()->execute()->fetchField();
+      if ($owner !== FALSE && (int) $owner !== (int) $organization['id']) throw new \RuntimeException('Prospect belongs to a different workspace.');
+    }
     $this->claimResource((int) $organization['id'], 'prospect', (int) $prospect->id());
     $this->previews->attachClaimedRequest($customerId, $id, $clean['status']);
     $this->activity((int) $organization['id'], 'website_request.created', $clean['status'] === 'submitted' ? 'A new website request was submitted.' : 'A website request draft was saved.');
     if ($clean['status'] === 'submitted') {
       $this->queueWebsiteRequestNotifications($id, $publicId, $customer, $clean);
-      $this->queueWebsiteRequestProofJob($id, (int) $prospect->id(), $publicId, $clean['intake']);
+      $this->queueWebsiteRequestProofJob($id, (int) $prospect->id(), $publicId, $clean['intake'], ['customer_id' => $customerId, 'source' => 'portal.create', 'prior_status' => NULL]);
     }
     return $this->serializeWebsiteRequest($this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $id)->execute()->fetchAssoc());
   }
@@ -612,7 +629,8 @@ final class CustomerPortalService {
       }
       $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
       $this->queueWebsiteRequestNotifications((int) $row['id'], (string) $row['public_id'], $customer, $clean);
-      $this->queueWebsiteRequestProofJob((int) $row['id'], (int) $row['prospect_id'], (string) $row['public_id'], $clean['intake']);
+      $this->queueWebsiteRequestProofJob((int) $row['id'], (int) $row['prospect_id'], (string) $row['public_id'], $clean['intake'],
+        $row['status'] === 'draft' ? ['customer_id' => $customerId, 'source' => 'portal.update', 'prior_status' => 'draft'] : NULL);
       $this->activity((int) $row['organization_id'], 'website_request.submitted', 'A website request was submitted for review.');
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
@@ -1050,6 +1068,9 @@ final class CustomerPortalService {
       ];
     }
 
+    $managed = FreshProofBinding::event($this->database, (int) $row['id'])
+      ? FreshProofBinding::handoff($this->database, $row, $this->time->getCurrentTime()) : NULL;
+    if ($managed !== NULL) return $managed;
     $requestId = (int) ($row['id'] ?? 0);
     $jobKey = 'website_proof.generate.v1:request:' . $requestId;
     $query = $this->database->select('famtastic_job', 'j')->fields('j', ['id', 'status', 'attempts', 'max_attempts']);
@@ -1517,7 +1538,11 @@ final class CustomerPortalService {
   }
 
   /** Enqueues the canonical pre-purchase proof routine exactly once. */
-  private function queueWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake): int {
+  private function queueWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake, ?array $freshness = NULL): int {
+    if ($freshness !== NULL && FreshProofAdmission::enabled()) {
+      if (!$this->freshProofAdmission) throw new \RuntimeException('Fresh proof admission service is not installed.');
+      return $this->freshProofAdmission->admit($requestId, $freshness['customer_id'], $freshness['source'], $freshness['prior_status']);
+    }
     $briefJson = json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
     $briefHash = hash('sha256', $briefJson);
     return $this->ledger->enqueue(
