@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 — Bounded Anderlye showcase publication lane
+
+Locally verified: a static agency case with immutable source imagery, passive
+UTM links and exact creator credit; five branding contracts, eight isolated
+filesystem publication tests, and CUA desktop/320/390/768 checks pass. Its
+expected-absent four-file promotion preserves the shared frontend. Remote
+metadata preflight is read-only and passed. Publication and business-operation
+proof remain separate; see `docs/plans/ANDERLYE_SHOWCASE_2026-09-21.md` for the
+current receipt. No CMS integration, automated delivery or business-result
+capability is upgraded by this presentation work.
+
 ## 2026-09-19 — Connect FAM with crown app icon
 
 Production verified at `95735502`: the owner-selected FAM with crown family is served to every Connect icon consumer on both domains; opaque maskable artwork fits the full safe circle. Build, mobile install preview, live video/QR/main-site checks and all 16 existing contracts pass. Physical Android installation and existing-device icon refresh remain untested. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.

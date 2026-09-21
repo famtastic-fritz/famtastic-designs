@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-21 — Anderlye static project showcase
+
+- Prepared a new `/work/anderlye/` case with byte-preserved illustrative imagery,
+  phone-friendly layout, exact creator credit, website/card links and honest
+  freight-CRM scope. Added an owner-directed, expected-absent four-file publisher
+  with per-file live verification and scoped rollback. Local CUA at320/390/768
+  and desktop, five creator contracts and eight isolated publication checks pass.
+  Publication status and the full-build disk-space exception are recorded in
+  `docs/plans/ANDERLYE_SHOWCASE_2026-09-21.md`; no gallery/CMS entry is implied.
+
 ## 2026-09-19 — Connect FAM with crown selection
 
 Replaced Connect app icons and install preview with the owner-selected original-pixel FAM plus crown from the existing social profile kit. Preserved the source master and mask-safe padding, and versioned icon URLs without changing app identity. Production verified at `95735502`: exact icon bytes on both domains, mobile preview, full commercial playback, QR/routing, main-site checks, local build and 16 contracts pass. Physical Android installation remains untested. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.

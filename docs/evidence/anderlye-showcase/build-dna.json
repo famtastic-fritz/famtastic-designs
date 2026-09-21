@@ -1,0 +1,170 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "agency-anderlye-showcase-20260921",
+  "classification": "local_tested_publication_pending",
+  "created_at": "2026-09-21T05:23:57.825886+00:00",
+  "record_timing_note": "Record assembled after construction and QA; per-edit time/cost telemetry unavailable.",
+  "repository": {
+    "name": "famtastic-designs",
+    "base_revision": "19ad376a659a764df422a3075840c9d443e9426f",
+    "branch": "codex/anderlye-showcase",
+    "state": "prepared for explicitly directed isolated commit, push and static publication"
+  },
+  "recipe": {
+    "routine": "agency-static-case-showcase",
+    "version": "1.0.0",
+    "build_class": "bounded-new-static-case",
+    "intensity": 3,
+    "ordered_sections": [
+      "agency-header",
+      "illustrative-hero",
+      "project-stage",
+      "business-job",
+      "delivered-scope",
+      "manual-workflow",
+      "digital-card-links",
+      "evidence-boundary",
+      "business-intake",
+      "legal-footer",
+      "exact-creator-credit"
+    ],
+    "motion": "native smooth scrolling with reduced-motion override",
+    "asset_strategy": "byte-preserved selected customer illustrative images; canonical agency logo and existing Kaushan font",
+    "publication_scope": "four initially absent static files; no shared frontend overwrite or CMS write"
+  },
+  "authority": {
+    "user_request": "Place Anderlye on FAMtastic Designs with linked creator branding.",
+    "root_scope_change": "After local ENOSPC, use bounded static path and expected-absent/hash guards; root explicitly authorized isolated commit/push/publication after customer-site readiness.",
+    "customer_app_ownership": "independent site-anderlye-pro-logistics repository"
+  },
+  "stages": [
+    {
+      "stage_id": "authored-static-page",
+      "execution": {
+        "provider": {
+          "id": "openai",
+          "transport": "Codex desktop"
+        },
+        "model": {
+          "status": "disclosed",
+          "id": "GPT-6"
+        },
+        "timing": {
+          "status": "partial"
+        },
+        "cost": {
+          "status": "provider_did_not_report"
+        }
+      },
+      "result": {
+        "status": "locally_tested",
+        "live_business_results": "not_measured"
+      }
+    },
+    {
+      "stage_id": "asset-reuse",
+      "execution": {
+        "provider": {
+          "id": "Muapi existing customer workflow",
+          "workflow_id": "7104b8db-4968-4e3b-a001-e71bc2ee080f",
+          "run_id": "fb2420f1-5c7f-423d-b46f-06fccf1e24ac"
+        },
+        "model": {
+          "status": "workflow_selected_provider_result_unknown",
+          "id": "bytedance-seedream-v4.5"
+        },
+        "cost": {
+          "status": "no_new_generation_request_by_showcase_task"
+        }
+      },
+      "result": {
+        "status": "byte_preserved",
+        "source": "/Users/famtastic-fritz/Development/FAMtastic-Repos/site-anderlye-pro-logistics/docs/assets/IMAGE-RECEIPT.json",
+        "selected_asset": "open-deck-steel-hero-v2",
+        "rights_boundary": "Illustrative generated freight scene; no owned-fleet/facility/shipment-evidence claim"
+      }
+    },
+    {
+      "stage_id": "local-qa",
+      "execution": {
+        "provider": {
+          "id": "CUA Chrome extension"
+        },
+        "model": {
+          "status": "not_applicable"
+        },
+        "cost": {
+          "status": "not_applicable"
+        }
+      },
+      "result": {
+        "status": "passed_with_disclosed_limits",
+        "viewports": [
+          320,
+          390,
+          768,
+          "default desktop"
+        ],
+        "no_horizontal_overflow": true,
+        "creator_logo_width_px": 180,
+        "minimum_visible_target_px": [
+          44,
+          44
+        ],
+        "h1_count": 1,
+        "authored_javascript": false,
+        "creator_contract_tests_passed": 5,
+        "isolated_publication_tests_passed": 8,
+        "console_note": "Three generic asynchronous extension listener errors observed; extension UI present. No empty-console claim.",
+        "unverified": [
+          "public apex/www browser acceptance",
+          "physical touch devices",
+          "Safari/Firefox",
+          "business results"
+        ],
+        "full_build": "Failed ENOSPC copying unchanged media; removed only own partial dist; root explicitly chose static lane."
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "frontend/public/work/anderlye/index.html",
+      "sha256": "ceca45418886489ffcd9614a58545fd88df12e2d0c93bbd6a5eb8a5fc6149d1b"
+    },
+    {
+      "path": "frontend/public/work/anderlye/style.css",
+      "sha256": "79fc73f11cdf2ce43c04405391342788e9d34ad77322047062fc5d4d1ae6a62b"
+    },
+    {
+      "path": "frontend/public/work/anderlye/assets/hero-steel.webp",
+      "sha256": "1e6241081f742827f8ebf287b6387bf80332529eb9825e4063c29427369720f3"
+    },
+    {
+      "path": "frontend/public/work/anderlye/assets/hero-steel-mobile.webp",
+      "sha256": "a0579e551f560e12f5df4720b148727c367ee54f38d58af553ceaf1ede72fc3c"
+    },
+    {
+      "path": "scripts/publish-anderlye-showcase.mjs",
+      "sha256": "254ca69003e02d3ae83cc5623fa9a9b979d3bb5ba6da3fccba1cfe5651a74a3a"
+    },
+    {
+      "path": "scripts/anderlye-showcase-remote.php",
+      "sha256": "c1d8131778342c7c2a5ca2788fb8e8679facbe787362acb926a1ebe0eba47795"
+    },
+    {
+      "path": "scripts/test-anderlye-showcase.mjs",
+      "sha256": "8810ce4d056f49fb72f158b070f462a5bed41c4ab09dd004183b5404b3803407"
+    }
+  ],
+  "publication": {
+    "status": "not_yet_published",
+    "cms_entry_created": false,
+    "customer_email_sent": false
+  },
+  "tracking": {
+    "method": "passive public-slug UTMs only",
+    "new_cookie": false,
+    "new_tracking_script": false,
+    "click_receipts_verified": false
+  }
+}

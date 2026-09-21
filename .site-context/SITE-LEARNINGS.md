@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 — Audit precise targets and scope static releases
+
+**Observation:** Anderlye's carrier packet HTML route returned200 while its PDF
+link returned404; the copyright year was already current. Plain automated and
+browser-like user agents also returned different access states. **Guidance:**
+Record the actual href, final target, bytes/type and timestamp before describing
+a failure. Do not infer absent backend or missing copyright from fetch trouble.
+For this expressly scoped agency showcase, a disk-space failure prompted a
+four-file expected-absent release; keep exact hashes, no-clobber promotion and
+separate receipts instead of altering the shared frontend or its release marker.
+
 ## 2026-09-19 — Recover the owner-selected icon family
 
 The owner pointed to prior logo work and selected the existing FAM plus crown avatar. Search session content and retained exported artwork before substituting another brand derivative. Keep the approved master, record the scoped app-icon selection, measure the final mask-safe crop and version all consumers without changing manifest identity. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.
