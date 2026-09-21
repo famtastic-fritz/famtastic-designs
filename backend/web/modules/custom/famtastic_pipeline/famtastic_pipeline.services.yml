@@ -38,7 +38,7 @@ services:
 
   famtastic_pipeline.operational_ledger:
     class: Drupal\famtastic_pipeline\Service\OperationalLedger
-    arguments: ['@database', '@datetime.time']
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.worker_coordinator']
 
   famtastic_pipeline.prospect_lists:
     class: Drupal\famtastic_pipeline\Service\ProspectListService

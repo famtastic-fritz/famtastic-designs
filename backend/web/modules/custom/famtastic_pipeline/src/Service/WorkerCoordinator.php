@@ -18,6 +18,18 @@ final class WorkerCoordinator {
 
   public function __construct(private readonly Connection $database, private readonly TimeInterface $time, private readonly LockBackendInterface $lock) {}
 
+  /** Shared capability predicate; enrollment never upgrades a static consumer. */
+  public static function supportsPayload(string $jobType, array $payload): bool {
+    $packet = $payload['packet'] ?? [];
+    $continuation = $packet['continuation'] ?? [];
+    return $jobType === 'site_studio_staging_prepare'
+      && ($packet['build_class'] ?? '') === 'prepayment_selected_direction_staging'
+      && ($continuation['spec']['capability_class'] ?? '') === 'static'
+      && empty($continuation['spec']['backend']) && empty($continuation['spec']['functional_contract'])
+      && in_array($continuation['operation'] ?? '', ['package_existing', 'continue_build'], TRUE)
+      && ($continuation['requested_next_action'] ?? '') === 'protected_review';
+  }
+
   /** Explicit exact-job admission. Does not run it, send mail or revive failures. */
   public function enroll(int $jobId, string $jobKey, string $payloadHash, int $reservationCents): array {
     if ($reservationCents < 25 || $reservationCents > 250 || !preg_match('/^[a-f0-9]{64}$/', $payloadHash)) {
@@ -35,13 +47,7 @@ final class WorkerCoordinator {
         return ['status' => 'already_enrolled', 'job_id' => $jobId];
       }
       if ($job['status'] !== 'queued' || (int) $job['attempts'] !== 0) throw new \RuntimeException('Only fresh unattempted jobs may enroll; historical work requires separate reconciliation.');
-      $packet = json_decode((string) $job['payload'], TRUE, flags: JSON_THROW_ON_ERROR)['packet'] ?? [];
-      $continuation = $packet['continuation'] ?? [];
-      if (($packet['build_class'] ?? '') !== 'prepayment_selected_direction_staging'
-        || ($continuation['spec']['capability_class'] ?? '') !== 'static'
-        || !empty($continuation['spec']['backend']) || !empty($continuation['spec']['functional_contract'])
-        || !in_array($continuation['operation'] ?? '', ['package_existing', 'continue_build'], TRUE)
-        || ($continuation['requested_next_action'] ?? '') !== 'protected_review') {
+      if (!self::supportsPayload($job['job_type'], json_decode((string) $job['payload'], TRUE, flags: JSON_THROW_ON_ERROR))) {
         throw new \RuntimeException('Planning/ecommerce work requires an implementation capability, not static packaging.');
       }
       $this->database->insert('famtastic_worker_claim')->fields([

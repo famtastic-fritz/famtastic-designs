@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Fresh selection admission is not worker activation
+
+Use the same Drupal transaction and claims for fresh selected-static jobs.
+Do not enroll history, expose a transient legacy queued state or silently treat
+ecommerce as static. The default-off hook is locally proven; the real Studio
+consumer has an endpoint merge conflict with Phase 1. Record that blocker before
+any activation claim or Chat Web handoff.
+
 ## 2026-09-21 - Isolated proof builds need external frontend imports
 
 Copy only the reviewed narration text imported from marketing/, preserve its

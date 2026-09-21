@@ -6,6 +6,7 @@ namespace Drupal\famtastic_pipeline\Service;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Site\Settings;
 
 /**
  * Durable, idempotent operational records for autonomous pipeline work.
@@ -15,6 +16,7 @@ final class OperationalLedger {
   public function __construct(
     private readonly Connection $database,
     private readonly TimeInterface $time,
+    private readonly ?WorkerCoordinator $workerCoordinator = NULL,
   ) {}
 
   /**
@@ -198,9 +200,19 @@ final class OperationalLedger {
     if ($existing) {
       return (int) $existing;
     }
+    // Opt-in only after the real consumer is verified. Never enroll a duplicate
+    // or scan historical work. Enqueue and admission commit atomically so a
+    // legacy worker cannot claim the transient queued state.
+    $autoAdmit = Settings::get('famtastic_fresh_selected_admission_enabled', FALSE) === TRUE
+      && WorkerCoordinator::supportsPayload($jobType, $payload);
+    if ($autoAdmit && !$this->workerCoordinator) {
+      throw new \RuntimeException('Fresh selected admission requires the shared worker coordinator.');
+    }
+    $transaction = $autoAdmit ? $this->database->startTransaction() : NULL;
+    $payloadWire = json_encode($payload, JSON_THROW_ON_ERROR);
     $now = $this->time->getRequestTime();
     try {
-      return (int) $this->database->insert('famtastic_job')
+      $id = (int) $this->database->insert('famtastic_job')
         ->fields([
           'job_key' => $jobKey,
           'job_type' => $jobType,
@@ -209,19 +221,26 @@ final class OperationalLedger {
           'attempts' => 0,
           'max_attempts' => $maxAttempts,
           'available_at' => $availableAt ?? $now,
-          'payload' => json_encode($payload, JSON_THROW_ON_ERROR),
+          'payload' => $payloadWire,
           'created' => $now,
           'changed' => $now,
         ])
         ->execute();
+      if ($autoAdmit) {
+        $this->workerCoordinator->enroll($id, $jobKey, hash('sha256', $payloadWire), 25);
+      }
+      unset($transaction);
+      return $id;
     }
     catch (\Throwable $e) {
+      if (isset($transaction)) $transaction->rollBack();
       if ($this->isDuplicateKey($e)) {
-        return (int) $this->database->select('famtastic_job', 'j')
+        $existingId = $this->database->select('famtastic_job', 'j')
           ->fields('j', ['id'])
           ->condition('job_key', $jobKey)
           ->execute()
           ->fetchField();
+        if ($existingId) return (int) $existingId;
       }
       throw $e;
     }

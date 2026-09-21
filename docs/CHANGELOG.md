@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-21 - Atomic fresh selected-job admission (disabled by default)
+
+New eligible static selections can join the existing shared Mac/cloud claim
+ledger in the enqueue transaction. Duplicates/history are untouched; admission
+failure rolls back; commerce and other capabilities remain excluded. 313 PHPUnit
+tests / 1,587 assertions and 85 installed Drupal checks pass. Full canonical
+fixture passes separately. Source only; consumer merge conflict and automatic
+creative generation remain open. See the September 21 automation integration plan.
+
 ## 2026-09-21 - Restore disposable customer-journey frontend inputs
 
 Both isolated proof runners copy and byte-check the exact narration text now

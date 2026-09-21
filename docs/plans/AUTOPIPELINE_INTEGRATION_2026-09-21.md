@@ -59,6 +59,43 @@ but stops at its expected public-CMS network denial with public reads disabled
 The ordinary fresh canonical runner above reads public CMS content for SEO
 shells; those GETs are not model calls, delivery or production writes.
 
+## Fresh selection admission, local implementation
+
+OperationalLedger now accepts the existing WorkerCoordinator service. With
+Settings `famtastic_fresh_selected_admission_enabled` exactly TRUE, a freshly
+inserted supported selected-static job is enrolled in the same transaction.
+The temporary queued state never commits for a legacy worker to claim. Failure
+rolls the new job back; an exact duplicate returns the existing job without
+enrolling historical work. The shared capability predicate rejects backend,
+functional-contract, planning, proof-generation and outreach jobs. No new queue,
+provider, scheduler, send operation or target allocator was added.
+
+Admission reserves no money. Actual claims retain the existing 25-cent minimum
+reservation, $20 stop threshold, global concurrency limit and bounded leases.
+This static dispatch cost reservation does not authorize model spending or
+constitute a budget for ecommerce implementation.
+
+Verification after the final source adjustment: 313 PHPUnit tests / 1,587
+assertions pass, including eight fresh-admission tests. The suite reports one
+deprecation and 68 PHPUnit deprecations; these are not failures. Retained run:
+20260921T183834Z-24657. All 85 installed selected-staging assertions pass in
+20260921T183835Z-24682, including fresh-process persistence, isolation, duplicate
+selection/callback and rollback. That installed run retains the switch off;
+enabled admission/shared claims are separately tested against in-memory SQLite.
+The full fresh canonical journey also passes with the new service wiring in
+fresh-customer-proof-20260921T183653Z-20885.
+
+## Integration stop and next decision
+
+A read-only Studio merge-tree check against selected consumer 9d0f6a2 reports
+conflicts in server/modules/pipeline/index.js and two documentation files. It
+does not alter the worktree/index. Do not merge or deploy around this conflict:
+the next integration must preserve both the Phase 1 mock firewall and the real
+consumer's immutable source/tenant/target authority, with explicit routing.
+Fresh admission stays disabled until that consumer is integrated and proven.
+The actual creative-generation trigger and laptop-independent cloud execution
+are still unfinished. The four milestones are not collectively complete.
+
 ## Chat Web alignment boundary
 
 Drupal owns customer, commercial, selection, notification and job truth. Studio

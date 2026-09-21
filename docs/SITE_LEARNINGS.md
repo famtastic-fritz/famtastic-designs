@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Automatic admission must share the enqueue transaction
+
+Enrolling later permits a legacy worker to claim a just-created queued job.
+Enroll eligible new jobs atomically, never use repeated enqueue as a historical
+backlog drain, and roll back a failed admission. Share the same capability
+predicate between explicit and automatic enrollment. Static dispatch remains
+different from creative generation and backend implementation; a disabled
+source hook does not make the live pipeline autonomous.
+
 ## 2026-09-21 - Frontend source dependencies belong in isolated proof inputs
 
 A new raw-text import outside frontend/ broke the disposable journey build.

@@ -1,5 +1,15 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Fresh selected-static admission (local source only)
+
+Default-off, atomic fresh-job enrollment in the existing Drupal claim ledger is
+locally tested: duplicate/history exclusion, admission rollback, capability
+limits and competing Mac/cloud claim identities. 313 PHP tests / 1,587 assertions,
+85 installed selected-staging checks and the canonical disposable journey pass.
+This does not prove automatic creative generation, live consumer integration,
+MySQL contention, real cloud execution or laptop independence. See
+`docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md`.
+
 ## 2026-09-21 — Connect QR discovery
 
 Production verified at `40ca506b`: prominent QR action, bounded/persisted pointer cue, accessible responsive scan dialog, and share/copy fallback. 23 contracts and 12 Chromium cases pass. QR asset bytes are preserved; QR repair/physical scan and actual OS sharing are not claimed. 24 live browser scenarios covered across apex/www, exact build bytes and main-site browser checks pass. GitHub hosted CI could not start due to billing. Evidence: `docs/evidence/connect-qr-discovery/`.

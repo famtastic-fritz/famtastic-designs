@@ -1,5 +1,18 @@
 # Agent Instructions
 
+## September 21 - Additive execution, not a replacement Mac workflow
+
+Read `docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md` before further automation
+integration. Drupal remains the shared customer/job authority. The new
+`famtastic_fresh_selected_admission_enabled` Settings switch defaults off and
+admits only newly inserted supported static jobs, atomically with enqueue.
+Do not enable it until the real consumer, exact hosting binding and signed
+callback are verified. Never replay old jobs or route ecommerce through it.
+Preserve the Mac creative lane; Phase 2 is an additive disabled shadow pilot.
+An observe-only tick, simulated proof or successful handoff is not an unattended
+customer delivery. The selected consumer currently conflicts with Phase 1's
+pipeline endpoint; reconcile the contracts before any live cutover.
+
 ## September 18 — Embedded build instructions must cover the current request
 
 Never reuse `selected_build_continuation` merely because it exists. Its producer
