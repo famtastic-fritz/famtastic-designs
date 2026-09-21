@@ -33,13 +33,16 @@ final class ManagedProofArtifactStoreTest extends TestCase {
 
   private function normalized(?array $input = NULL): array { return ProofCallbackArtifacts::normalize(($input ?? Input::input())['variants'], Input::DIRECTIONS); }
   private function prepare(?ManagedProofArtifactStore $store = NULL, ?array $input = NULL, ?array $expected = NULL): array {
+    // Never normalize malformed assets before the store. DNA guard tests supply
+    // an explicit same-input result so mismatch cannot hide a missing DNA guard.
     return ($store ?? new ManagedProofArtifactStore($this->root, $this->web))->prepare(Input::wire($input ?? Input::input()), $expected ?? $this->normalized());
   }
-  private function reject(callable $operation, string $message = ''): void {
+  private function reject(callable $operation, string $message = ''): \Throwable {
     $error = NULL;
     try { $operation(); } catch (\Throwable $e) { $error = $e; }
     self::assertNotNull($error, 'Expected rejection, never hide a failed PHPUnit assertion in the exception catch.');
     if ($message !== '') self::assertStringContainsString($message, $error->getMessage());
+    return $error;
   }
   private function emptyRoot(): void { self::assertSame(['.', '..'], scandir($this->root)); }
 
@@ -95,19 +98,65 @@ final class ManagedProofArtifactStoreTest extends TestCase {
     foreach (['lease_token', 'artifact_path', 'selected_build_artifacts'] as $key) {
       $i = Input::input(); $i['variants'][0][$key] = 'bad'; yield 'variant-' . $key => [$i];
     }
-    foreach (['lease_token', 'API_KEY', 'credentials', 'source_capture', 'selected_build_continuation'] as $key) {
-      $i = Input::input(); $i['variants'][0]['design_dna']['nested'] = [$key => 'bad']; yield 'dna-' . $key => [$i];
-    }
     foreach (['../escape.png', '/tmp/escape.png', 'a/../../x.png', '%2e%2e/x.png', '.hidden.png', 'x.php', 'a//x.png'] as $path) {
       $i = Input::input(); $i['variants'][0]['assets'] = [Input::asset($path)]; yield 'path-' . $path => [$i];
     }
     $i = Input::input(); $i['variants'][0]['assets'][0]['sha256'] = str_repeat('0', 64); yield 'wrong hash' => [$i];
     $i = Input::input(); $i['variants'][0]['assets'][0]['size_bytes'] = 24; yield 'untrusted size field' => [$i];
     $i = Input::input(); $i['variants'][0]['assets'] = [Input::asset('hero.png', 2020725)]; yield 'canonical logo still over cap' => [$i];
-    $i = Input::input(); $i['variants'][0]['design_dna']['notes'] = str_repeat('x', 4097); yield 'DNA string cap' => [$i];
-    $i = Input::input(); $i['variants'][0]['design_dna']['notes'] = array_fill(0, 513, 1); yield 'DNA node cap' => [$i];
     $i = Input::input(); $i['variants'][0]['thumbnail_base64'] = []; yield 'thumbnail type' => [$i];
     $i = Input::input(); unset($i['event_id']); yield 'missing identity' => [$i];
+  }
+
+  #[DataProvider('invalidDna')]
+  public function testDnaGuardsRejectMatchingNormalizedInput(array $input, string $message): void {
+    // Legacy validation permits descriptive DNA unchanged. Its successful result
+    // is computed outside reject(), proving rejection comes from the store.
+    $expected = $this->normalized($input);
+    self::assertSame($input['variants'][0]['design_dna'], $expected['a']['design_dna']);
+    $error = $this->reject(fn() => $this->prepare(input: $input, expected: $expected));
+    self::assertInstanceOf(\InvalidArgumentException::class, $error);
+    self::assertSame($message, $error->getMessage());
+    $this->emptyRoot();
+  }
+  public static function invalidDna(): iterable {
+    foreach (['lease_token', 'API_KEY', 'credentials', 'source_capture', 'selected_build_continuation'] as $key) {
+      $i = Input::input(); $i['variants'][0]['design_dna']['nested'] = [$key => 'bad'];
+      yield 'dna-' . $key => [$i, 'Managed direction DNA contains a prohibited field.'];
+    }
+    $structural = 'Managed direction DNA exceeds its structural bound.';
+    $i = Input::input(); $i['variants'][0]['design_dna']['notes'] = str_repeat('x', 4097);
+    yield 'DNA string cap' => [$i, $structural];
+    $i = Input::input(); $i['variants'][0]['design_dna']['notes'] = array_fill(0, 513, 1);
+    yield 'DNA node cap' => [$i, $structural];
+    $dna = 'leaf'; for ($depth = 0; $depth < 9; $depth++) $dna = ['level' => $dna];
+    $i = Input::input(); $i['variants'][0]['design_dna'] = $dna;
+    yield 'DNA depth cap' => [$i, $structural];
+    $i = Input::input(); $i['variants'][0]['design_dna'] = array_fill(0, 9, str_repeat('x', 4096));
+    yield 'DNA wire byte cap' => [$i, 'Invalid managed variant shape or DNA bound.'];
+  }
+
+  public function testValidNondefaultDnaRoundTripsWithExactManifestBytes(): void {
+    $input = Input::input();
+    foreach ($input['variants'] as &$variant) {
+      $variant['design_dna'] = ['direction_name' => 'Custom ' . $variant['direction_id'],
+        'composition' => ['notes' => 'Synthetic café layout', 'weights' => [0.0, 1.5], 'enabled' => TRUE, 'optional' => NULL]];
+    }
+    unset($variant);
+    $result = $this->prepare(input: $input, expected: $this->normalized($input));
+    self::assertSame(Input::wire($input), file_get_contents($result['directory'] . '/callback.json'));
+    self::assertFalse($result['manifest']['deliverable']);
+    self::assertSame(['.', '..'], scandir($this->web));
+    $files = array_column($result['manifest']['files'], NULL, 'path');
+    foreach ($input['variants'] as $variant) {
+      $path = $result['manifest']['variants'][$variant['direction_id']]['design_dna'];
+      $wire = Input::wire($variant['design_dna']);
+      self::assertNotSame(Input::variants()[0]['design_dna'], $variant['design_dna']);
+      self::assertSame($wire, file_get_contents($result['directory'] . '/' . $path));
+      self::assertSame('direction_dna', $files[$path]['role']);
+      self::assertSame(strlen($wire), $files[$path]['size_bytes']);
+      self::assertSame(hash('sha256', $wire), $files[$path]['sha256']);
+    }
   }
 
   public function testRawWireAndEveryNormalizedFieldMustMatch(): void {

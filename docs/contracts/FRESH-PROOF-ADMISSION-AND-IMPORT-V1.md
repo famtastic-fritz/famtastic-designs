@@ -8,9 +8,10 @@ Read SHARED-PROOF-CLAIMS-V1.md and MAC-CREATIVE-WORKER-V1.md together.
 
 The later narrow `MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md` checkpoint extracts
 legacy artifact validation and adds unregistered private create-only preparation.
-Its 106 focused tests / 414 assertions pass with a hash-pinned pre-extraction
-service fixture and Git unavailable. Preparation uses file fsync, not directory
-fsync or a crash/power-loss durability guarantee.
+Its 109 focused tests / 463 assertions pass with isolated DNA guards, a hash-pinned
+pre-extraction service fixture and Git unavailable. Disabling DNA guards only in
+a subprocess causes all nine targeted cases to fail as intended. Preparation
+uses file fsync, not directory fsync or a crash/power-loss durability guarantee.
 It does not implement or open import,
 completion, Build DNA authority, QA, delivery or provider activation.
 

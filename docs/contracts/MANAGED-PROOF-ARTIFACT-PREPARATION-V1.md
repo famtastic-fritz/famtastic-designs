@@ -1,10 +1,11 @@
 # Managed proof artifact preparation v1
 
 September 21, 2026. Source groundwork only, based on `3bc4e9baf`.
-Focused runtime verification: 106 tests / 414 assertions PASS with Git unavailable
-and bounded callback child arguments. The earlier helper repair, original disk
-pause and failed receipts are retained below. This is not an importer, producer
-or deliverable proof.
+Focused runtime verification: 109 tests / 463 assertions PASS with Git unavailable,
+bounded callback child arguments and independently exercised DNA guards. A
+subprocess-only DNA mutant fails all nine targeted cases as intended. The earlier
+helper repair, original disk pause and failed receipts are retained below. This
+is not an importer, producer or deliverable proof.
 
 ## Scope and unchanged authority
 
@@ -92,7 +93,53 @@ Script/event-handler/iframe/object/embed/base restrictions remain unchanged. The
 legacy regex is not a complete HTML sanitizer or functionality proof. Static/demo
 HTML preparation does not prove live forms, commerce or an actual creative run.
 
-## Shallow-checkout portability repair and current receipt
+## DNA guard isolation repair and current receipts
+
+Independent review found that the original prepare helper supplied default
+normalized artifacts even for changed DNA. Those negative cases could pass on
+raw/normalized mismatch if the intended DNA guard were removed. The focused pass
+counts below remain historical receipts, not independent proof of those guards.
+
+The dedicated nine-case DNA provider now normalizes the SAME input with the real
+legacy validator, outside the rejection assertion. It proves that DNA survives
+normalization, then asserts InvalidArgumentException, the exact intended guard
+message and no private writes. It covers five sensitive/protected nested keys,
+string/node/depth bounds and the separate serialized DNA byte bound. A positive
+nondefault-DNA case verifies all three directions' exact canonical bytes and
+manifest role/size/hash, plus raw callback preservation and no web writes.
+Malformed asset cases still reach the store without pre-normalizing bad assets;
+normalizer rejection is not counted as store verification.
+
+`tests/src/Unit/Fixtures/ManagedProofDnaMutationBootstrap.php` is an explicitly
+invoked, test-only bootstrap. It loads the matching existing vendor, checks the
+store is unloaded and requires exactly one match for each mutation anchor. It
+suppresses only the recursive DNA call and serialized-size predicate in memory
+in a separate process. It never rewrites production source or disables equality,
+asset, private-root or filesystem guards. Normal discovery does not invoke it.
+
+Serial guarded verification, PHP 8.5.9 / PHPUnit 11.5.56:
+
+- Real source, same three focused files: **109 tests / 463 assertions PASS**,
+  0.785 seconds, 12 MiB, no failures/skips/warnings/deprecations. Wrapper exit 0,
+  elapsed 1.122 seconds. Evidence: `managed-artifact-dna-focused.nRmwUO`.
+- Intentional mutant, only the nine DNA cases: **9 tests / 18 assertions /
+  9 failures**, 0.067 seconds, 10 MiB. Each fails the missing-rejection assertion
+  because the mutant prepares the input. Wrapper exit 1, elapsed 0.285 seconds.
+  Evidence: `managed-artifact-dna-mutation.gaWaaN`. This is executed negative
+  mutation proof, not a bootstrap failure or a failure of unchanged real source.
+
+Both evidence directories are under `/tmp/famtastic-phase2-review.NVAfPl/`;
+both receipts report stoppedFor=null and protectedDataUnchanged=true. The same
+200 MiB continuous guard and exclusions below apply. Available disk after both
+runs was 734,728 KiB. Only test/fixture/docs changed from `b5831ea1`; production
+source and its guards are unchanged. Exact executed commands:
+
+```sh
+node /tmp/famtastic-phase2-review.NVAfPl/run-integration-check.mjs managed-artifact-dna-focused "cd /tmp/famtastic-fresh-admission.k98Gm4/designs && /usr/bin/env PATH=/nonexistent/famtastic-parity-no-executables FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor /opt/homebrew/bin/php /Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor/phpunit/phpunit/phpunit --bootstrap scripts/automation-test-bootstrap.php --no-configuration --do-not-cache-result backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackArtifactsTest.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ManagedProofArtifactStoreTest.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackServiceParityTest.php"
+node /tmp/famtastic-phase2-review.NVAfPl/run-integration-check.mjs managed-artifact-dna-mutation "cd /tmp/famtastic-fresh-admission.k98Gm4/designs && /usr/bin/env PATH=/nonexistent/famtastic-parity-no-executables FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor /opt/homebrew/bin/php /Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor/phpunit/phpunit/phpunit --bootstrap backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/Fixtures/ManagedProofDnaMutationBootstrap.php --no-configuration --do-not-cache-result --filter testDnaGuardsRejectMatchingNormalizedInput backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ManagedProofArtifactStoreTest.php"
+```
+
+## Shallow-checkout portability repair and prior receipt
 
 The old differential required `git show 3bc4e9baf:...` at test runtime, but the
 actual acceptance workflow uses actions/checkout's default shallow history. Keep

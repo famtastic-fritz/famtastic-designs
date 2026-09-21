@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-21 - Isolate artifact DNA guard regressions
+
+- Use the same input's legacy normalization for DNA-only rejection cases, assert
+  exact guard errors, and verify nondefault DNA bytes/hashes roundtrip. Keep
+  invalid assets entering the store without pre-normalization.
+- Only three focused files pass, 109 tests / 463 assertions. A separate in-memory
+  DNA mutant fails all nine targeted cases for missing rejection; retain that
+  intentional red receipt. Protected data and production source are unchanged.
+  Commands/limits: `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`.
+
 ## 2026-09-21 - Callback parity without repository history
 
 - Replace runtime historical Git lookup with a 63,318-byte hash-pinned, bounded

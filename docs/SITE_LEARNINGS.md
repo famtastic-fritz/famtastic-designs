@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Reject for the guard the test claims to exercise
+
+Observation: default expected normalization made changed-DNA cases reject at
+raw/normalized mismatch even if the DNA guard were absent. Guidance: normalize
+the same DNA input outside the rejection assertion, prove legacy acceptance,
+assert the exact store guard message, and add a nondefault positive roundtrip.
+Do not normalize malformed assets before the store and count that as store proof.
+Only the three focused files pass, 109 tests / 463 assertions. A test-only
+in-memory mutant removes DNA guards and all nine targeted cases fail on missing
+rejection, not bootstrap errors; retain this red receipt. Production unchanged.
+
 ## 2026-09-21 - Differential tests cannot require shallow-clone ancestors
 
 Observation: the old-service callback comparison used a Git ancestor absent from

@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Independent DNA rejection needs matching normalized input
+
+Observation: a default normalized fixture masked missing DNA guards by causing
+an unrelated mismatch. Guidance: normalize the same DNA-only input first, assert
+the exact guard error and verify valid nondefault DNA roundtrips. Invalid assets
+must still enter the store before normalization. Three focused files pass,
+109 tests / 463 assertions. The subprocess-only DNA mutant executes all nine
+targeted cases and fails each for missing rejection. Keep that intentional red
+receipt separate from earlier bootstrap failures. Production and protected data
+unchanged; Drive mirror remains deferred under the isolated/offline scope.
+
 ## 2026-09-21 - Freeze parity evidence, not a dependency on Git history
 
 Observation: default shallow CI has no pre-extraction ancestor. Guidance: use the
