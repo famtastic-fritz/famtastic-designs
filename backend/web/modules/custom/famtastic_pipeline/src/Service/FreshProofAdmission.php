@@ -41,7 +41,7 @@ final class FreshProofAdmission {
     }
     $this->assertNoHistory($row);
     $now = $this->time->getCurrentTime();
-    $campaignId = 'proof-' . bin2hex(random_bytes(16));
+    $campaignId = 'pc-' . bin2hex(random_bytes(16));
     $studioJobId = 'proof-worker-' . bin2hex(random_bytes(16));
     $campaign = $this->entities->getStorage('proof_campaign')->create([
       'campaign_id' => $campaignId, 'prospect_id' => (int) $row['prospect_id'], 'business_name' => $row['business_name'],

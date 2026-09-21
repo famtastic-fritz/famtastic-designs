@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Campaign allocation must satisfy canonical media paths
+
+Observation: `proof-*` allocation failed the real `pc-*` asset-path validator.
+Guidance: change only the new allocation prefix, preserve random identity and
+all history, and test the actual validator. 90 admission tests / 521 assertions
+pass; no import or activation. Drive mirroring remains parent-deferred.
+
 ## 2026-09-21 - Managed queue identity cannot revert to legacy
 
 Observation: edited managed requests could create a legacy job through manual

@@ -6,6 +6,36 @@ It extends the established Mac creative process; it does not substitute static
 packaging or the fictional six-direction benchmark for customer proof creation.
 Read SHARED-PROOF-CLAIMS-V1.md and MAC-CREATIVE-WORKER-V1.md together.
 
+## Canonical campaign namespace follow-up (source only)
+
+New admission now allocates `pc-` plus the existing 16 random bytes encoded as
+32 lowercase hex characters. `ProofAssetContract::artifactPath` requires the
+existing `^pc-[a-z0-9-]+$` namespace; the canonical campaign service also uses
+`pc-`. No business-name slug, new determinism, validator relaxation or historical
+rewrite was added. Existing `pc-*`, `proof-*` and other legacy campaigns remain
+excluded from fresh admission, with their full stored rows unchanged.
+
+The new test first failed on d8f253786 with `Proof asset campaign or direction is
+invalid` from the real asset-path validator. After the one-line source fix,
+90 admission tests / 521 assertions pass (PHP 8.5.9 / PHPUnit 11.5.56, 22 MiB).
+The test validates actual emitted campaign/payload IDs and all three canonical
+media paths, then proves exact retry does not allocate or rewrite anything.
+Both changed PHP files pass syntax checks; git whitespace checks pass. Run:
+
+```sh
+test "$(df -k . | awk 'NR==2 {print $4}')" -ge 204800 && \
+FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor \
+sandbox-exec -p '(version 1)(allow default)(deny network*)' \
+php /Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor/phpunit/phpunit/phpunit \
+  --bootstrap scripts/automation-test-bootstrap.php --no-configuration --do-not-cache-result \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/FreshProofAdmissionTest.php
+```
+
+Only in-memory SQLite/entity doubles and path validation ran. No files were
+imported, no historical IDs migrated, no authoritative DB/provider/cloud touched.
+Importer implementation and activation remain absent/closed; disk stayed above
+the 200 MiB guard. The broader 224-test receipt below predates this follow-up.
+
 ## Managed resend isolation repair (source only)
 
 Independent review found an admission escape in `abfd3fed`: admit a new request,

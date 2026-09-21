@@ -1,5 +1,11 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Canonical admission media namespace (synthetic source only)
+
+New campaign IDs satisfy the existing `pc-*` asset-path validator; legacy IDs
+remain untouched and excluded from admission. 90 admission tests / 521 assertions
+pass. This verifies path compatibility, not artifact import or worker activation.
+
 ## 2026-09-21 - Managed resend isolation (synthetic local source only)
 
 Persisted managed identity now prevents manual resend, deep-dive repair or revision

@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-21 - Canonical fresh-proof campaign namespace (source only)
+
+- Allocate new managed campaigns with `pc-` plus unchanged random hex, matching
+  the existing asset-path contract without broadening it or rewriting history.
+  90 admission tests / 521 assertions pass; the new real-validator regression
+  fails before the fix. Import and activation remain closed.
+
 ## 2026-09-21 - Preserve managed proof isolation on resend (source only)
 
 - Check durable admission identity before every queue fallback, even with the

@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Validate allocated IDs at their downstream boundary
+
+Observation: an inert admission campaign used `proof-*`, but canonical asset
+paths require `pc-*`. Guidance: keep the existing namespace and random suffix;
+test emitted IDs through the actual path validator before integration. Do not
+relax the validator, add business data or migrate historical IDs to repair this.
+90 admission tests / 521 assertions pass; importer remains unimplemented.
+
 ## 2026-09-21 - Admission identity outlives its feature flag
 
 Observation: a fresh-only hook did not constrain later manual resend. Editing a

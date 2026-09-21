@@ -10,7 +10,7 @@ use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Entity\ProofCampaign;
 use Drupal\famtastic_pipeline\Entity\Prospect;
-use Drupal\famtastic_pipeline\Service\{AttributionService, CustomerPortalService, FreshProofAdmission, FreshProofBinding, FreshProofInput, OperationalLedger, ProofCampaignService, PublicPreviewDeliveryService, SiteStudioBuildPacketService, WorkerCapabilityPolicy, WorkerCoordinator, WorkerCoordinatorSchema};
+use Drupal\famtastic_pipeline\Service\{AttributionService, CustomerPortalService, FreshProofAdmission, FreshProofBinding, FreshProofInput, OperationalLedger, ProofAssetContract, ProofCampaignService, PublicPreviewDeliveryService, SiteStudioBuildPacketService, WorkerCapabilityPolicy, WorkerCoordinator, WorkerCoordinatorSchema};
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -237,13 +237,34 @@ final class FreshProofAdmissionTest extends UnitTestCase {
     }
   }
 
-  public function testUnboundImportedCampaignIsNotAdoptedOrDuplicated(): void {
+  #[DataProvider('historicalCampaignIds')]
+  public function testUnboundImportedCampaignIsNotAdoptedOrDuplicated(string $campaignId): void {
     $draft = $this->create('save');
-    $this->db->insert('proof_campaign')->fields(['campaign_id' => 'legacy-import', 'prospect_id' => 1, 'generation_status' => 'ready'])->execute();
+    $this->db->insert('proof_campaign')->fields(['campaign_id' => $campaignId, 'prospect_id' => 1, 'generation_status' => 'ready'])->execute();
     $before = $this->row('proof_campaign'); $this->enable();
     $this->reject(fn() => $this->portal->updateWebsiteRequest(1, $draft['public_id'], $this->input()), 'Historical proof');
     self::assertSame($before, $this->row('proof_campaign'));
     self::assertSame(0, $this->campaignCreates);
+  }
+  public static function historicalCampaignIds(): iterable {
+    foreach (['legacy-import', 'pc-legacy-0123456789abcdef', 'proof-' . str_repeat('a', 32)] as $id) yield $id => [$id];
+  }
+
+  public function testNewManagedCampaignUsesCanonicalAssetNamespaceWithoutDispatch(): void {
+    $this->enable(); $this->create();
+    $campaignId = $this->row('proof_campaign')['campaign_id'];
+    $payload = json_decode($this->row('famtastic_job')['payload'], TRUE, flags: JSON_THROW_ON_ERROR);
+    self::assertSame($campaignId, $payload['campaign_id']);
+    foreach ($payload['direction_ids'] as $direction) {
+      self::assertSame('web/proofs/' . $campaignId . '/' . $direction . '/assets/media/hero.png',
+        ProofAssetContract::artifactPath($campaignId, $direction, 'media/hero.png'));
+    }
+    self::assertMatchesRegularExpression('/^pc-[a-f0-9]{32}$/D', $campaignId);
+    self::assertSame('queued', $this->row('proof_campaign')['generation_status']);
+    $before = $this->proofRecords();
+    self::assertSame(1, $this->repeat());
+    self::assertSame($before, $this->proofRecords());
+    self::assertSame(1, $this->campaignCreates);
   }
 
   public function testLateWithdrawalRollsBackEverythingAndExactReplayRejectsChangedRights(): void {
