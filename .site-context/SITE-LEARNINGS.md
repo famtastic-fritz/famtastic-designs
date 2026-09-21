@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 — Match contact inquiries to existing customer proofs
+
+**Observation:** Prospects 300/301 were simple public contacts (intakes 20/21), with no account-bound website requests. Their businesses already had independent weekend proof projects and published business-domain email contacts. **Guidance:** Preserve the exact submitted reply address, match the source intake and project history, reuse the active branded renderer, and save the existing proof as one direction while clearly labeling unfinished alternatives. Do not infer missing business email from a Gmail inquiry or announce a complete three-proof set. Evidence: `docs/operations/FRIENDS-WEBSITE-REPLIES-2026-09-21.md`.
+
 ## 2026-09-21 — Make in-person sharing discoverable
 
 **Observation:** The original QR lived behind an unlabeled footer icon, and the intro would conceal a page-load cue. Chromium can move focus into browser chrome at a native dialog boundary.

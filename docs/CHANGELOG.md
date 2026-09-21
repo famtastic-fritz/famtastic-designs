@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-21 — Weekend proof inquiry responses
+
+- Sent two explicitly owner-authorized personalized `standard/v2` emails for prospects 300/301 through the existing exact-key outbox; SMTP accepted outbox 843/844 once each. Saved conversation receipts and the existing-proof-as-direction-one continuation notes. See `docs/operations/FRIENDS-WEBSITE-REPLIES-2026-09-21.md`.
+
 ## 2026-09-21 — Connect QR discovery
 
 - Added the visible SHOW MY QR action, a three-bounce pointer after card reveal, persistent quiet repeat visits, and reduced-motion support.

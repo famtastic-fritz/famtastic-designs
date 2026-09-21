@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 — Contact identity and prior-proof reuse
+
+Contact list numbers 300/301 were prospect IDs, mapped to intakes 20/21 and independent September 18 proof projects. They were not account-bound website requests. Preserve exact submitted addresses, original intake and prior source; record proposed versus existing directions explicitly. Current mail branding must come from the production shared renderer. Operational receipt and continuation: `docs/operations/FRIENDS-WEBSITE-REPLIES-2026-09-21.md`.
+
 ## 2026-09-21 — Connect sharing discovery
 
 **Observation:** A footer-only QR icon was easy to miss. The intro masks early hints, and native dialog boundaries needed explicit keyboard wrapping in Chromium.
