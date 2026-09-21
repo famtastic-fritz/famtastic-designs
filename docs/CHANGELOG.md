@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-21 - Autonomous integration contract and evidence boundaries
+
+Record the actual Mac creative workflow, required shared-claim adapter and
+remaining source/rights/first-association gates. The owner authorized resolving
+the integration conflict; this is not a new manual approval gate. No worker,
+cloud, customer or financial activation is claimed by this documentation.
+
 ## 2026-09-21 - Atomic fresh selected-job admission (disabled by default)
 
 New eligible static selections can join the existing shared Mac/cloud claim

@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Automatic-workflow integration remains additive
+
+Read docs/contracts/MAC-CREATIVE-WORKER-V1.md before extending intake claims.
+Use the existing Mac agent/build/import/QA flow, not the fictional benchmark.
+The integration conflict is authorized for repair; actual activation still
+requires source, rights, ownership, recovery and full-journey evidence.
+
 ## 2026-09-21 - Fresh selection admission is not worker activation
 
 Use the same Drupal transaction and claims for fresh selected-static jobs.

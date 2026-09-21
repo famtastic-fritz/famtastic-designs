@@ -10,8 +10,10 @@ Do not enable it until the real consumer, exact hosting binding and signed
 callback are verified. Never replay old jobs or route ecommerce through it.
 Preserve the Mac creative lane; Phase 2 is an additive disabled shadow pilot.
 An observe-only tick, simulated proof or successful handoff is not an unattended
-customer delivery. The selected consumer currently conflicts with Phase 1's
-pipeline endpoint; reconcile the contracts before any live cutover.
+customer delivery. Read `docs/contracts/MAC-CREATIVE-WORKER-V1.md`; the old
+six-direction benchmark is not the executed customer proof routine. The owner
+authorized resolving the selected-consumer integration conflict. Keep the real
+consumer separate from mock admission, and verify both before live cutover.
 
 ## September 18 — Embedded build instructions must cover the current request
 

@@ -2,6 +2,36 @@
 
 Status: local repairs and verification; no live activation.
 
+## September 21 autonomous-goal checkpoint
+
+The owner authorized resolving all four milestones autonomously. The earlier
+read-only merge conflict is no longer a request to wait for another Fritz gate.
+Both integration worktrees preserve current main's independent customer
+collection policy. Studio's real selected consumer is being reconciled behind
+a separate internal route while the Phase 1 mock route remains unchanged.
+Fresh admission remains disabled pending complete cross-repository verification.
+
+Independent fixed-source Phase 2 review found a stale pre-submission lease gap
+and three stored-ownership validation gaps. Repairs are underway in a separate
+Studio worktree. They must pass independent regression checks before release.
+Selected-consumer integration also exposed creator-credit derivative mismatches
+at QA, hosting and source reuse; original selections must remain immutable.
+Studio-origin first association still needs matching signed policy/verification
+on both sides, not a broad asset or hash exception. No release is claimed here.
+
+The read-only Mac workflow inventory verified historical artifact records for
+requests 17 (81/82 current hashes; design.md matches its recorded historical
+commit), 16 (34/34) and 8 (144/144). These were active-agent build and review
+workflows with managed imagery, customer-specific build scripts and canonical
+imports. They do not establish a single unattended generation command. The
+six-direction provider benchmark is not their producer and must not silently
+replace their routine. See [the Mac worker contract](../contracts/MAC-CREATIVE-WORKER-V1.md).
+
+Storage fell below 200 MiB free; full render/build verification requires
+headroom. gcloud has no signed-in account or selected project. Fritz has been
+asked for 5 GiB free and the intended existing project/sign-in. No account,
+cloud resource, credential, customer notice or historical job was changed.
+
 ## Owner intent
 
 Keep the established laptop creative workflow. Automate its triggers, durable

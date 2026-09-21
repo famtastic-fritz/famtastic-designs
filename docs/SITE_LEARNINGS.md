@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Preserve the executed creative routine
+
+Recent delivered proofs used active agents, managed imagery, customer build
+scripts and independent review. A six-direction benchmark and a packaging
+bridge are not interchangeable with that workflow. Automate the proven seams
+under one durable Drupal claim with explicit capability and cost bounds.
+
 ## 2026-09-21 - Automatic admission must share the enqueue transaction
 
 Enrolling later permits a legacy worker to claim a just-created queued job.
