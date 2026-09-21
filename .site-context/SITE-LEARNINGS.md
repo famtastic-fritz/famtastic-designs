@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Keep artifact preparation separate from import authority
+
+Observation: filesystem replacement is not rolled back with Drupal records.
+Guidance: reuse pure validation, prepare create-only private bytes and require a
+later fenced DB receipt. No default root, producer credentials in raw envelopes,
+automatic adoption or generic cap exception for the 2,020,725-byte logo. New
+regressions are written but runtime verification is paused below 200 MiB free.
+
 ## 2026-09-21 - Legacy fixtures must not bypass managed admission guards
 
 Load the real new binding dependencies in the manual PHP bootstrap. Permit only

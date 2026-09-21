@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-21 - Private artifact preparation groundwork, verification pending
+
+- Extract callback validation without changing legacy limits, errors or policy.
+- Add unregistered/default-unconfigured private create-only preparation, strict
+  credential-free envelope shape and complete hashed file inventory; no importer.
+- Add frozen-source differential and filesystem fault regressions. Runtime tests
+  paused below 200 MiB; syntax checks pass. Receipt and remaining gates:
+  `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`. Nothing is activated.
+
 ## 2026-09-21 - Keep the legacy cross-repository fixture honest
 
 - Load the real fresh-proof binding dependencies in the manually bootstrapped

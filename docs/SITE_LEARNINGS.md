@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - File preparation is not a database transaction
+
+Observation: canonical callbacks replace HTML/media paths before final DB and
+delivery work. DB rollback cannot undo those overwrites. Extract validation only;
+prepare new immutable bytes privately, with no overwrite/adoption/cleanup, then
+require a separate authoritative receipt before any consumer can use them.
+The exact logo exceeds the generic image cap by 20,725 bytes; do not weaken caps.
+Runtime regression execution is pending the 200 MiB disk guard, not a pass.
+
 ## 2026-09-21 - New production guards need real fixture dependencies
 
 A dependency-free PHP harness manually loads services, unlike Drupal's autoloader.
