@@ -1,0 +1,14 @@
+[
+  {
+    "artifact": "qr.svg",
+    "live_sha256": "dde091d4741fb27e5fda13720d9ec91e02644622a729c245a2deba2f98ae7fbf",
+    "source_sha256": "dde091d4741fb27e5fda13720d9ec91e02644622a729c245a2deba2f98ae7fbf",
+    "matches": true
+  },
+  {
+    "artifact": "FAMtastic-Connect-QR.png",
+    "live_sha256": "fcfb9945199a342866eb317cee9ae8704aec3ec5b22de826e09e2e82df4e9899",
+    "source_sha256": "fcfb9945199a342866eb317cee9ae8704aec3ec5b22de826e09e2e82df4e9899",
+    "matches": true
+  }
+]

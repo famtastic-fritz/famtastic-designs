@@ -14,7 +14,7 @@ test('every supplied file is tracked and available to a clean server build', () 
   execFileSync('git', ['ls-files', '--error-unmatch', '--', ...rows.map(row => `frontend/public/connect/${row.path}`), 'frontend/public/connect/icons/favicon-32.png'], { cwd: new URL('../', import.meta.url), stdio: 'pipe' });
 });
 
-function fixture({ standalone = false, reduced = false, hash = '', ua = 'Android Chrome', script = 'app.js' } = {}) {
+function fixture({ standalone = false, reduced = false, hash = '', ua = 'Android Chrome', script = 'app.js', seen = false, storageBlocked = false, share, copyFails = false } = {}) {
   class Element {
     listeners = new Map();
     hidden = false;
@@ -48,15 +48,19 @@ function fixture({ standalone = false, reduced = false, hash = '', ua = 'Android
     querySelectorAll: selector => selector === '[data-install]' ? installs : cardLinks,
   });
   const media = Object.assign(new Element(), { matches: standalone });
-  const window = Object.assign(new Element(), { matchMedia: query => query.includes('display-mode') ? media : { matches: reduced }, scrollTo() {}, alert() {} });
+  const motion = Object.assign(new Element(), { matches: reduced });
+  const stored = new Map(seen ? [['famtastic-connect-qr-hint-v1', 'seen']] : []);
+  const storage = { getItem: key => { if (storageBlocked) throw Error('blocked'); return stored.get(key); }, setItem: (key, value) => { if (storageBlocked) throw Error('blocked'); stored.set(key, value); } };
+  const window = Object.assign(new Element(), { matchMedia: query => query.includes('display-mode') ? media : motion, localStorage: storage, sessionStorage: storage, scrollTo() {}, alert() {} });
   const location = { hash, pathname: '/connect/', search: '' };
   const history = { replaceState: () => { location.hash = ''; } };
   const timers = new Map(); let timerId = 0; let clock = 100;
-  const context = { document, window, location, history, navigator: { userAgent: ua, clipboard: { writeText: async () => {} } },
+  const copied = [];
+  const context = { document, window, location, history, navigator: { userAgent: ua, share, clipboard: { writeText: async value => { if (copyFails) throw Error('blocked'); copied.push(value); } } },
     Date: { now: () => clock }, URL, setTimeout: (callback, delay) => { timers.set(++timerId, { callback, delay }); return timerId; },
     clearTimeout: id => timers.delete(id) };
   vm.runInNewContext(read(script), context, { filename: script });
-  return { nodes, document, window, installs, cardLinks, location, timers,
+  return { nodes, document, window, installs, cardLinks, location, timers, stored, motion, copied,
     advance: ms => { clock += ms; },
     tick: delay => { for (const [id, timer] of [...timers]) if (timer.delay === delay) { timers.delete(id); timer.callback(); } },
   };
@@ -86,7 +90,8 @@ test('normal intro dismisses on deadline and Skip remains a working escape', asy
 
 test('installed and reduced-motion launches immediately expose the card', () => {
   for (const options of [{ standalone: true }, { reduced: true }]) {
-    const f = fixture(options); assert.equal(f.nodes.get('intro').hidden, true); assert.equal(f.timers.size, 0);
+    const f = fixture(options); assert.equal(f.nodes.get('intro').hidden, true);
+    assert.ok([...f.timers.values()].every(timer => timer.delay === 1250), 'only the nonblocking QR hint may wait');
   }
 });
 
@@ -134,4 +139,81 @@ test('cancelled or failed native prompts return to manual instructions', async (
     await f.window.emit('beforeinstallprompt', { prompt: async () => { if (fail) throw Error('unavailable'); }, userChoice: Promise.resolve({ outcome: 'dismissed' }) });
     await f.installs[0].emit('click'); assert.equal(f.nodes.get('installDialog').open, true); assert.equal(f.installs[0].disabled, false);
   }
+});
+
+test('QR cue waits until the card is visible, then settles and remembers the visit', () => {
+  const f = fixture(); const hint = f.nodes.get('qrPrompt');
+  f.tick(1250); assert.equal(hint.classes.has('is-visible'), false);
+  f.tick(2300); f.tick(400);
+  assert.equal(hint.classes.has('is-visible'), false);
+  f.tick(1250); assert.equal(hint.classes.has('is-nudging'), true);
+  assert.equal(f.stored.get('famtastic-connect-qr-hint-v1'), 'seen');
+  f.tick(2400); assert.equal(hint.classes.has('is-nudging'), false);
+  assert.equal(hint.classes.has('is-visible'), true);
+});
+
+test('repeat and reduced-motion visits have a static cue; a preference change stops the cue', async () => {
+  for (const options of [{ seen: true }, { reduced: true }]) {
+    const f = fixture(options); f.tick(2300); f.tick(400); f.tick(1250);
+    assert.equal(f.nodes.get('qrPrompt').classes.has('is-nudging'), false);
+    assert.equal(f.nodes.get('qrPrompt').classes.has('is-visible'), true);
+  }
+  const f = fixture({ standalone: true }); f.tick(1250);
+  f.motion.matches = true; await f.motion.emit('change');
+  assert.equal(f.nodes.get('qrPrompt').classes.has('is-nudging'), false);
+});
+
+test('both QR controls work before the cue, restore focus and remove the hash when closed', async () => {
+  for (const id of ['showQrPrimary', 'showQr']) {
+    const f = fixture({ storageBlocked: true });
+    await f.nodes.get(id).emit('click');
+    assert.equal(f.nodes.get('qrDialog').open, true);
+    assert.equal(f.document.activeElement, f.nodes.get('closeQr'));
+    assert.equal(f.location.hash, 'qr');
+    f.location.hash = '#qr';
+    await f.nodes.get('closeQr').emit('click');
+    assert.equal(f.nodes.get('qrDialog').open, false);
+    assert.equal(f.document.activeElement, f.nodes.get(id));
+    assert.equal(f.location.hash, '');
+    f.tick(400); f.tick(1250);
+    assert.equal(f.nodes.get('qrPrompt').classes.has('is-nudging'), false);
+  }
+});
+
+test('a backgrounded first visit defers its cue until visible', async () => {
+  const f = fixture({ standalone: true }); f.document.hidden = true; f.tick(1250);
+  assert.equal(f.stored.size, 0);
+  f.document.hidden = false; await f.document.emit('visibilitychange'); f.tick(1250);
+  assert.equal(f.nodes.get('qrPrompt').classes.has('is-nudging'), true);
+});
+
+test('QR hash navigation and backdrop dismissal close without stranding focus', async () => {
+  const f = fixture({ hash: '#qr' });
+  f.location.hash = ''; await f.window.emit('hashchange');
+  assert.equal(f.nodes.get('qrDialog').open, false);
+  f.location.hash = '#qr'; await f.window.emit('hashchange');
+  await f.nodes.get('qrDialog').emit('click', { clientX: -1, clientY: -1 });
+  assert.equal(f.nodes.get('qrDialog').open, false);
+  assert.equal(f.document.activeElement, f.nodes.get('showQrPrimary'));
+});
+
+test('Share Link uses the canonical URL and never reports a cancelled share as success', async () => {
+  const calls = []; const f = fixture({ share: async data => calls.push(data) });
+  await f.nodes.get('shareQrLink').emit('click');
+  assert.equal(calls[0].url, 'https://famtasticdesigns.com/connect');
+  assert.equal(f.nodes.get('qrShareStatus').hidden, true);
+  const cancelled = fixture({ share: async () => { throw { name: 'AbortError' }; } });
+  await cancelled.nodes.get('shareQrLink').emit('click');
+  assert.equal(cancelled.copied.length, 0);
+  assert.equal(cancelled.nodes.get('qrShareStatus').hidden, true);
+});
+
+test('clipboard fallback reports success only after copying and exposes the URL on failure', async () => {
+  const f = fixture({ share: async () => { throw Error('unavailable'); } });
+  await f.nodes.get('shareQrLink').emit('click');
+  assert.equal(f.copied[0], 'https://famtasticdesigns.com/connect');
+  assert.match(f.nodes.get('qrShareStatus').textContent, /^Link copied/);
+  const blocked = fixture({ copyFails: true });
+  await blocked.nodes.get('shareQrLink').emit('click');
+  assert.equal(blocked.nodes.get('qrShareStatus').textContent, 'Copy this link: https://famtasticdesigns.com/connect');
 });

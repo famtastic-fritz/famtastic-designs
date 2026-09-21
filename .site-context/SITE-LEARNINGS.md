@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 — Make in-person sharing discoverable
+
+**Observation:** The original QR lived behind an unlabeled footer icon, and the intro would conceal a page-load cue. Chromium can move focus into browser chrome at a native dialog boundary.
+
+**Guidance:** Expose a labeled action independently of animation; time the finite pointer from card reveal, remember the cue, honor reduced motion, and verify forward/reverse focus wrapping in a real browser. Preserve the QR artifact when another owner is correcting it. Sparse checkouts need the marketing narration text imported by the main frontend, and creator-credit contracts run from the repository root.
+
 ## 2026-09-19 — Recover the owner-selected icon family
 
 The owner pointed to prior logo work and selected the existing FAM plus crown avatar. Search session content and retained exported artwork before substituting another brand derivative. Keep the approved master, record the scoped app-icon selection, measure the final mask-safe crop and version all consumers without changing manifest identity. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.

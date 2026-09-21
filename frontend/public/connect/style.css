@@ -15,3 +15,33 @@ dialog{color:var(--text);background:#0c100b;border:1px solid #3b4a31;border-radi
 @keyframes introFailOpen{to{visibility:hidden;pointer-events:none}}
 @media(display-mode:standalone){.intro{display:none!important}}
 @media(prefers-reduced-motion:reduce){.intro{display:none!important}}
+
+/* QR discovery stays in normal flow: the action never waits for its pointer. */
+.qr-share{margin:-8px 0 22px}
+.qr-prompt{display:flex;align-items:center;justify-content:center;gap:10px;min-height:36px;margin:0 0 9px;color:#b9c7af;font-size:.8rem;visibility:hidden;opacity:0;pointer-events:none}
+.qr-prompt strong{color:#ecf5e6;font-weight:600}
+.qr-prompt.is-visible{visibility:visible;opacity:1}
+.qr-pointer{width:30px;height:34px;color:var(--lime);stroke-width:2.4}
+.qr-prompt.is-nudging{animation:qrPromptIn .25s ease-out both}
+.qr-prompt.is-nudging .qr-pointer{animation:qrPointerBounce .65s ease-in-out 3;filter:drop-shadow(0 0 8px #7cfc0066)}
+.show-qr{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:56px;padding:14px 18px;background:linear-gradient(120deg,#1c2a14,#10180e);border:1px solid #7cfc0080;border-radius:16px;color:#e9ffd9;font-size:.94rem;font-weight:800;letter-spacing:.075em}
+.show-qr svg{color:var(--lime);width:26px;height:26px}
+#qrDialog{max-width:480px;padding:20px;overscroll-behavior:contain}
+#qrDialog .dialog-top{margin-bottom:10px}
+#qrDialog .dialog-top h2{font-size:1rem;letter-spacing:.045em}
+#qrDialog .qr-close{display:flex;align-items:center;justify-content:center;gap:8px;width:auto;min-width:78px;border-radius:12px;padding:0 10px;font-size:.875rem}
+.qr-close span{font-size:1.35rem}
+#qrDialog .qr-copy{font-size:.875rem;margin:0 0 18px}
+#qrDialog .qr-link{width:min(100%,360px,46svh);margin-inline:auto}
+.qr-person{text-align:center;font-size:1rem;font-weight:700;margin:18px 0 5px}
+#qrDialog .qr-domain{font-size:.82rem;margin:0;overflow-wrap:anywhere}
+.qr-details{text-align:center;color:var(--muted);font-size:.8rem;margin:9px 0 20px}
+.qr-details span{margin-inline:5px}
+.qr-dialog-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qr-dialog-actions .modal-cta{align-items:center;justify-content:center;padding:12px;min-height:48px}
+.qr-open-card{display:flex;align-items:center;justify-content:center;border:1px solid #36452d;border-radius:12px;min-height:48px;font-size:.875rem}
+.qr-share-status{font-size:.875rem;color:#d4ecc3;line-height:1.5;overflow-wrap:anywhere;margin:14px 0 0}
+@keyframes qrPromptIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes qrPointerBounce{0%,100%{transform:translateY(0);opacity:.75}50%{transform:translateY(6px);opacity:1}}
+@media(max-width:600px){#qrDialog{margin:auto auto max(12px,env(safe-area-inset-bottom));padding:18px;border-radius:24px}}
+@media(prefers-reduced-motion:reduce){.qr-prompt{visibility:visible;opacity:1}.qr-prompt.is-nudging .qr-pointer{filter:none}}

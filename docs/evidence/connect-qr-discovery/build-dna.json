@@ -1,0 +1,165 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "connect-qr-discovery-20260921",
+  "classification": "locally_proven_release_pending",
+  "created_at": "2026-09-21T05:49:58.359190+00:00",
+  "repository": {
+    "name": "famtastic-designs",
+    "revision": "19ad376a659a764df422a3075840c9d443e9426f",
+    "worktree_state": "isolated sparse worktree"
+  },
+  "recipe": {
+    "routine": "connect-discovery-maintenance",
+    "version": "1",
+    "build_class": "existing-public-card",
+    "motion": "1250ms after reveal; three pointer bounces; static repeat/reduced motion",
+    "artwork": "existing owner artwork and QR files preserved"
+  },
+  "stages": [
+    {
+      "stage_id": "implementation",
+      "attempt": 1,
+      "capability": "scoped frontend maintenance",
+      "execution": {
+        "provider": {
+          "id": "openai",
+          "transport": "Codex desktop"
+        },
+        "model": {
+          "status": "not_disclosed_by_runtime"
+        },
+        "timing": {
+          "status": "partial",
+          "started_at": "2026-09-21T05:49:58.359486+00:00",
+          "ended_at": "2026-09-21T05:58:23.561098+00:00"
+        },
+        "cost": {
+          "status": "not_reported_by_runtime"
+        },
+        "prompt": {
+          "path": "docs/plans/CONNECT_QR_DISCOVERY_2026-09-21.md",
+          "type": "scoped brief incorporating user correction"
+        }
+      },
+      "result": {
+        "status": "passed",
+        "review_type": "author review with browser and automated evidence",
+        "production": "pending"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "source_or_evidence",
+      "path": "docs/plans/CONNECT_QR_DISCOVERY_2026-09-21.md",
+      "sha256": "7ca01149163c2b028afd74efe605f5167489b1ed8e0bf46955bcbe6740642ced",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "frontend/public/connect/index.html",
+      "sha256": "b95df8463e9ce76e7f2a041146b27e1b6b57bfecbd1f8f7f274bbcd521c77308",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "frontend/public/connect/style.css",
+      "sha256": "a42279e2a3877525912dc7c32c4bb2879386e90cce251c34f18a23c0ba056e8e",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "frontend/public/connect/app.js",
+      "sha256": "dd5cec267f221bdbcde39cded9353e9c4efa801a5ca31ac0606067ed99bf8d2c",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "scripts/test-connect.mjs",
+      "sha256": "83a25b04467066de9d5595aa343f288c12996ca88781c2a4760f154cf70d39aa",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "frontend/e2e/connect-qr.spec.js",
+      "sha256": "76abdd7f2043fe37e3e00eeda358f65f9c582e587b21572abf4b364983431bf2",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/local-review.json",
+      "sha256": "c631d115f27f3729ea2cf8d735eaf29b5dc61034fff802c6f8dfcb4475e91682",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/qr-preserved-before.json",
+      "sha256": "221f0f8975908744de0b74357a9f8fda19284962e12c3a10de1e7db7f4664749",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/local/desktop-chromium-card.png",
+      "sha256": "019761a5c5e538fe22640c50eeb055cd5f5917afecdc943ee634e62997cdba48",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/local/desktop-chromium-scan-320.png",
+      "sha256": "cd2078f9525b1f976c0e1f91f074646163f5523e9030af8b8204de0989a77f95",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/local/desktop-chromium-scan-568.png",
+      "sha256": "94182e5438fdad80e0b4c2168396b1a50bce1bfaf58b16757ffc5cbdd14ed024",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/local/desktop-chromium-scan-sheet.png",
+      "sha256": "aa81cbab328ea88e67547cf4111704691db18b923c226e112770fdbfd93f0cdc",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/local/mobile-chromium-card.png",
+      "sha256": "40ce610cb3a8a9fd30a88bbe1d994104ef866c5ecc2875474a27b0ae992342f0",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/local/mobile-chromium-scan-320.png",
+      "sha256": "cd2078f9525b1f976c0e1f91f074646163f5523e9030af8b8204de0989a77f95",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/local/mobile-chromium-scan-568.png",
+      "sha256": "94182e5438fdad80e0b4c2168396b1a50bce1bfaf58b16757ffc5cbdd14ed024",
+      "rights": "owner-authorized maintenance; no customer data"
+    },
+    {
+      "role": "source_or_evidence",
+      "path": "docs/evidence/connect-qr-discovery/local/mobile-chromium-scan-sheet.png",
+      "sha256": "e1765670a432fdc34d0b0fa1b9519c86328ace27dad0f4d6b0bfb27118dc94b3",
+      "rights": "owner-authorized maintenance; no customer data"
+    }
+  ],
+  "retrieval": {
+    "filesystem": {
+      "path": "docs/evidence/connect-qr-discovery"
+    },
+    "database": {
+      "status": "not_applicable",
+      "reason": "No customer or Drupal handoff"
+    },
+    "site_studio": {
+      "status": "not_applicable",
+      "reason": "Direct agency card maintenance"
+    }
+  },
+  "integrity": {
+    "artifact_hash_algorithm": "sha256"
+  }
+}
