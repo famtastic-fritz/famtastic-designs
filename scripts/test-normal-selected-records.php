@@ -40,12 +40,13 @@ namespace Drupal\famtastic_pipeline\Service {
   class PublicPreviewDeliveryService { public function isPublicDeliveryForCampaign(...$args) { return FALSE; } }
 }
 namespace Drupal\Core\Database {
-  // This fixture has no private offers. Preserve Drupal's grouped-query API
-  // without pretending to evaluate offer SQL or weakening asset conditions.
+  // This legacy fixture has no private offers or managed-admission events.
+  // Preserve grouped-query syntax but reject any attempt to seed managed events;
+  // their actual query/transaction semantics are exercised in the SQLite suite.
   class ConditionGroup {
     public array $conditions = [];
     public function isNull($key) { $this->conditions[] = [$key, NULL, 'IS NULL']; return $this; }
-    public function condition($key, $value, $operator = '=') { $this->conditions[] = [$key, $value, $operator]; return $this; }
+    public function condition($key, $value = NULL, $operator = '=') { $this->conditions[] = [$key, $value, $operator]; return $this; }
   }
   class Connection {
     public array $row = []; public array $writes = []; public array $tables = [];
@@ -64,9 +65,10 @@ namespace Drupal\Core\Database {
     public function insertFields($values) { $this->values = $values; return $this; }
     public function updateFields($values) { $this->values = $values + $this->values; return $this; }
     public function orConditionGroup() { return new ConditionGroup(); }
+    public function andConditionGroup() { return new ConditionGroup(); }
     public function condition($key, $value = NULL, ...$args) {
       if ($key instanceof ConditionGroup) {
-        if ($this->table !== 'famtastic_private_offer') throw new \LogicException('Grouped queries require an explicit fixture implementation');
+        if (!in_array($this->table, ['famtastic_private_offer', 'famtastic_event'], TRUE)) throw new \LogicException('Grouped queries require an explicit fixture implementation');
         return $this;
       }
       $this->conditions[$key] = $value;
@@ -74,7 +76,12 @@ namespace Drupal\Core\Database {
     }
     private function asset() { $row = $this->db->tables['famtastic_request_asset'] ?? FALSE; if (!$row) return FALSE; $row += ['id' => 1]; foreach ($this->conditions as $key => $value) if ((string) ($row[$key] ?? '') !== (string) $value) return FALSE; return $row; }
     public function __call($name, $args) { return $this; }
-    public function execute() { if ($this->write) { $this->db->writes[] = $this->table; $this->db->tables[$this->table] = $this->values + ($this->table === 'famtastic_request_asset' ? ($this->db->tables[$this->table] ?? []) : []); if ($this->table === 'famtastic_project_request') $this->db->row = $this->values + $this->db->row; return 1; } return $this; }
+    public function execute() { if ($this->table === 'famtastic_event' && ($this->write || !empty($this->db->tables[$this->table]))) throw new \LogicException('This legacy fixture cannot model managed admission events; use the real SQLite suite.'); if ($this->write) { $this->db->writes[] = $this->table; $this->db->tables[$this->table] = $this->values + ($this->table === 'famtastic_request_asset' ? ($this->db->tables[$this->table] ?? []) : []); if ($this->table === 'famtastic_project_request') $this->db->row = $this->values + $this->db->row; return 1; } return $this; }
+    public function fetchCol() {
+      if ($this->table !== 'famtastic_project_request') throw new \LogicException('Unsupported fixture column query');
+      foreach ($this->conditions as $key => $value) if ((string) ($this->db->row[$key] ?? '') !== (string) $value) return [];
+      return isset($this->db->row['id']) ? [$this->db->row['id']] : [];
+    }
     public function fetchField() { return match ($this->table) { 'famtastic_membership' => 1, 'famtastic_website_proof_research_snapshot' => $this->db->tables[$this->table]['snapshot_json'] ?? FALSE, default => 0 }; }
     public function fetchAssoc() { return match ($this->table) { 'famtastic_request_asset' => $this->asset(), 'famtastic_project_request' => $this->db->row, 'famtastic_customer_resource' => ['organization_id' => 907, 'resource_type' => 'project', 'resource_id' => 902], 'famtastic_customer' => ['id' => 903, 'display_name' => 'Synthetic owner', 'email' => 'owner@example.invalid'], 'famtastic_website_proof_research_snapshot' => $this->db->tables[$this->table] ?? FALSE, default => FALSE }; }
     public function fetchAll(...$args) { return $this->table === 'famtastic_request_asset' && $this->asset() ? [$this->asset()] : []; }
@@ -85,7 +92,7 @@ namespace {
   if (!function_exists('mb_substr')) { function mb_substr($s, $start, $length) { return substr($s, $start, $length); } }
   if (!function_exists('mb_strtolower')) { function mb_strtolower($s) { return strtolower($s); } }
   $root = dirname(__DIR__) . '/backend/web/modules/custom/famtastic_pipeline/src/Service/';
-  foreach (['OutreachMailer', 'ProofAssetContract', 'SelectedAssetRights', 'SelectedSourceCapture', 'SelectedRequestContent', 'SelectedRecordResolver', 'SelectedSourceIntent', 'SelectedFinalizedSource', 'SelectedStagingContinuation', 'SelectedPlanningPacket', 'SiteStudioBuildPacketService', 'CustomerPortalService', 'ProofCampaignService', 'StagingReceiptService', 'SiteStudioStagingClient', 'AutomationWorker'] as $class) require $root . $class . '.php';
+  foreach (['OutreachMailer', 'ProofAssetContract', 'FreshProofInput', 'FreshProofBinding', 'FreshProofAdmission', 'SelectedAssetRights', 'SelectedSourceCapture', 'SelectedRequestContent', 'SelectedRecordResolver', 'SelectedSourceIntent', 'SelectedFinalizedSource', 'SelectedStagingContinuation', 'SelectedPlanningPacket', 'SiteStudioBuildPacketService', 'CustomerPortalService', 'ProofCampaignService', 'StagingReceiptService', 'SiteStudioStagingClient', 'AutomationWorker'] as $class) require $root . $class . '.php';
   require $root . 'CharacterAssetService.php';
   require $root . 'SelectedSourceAssociation.php';
   require dirname($root) . '/Controller/WebsiteRequestProofController.php';

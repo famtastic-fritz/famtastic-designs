@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-21 - Keep the legacy cross-repository fixture honest
+
+- Load the real fresh-proof binding dependencies in the manually bootstrapped
+  PHP fixture. Reject seeded managed events instead of silently simulating their
+  query semantics; managed admission is covered by the SQLite service suite.
+- The combined Studio run exposed 20 failures from the missing fixture class
+  (1,551 passed / 1,571 total). All 20 affected continuation/association tests now
+  pass; the combined rerun remains pending. Production import guards are unchanged.
+
 ## 2026-09-21 - Do not silently skip a symlinked worker executable
 
 - Canonicalize both the module and argv paths for the existing bounded CLI's

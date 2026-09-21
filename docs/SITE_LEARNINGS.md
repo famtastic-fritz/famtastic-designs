@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - New production guards need real fixture dependencies
+
+A dependency-free PHP harness manually loads services, unlike Drupal's autoloader.
+When the importer gained a durable admission guard, the stale class list caused
+20 cross-repository failures. Load the actual guard; do not stub it away. This
+legacy fixture may model an empty admission-event table only, and must throw for
+seeded events. All 20 affected tests pass; retain the failed full-run receipt and
+rerun the entire suite before claiming current combined verification.
+
 ## 2026-09-21 - An imported-function test is not an executable-worker test
 
 The bounded worker silently skipped main when its argv used `/tmp` but Node's

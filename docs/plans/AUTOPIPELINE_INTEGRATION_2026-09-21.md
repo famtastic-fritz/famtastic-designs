@@ -4,6 +4,25 @@ Status: local repairs and verification; no live activation.
 
 ## Latest integrated source checkpoint
 
+Fresh proof admission is now implemented in isolated source through 81ff57ee:
+default-off, atomic fresh request/campaign/job/claim identity, strict managed
+resend isolation, canonical `pc-*` campaign IDs, and denial of generic managed
+imports. The production cost catalog remains empty. Parent verification passes
+227 PHP tests / 1,185 assertions and nine bounded-worker Node tests in
+`fresh-admission-integrated-final.1tGszs`. A review-discovered login coupling
+regression is being repaired; these totals do not prove that boundary yet.
+
+The newer combined run against Studio 2da81fa / Designs 81ff57ee reports
+1,551 passed / 20 failed out of 1,571 tests in 134 files, plus 12 cascading
+uncaught child-process errors. All failures originate in a manually bootstrapped
+legacy PHP fixture missing the real FreshProofBinding class, not Drupal's
+production autoloader. `complete-integrated-source.OCaFU5` retains the failure.
+The repaired fixture explicitly loads the dependencies, supports the exact
+request lookup, and rejects nonempty managed-event data rather than pretending
+to model it. All 20 affected tests in three files pass in 118.447 seconds:
+`legacy-fresh-binding-fixture.f9NJV0`. Both protected data inventories remain
+unchanged. Production guards were not weakened; a new full rerun is required.
+
 The real bounded worker executable now survives macOS symlink paths instead of
 silently exiting zero. Nine Node tests plus two companion Studio CLI/ingress
 tests pass, including preserve-symlinks-main, silent imports, lost finish
@@ -21,14 +40,15 @@ account is locked due to a billing issue. Hosted CI is blocked, not a passing
 test receipt and not evidence of a source-test failure. No billing settings
 or required-check protections were changed.
 
-Final combined Studio verification now passes 1,544 tests in 132 files with zero
+The earlier combined Studio verification passed 1,544 tests in 132 files with zero
 skips, both lints and both execution proof scripts, using Studio 5ab65a2 and
 Designs 3db3e01ed. Both protected data inventories remained unchanged. Evidence:
 /tmp/famtastic-phase2-review.NVAfPl/full-integrated-source-final.Dp4s64. Initial
 disk interruption and six obsolete assertions are retained in the Studio
 evidence history. Exact canonical branding and separate invalid payload/signature
 assertions replaced those expectations; production guards were not loosened.
-This completes combined source verification, not production activation.
+This is a historical source checkpoint, not verification of the newer changes
+or production activation.
 
 The shared-claim source received a second independent read-only review with no
 new confirmed bypass. Existing static finish trusts its authenticated worker's
@@ -55,13 +75,14 @@ merge conflicts retained both histories; production source merged without confli
 The existing Drupal coordinator owns both capability profiles. Selected-static
 defaults and limits stay unchanged. Proof claims require explicit server grants,
 an immutable account-bound input and a reviewed cost policy. The production
-creative cost catalog is deliberately empty, fresh creative admission is not
-connected, and proof completion remains closed pending the authoritative importer.
+creative cost catalog is deliberately empty. Fresh creative admission now has
+default-off source wiring; proof completion remains closed pending the
+authoritative importer.
 No synthetic cost fixture constitutes authorization for real model spending.
 
-Still required: remaining complete-source compatibility and combined suite;
-atomic fresh proof/campaign admission, actual Mac creative adapter and fenced
-import; unattended QA/portal/notification/selection/staging proof; real additive
+Still required: finish the login regression repair and combined suite; actual
+Mac creative adapter and fenced import; unattended
+QA/portal/notification/selection/staging proof; real additive
 cloud execution and laptop-unavailable proof. The four-step goal is not complete.
 Disk headroom and GCP project/sign-in remain external prerequisites. No production
 job, service, customer message, payment or cloud resource has changed in this pass.

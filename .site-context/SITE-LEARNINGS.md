@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Legacy fixtures must not bypass managed admission guards
+
+Load the real new binding dependencies in the manual PHP bootstrap. Permit only
+the fixture's empty event table; seeded managed events require the real SQLite
+suite. Twenty affected tests pass after a retained failed combined run. No
+production guard changed. Full rerun and Drive checkpoint remain parent work.
+
 ## 2026-09-21 - Bound worker executable identity
 
 Compare canonical module and argv paths before CLI main. Node's macOS symlink
