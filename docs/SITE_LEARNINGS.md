@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Non-autoload fixture names do not prevent source disclosure
+
+Observation: installed Drupal's `.htaccess` does not deny `.fixture` or the whole
+custom-module tests tree. Guidance: keep frozen raw service code and provenance
+outside `backend/web`, at `backend/tests/fixtures/managed-proof/`, preserving hashes.
+Use the outside-docroot path in actual parity tests, not an assumed server rule.
+One post-move three-file run passes 109 tests / 463 assertions, protected data
+unchanged. Prior mutation evidence remains valid; no production source changed.
+
 ## 2026-09-21 - Reject for the guard the test claims to exercise
 
 Observation: default expected normalization made changed-DNA cases reject at

@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Frozen raw source belongs outside the webroot
+
+Observation: `.fixture` avoids autoloading, not HTTP disclosure under Drupal's
+installed rules. Guidance: store both old service and provenance outside the
+docroot in `backend/tests/fixtures/managed-proof/`. Their hashes remain unchanged;
+the single post-move three-file run passes 109 tests / 463 assertions. Protected
+data unchanged, earlier mutation/red receipts retained, no production change.
+Drive mirroring stays deferred to the parent under the isolated/offline scope.
+
 ## 2026-09-21 - Independent DNA rejection needs matching normalized input
 
 Observation: a default normalized fixture masked missing DNA guards by causing

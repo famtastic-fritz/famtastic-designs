@@ -20,7 +20,7 @@ final class ProofCallbackServiceParityTest extends TestCase {
   public function testActualCallbackAgainstFrozenPreExtractionService(array $variants): void {
     $repo = dirname(__DIR__, 8);
     $path = 'backend/web/modules/custom/famtastic_pipeline/src/Service/ProofCampaignService.php';
-    $fixture = __DIR__ . '/Fixtures/ProofCampaignService.pre-extraction.fixture';
+    $fixture = $repo . '/backend/tests/fixtures/managed-proof/ProofCampaignService.pre-extraction.fixture';
     self::assertFileExists($fixture);
     self::assertFalse(is_link($fixture));
     $old = file_get_contents($fixture, FALSE, NULL, 0, self::MAX_FIXTURE_BYTES + 1);

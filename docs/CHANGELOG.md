@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-21 - Keep frozen callback source outside the docroot
+
+- Move frozen service and provenance to `backend/tests/fixtures/managed-proof/`;
+  preserve both files byte-for-byte and update the parity test path. Do not rely
+  on `.fixture` being denied by Drupal's webserver rules.
+- One post-move three-file run passes 109 tests / 463 assertions; protected data
+  unchanged. Prior mutation/red receipts retained. No production code changed.
+  Exact receipt: `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`.
+
 ## 2026-09-21 - Isolate artifact DNA guard regressions
 
 - Use the same input's legacy normalization for DNA-only rejection cases, assert

@@ -93,7 +93,37 @@ Script/event-handler/iframe/object/embed/base restrictions remain unchanged. The
 legacy regex is not a complete HTML sanitizer or functionality proof. Static/demo
 HTML preparation does not prove live forms, commerce or an actual creative run.
 
-## DNA guard isolation repair and current receipts
+## Frozen source outside the docroot and current receipt
+
+The frozen old service and adjacent provenance now reside together in
+`backend/tests/fixtures/managed-proof/`, outside `backend/web`. The parity test
+uses that repository-relative location. Installed Drupal's actual `.htaccess`
+(read from the matching dependency checkout's `backend/web/.htaccess`) denies
+several source extensions but not `.fixture` or every custom-module tests path.
+A non-autoload extension is not a web access boundary. Neither file remains in
+the old module test directory; no webserver deny rule is assumed or added.
+
+Both files are byte-for-byte unchanged by the move:
+
+- `ProofCampaignService.pre-extraction.fixture`: 63,318 bytes, SHA256
+  `549273b904ff05a263f2b3db5bc182f4b11e7fa2779ba3a69491eded1810e890`.
+- `ProofCampaignService.pre-extraction.provenance.json`: 707 bytes, SHA256
+  `d34b39db4cf8f866c04b94e097ce8a891379591bd55f9f4d93d48efa8bbb8708`.
+
+Only the three focused files were rerun once after the move: **109 tests /
+463 assertions PASS**, PHP 8.5.9 / PHPUnit 11.5.56, 0.826 seconds, 12 MiB, no
+failures/skips/warnings/deprecations. Wrapper exit 0, elapsed 1.165 seconds,
+stoppedFor=null, protectedDataUnchanged=true. Evidence:
+`/tmp/famtastic-phase2-review.NVAfPl/managed-artifact-fixture-outside-docroot.5ZesXQ`.
+The 200 MiB watch guard remained active; disk after the run was 740,264 KiB.
+The previous nine-case intentional DNA mutation receipt below is retained, not
+rerun or reclassified. No production code, guard or activation changed. Command:
+
+```sh
+node /tmp/famtastic-phase2-review.NVAfPl/run-integration-check.mjs managed-artifact-fixture-outside-docroot "cd /tmp/famtastic-fresh-admission.k98Gm4/designs && /usr/bin/env PATH=/nonexistent/famtastic-parity-no-executables FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor /opt/homebrew/bin/php /Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor/phpunit/phpunit/phpunit --bootstrap scripts/automation-test-bootstrap.php --no-configuration --do-not-cache-result backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackArtifactsTest.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ManagedProofArtifactStoreTest.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofCallbackServiceParityTest.php"
+```
+
+## DNA guard isolation repair and retained receipts
 
 Independent review found that the original prepare helper supplied default
 normalized artifacts even for changed DNA. Those negative cases could pass on
@@ -144,7 +174,7 @@ node /tmp/famtastic-phase2-review.NVAfPl/run-integration-check.mjs managed-artif
 The old differential required `git show 3bc4e9baf:...` at test runtime, but the
 actual acceptance workflow uses actions/checkout's default shallow history. Keep
 the public-callback differential, not a skip or broader fetch. The committed
-`tests/src/Unit/Fixtures/ProofCampaignService.pre-extraction.fixture` is the full
+`backend/tests/fixtures/managed-proof/ProofCampaignService.pre-extraction.fixture` is the full
 old service, byte-identical to commit `3bc4e9baf0368db35d454ae8922c149430a866b4`,
 path `backend/web/modules/custom/famtastic_pipeline/src/Service/ProofCampaignService.php`.
 Provenance is in the adjacent `.provenance.json`:
