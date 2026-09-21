@@ -14,6 +14,12 @@ customer delivery. Read `docs/contracts/MAC-CREATIVE-WORKER-V1.md`; the old
 six-direction benchmark is not the executed customer proof routine. The owner
 authorized resolving the selected-consumer integration conflict. Keep the real
 consumer separate from mock admission, and verify both before live cutover.
+For fresh proof work, also read `docs/contracts/SHARED-PROOF-CLAIMS-V1.md` and
+`docs/contracts/FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md`. Shared ownership is not
+proof generation. Atomically bind fresh request/campaign/job admission, preserve
+legacy jobs, freeze current rights, fence generic import bypasses and verify
+independent QA before any automatic client release. Never infer delivery or
+remote acceptance from an allocated job ID alone.
 
 ## September 18 — Embedded build instructions must cover the current request
 

@@ -4,6 +4,14 @@ Status: local repairs and verification; no live activation.
 
 ## Latest integrated source checkpoint
 
+Review checkpoint pushed, not merged or deployed:
+https://github.com/famtastic-fritz/famtastic-designs/pull/42 and companion
+https://github.com/famtastic-fritz/famtastic-studio/pull/2 are drafts. GitHub
+run 35660895111 reports that all three checks were not started because the
+account is locked due to a billing issue. Hosted CI is blocked, not a passing
+test receipt and not evidence of a source-test failure. No billing settings
+or required-check protections were changed.
+
 Final combined Studio verification now passes 1,544 tests in 132 files with zero
 skips, both lints and both execution proof scripts, using Studio 5ab65a2 and
 Designs 3db3e01ed. Both protected data inventories remained unchanged. Evidence:
