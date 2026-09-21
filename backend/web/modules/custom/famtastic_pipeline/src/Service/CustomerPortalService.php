@@ -530,7 +530,8 @@ final class CustomerPortalService {
       throw new \RuntimeException('The completed interview is linked to a different customer request.');
     }
     if (FreshProofBinding::isManaged($this->database, $row)) {
-      $this->queueWebsiteRequestProofJob($requestId, (int) $row['prospect_id'], (string) $row['public_id'], json_decode($row['intake_data'], TRUE, flags: JSON_THROW_ON_ERROR));
+      // Login/verification repair is not a proof retry. Keep the existing owned
+      // request unchanged; its handoff projects reconciliation independently.
       return $requestId;
     }
     if (!in_array((string) $row['status'], ['draft', 'submitted'], TRUE)) {

@@ -1,5 +1,13 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Login independent of managed proof retry (synthetic source only)
+
+Managed deep-dive resume preserves the owned request without attempting work;
+changed brief/rights show attention separately. Actual controller login passes
+with credential/session doubles while auth denials remain intact. 243 focused
+PHP tests / 1,427 assertions pass (106 admission/login / 763). No live auth session,
+provider, customer delivery, importer or activation proof is claimed.
+
 ## 2026-09-21 - Canonical admission media namespace (synthetic source only)
 
 New campaign IDs satisfy the existing `pc-*` asset-path validator; legacy IDs

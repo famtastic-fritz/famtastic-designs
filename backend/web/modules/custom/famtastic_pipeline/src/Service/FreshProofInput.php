@@ -20,10 +20,12 @@ final class FreshProofInput {
     return $snapshot;
   }
 
-  /** Locks the actual claimed asset rows; the request lock alone is insufficient. */
-  public static function assets(Connection $db, array $request): array {
-    $rows = $db->select('famtastic_request_asset', 'a')->fields('a')
-      ->condition('website_request_id', (int) $request['id'])->orderBy('id')->forUpdate()->execute()->fetchAll(\PDO::FETCH_ASSOC);
+  /** Mutation boundaries lock actual assets; a read-only projection need not. */
+  public static function assets(Connection $db, array $request, bool $lock = TRUE): array {
+    $query = $db->select('famtastic_request_asset', 'a')->fields('a')
+      ->condition('website_request_id', (int) $request['id'])->orderBy('id');
+    if ($lock) $query->forUpdate();
+    $rows = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
     $assets = [];
     foreach ($rows as $row) {
       if ((int) $row['customer_id'] !== (int) $request['customer_id'] || !in_array($row['status'], ['active', 'withdrawn'], TRUE)) throw new \RuntimeException('Proof asset ownership or status is invalid.');

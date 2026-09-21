@@ -72,7 +72,10 @@ final class FreshProofBinding {
     if (!$event) return NULL;
     $base = ['state' => 'needs_attention', 'label' => 'Proof preparation needs attention',
       'detail' => 'Your request is saved. No completed proof import is recorded.'];
-    try { $record = self::read($db, $event, $request); }
+    try {
+      $record = self::read($db, $event, $request);
+      if ($record['binding']['asset_snapshot'] !== FreshProofInput::assets($db, $request, FALSE)) return $base;
+    }
     catch (\Throwable) { return $base; }
     $job = $record['job']; $claim = $record['claim'];
     $base += ['job_id' => (int) $job['id'], 'job_status' => $job['status'], 'attempts' => (int) $claim['attempt'], 'max_attempts' => 3];

@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Sign-in cannot depend on retrying managed proof work
+
+Observation: optional deep-dive repair blocked valid login on changed proof input.
+Guidance: preserve existing ownership checks, return managed request identity
+without queue/reuse, and show brief/rights attention separately. Do not catch
+generic auth/system errors. 243 focused PHP tests / 1,427 assertions pass, with
+real controller and synthetic credentials/session finalizer. No live auth or
+activation. Drive mirror/browser verification remain parent-deferred.
+
 ## 2026-09-21 - Campaign allocation must satisfy canonical media paths
 
 Observation: `proof-*` allocation failed the real `pc-*` asset-path validator.

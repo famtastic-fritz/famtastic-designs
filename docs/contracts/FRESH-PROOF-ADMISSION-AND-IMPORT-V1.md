@@ -6,6 +6,63 @@ It extends the established Mac creative process; it does not substitute static
 packaging or the fictional six-direction benchmark for customer proof creation.
 Read SHARED-PROOF-CLAIMS-V1.md and MAC-CREATIVE-WORKER-V1.md together.
 
+## Sign-in is not a managed proof retry (source only)
+
+Independent review reproduced a valid-login regression: login calls deep-dive
+claim/repair before `user_login_finalize`, so strict reuse of an edited managed
+brief threw and prevented session finalization. The narrow repair leaves the
+controller unchanged. After existing verified-customer, request ownership and
+membership checks, managed deep-dive resume returns only the existing request ID.
+It does NOT call enqueue/reuse, normalize intake, require an admission service,
+or claim proof success. This applies equally to login, verification and existing
+registration callers of that helper. Unmanaged deep-dive submission is unchanged.
+Explicit manual resend still performs strict live-authority reuse and rejects
+changed input; managed revision still rejects before mutation.
+
+No auth exception is caught or converted to success. Bad credentials, inactive
+users, unverified accounts and flood limits remain denied. Foreign request
+ownership and system/database errors still propagate. Managed handoff projection
+also compares the current asset/rights snapshot without a write lock, so changed
+rights or withdrawal projects `needs_attention`, just like changed brief binding.
+Admission/reuse keep the default asset-row locking behavior. Projection is not
+provider authorization or a replacement-round policy.
+
+Final verification: 243 focused PHP tests / 1,427 assertions pass using the same
+ten-file command under the managed-resend receipt below. The single-file command
+below under canonical namespace now passes 106 tests / 763 assertions, including
+16 new controller-login cases. Two existing PHPUnit doc-comment deprecations
+remain. All six changed/new PHP files pass syntax checks; git whitespace passes.
+PHP 8.5.9 / PHPUnit 11.5.56, 28 MiB combined peak; disk remained above 200 MiB.
+
+The final controller and portal/deep-dive services execute against in-memory
+SQLite. Only credentials, user entity/account proxy, flood service and session
+finalization are doubled; a test-only namespaced finalizer records the call and
+allows the real controller session response. Unused mail/Commerce dependencies
+are uninitialized. Tests verify flag on/off, changed brief/rights/withdrawal,
+unchanged input, no request/campaign/job/claim/budget/outbox/activity/asset mutation,
+no fake queued repair, and unchanged authentication gates. No real login session,
+email, authoritative DB, network, provider, cloud or activation occurred. This is
+not installed Drupal kernel, browser login or concurrent MySQL proof.
+
+Retained pre-fix failure: the `off-brief` controller case throws `Proof admission
+differs from current input` through login line 180 before finalization (1 test,
+4 assertions, 1 error). Reproduce with only the old portal service loaded in
+memory; no source replacement or authoritative database is involved:
+
+```sh
+test "$(df -k . | awk 'NR==2 {print $4}')" -ge 204800 && \
+FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor \
+sandbox-exec -p '(version 1)(allow default)(deny network*)' php -r '
+require "scripts/automation-test-bootstrap.php";
+eval("?>" . shell_exec("git show 5edcffc78:backend/web/modules/custom/famtastic_pipeline/src/Service/CustomerPortalService.php"));
+exit((new \PHPUnit\TextUI\Application())->run(["phpunit", "--no-configuration", "--do-not-cache-result", "--filter", "testRealLoginDoesNotResumeManagedProofWork.*off-brief", "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/FreshProofAdmissionTest.php"]));'
+```
+
+This supersedes the earlier statement that managed deep-dive resume performs
+strict reuse. That behavior belongs to explicit resend, not optional sign-in
+repair. Importer implementation/activation remain closed. Drive and browser
+validation remain parent-deferred; no frontend or controller source changed.
+
 ## Canonical campaign namespace follow-up (source only)
 
 New admission now allocates `pc-` plus the existing 16 random bytes encoded as
