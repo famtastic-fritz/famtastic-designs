@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Frontend source dependencies belong in isolated proof inputs
+
+A new raw-text import outside frontend/ broke the disposable journey build.
+Allowlist that exact reviewed file, reject missing/symlink sources and compare
+copied bytes; never copy private marketing wholesale. On macOS, rsync -R does
+not reliably provide the expected /./ path stripping. Explicit destination
+directories and cp avoid that ambiguity. Passing the canonical legacy fixture
+is not proof of a newly unattended creative workflow.
+
 ## 2026-09-21 — Connect sharing discovery
 
 **Observation:** A footer-only QR icon was easy to miss. The intro masks early hints, and native dialog boundaries needed explicit keyboard wrapping in Chromium.

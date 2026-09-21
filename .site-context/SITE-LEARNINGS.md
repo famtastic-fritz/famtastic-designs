@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Isolated proof builds need external frontend imports
+
+Copy only the reviewed narration text imported from marketing/, preserve its
+exact relative path and compare bytes. Missing/symlink inputs fail closed.
+The canonical fresh lifecycle passes with captured mail and fixture providers;
+this does not activate automatic Mac or cloud generation. See
+`docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md`.
+
 ## 2026-09-21 — Make in-person sharing discoverable
 
 **Observation:** The original QR lived behind an unlabeled footer icon, and the intro would conceal a page-load cue. Chromium can move focus into browser chrome at a native dialog boundary.

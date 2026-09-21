@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-21 - Restore disposable customer-journey frontend inputs
+
+Both isolated proof runners copy and byte-check the exact narration text now
+imported by the frontend. The fresh canonical journey passes with disposable
+SQLite, captured email, synthetic payments and local deployment. Live automation
+remains observe-only. See `docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md`.
+
 ## 2026-09-21 — Connect QR discovery
 
 - Added the visible SHOW MY QR action, a three-bounce pointer after card reveal, persistent quiet repeat visits, and reduced-motion support.

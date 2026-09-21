@@ -12,6 +12,11 @@ test -x "$vendor_source/bin/drush" || {
   exit 1
 }
 runtime_backend="$(cd -P "$vendor_source/.." && pwd)"
+frontend_content='marketing/brands/famtastic/video-studio/whats-the-catch/user-script.txt'
+test -f "$repo_root/$frontend_content" && test ! -L "$repo_root/$frontend_content" || {
+  echo "ERROR: required canonical frontend narration is missing or a symlink: $frontend_content" >&2
+  exit 1
+}
 test -d "$runtime_backend/web/core" || {
   echo "ERROR: supplied Drupal runtime is incomplete (missing web/core)." >&2
   exit 1
@@ -75,6 +80,11 @@ rsync -a \
   --exclude 'public/showcase' \
   "$repo_root/frontend/" "$runtime_repo/frontend/"
 ln -s "$repo_root/frontend/node_modules" "$runtime_repo/frontend/node_modules"
+# The live frontend imports this exact reviewed source outside frontend/.
+# Copy only its declared text dependency, never the private marketing tree.
+mkdir -p "$runtime_repo/$(dirname "$frontend_content")"
+cp "$repo_root/$frontend_content" "$runtime_repo/$frontend_content"
+cmp "$repo_root/$frontend_content" "$runtime_repo/$frontend_content"
 
 # Build a complete matching Drupal runtime beside the copied module source.
 rsync -aL "$vendor_source/" "$runtime_repo/backend/vendor/"
