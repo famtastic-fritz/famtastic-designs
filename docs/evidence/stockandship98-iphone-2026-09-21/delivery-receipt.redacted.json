@@ -1,0 +1,85 @@
+{
+  "date": "2026-09-21",
+  "request_id": 17,
+  "customer_id": 15,
+  "campaign_id": 56,
+  "authorized_scope": "One iPhone screenshot walkthrough to the verified customer, copy to the verified owner; one owner copy of the preceding reminder.",
+  "reminder_copy": {
+    "gmail_message_id": "1a0c5eb8f769e20f",
+    "subject": "Copy: Your StockandShip98 website concepts are ready to review",
+    "sent_at_utc": "2026-09-21T21:42:24Z",
+    "recipient": "[verified owner mailbox]",
+    "owner_inbox_verified": true,
+    "source_outbox_id": 842,
+    "original_plain_and_html_hashes_matched": true
+  },
+  "walkthrough": {
+    "gmail_message_id": "1a0c5f6e78302602",
+    "subject": "Finding your 3 StockandShip98 concepts on iPhone",
+    "sent_at_utc": "2026-09-21T21:54:47Z",
+    "recipient": "[verified customer 15]",
+    "cc": "[verified owner mailbox]",
+    "sent_and_owner_inbox_verified": true,
+    "customer_inbox_or_read_verified": false,
+    "html_sha256": "9bfa281dfd302f102ff78e46e2b6605f5f6407f7f1ed5ed6d5ac3c35da4962bc",
+    "plain_sha256": "dffb8037047a185068d51b94bed7c8f884df2cf2320bc73192f3d1e537cc410f",
+    "shared_brand_shell_sha256": "b9ee2dd689e49f8fac06d7470c6464b4e4a6f92cd5369fe34c53954e318400c0",
+    "inline_images": [
+      {
+        "filename": "01-project.jpg",
+        "mime_type": "image/jpeg",
+        "size_bytes": 43525,
+        "sha256": "16a73e30641be840093273ac0a548ff7a43191a24a33faaeff70d8a4462e9d8a",
+        "gmail_inline_image_metadata_matched": true
+      },
+      {
+        "filename": "02-exchange.jpg",
+        "mime_type": "image/jpeg",
+        "size_bytes": 40528,
+        "sha256": "30a2c14dcaa181f4eabc06d4afd79a83253c04e14fb47904b49d457d2cf4f8e4",
+        "gmail_inline_image_metadata_matched": true
+      },
+      {
+        "filename": "03-curated-finds.jpg",
+        "mime_type": "image/jpeg",
+        "size_bytes": 39113,
+        "sha256": "5ab6ab5f62a85d6ec7079827a159597001ea6060b1454d8fc8b1b4ed6e86ffd3",
+        "gmail_inline_image_metadata_matched": true
+      },
+      {
+        "filename": "04-the-drop.jpg",
+        "mime_type": "image/jpeg",
+        "size_bytes": 40524,
+        "sha256": "7d9e3a9c86bb705b065f66f99e1d3ad5ab3bee9e00d6752eb7971dbdb9148be3",
+        "gmail_inline_image_metadata_matched": true
+      }
+    ]
+  },
+  "portal_verification": {
+    "production_customer_controller_session_status": 200,
+    "production_customer_controller_workspace_status": 200,
+    "proof_variants": 3,
+    "selected_direction": "",
+    "screenshots": "Read-only local replay of the production customer controller response, using deployed frontend assets at phone width. Contact labels hidden. Captured through CUA.",
+    "screenshot_pixels": [
+      375,
+      812
+    ],
+    "production_masquerade_module_enabled": false,
+    "custom_view_as_customer_route_found": false,
+    "live_customer_browser_login_tested": false,
+    "physical_iphone_safari_tested": false,
+    "production_mutations": false,
+    "observed_at": "2026-09-21T21:44:17Z"
+  },
+  "email_presentation": {
+    "widths_checked": [
+      1280,
+      390
+    ],
+    "horizontal_overflow": false,
+    "all_eight_images_loaded": true,
+    "project_button_height": 56,
+    "actual_mail_client_visual_rendering_tested": false
+  }
+}

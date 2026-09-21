@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-21 — StockandShip98 iPhone support walkthrough
+
+- Sent one owner-authorized customer support email with four inline screenshots
+  and an owner copy, plus the requested owner copy of the earlier reminder. Used
+  the existing BrandedEmail shell and Gmail MIME delivery. Owner inbox receipts
+  and all four screenshot parts verified; customer inbox/read remains unknown.
+  Current customer controller data showed all three proofs. See
+  `docs/plans/STOCKANDSHIP98-IPHONE-2026-09-21.md`.
+
 ## 2026-09-21 — StockandShip98 proof reminder
 
 - Sent one owner-requested reminder after checking current email standards and

@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 — Customer screenshot support delivery
+
+**Provider send and owner inbox copy verified.** Sent a StockandShip98
+customer guide through Gmail with four inline screenshot parts, using
+the deployed BrandedEmail shell. The owner reminder copy and walkthrough copy
+are inbox-verified. This is an exact support operation, not a new screenshot
+notification producer or live customer impersonation feature. Current production
+customer controllers returned all three proofs; screenshots replay that response
+locally at phone width. Physical Safari/login and customer inbox/read are untested.
+See `docs/plans/STOCKANDSHIP98-IPHONE-2026-09-21.md`.
+
 ## 2026-09-21 — StockandShip98 exact reminder acceptance
 
 **SMTP acceptance verified, one notification.** Existing `customer_proof_ready/v4`

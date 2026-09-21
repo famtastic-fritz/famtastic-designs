@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 — Customer view and phone proof guidance
+
+**Observation:** StockandShip98 had all three accessible proofs but a long research
+section above the horizontal phone cards. No custom view-as-customer route was
+found; production masquerade was disabled. **Guidance:** Verify the real customer
+controller and permissions, then label a local response replay honestly. A live
+customer Safari login is separate evidence. Screenshot instructions should show
+where to scroll and swipe, and distinguish Open working concept from Choose.
+CUA screenshot bytes here were JPEG despite a tentative PNG filename; retain the
+bytes and use the correct extension/MIME before sending inline images.
+
 ## 2026-09-21 — Reconcile exact proof receipts before reminders
 
 **Observation:** StockandShip98's original handoff listed outbox 769 but omitted
