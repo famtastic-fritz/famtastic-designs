@@ -4,6 +4,22 @@ Status: local repairs and verification; no live activation.
 
 ## Latest integrated source checkpoint
 
+Final combined Studio verification now passes 1,544 tests in 132 files with zero
+skips, both lints and both execution proof scripts, using Studio 5ab65a2 and
+Designs 3db3e01ed. Both protected data inventories remained unchanged. Evidence:
+/tmp/famtastic-phase2-review.NVAfPl/full-integrated-source-final.Dp4s64. Initial
+disk interruption and six obsolete assertions are retained in the Studio
+evidence history. Exact canonical branding and separate invalid payload/signature
+assertions replaced those expectations; production guards were not loosened.
+This completes combined source verification, not production activation.
+
+The shared-claim source received a second independent read-only review with no
+new confirmed bypass. Existing static finish trusts its authenticated worker's
+dispatch receipt; that is a handoff assertion, not independent staging-readiness
+proof. Proof completion remains closed. Cross-month cost holds remain recorded
+in their original month, not counted as current-month availability deductions.
+Real database contention and actual cost reconciliation remain unproven.
+
 The earlier selected-route merge conflict is resolved in the isolated Studio
 integration, preserving the Phase 1 mock firewall and separate real consumer.
 Phase 2's independent review repairs pass 362 targeted tests; Phase 1 passes 42.
