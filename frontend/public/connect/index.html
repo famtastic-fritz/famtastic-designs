@@ -16,9 +16,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=fam-crown-1">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=qr-discovery-1">
   <script src="install.js" defer></script>
-  <script src="app.js" defer></script>
+  <script src="app.js?v=qr-discovery-1" defer></script>
 </head>
 <body>
   <div class="ambience" aria-hidden="true"></div>
@@ -44,6 +44,17 @@
       <h1 id="greeting">Your vision.<br><span>Let's make it FAMtastic.</span></h1>
       <p class="intro-copy">Websites. Brands. Automation. Real results.</p>
     </section>
+
+    <div class="qr-share">
+      <p id="qrPrompt" class="qr-prompt">
+        <span><strong>Need to share this?</strong> Tap here</span>
+        <svg class="qr-pointer" aria-hidden="true" viewBox="0 0 32 36"><path d="M7 4c16-2 20 12 12 25M11 21l8 8 9-7"/></svg>
+      </p>
+      <button type="button" id="showQrPrimary" class="show-qr" aria-haspopup="dialog" aria-controls="qrDialog">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 3h6v6H3zm12 0h6v6h-6zM3 15h6v6H3zm12 0h3v3h3v3h-6zM12 3v6m-9 3h9v9m3-9h6"/></svg>
+        <span>SHOW MY QR</span>
+      </button>
+    </div>
 
     <nav class="actions" aria-label="Connect with FAMtastic Designs">
       <a class="offer" href="https://famtasticdesigns.com/55-cents-a-day-website/">
@@ -77,9 +88,9 @@
     <p id="contactHint" class="contact-hint" role="status" hidden>Open the downloaded contact card and choose “Save” or “Import.” It includes Fritz's name, business email, and website.</p>
     <footer>
       <a href="https://famtasticdesigns.com/" class="site-address">famtasticdesigns.com</a>
-      <button type="button" class="qr-button" id="showQr" aria-label="Show this page's QR code"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 3h6v6H3zm12 0h6v6h-6zM3 15h6v6H3zm12 0h3v3h3v3h-6zM12 3v6m-9 3h9v9m3-9h6"/></svg></button>
+      <button type="button" class="qr-button" id="showQr" aria-label="Show this page's QR code" aria-haspopup="dialog" aria-controls="qrDialog"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 3h6v6H3zm12 0h6v6h-6zM3 15h6v6H3zm12 0h3v3h3v3h-6zM12 3v6m-9 3h9v9m3-9h6"/></svg></button>
     </footer>
-    <noscript><p><a href="commercial.mp4">Play the commercial</a></p></noscript>
+    <noscript><p><a href="qr.svg">Open the QR code</a> · <a href="commercial.mp4">Play the commercial</a></p></noscript>
   </main>
 
   <dialog id="videoDialog" aria-labelledby="videoTitle">
@@ -90,13 +101,18 @@
     <a class="modal-cta" href="https://famtasticdesigns.com/55-cents-a-day-website/">Explore the $199 website offer <span aria-hidden="true">→</span></a>
   </dialog>
 
-  <dialog id="qrDialog" aria-labelledby="qrTitle">
-    <div class="dialog-top"><h2 id="qrTitle">Let's connect.</h2><button type="button" class="close" id="closeQr" aria-label="Close QR code">×</button></div>
-    <p class="qr-copy">Scan or tap the code.<br>Step into FAMtastic.</p>
+  <dialog id="qrDialog" aria-labelledby="qrTitle" aria-describedby="qrInstructions">
+    <div class="dialog-top"><h2 id="qrTitle">SCAN TO CONNECT</h2><button type="button" class="close qr-close" id="closeQr" aria-label="Close QR code" autofocus>Close <span aria-hidden="true">×</span></button></div>
+    <p class="qr-copy" id="qrInstructions">Point another phone at this QR code.</p>
     <a class="qr-link" data-open-card href="/connect/" aria-label="Open the FAMtastic card on this phone"><img src="qr.svg" class="qr-image" width="400" height="400" alt="QR code for this FAMtastic Designs contact page"></a>
-    <p class="qr-domain">famtasticdesigns.com/connect/</p>
-    <a class="modal-cta" data-open-card href="/connect/">Open this card <span aria-hidden="true">→</span></a>
-    <button type="button" class="install-button" data-install><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M12 6v8m-3-3 3 3 3-3M10 18h4"/></svg><span><strong data-install-label>Save to this device</strong><small data-install-detail>Add an icon to your Home Screen</small></span></button>
+    <p class="qr-person">Scan to connect with Fritz</p>
+    <p class="qr-domain">famtasticdesigns.com/connect</p>
+    <p class="qr-details">Contact <span aria-hidden="true">·</span> Website <span aria-hidden="true">·</span> $199 Special</p>
+    <div class="qr-dialog-actions">
+      <button type="button" id="shareQrLink" class="modal-cta">Share Link <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 16V3m-4 4 4-4 4 4M5 12v8h14v-8"/></svg></button>
+      <a class="qr-open-card" data-open-card href="/connect/">Open this card</a>
+    </div>
+    <p id="qrShareStatus" class="qr-share-status" role="status" hidden></p>
   </dialog>
 
   <dialog id="installDialog" aria-labelledby="installTitle">

@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 — Connect sharing discovery
+
+**Observation:** A footer-only QR icon was easy to miss. The intro masks early hints, and native dialog boundaries needed explicit keyboard wrapping in Chromium.
+
+**Guidance:** Keep a labeled action visible immediately, delay a finite cue until content is visible, store a seen preference, respect reduced motion, and test focus/close/back behavior. Preserve QR bytes when QR artwork belongs to another task. Evidence: `docs/plans/CONNECT_QR_DISCOVERY_2026-09-21.md`.
+
 ## 2026-09-19 — Recover the owner-selected icon family
 
 The owner pointed to prior logo work and selected the existing FAM plus crown avatar. Search session content and retained exported artwork before substituting another brand derivative. Keep the approved master, record the scoped app-icon selection, measure the final mask-safe crop and version all consumers without changing manifest identity. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.

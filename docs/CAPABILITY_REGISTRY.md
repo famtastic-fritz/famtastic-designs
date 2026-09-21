@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 — Connect QR discovery
+
+Locally proven: prominent QR action, bounded/persisted pointer cue, accessible responsive scan dialog, and share/copy fallback. 23 contracts and 12 Chromium cases pass. QR asset bytes are preserved; QR repair/physical scan and actual OS sharing are not claimed. Owner authorized release; production verification pending. Evidence: `docs/evidence/connect-qr-discovery/`.
+
 ## 2026-09-19 — Connect FAM with crown app icon
 
 Production verified at `95735502`: the owner-selected FAM with crown family is served to every Connect icon consumer on both domains; opaque maskable artwork fits the full safe circle. Build, mobile install preview, live video/QR/main-site checks and all 16 existing contracts pass. Physical Android installation and existing-device icon refresh remain untested. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.
