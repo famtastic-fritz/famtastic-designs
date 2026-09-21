@@ -2803,3 +2803,13 @@ Keep material/interaction layers separate from official symbols.
 The source plan assumed NVIDIA-like16GB video generation; the repo confirms16GB Apple unified memory. The new engine therefore defaults to local HyperFrames composition/reuse, with explicit optional shot generation. Existing MPT configuration can auto-upload after rendering, so the wrapper rejects an armed switch before invoking it. Actual upstream checks also exposed a required WAAPI root annotation and compact-format overflow; both are handled in the compositor, with test and real-render evidence in `docs/marketing/local-video-studio/PROOF.md`. Preserve zero-provider-fee versus unmeasured electricity/time, and contract-tested versus native-proven distinctions.
 
 Remote delivery correction: GitHub integration returned403 for Git-object creation despite broad repository metadata permissions, and shell push lacked credentials. Do not treat metadata as proof of write access. The concrete fallback is a verified Git bundle with the exact committed tree and explicit owner-side import instructions.
+
+## Customer-site checkout location — owner correction, 2026-09-21
+
+Create customer source repositories at `/Users/famtastic-fritz/Development/FAMtastic/sites/site-<business-slug>` (portable form: `~/Development/FAMtastic/sites/site-<business-slug>`). StockandShip98 belongs at `~/Development/FAMtastic/sites/site-stockandship98`. `FAMtastic-Repos` is not the default customer-site collection.
+
+Each site must own its Git root, common directory, manifest and verified remote. The ecosystem ignores `/sites/`; independent repositories beneath that ignored directory are valid. A tracked folder, submodule/gitlink, or worktree sharing the agency/platform Git common directory is not an independent customer repository. Verify the parent ignore rule and absence of tracked target paths before creation.
+
+Studio/library checkouts retain their separately configured locations. Explicit sandbox roots remain supported. New customer identities should use `site-<business-slug>`; preserve existing IDs and registry bindings on continuation. Check existing source and registry before creating a duplicate. This rule does not automatically move existing repositories or authorize deployment, credentials, DNS or customer communication. Fritz assigned the StockandShip98 move to its own task.
+
+Historical migration receipts retain their original paths as evidence; this current rule supersedes their use as defaults. When an authorized move is performed, preserve history, dirty work and remotes, then update the local project/launcher mappings and current handoff documents. Confirm the actual new checkout before claiming migration complete.
