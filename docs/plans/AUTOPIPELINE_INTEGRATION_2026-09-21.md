@@ -4,6 +4,14 @@ Status: local repairs and verification; no live activation.
 
 ## Latest integrated source checkpoint
 
+The complete pipeline module unit directory also passes locally against
+`3bc4e9baf`: 482 PHP tests / 2,631 assertions, 68 existing PHPUnit deprecations,
+no failures/skips. Receipt `designs-full-unit-baseline.s4a6TQ`, guarded duration
+1.421 seconds, protected data unchanged. This uses the reviewed read-only
+dependency runtime and isolated bootstrap, not an installed live site or hosted
+CI's PHP 8.3 environment; local PHP is 8.5.9. It includes the narrower tests below
+and must not be added to them as distinct coverage.
+
 Fresh proof admission is now implemented in isolated source through 81ff57ee:
 default-off, atomic fresh request/campaign/job/claim identity, strict managed
 resend isolation, canonical `pc-*` campaign IDs, and denial of generic managed
@@ -51,6 +59,9 @@ run 35660895111 reports that all three checks were not started because the
 account is locked due to a billing issue. Hosted CI is blocked, not a passing
 test receipt and not evidence of a source-test failure. No billing settings
 or required-check protections were changed.
+After pushing the newer checkpoint, run `35665612252` again failed to start;
+backend check `106550570479` explicitly reports the same billing lock. No source
+test was executed by that hosted job.
 
 The earlier combined Studio verification passed 1,544 tests in 132 files with zero
 skips, both lints and both execution proof scripts, using Studio 5ab65a2 and
