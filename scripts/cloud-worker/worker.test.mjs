@@ -1,6 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, symlinkSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { runOnce, validateEndpoint, validateClaim, signedHeaders } from './worker.mjs';
 const now = () => 1789700000_000;
 function fixture() {
@@ -51,4 +56,21 @@ test('signatures bind exact action, worker, bytes and nonce', () => {
   const base = signedHeaders('claim', '{}', 'cloud-run', secret, now(), nonce);
   assert.notEqual(base['X-FAMtastic-Signature'], signedHeaders('finish', '{}', 'cloud-run', secret, now(), nonce)['X-FAMtastic-Signature']);
   assert.notEqual(base['X-FAMtastic-Signature'], signedHeaders('claim', '{}', 'mac-fallback', secret, now(), nonce)['X-FAMtastic-Signature']);
+});
+test('direct execution through a symlink runs and fails closed without configuration; imports stay inert', () => {
+  const root = mkdtempSync(join(tmpdir(), 'bounded-cli-'));
+  const source = fileURLToPath(new URL('./worker.mjs', import.meta.url));
+  const link = join(root, 'worker-link.mjs');
+  try {
+    symlinkSync(source, link);
+    for (const args of [[link], ['--preserve-symlinks-main', link]]) {
+      const direct = spawnSync(process.execPath, args, { env: {}, encoding: 'utf8', timeout: 5000 });
+      assert.equal(direct.status, 1, direct.stderr);
+      assert.equal(direct.stdout, '');
+      assert.match(direct.stderr, /bounded_worker_failed/);
+    }
+    const imported = spawnSync(process.execPath, ['--input-type=module', '-e', `await import(${JSON.stringify(new URL('./worker.mjs', import.meta.url).href)})`], { env: {}, encoding: 'utf8', timeout: 5000 });
+    assert.equal(imported.status, 0, imported.stderr);
+    assert.equal(imported.stdout + imported.stderr, '');
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });

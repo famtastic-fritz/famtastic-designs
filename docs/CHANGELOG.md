@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-21 - Do not silently skip a symlinked worker executable
+
+- Canonicalize both the module and argv paths for the existing bounded CLI's
+  direct-execution check. macOS `/tmp` previously caused exit zero with no work.
+- Verify direct and preserve-symlinks-main execution, inert imports and the real
+  CLI through the paired Studio signed-ingress fixture. Nine Node tests and two
+  cross-repository cases pass; authority/hosting are synthetic, not live.
+
 ## 2026-09-21 - Complete-source fixture authority repair
 
 - Extend only the legacy PHP export fixture to materialize the bounded system PNG

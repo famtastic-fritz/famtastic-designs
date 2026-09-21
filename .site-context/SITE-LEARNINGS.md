@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Bound worker executable identity
+
+Compare canonical module and argv paths before CLI main. Node's macOS symlink
+normalization otherwise permits exit zero without execution. Verify a real
+child process as well as imported functions; preserve silent imports. Static
+continuation through a synthetic loopback fixture is not customer automation.
+
 ## 2026-09-21 - Completed-source fixture authority
 
 Observation: the legacy export fixture omitted the required PNG and selected old

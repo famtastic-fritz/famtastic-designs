@@ -4,6 +4,15 @@ Status: local repairs and verification; no live activation.
 
 ## Latest integrated source checkpoint
 
+The real bounded worker executable now survives macOS symlink paths instead of
+silently exiting zero. Nine Node tests plus two companion Studio CLI/ingress
+tests pass, including preserve-symlinks-main, silent imports, lost finish
+acknowledgement, replay with one build/captured callback, and an unconfigured
+selected-runtime rejection. Drupal claim authority and hosting remain doubles.
+Evidence: /tmp/famtastic-phase2-review.NVAfPl/bounded-cli-final.28iJVQ. No installed
+service, cloud or customer job changed. These focused additions postdate the
+full-suite checkpoint below and are not added to its overlapping test total.
+
 Review checkpoint pushed, not merged or deployed:
 https://github.com/famtastic-fritz/famtastic-designs/pull/42 and companion
 https://github.com/famtastic-fritz/famtastic-studio/pull/2 are drafts. GitHub

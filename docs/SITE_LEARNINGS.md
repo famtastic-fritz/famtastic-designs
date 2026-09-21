@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - An imported-function test is not an executable-worker test
+
+The bounded worker silently skipped main when its argv used `/tmp` but Node's
+module URL used `/private/tmp`. Canonicalize both, including when the caller
+uses preserve-symlinks-main. Retain a subprocess test requiring the actual
+configuration failure, plus a silent-import assertion. The paired Studio test
+exercises its signed ingress and one static build, not actual cloud execution.
+
 ## 2026-09-21 - Separate complete-source fixtures from proof callback ingress
 
 A finalized-source adoption test needs authoritative bytes and explicit rights
