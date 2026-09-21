@@ -3,6 +3,7 @@
 ## 2026-09-21 — Weekend proof inquiry responses
 
 - Sent two explicitly owner-authorized personalized `standard/v2` emails for prospects 300/301 through the existing exact-key outbox; SMTP accepted outbox 843/844 once each. Saved conversation receipts and the existing-proof-as-direction-one continuation notes. See `docs/operations/FRIENDS-WEBSITE-REPLIES-2026-09-21.md`.
+- Later prepared two expanded intake/benefits email drafts and two original owner-desk guides; all held outside the sending outbox at Fritz's request pending recipient confirmation. Recorded the WhatsApp-reference clarification and hold on both contacts; no additional sends.
 
 ## 2026-09-21 — Connect QR discovery
 

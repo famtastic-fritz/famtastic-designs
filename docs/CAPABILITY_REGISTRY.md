@@ -4,6 +4,8 @@
 
 Additional production evidence for the existing mail capability: two owner-authorized `standard/v2` contact replies, outbox 843/844, one SMTP-accepted attempt each, persisted conversation references and request continuation notes. Browser mobile branding/link checks passed. No new autonomous-send authority, inbox-placement proof, completed three-proof set or launch capability is claimed. See `docs/operations/FRIENDS-WEBSITE-REPLIES-2026-09-21.md`.
 
+Later expanded follow-ups and backend guides are locally rendered, owner-held drafts only. They created no outbox rows and do not inherit the previous messages' send approval. Both contact records carry the explicit hold.
+
 ## 2026-09-21 — Connect QR discovery
 
 Production verified at `40ca506b`: prominent QR action, bounded/persisted pointer cue, accessible responsive scan dialog, and share/copy fallback. 23 contracts and 12 Chromium cases pass. QR asset bytes are preserved; QR repair/physical scan and actual OS sharing are not claimed. 24 live browser scenarios covered across apex/www, exact build bytes and main-site browser checks pass. GitHub hosted CI could not start due to billing. Evidence: `docs/evidence/connect-qr-discovery/`.

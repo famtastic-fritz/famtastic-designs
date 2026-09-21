@@ -37,3 +37,15 @@ SMTP acceptance does not prove inbox placement, reading or customer approval. No
 The main intake evidence was sparse: each customer asked only to update the current website and came from `/connect/` through `/contact/`. Do not invent a detailed brief or force account sign-in for this initial response. Both public sites already list business-domain contact addresses, so a Gmail submission is not evidence that they lack business email. Preserve the submitted address exactly, especially South Shore's trailing `a`.
 
 Next action belongs to the customer: reply with priorities and desired changes. Reuse the stored continuation notes when that response arrives.
+
+## Later owner instruction — expanded drafts held
+
+Fritz subsequently requested a fuller explanation of the required website intake, why its length supports market research and design planning, project benefits, planned branded domain-email setup, and the special pricing already discussed. He explicitly instructed that the new messages be held pending confirmation of the recipient address. He clarified that the earlier reference was a WhatsApp handoff from when the businesses first asked, not today's two sent emails.
+
+The original private September 18 owner-access guide for both proofs was found in Downloads. It includes the proof URLs, owner-desk URLs and the inquiry/status/business-details walkthrough. The exact WhatsApp message text was not retrieved. Two separate branded backend guides were prepared from the original guide and current source, without copying passwords or private access details.
+
+The local `held-v2` package contains two expanded `standard/v2` email drafts and two instruction guides. Every recipient field is null, send authorization is false and the package is explicitly held outside the production outbox. The signed-in production intake link opens the new-request form; source and visible labels confirm the redesign choice and save-draft/full-brief path. Source confirms draft saving and the final submit action. Both proof owner-desk login screens are reachable. Four 390px previews have loaded logos, no horizontal overflow, 46px content links and 84px creator-credit links.
+
+The hold is appended to both prospect records and recorded as an idempotent operational event. A readback found no pending outbox messages for either original contact address; only the earlier sent receipts 843/844 remain. No new message was sent, no new outbox entry was created, and no customer account, mailbox, pricing record or live website was changed. Special-price amounts and the final recipient remain unspecified. The send hold comes from Fritz's explicit instruction.
+
+Local owner review: `.artifacts/friends-replies-20260921/held-v2/index.html`. Draft content and the original private access guide remain outside Git. Resumable brief: `plans/FRIENDS-INTAKE-DRAFTS-HOLD-2026-09-21.md`.

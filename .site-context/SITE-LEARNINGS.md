@@ -4,6 +4,8 @@
 
 **Observation:** Prospects 300/301 were simple public contacts (intakes 20/21), with no account-bound website requests. Their businesses already had independent weekend proof projects and published business-domain email contacts. **Guidance:** Preserve the exact submitted reply address, match the source intake and project history, reuse the active branded renderer, and save the existing proof as one direction while clearly labeling unfinished alternatives. Do not infer missing business email from a Gmail inquiry or announce a complete three-proof set. Evidence: `docs/operations/FRIENDS-WEBSITE-REPLIES-2026-09-21.md`.
 
+**Later clarification:** The prior handoff Fritz meant was WhatsApp, not the recent email. Retrieve original owner instructions independently and keep credentials private. When Fritz says hold and awaits a recipient address, stage drafts with unset recipients outside the automatic outbox and record that hold. Previous send receipts remain immutable history.
+
 ## 2026-09-21 — Make in-person sharing discoverable
 
 **Observation:** The original QR lived behind an unlabeled footer icon, and the intro would conceal a page-load cue. Chromium can move focus into browser chrome at a native dialog boundary.
