@@ -40,6 +40,13 @@ namespace Drupal\famtastic_pipeline\Service {
   class PublicPreviewDeliveryService { public function isPublicDeliveryForCampaign(...$args) { return FALSE; } }
 }
 namespace Drupal\Core\Database {
+  // This fixture has no private offers. Preserve Drupal's grouped-query API
+  // without pretending to evaluate offer SQL or weakening asset conditions.
+  class ConditionGroup {
+    public array $conditions = [];
+    public function isNull($key) { $this->conditions[] = [$key, NULL, 'IS NULL']; return $this; }
+    public function condition($key, $value, $operator = '=') { $this->conditions[] = [$key, $value, $operator]; return $this; }
+  }
   class Connection {
     public array $row = []; public array $writes = []; public array $tables = [];
     public function startTransaction() { return new class { public function rollBack() {} }; }
@@ -56,7 +63,15 @@ namespace Drupal\Core\Database {
     public function fields(...$args) { if ($this->write) $this->values = $args[0]; return $this; }
     public function insertFields($values) { $this->values = $values; return $this; }
     public function updateFields($values) { $this->values = $values + $this->values; return $this; }
-    public function condition($key, $value, ...$args) { $this->conditions[$key] = $value; return $this; }
+    public function orConditionGroup() { return new ConditionGroup(); }
+    public function condition($key, $value = NULL, ...$args) {
+      if ($key instanceof ConditionGroup) {
+        if ($this->table !== 'famtastic_private_offer') throw new \LogicException('Grouped queries require an explicit fixture implementation');
+        return $this;
+      }
+      $this->conditions[$key] = $value;
+      return $this;
+    }
     private function asset() { $row = $this->db->tables['famtastic_request_asset'] ?? FALSE; if (!$row) return FALSE; $row += ['id' => 1]; foreach ($this->conditions as $key => $value) if ((string) ($row[$key] ?? '') !== (string) $value) return FALSE; return $row; }
     public function __call($name, $args) { return $this; }
     public function execute() { if ($this->write) { $this->db->writes[] = $this->table; $this->db->tables[$this->table] = $this->values + ($this->table === 'famtastic_request_asset' ? ($this->db->tables[$this->table] ?? []) : []); if ($this->table === 'famtastic_project_request') $this->db->row = $this->values + $this->db->row; return 1; } return $this; }
