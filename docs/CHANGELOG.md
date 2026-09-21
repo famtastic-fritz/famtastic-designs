@@ -8,6 +8,33 @@
   CLI through the paired Studio signed-ingress fixture. Nine Node tests and two
   cross-repository cases pass; authority/hosting are synthetic, not live.
 
+## 2026-09-21 - Canonical fresh-proof campaign namespace (source only)
+
+- Allocate new managed campaigns with `pc-` plus unchanged random hex, matching
+  the existing asset-path contract without broadening it or rewriting history.
+  90 admission tests / 521 assertions pass; the new real-validator regression
+  fails before the fix. Import and activation remain closed.
+
+## 2026-09-21 - Preserve managed proof isolation on resend (source only)
+
+- Check durable admission identity before every queue fallback, even with the
+  flag off; exact retries revalidate account/input/rights and reuse the same job.
+- Reject managed replacement rounds before campaign/reset writes; protect managed
+  deep-dive resume from intake normalization. Preserve unmanaged legacy behavior.
+- 224 focused PHP tests / 1,170 assertions pass; original-source four-case failures
+  and exact commands are retained in the fresh-proof admission/import contract.
+  No importer, provider, production cost catalog or activation was added.
+
+## 2026-09-21 - Atomic fresh proof admission (source only, OFF)
+
+- Add reviewed-policy-only admission for new portal submissions and exact draft
+  submissions, atomically binding an inert campaign, frozen input, job and claim.
+- Preserve history, lock claimed asset authority, reject unfenced managed imports,
+  and project queue/lease facts without pretending an opaque ID is Studio acceptance.
+- 177 focused PHP tests / 926 assertions pass (43 new / 286), with one existing
+  PHPUnit deprecation. Empty production cost catalogs, importer and activation
+  remain closed. See `contracts/FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md`.
+
 ## 2026-09-21 - Complete-source fixture authority repair
 
 - Extend only the legacy PHP export fixture to materialize the bounded system PNG

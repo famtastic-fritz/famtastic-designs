@@ -8,6 +8,44 @@ uses preserve-symlinks-main. Retain a subprocess test requiring the actual
 configuration failure, plus a silent-import assertion. The paired Studio test
 exercises its signed ingress and one static build, not actual cloud execution.
 
+## 2026-09-21 - Validate allocated IDs at their downstream boundary
+
+Observation: an inert admission campaign used `proof-*`, but canonical asset
+paths require `pc-*`. Guidance: keep the existing namespace and random suffix;
+test emitted IDs through the actual path validator before integration. Do not
+relax the validator, add business data or migrate historical IDs to repair this.
+90 admission tests / 521 assertions pass; importer remains unimplemented.
+
+## 2026-09-21 - Admission identity outlives its feature flag
+
+Observation: a fresh-only hook did not constrain later manual resend. Editing a
+managed brief then resending allocated a new legacy job outside shared claims,
+including after disabling admission. Deep-dive normalization and revision reset
+also mutate records before reaching the common helper.
+
+Guidance: lock the request and consult durable admission markers before ANY queue
+fallback. Reuse only exact current binding/account/rights, never silently enroll a
+replacement. Reject managed revisions before expiring prior campaigns and reuse
+managed deep-dive records before normalization. Keep malformed evidence closed.
+Test real public service callers, changed input and both flag states. Put test
+failure assertions outside expected-exception catches. The 224-test synthetic
+receipt and four original-source failures are in the fresh-proof contract.
+
+## 2026-09-21 - Freshness, immutable binding and import closure
+
+Observation: the proof queue helper also serves login repair, resend and revisions;
+generic callbacks trust event IDs and a legacy prospect fallback. An opaque job ID
+in a waiting campaign can incorrectly imply remote acceptance. Request locks alone
+also do not protect asset withdrawal.
+
+Guidance: admit only explicit trusted fresh writer events in their outer transaction;
+lock actual asset/account/resource rows, exclude history before campaign allocation,
+and use a direct unique job insert. Persist byte-bound admission evidence and deny
+generic imports before duplicate shortcuts. Project actual queue/lease facts and
+keep provider/import authority closed. New uploads or later rights changes require
+fresh checks before external work. Tests are SQLite with entity doubles, not MySQL
+or customer execution. See the fresh-proof admission/import contract for commands.
+
 ## 2026-09-21 - Separate complete-source fixtures from proof callback ingress
 
 A finalized-source adoption test needs authoritative bytes and explicit rights

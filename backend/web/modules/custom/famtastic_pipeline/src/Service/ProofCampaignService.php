@@ -407,6 +407,7 @@ class ProofCampaignService {
     if (!$campaign || !hash_equals((string) $campaign->get('studio_job_id')->value, $studioJobId)) {
       throw new \InvalidArgumentException('Unknown campaign or Site Studio job.');
     }
+    FreshProofBinding::assertGenericImportAllowed($this->database, (int) $campaign->id());
     $prospectId = (int) $campaign->get('prospect_id')->target_id;
     $isShowcase = str_starts_with($studioJobId, 'local-showcase-');
     $isPublicPreviewCampaign = !$isShowcase && $this->previews->isPublicDeliveryForCampaign($prospectId, (int) $campaign->id());

@@ -7,6 +7,35 @@ normalization otherwise permits exit zero without execution. Verify a real
 child process as well as imported functions; preserve silent imports. Static
 continuation through a synthetic loopback fixture is not customer automation.
 
+## 2026-09-21 - Campaign allocation must satisfy canonical media paths
+
+Observation: `proof-*` allocation failed the real `pc-*` asset-path validator.
+Guidance: change only the new allocation prefix, preserve random identity and
+all history, and test the actual validator. 90 admission tests / 521 assertions
+pass; no import or activation. Drive mirroring remains parent-deferred.
+
+## 2026-09-21 - Managed queue identity cannot revert to legacy
+
+Observation: edited managed requests could create a legacy job through manual
+resend because fresh intent and a flag were the only router. Guidance: use stored
+admission identity under the request lock before fallback, revalidate live account
+and asset rights for exact reuse, and reject replacements before mutations. This
+also protects deep-dive resume; unmanaged behavior is retained. 224 focused PHP
+tests / 1,170 assertions pass; four cases reproduce the original escape. Source
+only, no provider/import/activation. Drive mirror remains parent-deferred.
+
+## 2026-09-21 - Fresh proof admission is not completed proof generation
+
+Observation: enqueue callers include historical repairs, asset withdrawal is not
+serialized by a request lock alone, and legacy import/status inference can bypass
+a new worker claim. Guidance: use explicit fresh writer intent, an outer atomic
+request/campaign/job/enrollment transaction, actual asset locks and immutable
+event bytes; deny generic imports for managed campaigns and display actual claim
+facts. 177 focused PHP tests / 926 assertions pass using synthetic SQLite and
+entity doubles. Cost catalog, producer, fenced importer and activation stay closed.
+Full details: docs/contracts/FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md. Drive mirror
+and remote fetch are deferred to the integrating parent for this offline milestone.
+
 ## 2026-09-21 - Completed-source fixture authority
 
 Observation: the legacy export fixture omitted the required PNG and selected old
