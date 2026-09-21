@@ -7,7 +7,7 @@ unrelated owner work and was not edited.
 
 ## Scope and current state
 
-Source-only static agency case at `/work/anderlye/`: four public files under
+Published static agency case at `/work/anderlye/`: four public files under
 `frontend/public/work/anderlye/`, plus bounded publication helpers. No customer
 application, private records, account, setup link or research work directory is
 copied into the agency site. The customer remains independent at
@@ -49,10 +49,12 @@ small frontend/schema alignment task.
 ## Publication and rollback
 
 The root operator subsequently confirmed the customer application live at
-`4cb3580` and explicitly directed this isolated source commit/push and bounded
+`9bee6867340826cf3615331668c795c45dd01b4d` with the revised main navigation
+and dedicated contact page, and explicitly directed this isolated source
+commit/push and bounded
 static publication. This exception publishes the exact dedicated branch SHA
 containing current main; it does not merge unrelated agency source or move the
-main frontend release pointer. Record the actual publication receipt below.
+main frontend release pointer. The actual publication receipt is below.
 
 ```sh
 node scripts/check-creator-credit.mjs frontend/public/work/anderlye
@@ -109,8 +111,9 @@ coreutils 8.30; PHP lint passed. No remote mutation was part of that check.
 - The document contains no authored JavaScript. Chrome recorded three generic
   asynchronous extension-listener errors; extension-injected UI was present.
   This is disclosed instead of claiming a completely clean browser console.
-- Public apex/www browser acceptance, actual contact-card navigation and the
-  independent customer's operational journey remain release checks. No physical
+- Public apex/www browser acceptance and actual website/contact-card navigation
+  subsequently passed as recorded below. The independent customer's private
+  operational journey remains the root operator's separate receipt. No physical
   device, Safari, Firefox, search-indexing or performance outcome is claimed.
 
 Asset provenance and source hashes are retained in
@@ -118,3 +121,29 @@ Asset provenance and source hashes are retained in
 in the independent customer repository's `docs/research/current-site-issues.*`:
 carrier CTA placeholder number and a 404 PDF download are verified; the six HTML
 routes and current 2026 copyright are present.
+
+## Published receipt — September 21, 2026
+
+Public on both [apex](https://famtasticdesigns.com/work/anderlye/) and
+[www](https://www.famtasticdesigns.com/work/anderlye/), served from exact pushed
+source `b033218dda39aaf1afe106001bf096350d1aa245`. Promotion finalized at
+05:34:01 UTC. Every allowlisted file matched its source SHA-256 and MIME type
+on both hosts. Existing apex/www homepage hashes, the shared asset aggregate
+and `.frontend-release` hash were unchanged. No CMS row or existing file was
+overwritten. The private receipt remains in the source-specific deployment
+directory; its sanitized copy is `docs/evidence/anderlye-showcase/release.json`.
+
+Live CUA acceptance passed on desktop (1920 pixels) and at 390 pixels: no
+horizontal overflow, one H1, loaded exact 180-pixel creator logo, visible link
+targets at least 44 by 44 pixels, and readable hero/footer screenshots. The
+creator-credit background and page background both resolve to `rgb(7, 9, 7)`.
+The www footer screenshot confirms the continuous dark treatment. Actual link
+clicks reached the revised Anderlye home, Corey's contact card and FAMtastic
+Connect with their intended public UTMs. No call, email, contact installation,
+private login or form submission was performed in this showcase check.
+
+`docs/evidence/anderlye-showcase/browser-results.json` records observed
+dimensions and destinations. Native screenshots are retained in the task's
+CUA transcript. The source branch remains separate from main; this evidence-only
+follow-up does not change the published static source SHA. The local full-build
+limitation and future gallery integration remain as described above.

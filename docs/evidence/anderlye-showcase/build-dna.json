@@ -1,14 +1,14 @@
 {
   "schema": "famtastic.build-dna.v1",
   "build_id": "agency-anderlye-showcase-20260921",
-  "classification": "local_tested_publication_pending",
+  "classification": "public_verified",
   "created_at": "2026-09-21T05:23:57.825886+00:00",
   "record_timing_note": "Record assembled after construction and QA; per-edit time/cost telemetry unavailable.",
   "repository": {
     "name": "famtastic-designs",
     "base_revision": "19ad376a659a764df422a3075840c9d443e9426f",
     "branch": "codex/anderlye-showcase",
-    "state": "prepared for explicitly directed isolated commit, push and static publication"
+    "state": "Exact source committed and pushed on the dedicated branch; static publication finalized; later documentation commits do not change the served source SHA."
   },
   "recipe": {
     "routine": "agency-static-case-showcase",
@@ -124,6 +124,32 @@
         ],
         "full_build": "Failed ENOSPC copying unchanged media; removed only own partial dist; root explicitly chose static lane."
       }
+    },
+    {
+      "stage_id": "public-verification",
+      "execution": {
+        "provider": {
+          "id": "Existing agency cPanel SSH/static web host + CUA Chrome"
+        },
+        "model": {
+          "status": "not_applicable"
+        },
+        "cost": {
+          "status": "provider_did_not_report"
+        }
+      },
+      "result": {
+        "status": "passed",
+        "source_sha": "b033218dda39aaf1afe106001bf096350d1aa245",
+        "all_four_file_hashes_and_mime_match_apex_and_www": true,
+        "existing_homepage_release_pointer_and_asset_hashes_preserved": true,
+        "browser_viewports": [
+          1920,
+          390
+        ],
+        "actual_website_and_both_card_links_passed": true,
+        "record": "docs/evidence/anderlye-showcase/browser-results.json"
+      }
     }
   ],
   "artifacts": [
@@ -157,9 +183,19 @@
     }
   ],
   "publication": {
-    "status": "not_yet_published",
+    "status": "published_verified",
+    "source_sha": "b033218dda39aaf1afe106001bf096350d1aa245",
+    "verified_at": "2026-09-21T05:34:01.239Z",
+    "urls": [
+      "https://famtasticdesigns.com/work/anderlye/",
+      "https://www.famtasticdesigns.com/work/anderlye/"
+    ],
+    "receipt": "docs/evidence/anderlye-showcase/release.json",
+    "browser_receipt": "docs/evidence/anderlye-showcase/browser-results.json",
     "cms_entry_created": false,
-    "customer_email_sent": false
+    "customer_email_sent_by_this_subtask": false,
+    "existing_agency_release_pointer_changed": false,
+    "existing_assets_changed": false
   },
   "tracking": {
     "method": "passive public-slug UTMs only",

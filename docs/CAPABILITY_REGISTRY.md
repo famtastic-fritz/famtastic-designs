@@ -2,12 +2,14 @@
 
 ## 2026-09-21 — Bounded Anderlye showcase publication lane
 
-Locally verified: a static agency case with immutable source imagery, passive
+Production verified at `b033218d`: a static agency case with immutable source imagery, passive
 UTM links and exact creator credit; five branding contracts, eight isolated
 filesystem publication tests, and CUA desktop/320/390/768 checks pass. Its
 expected-absent four-file promotion preserves the shared frontend. Remote
-metadata preflight is read-only and passed. Publication and business-operation
-proof remain separate; see `docs/plans/ANDERLYE_SHOWCASE_2026-09-21.md` for the
+metadata preflight was read-only. Both hosts serve the exact four source files;
+live desktop/390px layouts and actual site/card navigation pass. Existing agency
+assets and release pointer are unchanged. Business-operation proof remains
+separate; see `docs/plans/ANDERLYE_SHOWCASE_2026-09-21.md` for the
 current receipt. No CMS integration, automated delivery or business-result
 capability is upgraded by this presentation work.
 

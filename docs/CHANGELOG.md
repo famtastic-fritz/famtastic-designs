@@ -2,12 +2,14 @@
 
 ## 2026-09-21 — Anderlye static project showcase
 
-- Prepared a new `/work/anderlye/` case with byte-preserved illustrative imagery,
+- Published `/work/anderlye/` at exact source `b033218d` with byte-preserved illustrative imagery,
   phone-friendly layout, exact creator credit, website/card links and honest
   freight-CRM scope. Added an owner-directed, expected-absent four-file publisher
-  with per-file live verification and scoped rollback. Local CUA at320/390/768
+  with per-file live verification and scoped rollback. Local CUA at 320/390/768
   and desktop, five creator contracts and eight isolated publication checks pass.
-  Publication status and the full-build disk-space exception are recorded in
+  Apex/www live hashes, desktop/390px browser layout, and actual website/card
+  navigation pass; existing agency assets/release pointer are unchanged.
+  Publication evidence and the full-build disk-space exception are recorded in
   `docs/plans/ANDERLYE_SHOWCASE_2026-09-21.md`; no gallery/CMS entry is implied.
 
 ## 2026-09-19 — Connect FAM with crown selection
@@ -3732,7 +3734,7 @@ Drupal, static campaigns, and existing proof-room boundaries remain isolated.
 - The focused browser suite, Design DNA validator, navigation validator and fixtures, Node 22 production build, and fresh synthetic customer-journey evidence passed. No production or customer state changed.
 ## 2026-09-14 — Owner Desk production release and authoritative brand binding
 
-- Preserve explicit Owner Desk links when an account also has ready website proofs; keep proof-specific links and default proof routing intact. Added ready-proof browser regression at390/768/1280.
+- Preserve explicit Owner Desk links when an account also has ready website proofs; keep proof-specific links and default proof routing intact. Added ready-proof browser regression at 390/768/1280.
 - Integrated reviewed Owner Desk source into main under explicit deployment authorization; production proof is recorded separately in `docs/plans/OWNER_DESK_PRODUCTION_RELEASE_2026-09-14.md`.
 - Corrected Ruby Signal presentation mapping to the existing generated production site key, retaining tenant-independent reusable source and adding two focused tests.
 

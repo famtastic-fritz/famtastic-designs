@@ -1,0 +1,23 @@
+{
+  "schema": "famtastic.anderlye-showcase-release.v1",
+  "source_sha": "b033218dda39aaf1afe106001bf096350d1aa245",
+  "public_root": "/home/xrdj7j99xhzt/public_html/work/anderlye",
+  "files": {
+    "assets/hero-steel-mobile.webp": "a0579e551f560e12f5df4720b148727c367ee54f38d58af553ceaf1ede72fc3c",
+    "assets/hero-steel.webp": "1e6241081f742827f8ebf287b6387bf80332529eb9825e4063c29427369720f3",
+    "index.html": "ceca45418886489ffcd9614a58545fd88df12e2d0c93bbd6a5eb8a5fc6149d1b",
+    "style.css": "79fc73f11cdf2ce43c04405391342788e9d34ad77322047062fc5d4d1ae6a62b"
+  },
+  "status": "published_verified",
+  "prepared_at": "2026-09-21T05:33:53+00:00",
+  "promoted_at": "2026-09-21T05:33:53+00:00",
+  "verified_at": "2026-09-21T05:34:01.239Z",
+  "existing_homepage_sha256": {
+    "https://famtasticdesigns.com": "8dd7c542d9f20e7a4687a4a240b18146d985ca44bb59c196a3dfd8153a264ff9",
+    "https://www.famtasticdesigns.com": "8dd7c542d9f20e7a4687a4a240b18146d985ca44bb59c196a3dfd8153a264ff9"
+  },
+  "existing_frontend_release_sha256": "c2fed78c7f177b1e9d436b20242577b7cb880e3a971525c719459c163d6e3c09",
+  "existing_assets_sha256": "fe9e9343cfa3decf39edf5b2214bf7868511e49c7a9cbc7b9b1e59af7089f207",
+  "browser_acceptance": "pending",
+  "cms_entry_created": false
+}

@@ -1,0 +1,93 @@
+{
+  "schema": "famtastic.anderlye-showcase-browser.v1",
+  "compiled_at": "2026-09-21T05:38:47.306147+00:00",
+  "source_sha": "b033218dda39aaf1afe106001bf096350d1aa245",
+  "tool": "CUA Chrome extension",
+  "tab_id": "1257282674",
+  "status": "passed_with_disclosed_limits",
+  "desktop": {
+    "url": "https://famtasticdesigns.com/work/anderlye/",
+    "inner_width": 1920,
+    "document_client_width": 1905,
+    "document_scroll_width": 1905,
+    "h1_count": 1,
+    "canonical": "https://famtasticdesigns.com/work/anderlye/",
+    "authored_scripts": 0,
+    "loaded_creator_logo_width": 180,
+    "screenshot_review": "passed"
+  },
+  "mobile": {
+    "url": "https://famtasticdesigns.com/work/anderlye/",
+    "inner_width": 390,
+    "document_client_width": 375,
+    "document_scroll_width": 375,
+    "minimum_visible_link_target_px": [
+      44,
+      44
+    ],
+    "page_background": "rgb(7, 9, 7)",
+    "creator_credit_background": "rgb(7, 9, 7)",
+    "screenshot_review": "passed"
+  },
+  "www_footer": {
+    "url": "https://www.famtasticdesigns.com/work/anderlye/",
+    "inner_width": 390,
+    "document_client_width": 375,
+    "document_scroll_width": 375,
+    "scroll_y": 3699,
+    "loaded_creator_logo_width": 180,
+    "screenshot_review": "passed: continuous dark background, no contrasting plate"
+  },
+  "actual_link_navigation": [
+    {
+      "from": "https://famtasticdesigns.com/work/anderlye/",
+      "action": "Clicked Explore the website",
+      "arrived_at": "https://anderlyepl.famtasticinc.com/?utm_source=famtastic-designs&utm_medium=portfolio&utm_campaign=anderlye-showcase",
+      "title": "Freight. Handled. | Anderlye Pro Logistics",
+      "header_navigation": [
+        "Home",
+        "Services",
+        "Industries",
+        "About",
+        "Carriers",
+        "Contact",
+        "Request a quote"
+      ]
+    },
+    {
+      "from": "https://www.famtasticdesigns.com/work/anderlye/",
+      "action": "Clicked Anderlye's digital card",
+      "arrived_at": "https://anderlyepl.famtasticinc.com/connect?utm_source=famtastic-designs&utm_medium=portfolio&utm_campaign=anderlye-card",
+      "title": "Connect with Corey Watkins | Anderlye Pro Logistics",
+      "observed": [
+        "Save Corey to your contacts",
+        "tel:+12055851255",
+        "mailto:corey.watkins@anderlyepl.com",
+        "QR code for digital card",
+        "Share this card"
+      ]
+    },
+    {
+      "from": "https://www.famtasticdesigns.com/work/anderlye/",
+      "action": "Clicked Meet FAMtastic. Save our card.",
+      "arrived_at": "https://www.famtasticdesigns.com/connect/?utm_source=anderlye-case&utm_medium=portfolio&utm_campaign=famtastic-connect",
+      "title": "FAMtastic Designs \u00b7 Let's connect",
+      "observed": [
+        "Save Fritz's contact",
+        "Add to Home Screen"
+      ]
+    }
+  ],
+  "screenshots": "Native live screenshots retained in the task CUA tool transcript; no exported screenshot files claimed.",
+  "limits": [
+    "No physical device, Safari or Firefox testing",
+    "No search-indexing, performance or business-result claim",
+    "No saved-contact installation or call/email action performed",
+    "Local browser earlier logged generic asynchronous extension-listener errors; no clean-console claim",
+    "No analytics receipt is claimed from passive UTM navigation"
+  ],
+  "customer_application_release": "9bee6867340826cf3615331668c795c45dd01b4d (parent operator finalized; new navigation independently observed)",
+  "customer_private_workflow": "Separate root operator lifecycle evidence",
+  "cms_entry_created": false,
+  "email_sent_by_this_subtask": false
+}

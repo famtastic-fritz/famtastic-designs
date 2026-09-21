@@ -11,6 +11,12 @@ For this expressly scoped agency showcase, a disk-space failure prompted a
 four-file expected-absent release; keep exact hashes, no-clobber promotion and
 separate receipts instead of altering the shared frontend or its release marker.
 
+Live receipt: the exact four-file publication at `b033218d` preserved agency
+homepage, asset and release-marker hashes. Browser navigation and a matching
+HTTP hash are separate checks; both passed. Keep the source SHA in later
+evidence-only commits, and do not rerun the expected-absent publisher merely to
+record documentation. See `docs/plans/ANDERLYE_SHOWCASE_2026-09-21.md`.
+
 ## 2026-09-19 — Recover the owner-selected icon family
 
 The owner pointed to prior logo work and selected the existing FAM plus crown avatar. Search session content and retained exported artwork before substituting another brand derivative. Keep the approved master, record the scoped app-icon selection, measure the final mask-safe crop and version all consumers without changing manifest identity. See `docs/plans/CONNECT_FAM_CROWN_2026-09-19.md`.
