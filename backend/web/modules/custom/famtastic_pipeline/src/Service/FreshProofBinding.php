@@ -15,6 +15,18 @@ final class FreshProofBinding {
     return $query->execute()->fetchAssoc();
   }
 
+  /** Stored identity survives flag changes, input edits and malformed evidence. */
+  public static function isManaged(Connection $db, array $request): bool {
+    $query = $db->select('famtastic_event', 'e');
+    $scope = $query->orConditionGroup()->condition('event_key', self::key((int) $request['id']));
+    if (!empty($request['proof_campaign_id'])) {
+      $marker = $query->orConditionGroup()->condition('event_type', self::EVENT)
+        ->condition('event_key', $db->escapeLike('proof-admission:request:') . '%', 'LIKE');
+      $scope->condition($query->andConditionGroup()->condition('campaign_id', (int) $request['proof_campaign_id'])->condition($marker));
+    }
+    return (bool) $query->fields('e', ['id'])->condition($scope)->range(0, 1)->forUpdate()->execute()->fetchField();
+  }
+
   public static function assertGenericImportAllowed(Connection $db, int $campaignId): void {
     // An invalid marker must also deny: no parsing failure can reopen a bypass.
     $requests = $db->select('famtastic_project_request', 'r')->fields('r', ['id'])->condition('proof_campaign_id', $campaignId)->execute()->fetchCol();

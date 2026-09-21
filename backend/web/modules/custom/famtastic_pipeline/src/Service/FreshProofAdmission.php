@@ -34,14 +34,10 @@ final class FreshProofAdmission {
     $prior = FreshProofBinding::event($this->database, $requestId, TRUE);
     if ($prior) {
       $record = FreshProofBinding::read($this->database, $prior, $row);
-      $b = $record['binding']; $p = $record['payload'];
+      $b = $record['binding'];
       if (($b['freshness'] ?? NULL) !== $freshness || ($b['request_snapshot'] ?? NULL) !== FreshProofInput::request($row, $freshness)
         || ($b['asset_snapshot'] ?? NULL) !== $assets) throw new \RuntimeException('Existing proof admission differs from current input.');
-      WorkerCapabilityPolicy::assertProof($record['job'], $reservation, [$this->reviewedPolicy['cost_policy']['id'] => $this->reviewedPolicy]);
-      $campaign = $this->locked('proof_campaign', 'id', (int) $row['proof_campaign_id']);
-      if (!$campaign || $campaign['campaign_id'] !== $p['campaign_id'] || $campaign['studio_job_id'] !== $p['studio_job_id']
-        || (int) $campaign['prospect_id'] !== (int) $row['prospect_id']) throw new \RuntimeException('Existing proof campaign differs.');
-      return (int) $record['job']['id'];
+      return $this->reuse($requestId);
     }
     $this->assertNoHistory($row);
     $now = $this->time->getCurrentTime();
@@ -91,6 +87,26 @@ final class FreshProofAdmission {
       'occurred_at' => $now, 'recorded_at' => $now,
     ])->execute();
     return $jobId;
+  }
+
+  /** Exact managed retry only, even when fresh admission has since been disabled. */
+  public function reuse(int $requestId): int {
+    if (!$this->database->inTransaction()) throw new \RuntimeException('Managed proof reuse requires an outer request transaction.');
+    $row = $this->locked('famtastic_project_request', 'id', $requestId);
+    $event = FreshProofBinding::event($this->database, $requestId, TRUE);
+    if (!$row || !$event) throw new \RuntimeException('Managed proof admission evidence is missing; replacement requires reconciliation.');
+    $this->assertAccount($row);
+    $assets = FreshProofInput::assets($this->database, $row);
+    $record = FreshProofBinding::read($this->database, $event, $row);
+    if ($record['binding']['asset_snapshot'] !== $assets) throw new \RuntimeException('Existing proof admission differs from current input; replacement policy is required.');
+    $reservation = $this->reviewedPolicy['cost_policy']['reservation_cents'] ?? NULL;
+    if (!is_int($reservation)) throw new \RuntimeException('No reviewed creative cost policy is installed.');
+    WorkerCapabilityPolicy::assertProof($record['job'], $reservation, [$this->reviewedPolicy['cost_policy']['id'] => $this->reviewedPolicy]);
+    $p = $record['payload'];
+    $campaign = $this->locked('proof_campaign', 'id', (int) $row['proof_campaign_id']);
+    if (!$campaign || $campaign['campaign_id'] !== $p['campaign_id'] || $campaign['studio_job_id'] !== $p['studio_job_id']
+      || (int) $campaign['prospect_id'] !== (int) $row['prospect_id']) throw new \RuntimeException('Existing proof campaign differs.');
+    return (int) $record['job']['id'];
   }
 
   private function locked(string $table, string $field, int $id): array|false {

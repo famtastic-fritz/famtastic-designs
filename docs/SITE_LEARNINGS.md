@@ -1,5 +1,20 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Admission identity outlives its feature flag
+
+Observation: a fresh-only hook did not constrain later manual resend. Editing a
+managed brief then resending allocated a new legacy job outside shared claims,
+including after disabling admission. Deep-dive normalization and revision reset
+also mutate records before reaching the common helper.
+
+Guidance: lock the request and consult durable admission markers before ANY queue
+fallback. Reuse only exact current binding/account/rights, never silently enroll a
+replacement. Reject managed revisions before expiring prior campaigns and reuse
+managed deep-dive records before normalization. Keep malformed evidence closed.
+Test real public service callers, changed input and both flag states. Put test
+failure assertions outside expected-exception catches. The 224-test synthetic
+receipt and four original-source failures are in the fresh-proof contract.
+
 ## 2026-09-21 - Freshness, immutable binding and import closure
 
 Observation: the proof queue helper also serves login repair, resend and revisions;

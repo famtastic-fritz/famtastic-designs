@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Managed resend isolation (synthetic local source only)
+
+Persisted managed identity now prevents manual resend, deep-dive repair or revision
+from falling into legacy execution. Exact live-authority retries reuse the existing
+job even when admission is disabled. 224 focused PHP tests / 1,170 assertions pass;
+four regressions fail against original abfd3fed source as expected. No capability
+is promoted to provider-, cloud- or production-proven. Import and activation stay
+closed. Exact receipt: `contracts/FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md`.
+
 ## 2026-09-21 - Fresh portal proof admission (synthetic local source only)
 
 Default-off create/draft-submit hooks atomically bind request, inert campaign,

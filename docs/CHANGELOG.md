@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-21 - Preserve managed proof isolation on resend (source only)
+
+- Check durable admission identity before every queue fallback, even with the
+  flag off; exact retries revalidate account/input/rights and reuse the same job.
+- Reject managed replacement rounds before campaign/reset writes; protect managed
+  deep-dive resume from intake normalization. Preserve unmanaged legacy behavior.
+- 224 focused PHP tests / 1,170 assertions pass; original-source four-case failures
+  and exact commands are retained in the fresh-proof admission/import contract.
+  No importer, provider, production cost catalog or activation was added.
+
 ## 2026-09-21 - Atomic fresh proof admission (source only, OFF)
 
 - Add reviewed-policy-only admission for new portal submissions and exact draft

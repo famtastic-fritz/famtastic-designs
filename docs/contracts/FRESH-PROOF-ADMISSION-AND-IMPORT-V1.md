@@ -6,13 +6,96 @@ It extends the established Mac creative process; it does not substitute static
 packaging or the fictional six-direction benchmark for customer proof creation.
 Read SHARED-PROOF-CLAIMS-V1.md and MAC-CREATIVE-WORKER-V1.md together.
 
+## Managed resend isolation repair (source only)
+
+Independent review found an admission escape in `abfd3fed`: admit a new request,
+edit its submitted brief, then call the authenticated manual resend service.
+Without fresh writer intent the queue helper created a second legacy queued
+`proof.generate` job with max_attempts=5, outside the existing shared claim.
+Disabling the admission flag did not prevent this escape.
+
+The helper now owns a request-locking transaction and checks stored managed
+identity BEFORE either fresh admission or any legacy fallback. The immutable
+request admission key or bound campaign admission marker establishes identity,
+not the flag, body, job prefix or successful evidence parsing. Malformed markers,
+cleared campaign bindings and missing admission service/policy cannot reopen
+legacy execution. Unchanged managed resend validates exact event/job/claim bytes,
+current request, locked account/membership/prospect ownership and actual asset
+rights rows, reviewed policy and campaign identity, then returns the original
+job. It never reenrolls, resets attempts, reserves money or queues a new notice.
+Changed input remains saved but resending fails closed pending replacement policy.
+
+Existing-request deep-dive resume uses the same exact managed reuse before any
+intake normalization. Its transaction also prevents a failed repair from leaving
+partial writes. This is NOT new deep-dive enrollment. Managed revision rebuild
+rejects under the request lock BEFORE expiring the old campaign, clearing its
+binding or recording a replacement. Unmanaged legacy resend, deep-dive submission
+and revision retain their prior queue behavior. Other new-request callers are
+still ineligible for fresh enrollment; no new round is inferred from a helper call.
+
+Final focused receipt: 224 PHP tests / 1,170 assertions pass, including 87 admission
+tests / 506 assertions (44 added cases). Two pre-existing PHPUnit doc-comment
+deprecations: VerifiedColdGenericLocalImportGuardTest and DeepDiveProofHandoffContractTest.
+The rejection helper now fails outside its exception catch, so PHPUnit assertion
+failures cannot masquerade as expected service exceptions. Four PHP syntax checks
+and git whitespace checks pass. PHP 8.5.9 / PHPUnit 11.5.56, 26 MiB peak.
+Disk remained above 200 MiB (roughly 889 MiB initially); no cleanup or install.
+These use in-memory SQLite, real service writers and entity/lock doubles, NOT
+installed-kernel, HTTP-authentication, MySQL concurrency or provider proof.
+No authoritative DB, network, production, customer send, cloud or activation.
+
+Run from this checkout with the existing matching Composer dependency runtime:
+
+```sh
+test "$(df -k . | awk 'NR==2 {print $4}')" -ge 204800 && \
+FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor \
+sandbox-exec -p '(version 1)(allow default)(deny network*)' \
+php /Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor/phpunit/phpunit/phpunit \
+  --bootstrap scripts/automation-test-bootstrap.php --no-configuration --do-not-cache-result --display-phpunit-deprecations \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/FreshProofAdmissionTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/WebsiteRequestProofHandoffTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/WebsiteRequestAuditPreservationTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ProofAttachmentReplayTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/SharedProofWorkerClaimsTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/FreshSelectedJobAdmissionTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/VerifiedColdGenericLocalImportGuardTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/WorkerCoordinatorTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/WorkerCoordinatorControllerTest.php \
+  backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/DeepDiveProofHandoffContractTest.php
+```
+
+Retained red evidence: loading ONLY the three original service classes through
+`git show abfd3fed` in memory, without replacing any file, produces four failures:
+`on-edited-pending`, `on-edited-leased`, `off-edited-pending`, `off-edited-leased`.
+An initial row-comparison run exposed the extra legacy job; after strengthening
+the rejection helper the same four cases fail with `Expected rejection: differs
+from current input` (4 tests / 4 assertions / 4 failures). Reproducer:
+
+```sh
+test "$(df -k . | awk 'NR==2 {print $4}')" -ge 204800 && \
+FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor \
+sandbox-exec -p '(version 1)(allow default)(deny network*)' php -r '
+require "scripts/automation-test-bootstrap.php";
+foreach (["CustomerPortalService", "FreshProofAdmission", "FreshProofBinding"] as $class) {
+  $source = shell_exec("git show abfd3fed:backend/web/modules/custom/famtastic_pipeline/src/Service/" . $class . ".php");
+  eval("?>" . $source);
+}
+exit((new \PHPUnit\TextUI\Application())->run(["phpunit", "--no-configuration", "--do-not-cache-result", "--filter", "testPublicManualResendCannotEscapeManagedClaim.*edited", "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/FreshProofAdmissionTest.php"]));'
+```
+
+The importer mapping remains read-only follow-up, not implementation. Default-OFF,
+empty production cost catalogs, closed proof finish/generic import and independent
+QA/notice boundaries remain unchanged. Portal-DNA/browser checks, remote fetch and
+Drive mirror remain deferred to parent integration; no frontend changed here.
+
 ## Implemented admission checkpoint (source only)
 
 `FreshProofAdmission` is wired into `CustomerPortalService` for exactly two
 trusted writer events: newly submitted `createWebsiteRequest`, and locked
 `updateWebsiteRequest` when the prior status is exactly `draft`. The private
 queue helper receives writer-created source/prior-status/customer intent, never
-body authority. Other callers remain legacy and are not admitted by this switch.
+body authority. Other callers cannot newly enroll; existing managed requests obey
+the stored-identity reuse guard above, while unmanaged callers remain legacy.
 Freshness is recorded and hashed in the immutable request snapshot.
 
 Settings `famtastic_fresh_proof_admission_enabled` must be boolean TRUE, and

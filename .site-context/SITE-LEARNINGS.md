@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Managed queue identity cannot revert to legacy
+
+Observation: edited managed requests could create a legacy job through manual
+resend because fresh intent and a flag were the only router. Guidance: use stored
+admission identity under the request lock before fallback, revalidate live account
+and asset rights for exact reuse, and reject replacements before mutations. This
+also protects deep-dive resume; unmanaged behavior is retained. 224 focused PHP
+tests / 1,170 assertions pass; four cases reproduce the original escape. Source
+only, no provider/import/activation. Drive mirror remains parent-deferred.
+
 ## 2026-09-21 - Fresh proof admission is not completed proof generation
 
 Observation: enqueue callers include historical repairs, asset withdrawal is not

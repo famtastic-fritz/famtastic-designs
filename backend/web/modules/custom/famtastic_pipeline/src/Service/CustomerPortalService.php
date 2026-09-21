@@ -511,10 +511,27 @@ final class CustomerPortalService {
 
   /** Idempotently repairs or resumes a request already linked to a deep dive. */
   private function submitClaimedDeepDiveRequest(int $customerId, int $requestId): ?int {
+    $transaction = $this->database->startTransaction();
+    try {
+      $result = $this->writeClaimedDeepDiveRequest($customerId, $requestId);
+      unset($transaction);
+      return $result;
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+  }
+
+  private function writeClaimedDeepDiveRequest(int $customerId, int $requestId): ?int {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
-      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+      ->condition('id', $requestId)->range(0, 1)->forUpdate()->execute()->fetchAssoc();
     if (!$row || (int) $row['customer_id'] !== $customerId || !$this->isMember($customerId, (int) $row['organization_id'])) {
       throw new \RuntimeException('The completed interview is linked to a different customer request.');
+    }
+    if (FreshProofBinding::isManaged($this->database, $row)) {
+      $this->queueWebsiteRequestProofJob($requestId, (int) $row['prospect_id'], (string) $row['public_id'], json_decode($row['intake_data'], TRUE, flags: JSON_THROW_ON_ERROR));
+      return $requestId;
     }
     if (!in_array((string) $row['status'], ['draft', 'submitted'], TRUE)) {
       return $requestId;
@@ -1539,6 +1556,31 @@ final class CustomerPortalService {
 
   /** Enqueues the canonical pre-purchase proof routine exactly once. */
   private function queueWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake, ?array $freshness = NULL): int {
+    $transaction = $this->database->startTransaction();
+    try {
+      // Serialize with admission before any legacy fallback, regardless of flag
+      // or caller freshness. A changed brief never creates a new managed round.
+      $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->forUpdate()->execute()->fetchAssoc();
+      if (!$row) throw new \RuntimeException('Website request not found.');
+      if (FreshProofBinding::isManaged($this->database, $row)) {
+        if ((int) $row['prospect_id'] !== $prospectId || $row['public_id'] !== $publicId || $row['intake_data'] !== FreshProofInput::wire($intake)) throw new \RuntimeException('Managed proof queue input differs from the current request.');
+        if (!$this->freshProofAdmission) throw new \RuntimeException('Managed proof admission service is not installed.');
+        $jobId = $this->freshProofAdmission->reuse($requestId);
+      }
+      else {
+        $jobId = $this->queueUnmanagedWebsiteRequestProofJob($requestId, $prospectId, $publicId, $intake, $freshness);
+      }
+      unset($transaction);
+      return $jobId;
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+  }
+
+  /** Caller holds the request lock and has excluded durable managed identity. */
+  private function queueUnmanagedWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake, ?array $freshness): int {
     if ($freshness !== NULL && FreshProofAdmission::enabled()) {
       if (!$this->freshProofAdmission) throw new \RuntimeException('Fresh proof admission service is not installed.');
       return $this->freshProofAdmission->admit($requestId, $freshness['customer_id'], $freshness['source'], $freshness['prior_status']);
@@ -2122,8 +2164,22 @@ final class CustomerPortalService {
    * does not send mail, charge, register a domain, or release a proof.
    */
   public function prepareWebsiteRequestRevisionRebuild(int $requestId, int $uid, string $reason): array {
+    $transaction = $this->database->startTransaction();
+    try {
+      $result = $this->writeWebsiteRequestRevisionRebuild($requestId, $uid, $reason);
+      unset($transaction);
+      return $result;
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+  }
+
+  private function writeWebsiteRequestRevisionRebuild(int $requestId, int $uid, string $reason): array {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
-      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+      ->condition('id', $requestId)->range(0, 1)->forUpdate()->execute()->fetchAssoc();
+    if ($row && FreshProofBinding::isManaged($this->database, $row)) throw new \RuntimeException('Managed proof replacement requires a separate reviewed replacement policy.');
     if (!$row || (string) $row['proof_review_status'] !== 'revision_requested' || !empty($row['commerce_order_id'])) {
       throw new \RuntimeException('Only a pre-purchase website proof revision can be rebuilt.');
     }
@@ -2134,7 +2190,6 @@ final class CustomerPortalService {
     // The rejected campaign, request reset, and replacement job are one
     // durable transition. A production schema failure must not strand the
     // customer with an expired proof set and no replacement queued.
-    $transaction = $this->database->startTransaction();
     $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE) ?: [];
     $now = $this->time->getRequestTime();
     $oldCampaignId = (int) ($row['proof_campaign_id'] ?? 0);

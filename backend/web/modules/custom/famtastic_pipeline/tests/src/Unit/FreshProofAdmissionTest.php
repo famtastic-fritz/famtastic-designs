@@ -67,7 +67,7 @@ final class FreshProofAdmissionTest extends UnitTestCase {
   private function uuid(): string { return '00000000-0000-0000-0000-' . str_pad((string) ++$this->uuidCounter, 12, '0', STR_PAD_LEFT); }
   private function enable(): void { new Settings(['famtastic_fresh_proof_admission_enabled' => TRUE]); }
 
-  private function install(bool $admissionPolicy = TRUE, bool $coordinatorPolicy = TRUE): void {
+  private function install(bool $admissionPolicy = TRUE, bool $coordinatorPolicy = TRUE, bool $admissionInstalled = TRUE): void {
     $lock = $this->createMock(LockBackendInterface::class);
     $lock->method('acquire')->willReturnCallback(function () {
       if ($this->interleave) { $c = $this->interleave; $this->interleave = NULL; $c(); }
@@ -82,7 +82,7 @@ final class FreshProofAdmissionTest extends UnitTestCase {
     $packets = (new \ReflectionClass(SiteStudioBuildPacketService::class))->newInstanceWithoutConstructor();
     $this->portal = new CustomerPortalService($this->db, $this->entities, $this->clock, $uuid,
       $this->getConfigFactoryStub(['famtastic_pipeline.settings' => ['frontend_base_url' => 'https://example.test', 'notification_to_email' => 'operator@example.test']]),
-      new OperationalLedger($this->db, $this->clock, $this->coordinator), $packets, new AttributionService($this->db, $this->clock), $preview, NULL, $this->admission);
+      new OperationalLedger($this->db, $this->clock, $this->coordinator), $packets, new AttributionService($this->db, $this->clock), $preview, NULL, $admissionInstalled ? $this->admission : NULL);
   }
 
   private function entity(string $type, array $values): object {
@@ -113,8 +113,9 @@ final class FreshProofAdmissionTest extends UnitTestCase {
   }
   private function repeat(string $source = 'portal.create', ?string $prior = NULL): int { return $this->transaction(fn() => $this->admission->admit(1, 1, $source, $prior)); }
   private function reject(callable $operation, string $message): void {
-    try { $operation(); self::fail('Expected rejection: ' . $message); }
-    catch (\RuntimeException|\InvalidArgumentException $e) { self::assertStringContainsString($message, $e->getMessage()); }
+    try { $operation(); }
+    catch (\RuntimeException|\InvalidArgumentException $e) { self::assertStringContainsString($message, $e->getMessage()); return; }
+    self::fail('Expected rejection: ' . $message);
   }
   private function asset(array $override = []): void {
     $this->db->insert('famtastic_request_asset')->fields($override + ['public_id' => $this->uuid(), 'website_request_id' => 1, 'customer_id' => 1, 'file_id' => 7,
@@ -370,5 +371,191 @@ final class FreshProofAdmissionTest extends UnitTestCase {
     self::assertSame('queued', $this->row('famtastic_job')['status']);
     self::assertSame(0, $this->campaignCreates);
     self::assertSame(0, $this->tableCount('famtastic_worker_claim'));
+  }
+
+  /** Full rows, including frozen bytes, attempts, holds and outbox dedupe keys. */
+  private function proofRecords(): array {
+    $records = [];
+    foreach (['famtastic_project_request', 'proof_campaign', 'famtastic_job', 'famtastic_worker_claim', 'famtastic_worker_budget', 'famtastic_event', 'famtastic_notification_outbox'] as $table) {
+      $key = match ($table) { 'famtastic_worker_claim' => 'job_id', 'famtastic_worker_budget' => 'reservation_key', default => 'id' };
+      $records[$table] = $this->db->select($table, 't')->fields('t')->orderBy($key)->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    }
+    return $records;
+  }
+
+  #[DataProvider('resendCases')]
+  public function testPublicManualResendCannotEscapeManagedClaim(bool $enabled, bool $changed, bool $claimed): void {
+    $this->enable(); $request = $this->create();
+    if ($claimed) $this->coordinator->claim('synthetic-mac', [WorkerCapabilityPolicy::PROOF]);
+    new Settings(['famtastic_fresh_proof_admission_enabled' => $enabled]);
+    if ($changed) $this->portal->updateWebsiteRequest(1, $request['public_id'], ['primary_goal' => 'Changed submitted brief'] + $this->input());
+    $before = $this->proofRecords();
+    for ($i = 0; $i < 2; $i++) {
+      if ($changed) $this->reject(fn() => $this->portal->sendWebsiteRequestToSiteStudio(1, $request['public_id']), 'differs from current input');
+      else {
+        $result = $this->portal->sendWebsiteRequestToSiteStudio(1, $request['public_id']);
+        self::assertSame($claimed ? 'preparing' : 'queued', $result['proof_handoff']['state']);
+        self::assertSame(1, $result['proof_handoff']['job_id']);
+      }
+      self::assertSame($before, $this->proofRecords());
+    }
+    self::assertSame(1, $this->campaignCreates);
+    self::assertFalse($this->db->inTransaction());
+  }
+  public static function resendCases(): iterable {
+    foreach ([TRUE, FALSE] as $enabled) foreach ([FALSE, TRUE] as $changed) foreach ([FALSE, TRUE] as $claimed) {
+      yield ($enabled ? 'on' : 'off') . '-' . ($changed ? 'edited' : 'same') . '-' . ($claimed ? 'leased' : 'pending') => [$enabled, $changed, $claimed];
+    }
+  }
+
+  #[DataProvider('resendAuthority')]
+  public function testManagedManualResendRechecksLiveAccountAndRights(bool $enabled, string $table, array $change, string $message): void {
+    $draft = $this->create('save'); $this->asset(); $this->enable();
+    $this->portal->updateWebsiteRequest(1, $draft['public_id'], $this->input());
+    new Settings(['famtastic_fresh_proof_admission_enabled' => $enabled]);
+    $this->db->update($table)->fields($change)->condition('id', $table === 'famtastic_organization' ? 2 : 1)->execute();
+    $before = $this->proofRecords();
+    $this->reject(fn() => $this->portal->sendWebsiteRequestToSiteStudio(1, $draft['public_id']), $message);
+    self::assertSame($before, $this->proofRecords());
+    self::assertSame(1, $this->campaignCreates);
+    self::assertFalse($this->db->inTransaction());
+  }
+  public static function resendAuthority(): iterable {
+    foreach ([TRUE, FALSE] as $enabled) foreach ([
+      'unverified' => ['famtastic_customer', ['verified_at' => NULL], 'Verified account'],
+      'inactive member' => ['famtastic_membership', ['status' => 'inactive'], 'not found'],
+      'inactive org' => ['famtastic_organization', ['status' => 'inactive'], 'Verified account'],
+      'foreign resource' => ['famtastic_customer_resource', ['organization_id' => 3], 'Verified account'],
+      'foreign asset' => ['famtastic_request_asset', ['customer_id' => 3], 'asset ownership'],
+      'rights revoked' => ['famtastic_request_asset', ['ownership_confirmed' => 0], 'asset integrity'],
+      'withdrawn' => ['famtastic_request_asset', ['status' => 'withdrawn'], 'differs from current input'],
+      'consent changed' => ['famtastic_request_asset', ['ai_transformation_consent' => 1], 'differs from current input'],
+    ] as $case => $values) yield ($enabled ? 'on-' : 'off-') . $case => [$enabled, ...$values];
+  }
+
+  #[DataProvider('corruptions')]
+  public function testMalformedManagedResendCannotFallBackWhenDisabled(string $corruption): void {
+    $this->enable(); $request = $this->create(); new Settings([]);
+    $event = FreshProofBinding::event($this->db, 1);
+    if ($corruption === 'event_bytes') $this->db->update('famtastic_event')->fields(['payload' => '{broken'])->condition('id', $event['id'])->execute();
+    if ($corruption === 'job_bytes') $this->db->update('famtastic_job')->fields(['payload' => $this->row('famtastic_job')['payload'] . ' '])->condition('id', 1)->execute();
+    if ($corruption === 'event_campaign') $this->db->update('famtastic_event')->fields(['event_key' => 'damaged-key'])->condition('id', $event['id'])->execute();
+    if ($corruption === 'claim_hash') $this->db->update('famtastic_worker_claim')->fields(['payload_sha256' => str_repeat('f', 64)])->condition('job_id', 1)->execute();
+    if ($corruption === 'request_scope') $this->db->update('famtastic_project_request')->fields(['proof_campaign_id' => NULL])->condition('id', 1)->execute();
+    if ($corruption === 'campaign_job') $this->db->update('proof_campaign')->fields(['studio_job_id' => 'foreign'])->condition('id', 1)->execute();
+    $before = $this->proofRecords();
+    $rejected = FALSE;
+    try { $this->portal->sendWebsiteRequestToSiteStudio(1, $request['public_id']); }
+    catch (\RuntimeException|\InvalidArgumentException|\JsonException) { $rejected = TRUE; }
+    self::assertTrue($rejected, 'Corrupt binding must reject');
+    self::assertSame($before, $this->proofRecords());
+    self::assertFalse($this->db->inTransaction());
+  }
+
+  #[DataProvider('flags')]
+  public function testManagedRevisionRejectsBeforeExpiringOrResettingAnything(bool $enabled): void {
+    $this->enable(); $this->create(); new Settings(['famtastic_fresh_proof_admission_enabled' => $enabled]);
+    $this->db->update('famtastic_project_request')->fields(['proof_review_status' => 'revision_requested'])->condition('id', 1)->execute();
+    $before = $this->proofRecords(); $activities = $this->tableCount('famtastic_portal_activity');
+    $this->reject(fn() => $this->portal->prepareWebsiteRequestRevisionRebuild(1, 9, 'Synthetic replacement request'), 'replacement policy');
+    self::assertSame($before, $this->proofRecords());
+    self::assertSame('active', $this->entityObjects['proof_campaign'][1]->get('status')->value);
+    self::assertSame($activities, $this->tableCount('famtastic_portal_activity'));
+    self::assertFalse($this->db->inTransaction());
+  }
+  public static function flags(): iterable { yield 'on' => [TRUE]; yield 'off' => [FALSE]; }
+
+  #[DataProvider('flags')]
+  public function testUnmanagedResendPreservesLegacyBriefDeduplication(bool $enabled): void {
+    $request = $this->create(); new Settings(['famtastic_fresh_proof_admission_enabled' => $enabled]);
+    $before = $this->proofRecords();
+    $this->portal->sendWebsiteRequestToSiteStudio(1, $request['public_id']);
+    self::assertSame($before, $this->proofRecords());
+    $this->portal->updateWebsiteRequest(1, $request['public_id'], ['primary_goal' => 'Changed legacy brief'] + $this->input());
+    $this->portal->sendWebsiteRequestToSiteStudio(1, $request['public_id']);
+    $this->portal->sendWebsiteRequestToSiteStudio(1, $request['public_id']);
+    self::assertSame(2, $this->tableCount('famtastic_job'));
+    self::assertSame('queued', $this->row('famtastic_job', 2)['status']);
+    self::assertSame(5, (int) $this->row('famtastic_job', 2)['max_attempts']);
+    self::assertSame(0, $this->tableCount('famtastic_worker_claim'));
+    self::assertSame(0, $this->campaignCreates);
+    self::assertSame($before['famtastic_notification_outbox'], $this->proofRecords()['famtastic_notification_outbox']);
+  }
+
+  public function testManagedReuseWithMissingInstalledPolicyNeverReopensLegacy(): void {
+    $this->enable(); $request = $this->create(); new Settings([]); $this->install(FALSE, FALSE);
+    $before = $this->proofRecords();
+    $this->reject(fn() => $this->portal->sendWebsiteRequestToSiteStudio(1, $request['public_id']), 'No reviewed creative cost policy');
+    self::assertSame($before, $this->proofRecords());
+  }
+
+  public function testMissingAdmissionServiceAndNewAssetCannotReopenLegacy(): void {
+    $this->enable(); $request = $this->create(); new Settings([]); $this->install(TRUE, TRUE, FALSE);
+    $before = $this->proofRecords();
+    $this->reject(fn() => $this->portal->sendWebsiteRequestToSiteStudio(1, $request['public_id']), 'service is not installed');
+    self::assertSame($before, $this->proofRecords());
+    $this->install(); $this->asset();
+    $this->reject(fn() => $this->portal->sendWebsiteRequestToSiteStudio(1, $request['public_id']), 'differs from current input');
+    self::assertSame($before, $this->proofRecords());
+  }
+
+  #[DataProvider('flags')]
+  public function testUnmanagedRevisionStillQueuesItsLegacyReplacement(bool $enabled): void {
+    $this->create();
+    $campaign = $this->entity('proof_campaign', ['campaign_id' => 'pc-legacy', 'prospect_id' => 1, 'status' => 'active', 'generation_status' => 'ready', 'expires_at' => $this->now + 3600]);
+    $campaign->save();
+    $this->db->update('famtastic_project_request')->fields(['proof_review_status' => 'revision_requested', 'proof_campaign_id' => 1])->condition('id', 1)->execute();
+    new Settings(['famtastic_fresh_proof_admission_enabled' => $enabled]);
+    $notices = $this->proofRecords()['famtastic_notification_outbox'];
+    $result = $this->portal->prepareWebsiteRequestRevisionRebuild(1, 9, 'Synthetic legacy replacement');
+    self::assertSame(2, $result['job_id']);
+    self::assertSame(1, $result['prior_campaign_id']);
+    self::assertSame('expired', $this->row('proof_campaign')['status']);
+    self::assertNull($this->row('famtastic_project_request')['proof_campaign_id']);
+    self::assertSame('queued', $this->row('famtastic_job', 2)['status']);
+    self::assertSame(5, (int) $this->row('famtastic_job', 2)['max_attempts']);
+    self::assertSame(0, $this->tableCount('famtastic_worker_claim'));
+    self::assertSame($notices, $this->proofRecords()['famtastic_notification_outbox']);
+    self::assertFalse($this->db->inTransaction());
+  }
+
+  #[DataProvider('flags')]
+  public function testNonFreshDeepDiveResumeCannotQueueAfterManagedBindingIsCleared(bool $enabled): void {
+    $this->enable(); $this->create();
+    new Settings(['famtastic_fresh_proof_admission_enabled' => $enabled]);
+    $this->db->update('famtastic_project_request')->fields(['proof_campaign_id' => NULL])->condition('id', 1)->execute();
+    $before = $this->proofRecords();
+    // The public deep-dive entry delegates to the actual existing-request helper.
+    $this->reject(fn() => $this->portal->createWebsiteRequestFromDeepDive(1, ['status' => 'claimed', 'website_request_id' => 1]), 'admission evidence changed');
+    self::assertSame($before, $this->proofRecords());
+    self::assertSame(1, $this->campaignCreates);
+  }
+
+  #[DataProvider('flags')]
+  public function testManagedDeepDiveResumeReusesWithoutNormalizingFrozenInput(bool $enabled): void {
+    $this->enable(); $request = $this->create(); new Settings(['famtastic_fresh_proof_admission_enabled' => $enabled]);
+    $before = $this->proofRecords();
+    self::assertSame(1, $this->portal->createWebsiteRequestFromDeepDive(1, ['status' => 'claimed', 'website_request_id' => 1]));
+    self::assertSame($before, $this->proofRecords());
+    $this->portal->updateWebsiteRequest(1, $request['public_id'], ['primary_goal' => 'Changed submitted brief'] + $this->input());
+    $before = $this->proofRecords();
+    $this->reject(fn() => $this->portal->createWebsiteRequestFromDeepDive(1, ['status' => 'claimed', 'website_request_id' => 1]), 'differs from current input');
+    self::assertSame($before, $this->proofRecords());
+    self::assertFalse($this->db->inTransaction());
+  }
+
+  #[DataProvider('flags')]
+  public function testUnmanagedDeepDiveStillSubmitsDraftAndReusesItsLegacyJob(bool $enabled): void {
+    $this->create('save'); new Settings(['famtastic_fresh_proof_admission_enabled' => $enabled]);
+    self::assertSame(1, $this->portal->createWebsiteRequestFromDeepDive(1, ['status' => 'claimed', 'website_request_id' => 1]));
+    $before = $this->proofRecords();
+    self::assertSame(1, $this->portal->createWebsiteRequestFromDeepDive(1, ['status' => 'claimed', 'website_request_id' => 1]));
+    self::assertSame($before, $this->proofRecords());
+    self::assertSame('submitted', $this->row('famtastic_project_request')['status']);
+    self::assertSame('queued', $this->row('famtastic_job')['status']);
+    self::assertSame(5, (int) $this->row('famtastic_job')['max_attempts']);
+    self::assertSame(0, $this->campaignCreates);
+    self::assertSame(0, $this->tableCount('famtastic_worker_claim'));
+    self::assertFalse($this->db->inTransaction());
   }
 }
