@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Combined closed journal / artifact verification
+
+Reviewed journal source69b834d2 passes 260 tests / 1,769 assertions, including
+cross-job unknown outcome, three-generation exhaustion and live-lease month
+rollover. Integration3325fd4e passes 791 tests / 4,804 assertions, same68 existing
+deprecations, no failed/skipped tests. Protected data unchanged. Provider/input
+verifiers remain unwired, generic managed imports closed and all activation off.
+This supersedes the journal follow-up's earlier unrun status below, not its gates.
+
 ## 2026-09-21 - Prepared proof content verification, not import authority
 
 Unregistered `verifyPrepared` reopens only server-resolved bundle IDs, verifies

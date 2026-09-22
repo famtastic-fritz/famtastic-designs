@@ -9,10 +9,11 @@ a retry or a presentation-validation gate. Existing attachment retries lock
 request before membership; competing first creation must release its root before
 switching to an existing request. Do not roll back a committed attachment when
 a post-transaction callback fails. Keep private readers and both DI registrations.
-The source-only real-DB contention candidate is documented in
+The frozen real-DB contention proof is documented in
 `docs/contracts/PRIVATE-REVIEW-MARIADB-PROOF-V1.md`. It reuses the exact owned
 worker DB with isolated fixture tables; preserve both lineage manifests and
-exact negative-control tags. No runtime or production capability is implied.
+exact negative-control tags. Seven current cases / 84 checks and all four exact
+negative controls are verified locally; this is not installed storage or delivery.
 
 ## September 21 - Paid-operation journal source only
 
@@ -20,8 +21,9 @@ Read `docs/contracts/PROOF-OPERATION-JOURNAL-V1.md` before connecting paid proof
 tools. The unregistered journal/catalog/verifiers default closed. Root-committed
 unknown state is not proof of submission or provider exactly-once behavior.
 Never retry an unresolved slot, refund unknown costs, store lease credentials,
-or interpret receipt metadata as proof import/QA authority. Parent's aad9 baseline
-passes 257/1,689; three follow-up cases remain unrun. Preserve the existing Mac
+or interpret receipt metadata as proof import/QA authority. Main verified the full
+journal slice: 260 tests / 1,769 assertions, including all three follow-up cases.
+This is synthetic SQLite evidence, not real provider/MariaDB journal proof. Preserve the existing Mac
 routine and parent-owned runtime/Drive slot. See the contract for exact evidence.
 
 ## September 21 - Additive execution, not a replacement Mac workflow

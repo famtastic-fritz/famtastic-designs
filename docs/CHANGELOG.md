@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-21 - Integrate and verify journal, artifact and database checkpoints
+
+- Combine reviewed journal and immutable prepared-bundle verification; full PHP
+  passes791/4,804, with unchanged existing deprecations and protected inventories.
+- Integrate private-review MariaDB harness; seven current cases/84checks and all
+  four exact old-source failures verified on frozen source; owned resources removed.
+- Preserve both documentation histories during docs-only integration conflicts.
+  No provider, production, customer message, migration or activation occurred.
+
 ## 2026-09-21 — Verify immutable prepared proof bytes without importing
 
 Add unregistered read-only bundle verification by server ID and manifest hash,

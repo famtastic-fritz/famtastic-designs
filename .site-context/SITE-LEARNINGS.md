@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Verification layers are not interchangeable
+
+Observation: journal260/1,769 and artifact139/562 focused counts overlap the
+combined PHP791/4,804 result; frozen review MariaDB7/84 proves another boundary.
+Guidance: retain exact source/receipt pairs and do not sum counts or reuse the
+review database result as paid-journal/provider evidence. Preserve reviewed
+root-worker ownership/source lineage when later schema changes are integrated.
+
 ## 2026-09-21 - Verify prepared content independently of its manifest
 
 A saved manifest hash alone does not prove every file still matches the callback.

@@ -2,6 +2,17 @@
 
 Status: local repairs and verification; no live activation.
 
+Latest integrated checkpoint `ee8f6d3871d122dada20a844a86f48113332221f` includes
+the reviewed default-closed paid journal, sealed prepared-bundle verifier and
+real private-review contention harness. Journal focused checks: 260/1,769;
+artifact focused checks: 139/562. Combined PHP at 3325fd4e: 791 tests / 4,804
+assertions, zero failed/skipped and the same 68 existing deprecations. These
+overlapping totals are not added. Frozen review source4998be27 passes seven real
+MariaDB cases / 84 checks; all four frozen controls fail exactly (22 checks).
+Its disposable resources/credentials are removed, evidence retained. The frozen
+harness is reproducible at b464c850, not by silently repinning newer journal
+schema into its owner lineage. All guarded receipts report protected data unchanged.
+
 The complete paired rerun now passes: Studio f527e8b plus fixture cleanup,
 Designs4998be27, 1,588 tests / 135 files, zero failed/skipped, both lints, both
 synthetic execution proofs, 291.94s suite/293.357s guarded. Receipt:
@@ -10,8 +21,8 @@ The predecessor was disk-guard interrupted; leaked batch/shadow test fixtures
 were fixed, and 13 exact interrupted-run roots were archived recoverably before
 removal. Details and SHA256 are in the paired Studio integration evidence.
 The later main f750a163 merge is delivery documentation only, not a runtime
-change. Paid-operation journal and private-review contention harness are separate
-unverified slices. No creative, import, delivery or cloud activation is claimed.
+change. The journal and private-review receipts above postdate that full paired
+run. No creative, import, delivery or cloud activation is claimed.
 
 Newer main 7227ceb6 private reviews are now reconciled locally, preserving both
 lifecycle boundaries and readers. Combined PHP 716/4,160, portal SSR 1/1 and
@@ -31,7 +42,7 @@ paid-operation recovery, authoritative import or full unattended journey gates.
 | Milestone | Implemented/verified locally | Still required |
 | --- | --- | --- |
 | 1. Phase 2 | Mac YAML, source/security repairs, executable entrypoints and filtered-container closure; synthetic verification | Safe provisioning implementation, Linux image/provenance and real concurrency/canary evidence; no activation |
-| 2. Existing Mac workflow | Default-off fresh admission, shared claims, managed retry isolation, real selected-static CLI | Existing creative-tool adapter, durable paid-operation recovery and fenced artifact import; no fresh creative trigger enabled |
+| 2. Existing Mac workflow | Default-off fresh admission, shared claims, managed retry isolation, real selected-static CLI; locally tested closed journal and artifact verification | Existing creative-tool adapter, trusted provider/input/receipt recovery, fenced artifact import; no fresh creative trigger enabled |
 | 3. Complete customer journey | Legacy controlled journey and actual selected-static continuation fixtures | New unattended fresh-artifact/QA/portal/captured-notice/selection/one-staging journey; no customer send or live site proof |
 | 4. Additive cloud | Shared Drupal capability/ownership protocol; isolated Phase 2 shadow source; existing project verified in Console | CLI authorization, safe provisioning, real shared-claim execution and laptop-unavailable proof |
 
@@ -40,7 +51,7 @@ and release gates, not new per-client owner approval requirements. GitHub's
 account billing lock remains a separate hosted-CI blocker. Source tests do not
 remove the ordinary client acceptance/settlement/final-launch boundary.
 
-## Latest integrated source checkpoint
+## Earlier source checkpoints (historical, superseded where noted above)
 
 The next local source repair serializes the existing customer reference writers
 before future creative-provider/import rights checks. Request-first locking,

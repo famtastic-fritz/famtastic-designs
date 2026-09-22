@@ -5,8 +5,8 @@
 Observation: an attempt-scoped call identity alone does not identify the same
 paid recipe step after worker replacement. Guidance: freeze one job/slot identity,
 record unknown before returning permission, retain cost holds and authenticate
-receipt recovery separately from the original producer. Parent reports aad9's
-real-SQLite baseline 257/1,689 PASS; three follow-up cases remain UNRUN. Actual
+receipt recovery separately from the original producer. Main verified69b834d2:
+260/1,769 including all three follow-up cases (synthetic SQLite). Actual
 three-generation recovery includes increasing backoff, not a fixed 31-second
 fixture wait. Late receipts must preserve exhausted attempts and original holds.
 No route/provider or activation exists; Drive/runtime remain parent-owned.
@@ -16,7 +16,8 @@ No route/provider or activation exists; Drive/runtime remain parent-owned.
 Compare B's own event/activity counts against its established snapshot before
 rollback, and require its uncommitted sentinel after both retry and refusal.
 Another connection seeing original state proves isolation, not preservation of
-the caller's work. These source-only harness assertions are not executed proof.
+the caller's work. These assertions now pass in the seven-case real MariaDB run;
+see PRIVATE-REVIEW-MARIADB-PROOF-V1.md for exact frozen-source limits.
 
 ## 2026-09-21 - Observe contention without manufacturing its outcome
 
@@ -25,7 +26,8 @@ observes the exact other InnoDB thread, and retains unchanged query results.
 Frozen 7227 retry inversion must be observed as acquired membership while the
 asset writer owns request, not relabeled SQL timeout/deadlock. Separate frozen
 source hashes and outside-webroot fixtures avoid shallow-history dependency.
-Candidate remains entirely unrun; no production/concurrency status upgraded.
+Seven current cases / 84 checks pass and four exact old-source controls fail.
+Only frozen local concurrency is verified, not production or installed storage.
 
 ## 2026-09-21 - Non-autoload fixture names do not prevent source disclosure
 

@@ -3,8 +3,9 @@
 Status: proposed adapter contract backed by source and historical receipts;
 not an activated worker or unattended production proof.
 
-Unverified source follow-up: PROOF-OPERATION-JOURNAL-V1.md adds an unregistered,
-default-unconfigured journal. It does not connect or replace the Mac routine.
+Locally verified source follow-up: PROOF-OPERATION-JOURNAL-V1.md adds an
+unregistered, default-unconfigured journal (260/1,769 synthetic SQLite checks).
+It does not connect or replace the Mac routine.
 No real provider/checkpoint verifier or paid-operation activation is installed.
 
 Later September 21 source milestone: default-OFF fresh portal create/draft-submit

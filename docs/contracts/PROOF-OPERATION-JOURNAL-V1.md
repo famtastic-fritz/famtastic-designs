@@ -1,10 +1,11 @@
 # Managed proof paid-operation journal v1
 
 September 21, 2026. Source groundwork from fixed
-`4f139cf0ab71d78a7bfd887c97616eb25f690522`. Parent verified the `aad9e14e`
-baseline below; three follow-up regression cases remain UNRUN. This helper ran
-no PHP, PHPUnit, Docker, provider, installation, network or authoritative DB work.
-The parent owns the runtime slot, disk guard, integration and Drive mirror.
+`4f139cf0ab71d78a7bfd887c97616eb25f690522`. Main independently reviewed and verified
+`69b834d2464ecd5264200b969b436ff9e81b2631`: 260 tests / 1,769 assertions, including
+the three follow-up cases below. Receipt `proof-operation-journal-faults.GH6uEl`,
+0.752s suite / 1.031s guarded, 34 MiB. No failed/skipped tests; protected data
+unchanged. The helper authored source only; main owns runtime and integration.
 This is not provider exactly-once execution, connected automation or activation.
 
 ## Scope and reuse
@@ -113,7 +114,7 @@ Parent-reported baseline receipt, exact `aad9e14e2d63a4b2287eae75f8794786ec1d187
 `/tmp/famtastic-phase2-review.NVAfPl/proof-operation-journal-first.H8Yaww`.
 This is synthetic SQLite evidence, not provider or real journal contention proof.
 
-Follow-up source adds three cases, NOT covered by that baseline receipt:
+Follow-up source adds three cases, covered by the newer 260/1,769 receipt:
 
 - `testUnknownOperationBlocksSecondJobUntilVerifiedTerminalReceipt`: actually
   admit/claim another request/job after the first deadline, assert the global
@@ -127,11 +128,15 @@ Follow-up source adds three cases, NOT covered by that baseline receipt:
   lease. The exact month guard withholds permission after committed unknown;
   retry reconciles and September holds are not moved into October.
 
-Only test-source/docs changed in this follow-up. No runtime or syntax checks ran;
-the parent owns the next guarded run. No production defect is established by
-source inspection, and no activation or capability upgrade follows from it.
+Only test-source/docs changed in that follow-up. Independent source review found
+no confirmed defect within the default-closed scope. Main's combined integration
+at 3325fd4e also passes 791 tests / 4,804 assertions in 2.312s suite / 2.742s
+guarded, 60 MiB, same 68 existing PHPUnit deprecations, zero failed/skipped tests.
+Receipt `journal-prepared-integrated-php.I0oWsH`; protected data unchanged.
+These overlapping totals must not be added. No activation/provider capability
+follows; the real MariaDB private-review harness does not test this journal.
 
-Parent-only next command, through its reviewed network/protected-data/disk wrapper:
+Reproduction command, through the reviewed network/protected-data/disk wrapper:
 
 ```sh
 FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/client-messaging-proof-rescue/backend/vendor \

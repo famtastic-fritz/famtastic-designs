@@ -2,6 +2,12 @@
 
 ## Read-only prepared-bundle verification (September 21 follow-up)
 
+Combined integration at 3325fd4e, including the journal, passes 791 PHP tests /
+4,804 assertions, 2.312s suite / 2.742s guarded, no failed/skipped tests and the
+same 68 existing PHPUnit deprecations. Receipt `journal-prepared-integrated-php.I0oWsH`;
+protected data unchanged. This supersedes the earlier full-module gap below,
+not the separate provider/importer/installed-storage gates.
+
 `verifyPrepared(bundleId, manifestSha256)` now reopens a server-resolved private
 bundle without accepting a worker filesystem path. It reads only owner-owned,
 0400 regular files with one hard link, explicit byte limits and before/after

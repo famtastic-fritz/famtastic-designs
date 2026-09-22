@@ -85,8 +85,15 @@ Independent source review found and closed the post-commit exception defect.
 
 ## Remaining integration and deployment gates
 
-The new full paired Studio rerun, real private-attachment/asset-writer contention,
-installed Drupal migration and live sessions are separate evidence. Worker update
+The full paired Studio rerun now passes 1,588 tests / 135 files, both lints and
+both synthetic execution proofs (`private-review-paired-cleanup.vq9vHH`). Frozen
+4998be27 private-attachment/asset-writer contention now passes seven MariaDB
+cases / 84 checks, with all four exact old-source failures. See the separate
+`PRIVATE-REVIEW-MARIADB-PROOF-V1.md` for source pins, explicit metadata doubles,
+failed observer diagnostics and positive-absence cleanup. Later artifact/journal
+integration passes 791 PHP tests / 4,804 assertions at 3325fd4e; overlapping
+counts are not added. Installed Drupal migration and live sessions remain
+separate unverified gates. Worker update
 8066 must exist before coordinator/legacy helpers run. The upstream eight-file
 private-review deploy lane intentionally cannot release this combined worker
 change; do not bypass its scope restriction. No provider call, customer send,
