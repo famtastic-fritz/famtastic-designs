@@ -2863,3 +2863,8 @@ Each site must own its Git root, common directory, manifest and verified remote.
 Studio/library checkouts retain their separately configured locations. Explicit sandbox roots remain supported. New customer identities should use `site-<business-slug>`; preserve existing IDs and registry bindings on continuation. Check existing source and registry before creating a duplicate. This rule does not automatically move existing repositories or authorize deployment, credentials, DNS or customer communication. Fritz assigned the StockandShip98 move to its own task.
 
 Historical migration receipts retain their original paths as evidence; this current rule supersedes their use as defaults. When an authorized move is performed, preserve history, dirty work and remotes, then update the local project/launcher mappings and current handoff documents. Confirm the actual new checkout before claiming migration complete.
+
+
+## First release preflight recovery — 2026-09-21
+
+The f5d8c769 apply passed PHP 8.3 syntax, cache rebuild and service resolution, but its command-discovery check incorrectly used `drush list --filter=full-site-review` (Drush expects a command category). The error trap restored all prior runtime hashes, removed new files and rebuilt the prior cache successfully. No account attachment occurred. The check now uses exact `drush help famtastic:full-site-review-attach`. An explicit validated ancestor baseline permits a corrective release to compare against the actual restored f5bc140e runtime rather than claiming the failed release was live.

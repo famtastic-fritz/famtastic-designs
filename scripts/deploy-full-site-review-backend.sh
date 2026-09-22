@@ -7,7 +7,9 @@ apply=false
 case "${1:-}" in '') ;; --apply) apply=true ;; *) exit 2 ;; esac
 [[ -z "$(git status --porcelain)" ]] || { echo 'Clean source required.' >&2; exit 1; }
 revision="$(git rev-parse HEAD)"
-base="$(git rev-parse HEAD^)"
+base="${FAMTASTIC_FULL_SITE_REVIEW_BASE_REVISION:-$(git rev-parse HEAD^)}"
+[[ "$base" =~ ^[a-f0-9]{40}$ ]] || { echo 'Exact baseline commit required.' >&2; exit 1; }
+git merge-base --is-ancestor "$base" "$revision" || { echo 'Baseline must be an ancestor of this release.' >&2; exit 1; }
 repository='https://github.com/famtastic-fritz/famtastic-designs.git'
 [[ "$revision" == "$(git ls-remote "$repository" refs/heads/main | awk '{print $1}')" ]] || { echo 'Current main required.' >&2; exit 1; }
 prefix='backend/web/modules/custom/famtastic_pipeline'
@@ -127,7 +129,7 @@ done <<< "$spec"
 cd "$production"
 "$php" vendor/bin/drush.php cache:rebuild
 "$php" vendor/bin/drush.php php:eval '\Drupal::service("famtastic_pipeline.full_site_review"); print "full_site_review_service=available\n";'
-"$php" vendor/bin/drush.php list --filter=full-site-review
+"$php" vendor/bin/drush.php help famtastic:full-site-review-attach
 [[ "$(crontab -l)" == "$cron_before" ]]
 while read -r file expected current; do
  [[ -n "$file" ]] || continue
