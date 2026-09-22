@@ -119,6 +119,11 @@ final class BuildTelemetryService {
    * source of truth.
    */
   public function recordBuildDna(array $dna): int {
+    return $this->record($this->prepareBuildDnaProjection($dna));
+  }
+
+  /** Pure projection, not provenance verification. Safe before an import root. */
+  public function prepareBuildDnaProjection(array $dna): array {
     if (($dna['schema'] ?? '') !== 'famtastic.build-dna.v1') {
       throw new \InvalidArgumentException('Unsupported Build DNA schema.');
     }
@@ -162,7 +167,7 @@ final class BuildTelemetryService {
       }
     }
 
-    return $this->record([
+    return [
       'build_key' => 'build-dna:' . $buildId,
       'campaign_key' => substr((string) ($run['campaign_id'] ?? ''), 0, 128),
       'prospect_id' => $prospectId,
@@ -185,7 +190,19 @@ final class BuildTelemetryService {
       'started_at' => $started,
       'completed_at' => $completed,
       'immutable' => TRUE,
-    ]);
+    ];
+  }
+
+  /** Internal create-only seam. Caller already verified provenance outside TX. */
+  public function insertPreparedBuildDnaLocked(array $values, Connection $connection): int {
+    if ($connection !== $this->database || !$connection->inTransaction()) throw new \LogicException('Build DNA insert requires the same active connection.');
+    if (!is_string($values['output_manifest'] ?? NULL) || strlen($values['output_manifest']) > 262144) throw new \InvalidArgumentException('Managed Build DNA exceeds its bound.');
+    $dna = json_decode($values['output_manifest'], TRUE, 32, JSON_THROW_ON_ERROR);
+    if ($values !== $this->prepareBuildDnaProjection($dna)) throw new \RuntimeException('Managed Build DNA projection changed.');
+    if ($this->database->select('famtastic_build_run', 'b')->fields('b', ['id'])->condition('build_key', $values['build_key'])->forUpdate()->execute()->fetchField()) throw new \RuntimeException('Managed Build DNA cannot adopt an existing row.');
+    unset($values['immutable']);
+    $now = $this->time->getCurrentTime();
+    return (int) $this->database->insert('famtastic_build_run')->fields($values + ['created' => $now, 'changed' => $now, 'error' => NULL])->execute();
   }
 
   /**
