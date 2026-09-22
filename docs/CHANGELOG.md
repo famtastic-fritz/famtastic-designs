@@ -2,10 +2,10 @@
 
 ## 2026-09-21 — Complete customer website review
 
-- Corrected private review routing for nested pages, documents and fonts with explicit bounded path segments and a regression through Drupal’s actual route-candidate database.
+- Corrected private review routing for nested pages, documents and fonts with explicit bounded path segments and a regression through Drupal’s actual route-candidate database. Backend 7227ceb6 and frontend cc8eada4 are live; all 58 protected file routes and native browser planner/document checks pass.
 
 - Added a staff-authorized, tenant-bound full-site review attachment with an immutable private package, per-read hashes, source/Build DNA binding, a sandboxed reader and truthful portal presentation. This lane does not queue proof work, messages, payments, selection or acceptance. Local security/browser evidence and the scoped release procedure are in `docs/plans/FULL_SITE_REVIEW_2026-09-21.md`.
-- Built Travel Addicts Courier Express in its independent private repository: 14 pages, design/type/texture contracts, 23 primary research sources, self-hosted licensed fonts, original illustration, responsive QA and clean-clone proof. Source `82a47502e01d07582c3b2721d5dae04aef5cfd91`; account attachment and exact replay verified; final nested-route/browser acceptance is recorded in `docs/plans/TRAVEL-ADDICTS-DELIVERY-2026-09-21.md`. Public business launch remains pending owner details and review.
+- Built Travel Addicts Courier Express in its independent private repository: 14 pages, design/type/texture contracts, 23 primary research sources, self-hosted licensed fonts, original illustration, responsive QA and clean-clone proof. Source `82a47502e01d07582c3b2721d5dae04aef5cfd91`; protected account attachment, exact replay, nested routes and live browser acceptance verified; evidence is recorded in `docs/plans/TRAVEL-ADDICTS-DELIVERY-2026-09-21.md`. Public business launch remains pending owner details and review.
 
 
 ## 2026-09-21 — Connect QR discovery

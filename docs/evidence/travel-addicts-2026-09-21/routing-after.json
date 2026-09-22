@@ -1,0 +1,240 @@
+{
+  "verified_at": "2026-09-22T00:42:03+00:00",
+  "paths_matched": 58,
+  "note": "Read-only production Drupal route provider and router match checks for both staff/customer paths; authorization separately verified.",
+  "routes": [
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/about/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/assets/brand/famtastic-designs-logo-v1.png",
+      "route": "famtastic_pipeline.admin_full_site_review_asset_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/assets/fonts/barlow-condensed-latin-700-normal.woff2",
+      "route": "famtastic_pipeline.admin_full_site_review_asset_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/assets/fonts/barlow-condensed-latin-800-italic.woff2",
+      "route": "famtastic_pipeline.admin_full_site_review_asset_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/assets/fonts/barlow-condensed-latin-800-normal.woff2",
+      "route": "famtastic_pipeline.admin_full_site_review_asset_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/assets/fonts/barlow-latin-400-normal.woff2",
+      "route": "famtastic_pipeline.admin_full_site_review_asset_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/assets/fonts/barlow-latin-600-normal.woff2",
+      "route": "famtastic_pipeline.admin_full_site_review_asset_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/assets/images/miami-route-illustration.png",
+      "route": "famtastic_pipeline.admin_full_site_review_asset_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/assets/images/supplied-flyer.jpg",
+      "route": "famtastic_pipeline.admin_full_site_review_asset_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/assets/site.css",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/assets/site.js",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/event-courier/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/faq/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/how-it-works/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/legal-courier/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/luxury-courier/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/medical-courier/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/pricing/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/privacy/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/request-delivery/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/review-documents/barlow-condensed-OFL.txt",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/review-documents/barlow-OFL.txt",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/review-documents/design.md",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/review-documents/launch-checklist.md",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/review-documents/market-research.md",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/service-areas/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/services/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/terms/index.html",
+      "route": "famtastic_pipeline.admin_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/about/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/assets/brand/famtastic-designs-logo-v1.png",
+      "route": "famtastic_pipeline.customer_full_site_review_asset_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/assets/fonts/barlow-condensed-latin-700-normal.woff2",
+      "route": "famtastic_pipeline.customer_full_site_review_asset_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/assets/fonts/barlow-condensed-latin-800-italic.woff2",
+      "route": "famtastic_pipeline.customer_full_site_review_asset_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/assets/fonts/barlow-condensed-latin-800-normal.woff2",
+      "route": "famtastic_pipeline.customer_full_site_review_asset_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/assets/fonts/barlow-latin-400-normal.woff2",
+      "route": "famtastic_pipeline.customer_full_site_review_asset_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/assets/fonts/barlow-latin-600-normal.woff2",
+      "route": "famtastic_pipeline.customer_full_site_review_asset_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/assets/images/miami-route-illustration.png",
+      "route": "famtastic_pipeline.customer_full_site_review_asset_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/assets/images/supplied-flyer.jpg",
+      "route": "famtastic_pipeline.customer_full_site_review_asset_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/assets/site.css",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/assets/site.js",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/event-courier/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/faq/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/how-it-works/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/legal-courier/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/luxury-courier/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/medical-courier/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/pricing/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/privacy/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/request-delivery/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/review-documents/barlow-condensed-OFL.txt",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/review-documents/barlow-OFL.txt",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/review-documents/design.md",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/review-documents/launch-checklist.md",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/review-documents/market-research.md",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/service-areas/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/services/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/terms/index.html",
+      "route": "famtastic_pipeline.customer_full_site_review_nested_file"
+    }
+  ],
+  "identifiers_redacted": true
+}

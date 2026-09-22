@@ -1,7 +1,7 @@
 {
   "schema": "famtastic.full-site-review-delivery-evidence.v1",
-  "phase": "attachment_and_direct_service_validation",
-  "browser_acceptance": "pending_nested_route_correction",
+  "phase": "completed_protected_review_delivery",
+  "browser_acceptance": "passed_native_CUA_staff_home_pricing_plan_validation_unsent_draft",
   "source_repository": "https://github.com/famtastic-fritz/site-travel-addicts-courier-express",
   "source_commit": "82a47502e01d07582c3b2721d5dae04aef5cfd91",
   "raw_manifest_sha256": "3d4d3ccd753ad1f98b0dbfff214663b73aa2b39aac145439c540fc8a0e54736a",
@@ -21,11 +21,31 @@
     404,
     404,
     404,
+    404,
     403
   ],
   "private_receipt_location": "Dated private FAMtastic agency Drive mirror and local ignored review package",
   "limitations": [
-    "Direct controller calls do not prove Drupal router matching. Native CUA found interior and document paths missing from route candidates; corrected release and actual HTTP/browser retest required.",
-    "No customer login, customer viewing, acceptance, payment, notification or public business launch is claimed."
-  ]
+    "Protected review hosting is not public business launch.",
+    "Native browser acceptance used the existing real staff session; the exact customer account projection and tenant policy were verified through production services. No customer login or customer view is claimed.",
+    "Hosted CI did not start because of a GitHub account billing lock; local, independent and production evidence are recorded separately."
+  ],
+  "backend_release": "7227ceb63f742e438f151b430bb6bc93a32cce41",
+  "frontend_release": "cc8eada405a30e7732ef8ede9a9e7050bf76d47a",
+  "production_route_matches": 58,
+  "browser_checks": [
+    "Existing authenticated staff homepage renders fonts/artwork",
+    "Pricing route and Starter link navigate successfully",
+    "Starter query remains selected in planner",
+    "Missing-phone validation and corrected synthetic unsent draft work",
+    "Private design document is readable",
+    "Same real staff session using another customer endpoint sees Review not found"
+  ],
+  "documentation_mirror": {
+    "local_written": true,
+    "cloud_uploaded": true,
+    "exact_text_readback": true,
+    "shared": false,
+    "bytes": 13273
+  }
 }
