@@ -214,6 +214,8 @@ directories and cp avoid that ambiguity. Passing the canonical legacy fixture
 is not proof of a newly unattended creative workflow.
 ## 2026-09-21 — Full-site handoff and portable source
 
+**Release:** The corrected protected account delivery is verified at backend 7227ceb6 / frontend cc8eada4. The same exact customer package survives route correction; 58 route matches, all file hashes, plan navigation and an unsent planner draft pass. A GitHub billing lock prevented hosted checks from starting. EDQUOT was recovered by deleting only five verified old, untracked/reproducible dist directories (1,099,176 KiB), retaining source/current build/backups.
+
 **Observation:** A direct controller test accepted a nested artifact path that Drupal’s real route-provider SQL never selected. **Guidance:** Test actual YAML through MatcherDumper and RouteProvider, then real authenticated browser navigation. Match one route parameter to each supported path segment; validate the same depth in the package contract. Keep account identifiers, private destinations and operational counts in the private receipt when agency source is public.
 
 **Observation:** The prior portal represents concept selection, so a finished 14-page site cannot be attached as three concepts or a paid project. **Guidance:** Keep independent business source, immutable staff-assisted review metadata, true page counts and current tenant checks. Freeze response version across HTML/resource reads. Protect the completed review from later brief submissions starting the concept workflow. Preserve actor and owner-authority facts without attributing customer authorship, acceptance, payment or notices.
