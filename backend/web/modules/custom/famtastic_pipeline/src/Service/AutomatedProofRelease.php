@@ -12,7 +12,8 @@ use Drupal\Component\Datetime\TimeInterface;
 final class AutomatedProofRelease {
   public function __construct(private readonly Connection $database, private readonly EntityTypeManagerInterface $entities,
     private readonly TimeInterface $time, private readonly OperationalLedger $ledger, private readonly CustomerPortalService $portal,
-    private readonly ?ManagedProofReader $managedReader = NULL) {}
+    private readonly ?ManagedProofReader $managedReader = NULL,
+    private readonly ?ManagedProofRelease $managedRelease = NULL) {}
 
   /** Read-only current bytes and normalized research for independent QA binding. */
   public function context(int $id, array $research, ?object $authenticatedPrincipal = NULL): array {
@@ -63,11 +64,14 @@ final class AutomatedProofRelease {
   }
 
   /** Atomic reveal + personal proof-ready outbox. No send; no generic mail. */
-  public function release(int $id, array $research, array $evidence, string $reviewer, array $notification): array {
+  public function release(int $id, array $research, array $evidence, string $reviewer, array $notification, ?object $authenticatedPrincipal = NULL): array {
     $request = $this->request($id);
-    // Read capability does not install the separately required locked managed
-    // decision/evidence writer. Never fall through to legacy files or release.
-    if ($request && FreshProofBinding::isManagedReadOnly($this->database, $request)) throw new \RuntimeException('Managed independent release requires its receipt-bound transaction adapter.');
+    // Never fall through to legacy files or accept a claimed reviewer string as
+    // a managed principal. Production dependencies remain unregistered/closed.
+    if ($request && FreshProofBinding::isManagedReadOnly($this->database, $request)) {
+      if ($this->managedRelease === NULL || $authenticatedPrincipal === NULL) throw new \RuntimeException('Managed independent release requires its receipt-bound transaction adapter.');
+      return $this->managedRelease->release($id, $research, $evidence, $reviewer, $notification, $authenticatedPrincipal);
+    }
     $tx = $this->database->startTransaction();
     try {
       $row = $this->request($id);

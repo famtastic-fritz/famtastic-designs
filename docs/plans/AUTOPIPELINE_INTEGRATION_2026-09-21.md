@@ -2,6 +2,17 @@
 
 Status: local repairs and verification; no live activation.
 
+September 22 managed-release checkpoint: unregistered receipt-bound independent
+release now commits research, immutable decision, reveal and the existing branded
+v4 outbox atomically, and derives the reader grant from that stored record. Both
+independently found late-write defects are repaired; full PHP **1,232 / 13,616**,
+portal DNA **34/34**, email presentation **86**, and canonical **legacy** journey
+pass. This supersedes the unimplemented release-source statement below, not the
+real principal/retained-evidence, pending-review consumer, metadata/selection,
+actual Mac creative runner or cloud gates. Next connect signed worker identity,
+then retained evidence and bounded review consumption. No service registration or
+activation. See `../evidence/MANAGED-PROOF-RELEASE-2026-09-22.md`.
+
 September22 reader checkpoint: receipt/current-authority reader and first QA/HTTP
 consumers now pass full PHP1,079/11,002, portal DNA34/34 and canonical legacy journey.
 They are unregistered; customer release remains an unimplemented authority dependency.

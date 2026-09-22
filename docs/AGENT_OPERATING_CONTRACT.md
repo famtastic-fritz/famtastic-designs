@@ -1,5 +1,15 @@
 # FAMtastic agent operating contract
 
+## September 22 amendment — atomic managed QA release
+
+Follow `contracts/MANAGED-PROOF-RELEASE-V1.md`. Its unregistered source preserves
+the existing mail queue and customer_proof_ready/v4 renderer, with a trusted
+independent reviewer and retained evidence rather than worker booleans. Read back
+all release rows and revalidate current receipt/account/asset authority before
+commit. Silent writes and late hook changes must roll back reveal and mail too.
+Historical exact retry does not restore access or resend. Real principal/evidence
+configuration, pending-review consumption and installed full delivery remain gates.
+
 ## September 18 amendment — executable evidence is request-version-bound
 
 Embedded continuation evidence needs a producer-recorded request binding, not a

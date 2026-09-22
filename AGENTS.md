@@ -1,5 +1,17 @@
 # Agent Instructions
 
+## September 22 - Managed release is atomic, not an installed QA worker
+
+Read `docs/contracts/MANAGED-PROOF-RELEASE-V1.md` before wiring managed QA or its
+customer read grant. Use the actual authenticated reviewer, exclude every producer,
+and verify retained evidence; do not install synthetic test attestors. Research,
+immutable decision, reveal and the existing v4 outbox commit together. Locked
+readback and final current-authority/receipt verification must precede commit;
+throwing after commit does not prove rollback. Historical acknowledgment is not a
+new read grant, selection or resend. Preserve pending-only locking and the existing
+mail renderer. Runtime registration, real provenance and complete unattended
+delivery remain unproved and off; source tests do not authorize activation.
+
 ## September 22 - Managed reads require current receipt and release authority
 
 Read `docs/contracts/MANAGED-PROOF-READS-V1.md` before connecting managed QA,
@@ -7,8 +19,9 @@ HTTP readers or portal metadata. Keep trusted principals and opaque read context
 exclude every recorded producer from independent review. Exact private bytes and
 receipt hashes are not approval. Customer reads require an authoritative immutable
 release, never legacy flags or a caller attestation. Do not call the read API under
-a transaction or use read facts as a later write grant. Managed release and service
-registration remain closed; tests use explicitly synthetic authority dependencies.
+a transaction or use read facts as a later write grant. Managed release source now
+exists under the contract above; service registration stays closed and tests use
+explicitly synthetic principal/retained-QA dependencies.
 Preserve exact credited HTML and relative assets, no legacy fallback or public share.
 
 ## September 22 - Import receipts are not independent QA or public read grants

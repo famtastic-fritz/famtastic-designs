@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - Verify persisted release rows before losing rollback
+
+Observation: ignored inserts and late database hooks can commit reveal/mail even
+when a subsequent verifier throws. Guidance: read back the exact decision,
+research, full fresh outbox state and request inside the root transaction, then
+revalidate actual receipt/account/asset authority after the final write. Test
+RAISE(IGNORE) and late mutations with complete rollback assertions. Keep a narrow
+same-transaction reveal assertion separate from pending-only admission; historical
+retry is acknowledgment, not renewed access or another send. Full 1,232/13,616
+passes locally; real reviewer identity and installed managed delivery are separate.
+
 ## 2026-09-22 - Preserve exact bytes without turning receipts into permission
 
 Observation: packaged HTML uses relative assets and already contains canonical

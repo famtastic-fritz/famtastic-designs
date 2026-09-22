@@ -37,8 +37,9 @@ comes from Drupal's authenticated AccountInterface and must own this request.
 Customer reads also require the separate authoritative release verifier to bind
 receipt ID/hash, request/customer/campaign, package hash, producer IDs, current
 review state/approval time, immutable QA-evidence hash and release-decision hash.
-That production release verifier is not implemented by these read tests; their
-explicit synthetic attestor is not a deployable authority.
+The later `MANAGED-PROOF-RELEASE-V1.md` source implements the stored atomic release
+and customer grant, but remains unregistered with real principal/evidence resolvers
+uninstalled. These read tests' synthetic attestor is not a deployable authority.
 
 The package factory creates a new real package reader with a narrow internal
 receipt/role resolver and trusted private roots/logo. Full original and credited
@@ -52,8 +53,9 @@ short locked authority check. No long file processing belongs inside that lock.
 `AutomatedProofRelease::context` and the portal wrapper now accept an optional
 trusted principal. Managed context uses actual verified package hashes and the
 import receipt instead of interpreting opaque references as legacy paths. Managed
-`release` still explicitly rejects before opening a transaction: this read slice
-does not implement independent QA evidence, approval or an outbox write.
+`release` now delegates only when the optional receipt-bound release service and
+trusted principal exist; otherwise it rejects without legacy fallback. The later
+release contract owns that atomic research/decision/outbox operation.
 
 Authenticated customer HTML/assets use the optional reader after existing owner
 lookup. A file-shaped route preserves original relative links:
@@ -90,8 +92,8 @@ The separate canonical installed disposable Drupal journey is legacy regression
 with its existing owner-review fixture, **not managed unattended delivery**.
 Exact receipts/counts are in `../evidence/MANAGED-PROOF-READS-2026-09-22.md`.
 
-Next: persist independently authenticated QA/evidence and an atomic receipt-bound
-release using the existing notification outbox; consume pending imports repeatably;
+Next: install real independent principal/retained-evidence authority for the
+unregistered atomic release; consume pending imports repeatably;
 install metadata/read authorization and selected-source continuation; prove real
 Mac producer provenance, installed lifecycle/tenant boundaries and cloud contention.
 No local test total authorizes activation or substitutes for those results.

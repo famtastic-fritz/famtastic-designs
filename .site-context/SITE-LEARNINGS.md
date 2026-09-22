@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - A post-commit exception cannot prove atomic rejection
+
+Independent review found silent-write and late-authority changes after earlier
+green tests. Locked pre-commit row readback plus a final actual receipt/account/
+asset check now closes both gaps. Guidance: test ignored inserts and late hooks
+against the entire pre-release snapshot, including absence of research and mail.
+Do not widen pending-only eligibility or restore permissions during an exact
+historical acknowledgment. Full PHP 1,232/13,616, portal/email contracts and legacy
+canonical journey pass; unregistered source is not installed automatic delivery.
+
 ## 2026-09-22 - Exact managed reads need separate current release authority
 
 Observation: receipt-aware QA/HTTP readers now verify exact package bytes and

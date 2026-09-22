@@ -119,32 +119,10 @@ final class ManagedProofReader {
   private function authorize(int $requestId, object $principal, string $purpose): array {
     $this->outsideTransaction();
     if ($requestId < 1 || !in_array($purpose, ['reviewer', 'customer'], TRUE)) throw new \InvalidArgumentException('Invalid managed read request or purpose.');
-    $request = $this->row('famtastic_project_request', 'id', $requestId);
-    if (!$request || $request['status'] !== 'submitted' || !empty($request['customer_archived_at'])
-      || $request['selected_proof_direction'] !== '' || $request['selected_proof_at'] !== NULL) throw new \RuntimeException('Managed request is not eligible for this reader.');
-    $event = FreshProofBinding::event($this->database, $requestId);
-    if (!$event) throw new \RuntimeException('Managed admission is absent.');
-    $admission = json_decode($event['payload'], TRUE, 32, JSON_THROW_ON_ERROR);
-    if (!is_int($admission['job_id'] ?? NULL) || ($admission['request_snapshot']['proof_review_status'] ?? '') !== 'not_started') throw new \RuntimeException('Managed admission binding is invalid.');
-    $committed = ManagedProofImportReceipt::committed($this->database, $admission['job_id']);
+    $current = ManagedProofCurrentBinding::read($this->database, $requestId, $this->time->getCurrentTime());
+    $request = $current['request']; $customer = $current['customer'];
+    $committed = $current['committed'];
     $r = $committed['receipt'];
-    if ($r['request_id'] !== $requestId) throw new \RuntimeException('Managed receipt belongs to a different request.');
-
-    $customer = $this->row('famtastic_customer', 'id', $r['customer_id']);
-    $organization = $this->row('famtastic_organization', 'id', $r['organization_id']);
-    $member = $this->database->select('famtastic_membership', 'm')->fields('m')
-      ->condition('customer_id', $r['customer_id'])->condition('organization_id', $r['organization_id'])->execute()->fetchAssoc();
-    $resource = $this->database->select('famtastic_customer_resource', 'r')->fields('r')
-      ->condition('resource_type', 'prospect')->condition('resource_id', $r['prospect_id'])->execute()->fetchAssoc();
-    $user = $customer ? $this->database->select('users_field_data', 'u')->fields('u', ['uid', 'status'])
-      ->condition('uid', (int) $customer['uid'])->condition('default_langcode', 1)->execute()->fetchAssoc() : FALSE;
-    if (!$customer || (int) $customer['uid'] < 1 || (int) $customer['verified_at'] < 1 || !$user || (int) $user['status'] !== 1
-      || !$organization || $organization['status'] !== 'active' || !$member || $member['status'] !== 'active'
-      || !$resource || (int) $resource['organization_id'] !== $r['organization_id']
-      || !$this->row('famtastic_prospect', 'id', $r['prospect_id'])) throw new \RuntimeException('Managed account authority is inactive or invalid.');
-    $campaign = $this->row('proof_campaign', 'id', $r['campaign_entity_id']);
-    if (!$campaign || $campaign['status'] !== 'active' || (int) $campaign['expires_at'] <= $this->time->getCurrentTime()
-      || !empty($campaign['selected_variant'])) throw new \RuntimeException('Managed campaign is unavailable.');
 
     $releaseHash = NULL; $evidenceHash = NULL;
     if ($purpose === 'reviewer') {
@@ -177,11 +155,14 @@ final class ManagedProofReader {
     // Reverse ONLY receipt-proven import (+ explicitly verified release above).
     // No selection, project, commerce, authored input or asset field is erased.
     $beforeImport = $request; $beforeImport['proof_review_status'] = 'not_started';
-    $binding = FreshProofBinding::read($this->database, $event, $beforeImport);
-    if ($binding['binding']['asset_snapshot'] !== FreshProofInput::assets($this->database, $request, FALSE)) throw new \RuntimeException('Managed asset authority changed.');
+    $binding = FreshProofBinding::read($this->database, $current['admission_event'], $beforeImport);
+    // Preserve the post-authentication rights sample, including changes observed
+    // while the trusted release verifier was reading retained evidence.
+    if ($binding['binding']['asset_snapshot'] !== $current['asset_snapshot']
+      || $current['asset_snapshot'] !== FreshProofInput::assets($this->database, $request, FALSE)) throw new \RuntimeException('Managed asset authority changed.');
     $this->outsideTransaction();
     return ['committed' => $committed, 'request' => $request, 'actor' => $actor, 'release_sha256' => $releaseHash, 'evidence_sha256' => $evidenceHash,
-      'authority_sha256' => ManagedProofImportContract::hash([$request, $customer, $user, $organization, $member, $resource, $campaign])];
+      'authority_sha256' => $current['authority_sha256']];
   }
 
   private function reauthorize(object $context): array {
@@ -242,10 +223,6 @@ final class ManagedProofReader {
   private function role(string $direction, string $role, ?string $assetId): void {
     if (!in_array($direction, ['a', 'b', 'c'], TRUE) || !in_array($role, ['html', 'asset', 'thumbnail', 'system_logo'], TRUE)
       || ($role === 'asset' ? $assetId === NULL || !preg_match('/\A[a-z][a-z0-9_-]{0,63}\z/', $assetId) : $assetId !== NULL)) throw new \InvalidArgumentException('Invalid managed read role.');
-  }
-
-  private function row(string $table, string $field, int $id): array|false {
-    return $this->database->select($table, 'r')->fields('r')->condition($field, $id)->execute()->fetchAssoc();
   }
 
   private function outsideTransaction(): void {

@@ -6,7 +6,9 @@ not an activated worker or unattended production proof.
 September 22 clarification: the fenced importer is now implemented and locally
 verified but unregistered (MANAGED-PROOF-IMPORT-V1.md); the older absent-importer
 statements below describe their dated checkpoints. A receipt-aware protected
-reader, independent QA/release and real creative provenance still need connection.
+reader and atomic independent QA/release now also exist as unregistered source
+(MANAGED-PROOF-READS-V1.md and MANAGED-PROOF-RELEASE-V1.md). Real creative/reviewer
+provenance, retained-evidence verification and worker consumption still need connection.
 Do not run paid fresh generation merely because import storage tests are green.
 
 Locally verified source follow-up: PROOF-OPERATION-JOURNAL-V1.md adds an

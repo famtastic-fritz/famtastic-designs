@@ -1497,6 +1497,7 @@ final class CustomerPortalService {
   /** Saves the owner-reviewed research brief before the customer proof gate. */
   public function saveWebsiteRequestProofResearchSnapshot(int $requestId, int $uid, array $input): void {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    if ($row && FreshProofBinding::isManagedReadOnly($this->database, $row)) throw new \RuntimeException('Managed research must commit with its independent QA release.');
     if (!$row || $row['proof_review_status'] !== 'owner_review' || empty($row['proof_campaign_id'])) {
       throw new \RuntimeException('Research can only be saved for a proof set awaiting owner review.');
     }
@@ -1720,15 +1721,16 @@ final class CustomerPortalService {
   }
 
   /** Trusted staff/worker caller supplies independent QA and owner-authorized copy. */
-  public function releaseWebsiteRequestProofAfterQa(int $requestId, array $research, array $evidence, string $authenticatedReviewer, array $notification): array {
+  public function releaseWebsiteRequestProofAfterQa(int $requestId, array $research, array $evidence, string $authenticatedReviewer, array $notification, ?object $authenticatedPrincipal = NULL): array {
     $normalized = $this->normalizeProofResearchSnapshot($research);
     if (!$normalized) throw new \InvalidArgumentException('Complete sourced research and three direction rationales are required.');
-    return \Drupal::service('famtastic_pipeline.automated_proof_release')->release($requestId, $normalized, $evidence, $authenticatedReviewer, $notification);
+    return \Drupal::service('famtastic_pipeline.automated_proof_release')->release($requestId, $normalized, $evidence, $authenticatedReviewer, $notification, $authenticatedPrincipal);
   }
 
   /** Owner approval reveals proofs and queues one transactional customer email. */
   public function approveWebsiteRequestProof(int $requestId, int $uid): array {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+    if ($row && FreshProofBinding::isManagedReadOnly($this->database, $row)) throw new \RuntimeException('Managed proofs require receipt-bound independent QA, not legacy owner approval.');
     if (!$row || !$row['proof_campaign_id'] || $row['proof_review_status'] !== 'owner_review') throw new \RuntimeException('Website proofs are not awaiting owner review.');
     $campaign = $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id']);
     $variantCount = (int) $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)

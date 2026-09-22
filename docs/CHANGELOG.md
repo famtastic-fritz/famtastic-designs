@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-09-22 - Commit independent managed QA release atomically
+
+- Add the unregistered receipt-bound release/customer grant, reusing existing
+  normalized research, automated policy and branded v4 notification outbox.
+- Share locked current authority without weakening pending-only rules; exclude
+  all producers, preserve historical acknowledgments and block legacy bypasses.
+- Repair both independently found late-write gaps with pre-commit row/authority
+  readbacks and actual ignored/altered-write rollback tests.
+- Full PHP **1,232 tests / 13,616 assertions**, portal DNA **34/34**, email
+  presentation **86**, and canonical legacy journey pass. No live enablement,
+  customer send or unattended managed-journey claim. See
+  `evidence/MANAGED-PROOF-RELEASE-2026-09-22.md`.
+
 ## 2026-09-22 - Verify receipt-authorized proof readers and initial consumers
 
 - Add current-authority, exact-byte managed reads with opaque contexts and full

@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-22 - Atomic managed release: locally verified, not installed
+
+Receipt-bound research/QA decision/reveal/existing v4 outbox and stored customer
+read grant now exist as unregistered source. Full PHP **1,232 / 13,616**, portal
+DNA **34/34**, email presentation **86**, and canonical **legacy** journey pass.
+Independent review's two late-write gaps are repaired and rollback-tested.
+Real reviewer/retained-evidence authority, pending-review consumption, metadata/
+selection and actual Mac creative generation remain integration work. Synthetic
+identity/QA tests do not establish autonomous customer delivery or deployment.
+See `evidence/MANAGED-PROOF-RELEASE-2026-09-22.md`; no live capability promotion.
+
 ## 2026-09-22 - Managed private reads: local verified, not installed
 
 Receipt/current-authority reader plus initial QA/HTTP consumers pass full PHP
