@@ -4,10 +4,13 @@ namespace Drupal\Tests\famtastic_pipeline\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\Settings;
+use Drupal\famtastic_pipeline\Controller\WorkerCoordinatorController;
 use Drupal\famtastic_pipeline\Service\{AutomatedProofPolicy, AutomatedProofRelease, CustomerPortalService, ManagedProofArtifactPackage,
-  ManagedProofPackageFiles, ManagedProofReader, ManagedProofRelease, OperationalLedger};
+  ManagedProofPackageFiles, ManagedProofReader, ManagedProofRelease, OperationalLedger, WorkerRequestAuthenticator};
 use Drupal\Tests\famtastic_pipeline\Unit\Fixtures\ManagedProofImportFixture;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\HttpFoundation\Request;
 
 require_once __DIR__ . '/Fixtures/ManagedProofImportFixture.php';
 
@@ -25,6 +28,7 @@ final class ManagedProofReleaseTest extends ManagedProofImportFixture {
   private bool $evidenceAllowed = TRUE;
   private bool $replayAllowed = TRUE;
   private ?\Closure $afterEvidence = NULL;
+  private ?WorkerRequestAuthenticator $signedAuth = NULL;
   private array $research = ['overview' => 'Synthetic research, not a customer deliverable.',
     'direction_rationale' => ['a' => 'Synthetic A.', 'b' => 'Synthetic B.', 'c' => 'Synthetic C.'],
     'sources' => ['https://example.test/fixture'], 'researched_at' => '2026-09-22'];
@@ -40,7 +44,9 @@ final class ManagedProofReleaseTest extends ManagedProofImportFixture {
     $this->reader = new ManagedProofReader($this->db, $this->clock,
       fn(\Closure $resolver) => new ManagedProofArtifactPackage($this->store,
         new ManagedProofPackageFiles($this->temporary . '/packages', $this->temporary . '/web'), $logo, $resolver),
-      fn(object $principal) => $principal === $this->principal ? $this->reviewer : NULL,
+      fn(object $principal, array $receipt, array $request) => $this->signedAuth
+        ? $this->signedAuth->reviewer($principal, (int) $request['id'])
+        : ($principal === $this->principal ? $this->reviewer : NULL),
       fn(array $committed, array $request, AccountInterface $principal) => $this->managedRelease->customerGrant($committed, $request, $principal));
     $this->portal = (new \ReflectionClass(CustomerPortalService::class))->newInstanceWithoutConstructor();
     foreach (['database' => $this->db, 'time' => $this->clock] as $p => $v) (new \ReflectionProperty($this->portal, $p))->setValue($this->portal, $v);
@@ -75,8 +81,9 @@ final class ManagedProofReleaseTest extends ManagedProofImportFixture {
         if ($this->afterEvidence) { $callback = $this->afterEvidence; $this->afterEvidence = NULL; $callback(); }
         return TRUE;
       } : NULL,
-      $withReplay ? function(object $principal): ?string {
+      $withReplay ? function(object $principal, array $committed, array $request): ?string {
         self::assertFalse($this->db->inTransaction());
+        if ($this->signedAuth) return $this->signedAuth->reviewer($principal, (int) $request['id']);
         return $this->replayAllowed && $principal === $this->principal ? $this->reviewer : NULL;
       } : NULL);
   }
@@ -87,6 +94,27 @@ final class ManagedProofReleaseTest extends ManagedProofImportFixture {
     $account = $this->createMock(AccountInterface::class); $account->method('isAuthenticated')->willReturn(TRUE); $account->method('id')->willReturn($uid); return $account;
   }
   private function notices(): array { return array_values(array_filter($this->rows('famtastic_notification_outbox'), fn($r) => $r['notification_key'] === $this->notice['notification_key'])); }
+  private function configureSignedAuthentication(): void {
+    new Settings(['famtastic_bounded_workers_enabled' => TRUE, 'famtastic_worker_registry' => [
+      'synthetic-independent' => ['secret' => str_repeat('s', 32), 'capabilities' => ['proof.review']],
+    ]]);
+    $this->signedAuth = new WorkerRequestAuthenticator($this->coordinator, $this->clock);
+    $container = \Drupal::getContainer();
+    $container->set('famtastic_pipeline.worker_request_authenticator', $this->signedAuth);
+    $container->set('famtastic_pipeline.worker_coordinator', $this->coordinator);
+    $container->set('famtastic_pipeline.customer_portal', $this->portal);
+    $container->set('famtastic_pipeline.pilot_exact_dispatch_lock', new class { public function isActive(): bool { return FALSE; } });
+  }
+  private function signedRequest(array $overrides = []): Request {
+    $wire = json_encode(array_replace(['request_id' => 1, 'research' => $this->research, 'evidence' => $this->evidence,
+      'notification' => $this->notice, 'reviewer' => 'Fritz', 'uid' => 1], $overrides), JSON_THROW_ON_ERROR);
+    $path = '/api/pipeline/worker/review'; $nonce = bin2hex(random_bytes(16));
+    $request = Request::create('https://authority.example.test/web' . $path, 'POST', [], [], [], ['CONTENT_TYPE' => 'application/json'], $wire);
+    $signature = hash_hmac('sha256', implode("\n", ['POST', $path, 'synthetic-independent', (string) $this->now, $nonce, hash('sha256', $wire)]), str_repeat('s', 32));
+    $request->headers->add(['X-FAMtastic-Worker' => 'synthetic-independent', 'X-FAMtastic-Timestamp' => (string) $this->now,
+      'X-FAMtastic-Nonce' => $nonce, 'X-FAMtastic-Signature' => 'sha256=' . $signature]);
+    return $request;
+  }
   private function deny(callable $call, string $message): void {
     $error = NULL; try { $call(); } catch (\Throwable $e) { if ($e instanceof \PHPUnit\Framework\AssertionFailedError) throw $e; $error = $e; }
     self::assertNotNull($error, 'Expected rejection: ' . $message); self::assertStringContainsString($message, $error->getMessage());
@@ -115,6 +143,39 @@ final class ManagedProofReleaseTest extends ManagedProofImportFixture {
     self::assertSame($this->committed['receipt']['variants']['a']['html_sha256'], $html['sha256']);
     $this->db->update('famtastic_website_proof_research_snapshot')->fields(['snapshot_hash' => str_repeat('f', 64)])->execute();
     $this->deny(fn() => $this->reader->readRole($handle, 'a', 'html'), 'research record differs');
+  }
+
+  public function testActualSignedControllerReleasesOnceAndNewNonceAcknowledgesSameRelease(): void {
+    $this->configureSignedAuthentication(); $controller = new WorkerCoordinatorController(); $request = $this->signedRequest();
+    $response = $controller->handle($request, 'review');
+    self::assertSame(200, $response->getStatusCode(), $response->getContent());
+    $result = json_decode($response->getContent(), TRUE)['result'];
+    self::assertFalse($result['duplicate']); self::assertFalse($result['email_sent_by_this_operation']);
+    $event = $this->db->select('famtastic_event', 'e')->fields('e', ['payload'])->condition('event_type', ManagedProofRelease::EVENT)->execute()->fetchField();
+    self::assertSame($this->reviewer, json_decode($event, TRUE)['decision']['actor']);
+    self::assertCount(1, $this->notices()); self::assertCount(1, $this->rows('famtastic_worker_nonce'));
+    $before = $this->snapshot();
+    self::assertSame(403, $controller->handle($request, 'review')->getStatusCode());
+    self::assertSame($before, $this->snapshot());
+    $retry = $controller->handle($this->signedRequest(), 'review');
+    self::assertSame(200, $retry->getStatusCode(), $retry->getContent());
+    self::assertTrue(json_decode($retry->getContent(), TRUE)['result']['historical_acknowledgment_only']);
+    self::assertSame($before, $this->snapshot()); self::assertCount(2, $this->rows('famtastic_worker_nonce'));
+    $handle = $this->reader->context(1, $this->customer(), 'customer');
+    self::assertSame($this->committed['receipt']['variants']['a']['html_sha256'], $this->reader->readRole($handle, 'a', 'html')['sha256']);
+  }
+
+  public function testSignedStringIdCannotBecomeManagedReviewerAuthorityByControllerCast(): void {
+    $this->configureSignedAuthentication(); $before = $this->snapshot();
+    self::assertSame(409, (new WorkerCoordinatorController())->handle($this->signedRequest(['request_id' => '1']), 'review')->getStatusCode());
+    self::assertSame($before, $this->snapshot()); self::assertCount(0, $this->notices());
+  }
+
+  public function testSignedAuthorityExpiringDuringEvidenceReadCannotRelease(): void {
+    $this->configureSignedAuthentication(); $before = $this->snapshot();
+    $this->afterEvidence = function(): void { $this->now += 91; };
+    self::assertSame(409, (new WorkerCoordinatorController())->handle($this->signedRequest(), 'review')->getStatusCode());
+    self::assertSame($before, $this->snapshot()); self::assertCount(0, $this->notices());
   }
 
   #[DataProvider('badInputs')]

@@ -2,6 +2,19 @@
 
 Status: local repairs and verification; no live activation.
 
+September 22 signed-authority checkpoint: the existing HMAC/registry/nonce scheme
+now mints current request-scoped principals and the existing controller passes
+them into managed release. Real disposable nonce persistence and a deterministic
+interleaved-winner test pass; full PHP **1,314 / 13,990**, portal DNA **34/34**,
+email presentation **86** and canonical **legacy** journey pass. Auth service is
+registered but workers stay off; managed readers/release/evidence remain unwired.
+Next: retained independent QA authority and bounded resumable review, released
+metadata/selected package adoption, actual Mac creative runner/provenance, then
+installed managed journey and additive cloud proof. Signed identity alone is not
+real independent QA. Hosted run **35727309714** ran zero job steps: billing lock.
+Cloud CLI has no active account/project. No account settings changed. See
+`../evidence/WORKER-REQUEST-PRINCIPAL-2026-09-22.md`.
+
 September 22 managed-release checkpoint: unregistered receipt-bound independent
 release now commits research, immutable decision, reveal and the existing branded
 v4 outbox atomically, and derives the reader grant from that stored record. Both

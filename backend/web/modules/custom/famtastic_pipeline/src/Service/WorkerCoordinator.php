@@ -183,9 +183,25 @@ final class WorkerCoordinator {
   }
 
   public function rememberNonce(string $worker, string $nonce): void {
-    // Unique insert is the replay gate; duplicate requests fail closed.
-    $this->database->insert('famtastic_worker_nonce')->fields(['nonce_key' => $worker . ':' . $nonce, 'expires' => $this->now() + 180])->execute();
+    // Authentication may not be rolled back by a later caller operation or
+    // checked on a lagging replica. The unique insert commits independently.
+    if ($this->database->inTransaction() || ($this->database->getTarget() !== NULL && $this->database->getTarget() !== 'default')) {
+      throw new \LogicException('Worker nonce authentication requires the committed primary connection.');
+    }
+    $key = $worker . ':' . $nonce; $expires = $this->now() + 180;
+    // Unique insert remains the concurrency gate. Reject an existing nonce first
+    // so an INSERT-ignore hook cannot make a replay look like this caller's write.
+    if ($this->database->select('famtastic_worker_nonce', 'n')->fields('n', ['nonce_key'])->condition('nonce_key', $key)->execute()->fetchField() !== FALSE) {
+      throw new \RuntimeException('Worker nonce was already consumed.');
+    }
+    // Require this statement's inserted row, not merely a later matching row
+    // which a concurrent authenticated request might have inserted first.
+    $statement = $this->database->prepareStatement('INSERT INTO {famtastic_worker_nonce} (nonce_key, expires) VALUES (:nonce_key, :expires)', [], TRUE);
+    $statement->execute([':nonce_key' => $key, ':expires' => $expires]);
+    if ($statement->rowCount() !== 1) throw new \RuntimeException('Worker nonce insertion was not confirmed.');
     $this->database->delete('famtastic_worker_nonce')->condition('expires', $this->now(), '<')->execute();
+    $persisted = $this->database->select('famtastic_worker_nonce', 'n')->fields('n', ['expires'])->condition('nonce_key', $key)->execute()->fetchField();
+    if ($persisted === FALSE || (int) $persisted !== $expires) throw new \RuntimeException('Worker nonce persistence could not be verified.');
   }
 
   private function recoverExpired(int $now): void {

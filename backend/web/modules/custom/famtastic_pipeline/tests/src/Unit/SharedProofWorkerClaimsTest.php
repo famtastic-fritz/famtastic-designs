@@ -10,6 +10,7 @@ use Drupal\famtastic_pipeline\Controller\WorkerCoordinatorController;
 use Drupal\famtastic_pipeline\Service\WorkerCapabilityPolicy;
 use Drupal\famtastic_pipeline\Service\WorkerCoordinator;
 use Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema;
+use Drupal\famtastic_pipeline\Service\WorkerRequestAuthenticator;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -279,13 +280,14 @@ final class SharedProofWorkerClaimsTest extends UnitTestCase {
 
   private function installController(array $creativeCaps = self::CAPS): void {
     new Settings(['famtastic_bounded_workers_enabled' => TRUE, 'famtastic_worker_registry' => [
-      'mac-creative' => ['secret' => str_repeat('x', 32), 'capabilities' => $creativeCaps],
-      'cloud-creative' => ['secret' => str_repeat('x', 32), 'capabilities' => self::CAPS],
-      'static-only' => ['secret' => str_repeat('x', 32), 'capabilities' => [WorkerCoordinator::CAPABILITY]],
-      'review-only' => ['secret' => str_repeat('x', 32), 'capabilities' => ['proof.review']],
+      'mac-creative' => ['secret' => $this->secret('mac-creative'), 'capabilities' => $creativeCaps],
+      'cloud-creative' => ['secret' => $this->secret('cloud-creative'), 'capabilities' => self::CAPS],
+      'static-only' => ['secret' => $this->secret('static-only'), 'capabilities' => [WorkerCoordinator::CAPABILITY]],
+      'review-only' => ['secret' => $this->secret('review-only'), 'capabilities' => ['proof.review']],
     ]]);
     $container = new ContainerBuilder();
     $container->set('famtastic_pipeline.worker_coordinator', $this->coordinator);
+    $container->set('famtastic_pipeline.worker_request_authenticator', new WorkerRequestAuthenticator($this->coordinator, $this->clock));
     $container->set('famtastic_pipeline.pilot_exact_dispatch_lock', new class { public function isActive(): bool { return FALSE; } });
     $container->set('famtastic_pipeline.customer_portal', new class {
       public function assertCurrentSelectedStagingPacket(array $packet): void {}
@@ -293,11 +295,12 @@ final class SharedProofWorkerClaimsTest extends UnitTestCase {
     });
     \Drupal::setContainer($container);
   }
+  private function secret(string $worker): string { return hash('sha256', 'synthetic-only/' . $worker); }
   private function http(string $operation, string $worker, array $body = []): array {
-    $wire = json_encode($body, JSON_THROW_ON_ERROR); $nonce = bin2hex(random_bytes(16)); $timestamp = (string) time();
+    $wire = json_encode($body, JSON_THROW_ON_ERROR); $nonce = bin2hex(random_bytes(16)); $timestamp = (string) $this->now;
     $path = '/api/pipeline/worker/' . $operation;
     $request = Request::create('https://authority.example.test/web' . $path, 'POST', [], [], [], ['CONTENT_TYPE' => 'application/json'], $wire);
-    $signature = hash_hmac('sha256', implode("\n", ['POST', $path, $worker, $timestamp, $nonce, hash('sha256', $wire)]), str_repeat('x', 32));
+    $signature = hash_hmac('sha256', implode("\n", ['POST', $path, $worker, $timestamp, $nonce, hash('sha256', $wire)]), $this->secret($worker));
     $request->headers->add(['X-FAMtastic-Worker' => $worker, 'X-FAMtastic-Timestamp' => $timestamp, 'X-FAMtastic-Nonce' => $nonce, 'X-FAMtastic-Signature' => 'sha256=' . $signature]);
     $response = (new WorkerCoordinatorController())->handle($request, $operation);
     return [$response->getStatusCode(), json_decode($response->getContent(), TRUE)];

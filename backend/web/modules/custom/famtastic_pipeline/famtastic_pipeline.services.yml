@@ -5,6 +5,9 @@ services:
   famtastic_pipeline.worker_coordinator:
     class: Drupal\famtastic_pipeline\Service\WorkerCoordinator
     arguments: ['@database', '@datetime.time', '@lock']
+  famtastic_pipeline.worker_request_authenticator:
+    class: Drupal\famtastic_pipeline\Service\WorkerRequestAuthenticator
+    arguments: ['@famtastic_pipeline.worker_coordinator', '@datetime.time']
   famtastic_pipeline.automated_proof_release:
     class: Drupal\famtastic_pipeline\Service\AutomatedProofRelease
     arguments: ['@database', '@entity_type.manager', '@datetime.time', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.customer_portal']

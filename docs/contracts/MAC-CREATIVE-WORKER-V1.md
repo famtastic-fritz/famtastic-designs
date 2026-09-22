@@ -9,6 +9,8 @@ statements below describe their dated checkpoints. A receipt-aware protected
 reader and atomic independent QA/release now also exist as unregistered source
 (MANAGED-PROOF-READS-V1.md and MANAGED-PROOF-RELEASE-V1.md). Real creative/reviewer
 provenance, retained-evidence verification and worker consumption still need connection.
+`WORKER-REQUEST-PRINCIPAL-V1.md` now provides the existing-HMAC signed reviewer
+adapter; it is not an independent visual QA worker or a generation adapter.
 Do not run paid fresh generation merely because import storage tests are green.
 
 Locally verified source follow-up: PROOF-OPERATION-JOURNAL-V1.md adds an

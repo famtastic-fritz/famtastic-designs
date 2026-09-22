@@ -5,8 +5,6 @@ namespace Drupal\famtastic_pipeline\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Service\WorkerCoordinator;
-use Drupal\famtastic_pipeline\Service\WorkerCapabilityPolicy;
-use Drupal\famtastic_pipeline\Service\WorkerRequestSignature;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,23 +14,17 @@ final class WorkerCoordinatorController extends ControllerBase {
     $headers = ['Cache-Control' => 'private, no-store', 'X-Robots-Tag' => 'noindex, nofollow'];
     if (!Settings::get('famtastic_bounded_workers_enabled', FALSE)) return new JsonResponse(['error' => 'workers_not_enabled'], 503, $headers);
     if (!$request->isSecure()) return new JsonResponse(['error' => 'tls_required'], 403, $headers);
-    $worker = (string) $request->headers->get('X-FAMtastic-Worker', '');
-    $registry = (array) Settings::get('famtastic_worker_registry', []);
-    $identity = $registry[$worker] ?? [];
-    $nonce = (string) $request->headers->get('X-FAMtastic-Nonce', '');
     try {
-      $capabilities = WorkerCapabilityPolicy::claimCapabilities($identity['capabilities'] ?? []);
-      if ($operation === 'review' ? !in_array('proof.review', $identity['capabilities'] ?? [], TRUE) : !$capabilities) throw new \InvalidArgumentException('Capability rejected.');
-      WorkerRequestSignature::verify($request->getMethod(), '/api/pipeline/worker/' . $operation, $request->getContent(), $worker,
-        (string) $request->headers->get('X-FAMtastic-Timestamp', ''), $nonce,
-        (string) $request->headers->get('X-FAMtastic-Signature', ''), (string) ($identity['secret'] ?? ''), time());
-      $coordinator = \Drupal::service('famtastic_pipeline.worker_coordinator');
-      $coordinator->rememberNonce($worker, $nonce);
+      $authenticator = \Drupal::service('famtastic_pipeline.worker_request_authenticator');
+      $principal = $authenticator->authenticate($request, $operation);
     } catch (\Throwable) { return new JsonResponse(['error' => 'worker_authentication_rejected'], 403, $headers); }
     try {
-      $body = json_decode($request->getContent(), TRUE, 32, JSON_THROW_ON_ERROR);
-      if (!is_array($body)) throw new \InvalidArgumentException('JSON object required.');
       if (\Drupal::service('famtastic_pipeline.pilot_exact_dispatch_lock')->isActive()) throw new \RuntimeException('Pilot lock prevents worker execution.');
+      // Use only the exact authenticated body, not the mutable HTTP request or a
+      // caller-supplied reviewer. Recheck current installed authority before work.
+      $facts = $authenticator->facts($principal);
+      $body = $facts['body']; $worker = $facts['worker']; $capabilities = $facts['capabilities'];
+      $coordinator = \Drupal::service('famtastic_pipeline.worker_coordinator');
       $portal = \Drupal::service('famtastic_pipeline.customer_portal');
       if ($operation === 'claim') {
         // Legacy runners send {} and remain static-only even for a multi-role
@@ -57,7 +49,7 @@ final class WorkerCoordinatorController extends ControllerBase {
         'finish' => $coordinator->finish($id, $worker, $token, (array) ($body['result'] ?? []), $capabilities, $attempt),
         'fail' => $coordinator->fail($id, $worker, $token, $capabilities, $attempt),
         'review' => $portal->releaseWebsiteRequestProofAfterQa((int) ($body['request_id'] ?? 0), (array) ($body['research'] ?? []),
-          (array) ($body['evidence'] ?? []), 'automation:' . $worker, (array) ($body['notification'] ?? [])),
+          (array) ($body['evidence'] ?? []), $facts['identity'], (array) ($body['notification'] ?? []), $principal),
         default => throw new \InvalidArgumentException('Unknown operation.'),
       };
       return new JsonResponse(['result' => $result], 200, $headers);

@@ -1,5 +1,17 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-22 - Signed worker authority: source integrated, locally verified
+
+Existing HMAC and real disposable nonce persistence now produce scoped principals
+for the existing controller/managed-release seam. Full PHP **1,314 / 13,990**,
+portal DNA **34/34**, email presentation **86** and canonical **legacy** journey
+pass. The independent nonce-race finding is fixed and deterministically tested.
+No installed TLS/worker, real visual QA, managed unattended journey or cloud
+capability is promoted. Auth service wiring preserves the default-off switch;
+managed reader/release dependencies remain unregistered. Hosted CI ran no steps
+because of the GitHub account billing lock. See
+`evidence/WORKER-REQUEST-PRINCIPAL-2026-09-22.md`.
+
 ## 2026-09-22 - Atomic managed release: locally verified, not installed
 
 Receipt-bound research/QA decision/reveal/existing v4 outbox and stored customer

@@ -1,5 +1,18 @@
 # Agent Instructions
 
+## September 22 - Signed worker principals preserve the existing identity scheme
+
+Read `docs/contracts/WORKER-REQUEST-PRINCIPAL-V1.md` before worker/auth/review
+integration. The existing HMAC registry and real committed nonce insert mint
+opaque request-scoped principals; signed body identity is not authority. Require
+the current operation, exact integer request ID, current distinct reviewer key
+and all-producer exclusion. An identical signed request is a replay; a fresh
+nonce can reconcile the exact stored release but cannot resend or restore access.
+Never serialize principal facts: signed bodies may contain lease credentials.
+The auth adapter is wired to the existing controller with workers still off.
+Managed readers/release and real retained QA remain unregistered/uninstalled;
+synthetic signed traffic is not installed autonomous delivery.
+
 ## September 22 - Managed release is atomic, not an installed QA worker
 
 Read `docs/contracts/MANAGED-PROOF-RELEASE-V1.md` before wiring managed QA or its

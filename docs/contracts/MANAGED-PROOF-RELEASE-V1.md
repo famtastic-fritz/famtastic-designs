@@ -16,8 +16,11 @@ The trusted local `verifyEvidence(evidence, context)` dependency must inspect th
 actual retained evidence for all nine existing checks: desktop/mobile, accessibility,
 links, functional behavior, rights, claims, no live checkout and distinct directions.
 It verifies their exact hashes/references and reviewer/import binding; booleans alone
-are insufficient. This resolver and real reviewer provenance are **not installed**
-by the source tests. Test bytes and authentication are explicitly synthetic.
+are insufficient. This resolver is **not installed** by the source tests.
+`WORKER-REQUEST-PRINCIPAL-V1.md` now supplies authenticated request identity through
+the existing HMAC scheme, but managed DI wiring and real QA evidence are still
+missing. Original release test bytes/authentication remain explicitly synthetic;
+the later signed tests do not prove independent visual review.
 
 `authenticateReplay(principal, committed, request)` separately authenticates access
 to an already committed historical decision. It does not grant customer reads,
@@ -110,7 +113,7 @@ guarantee external SMTP exactly-once behavior.
 
 ## Remaining integration gates
 
-Runtime registration of the real principal/evidence dependencies; repeatable bounded
+Managed DI wiring of the signed-principal and real evidence dependencies; repeatable bounded
 pending-import review consumption; released portal metadata; selection/adoption of
 the actual winning package; existing Mac creative runner/provenance; installed
 whole-journey, interruption/duplicate/contention proof; cloud authorization and

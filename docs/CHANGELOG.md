@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-09-22 - Bind existing worker requests to durable scoped principals
+
+- Reuse the existing registry/HMAC/nonce table in a request-scoped authenticator;
+  wire the existing controller without enabling workers or adding credentials.
+- Preserve exact signed input, current capability/revocation checks, distinct
+  reviewer keys and strict request binding through the managed release seam.
+- Require one actual nonce INSERT row; independently reviewed interleaved replay
+  test proves a silently ignored losing insert cannot adopt the winner's nonce.
+- Full PHP **1,314 tests / 13,990 assertions**, portal DNA **34/34**, email **86**
+  and canonical disposable legacy journey pass. Protected data unchanged; no
+  external send, service restart, merge or live activation. See
+  `evidence/WORKER-REQUEST-PRINCIPAL-2026-09-22.md`.
+
 ## 2026-09-22 - Commit independent managed QA release atomically
 
 - Add the unregistered receipt-bound release/customer grant, reusing existing

@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - A matching nonce row does not identify its winning writer
+
+Observation: independent review found that insert-ignore plus a concurrent winner
+could make two signed requests appear accepted. Guidance: require exactly one
+affected row from this INSERT before cleanup/readback; retain the winning nonce
+when rejecting the loser. The deterministic interleaving uses two real HMAC
+authentications and SQLite persistence, not multi-process MariaDB proof. Existing
+controller fixtures also need the actual auth service/clock after DI changes.
+Final full PHP 1,314/13,990 and legacy canonical journey pass with protected data
+unchanged. Distinct reviewer keys prove identity separation, not quality of QA.
+
 ## 2026-09-22 - A post-commit exception cannot prove atomic rejection
 
 Independent review found silent-write and late-authority changes after earlier

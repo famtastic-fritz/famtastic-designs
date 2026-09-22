@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - Authentication needs insertion ownership, not just persistence
+
+Observation: a readback can match a concurrent winner after a losing nonce insert
+is ignored. Guidance: verify this prepared statement inserted exactly one row,
+then verify its retained expiry. Test actual signed interleaving and preserve the
+winner while rejecting the loser. Authenticated malformed JSON still consumes
+the nonce; a fresh signature/nonce reconciles an immutable release without resend.
+Fixture failures were repaired at the actual SQLite statement/auth-service seams,
+not by weakening assertions. Final PHP 1,314/13,990, portal/email contracts and
+canonical legacy journey pass; managed automatic delivery remains unproved.
+
 ## 2026-09-22 - Verify persisted release rows before losing rollback
 
 Observation: ignored inserts and late database hooks can commit reveal/mail even

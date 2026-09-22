@@ -38,8 +38,10 @@ Customer reads also require the separate authoritative release verifier to bind
 receipt ID/hash, request/customer/campaign, package hash, producer IDs, current
 review state/approval time, immutable QA-evidence hash and release-decision hash.
 The later `MANAGED-PROOF-RELEASE-V1.md` source implements the stored atomic release
-and customer grant, but remains unregistered with real principal/evidence resolvers
-uninstalled. These read tests' synthetic attestor is not a deployable authority.
+and customer grant, but remains unregistered. The later
+`WORKER-REQUEST-PRINCIPAL-V1.md` adapter supplies existing-HMAC reviewer identity;
+managed service wiring and real retained-evidence verification remain uninstalled.
+These original read tests' synthetic attestor is not a deployable authority.
 
 The package factory creates a new real package reader with a narrow internal
 receipt/role resolver and trusted private roots/logo. Full original and credited
@@ -92,8 +94,8 @@ The separate canonical installed disposable Drupal journey is legacy regression
 with its existing owner-review fixture, **not managed unattended delivery**.
 Exact receipts/counts are in `../evidence/MANAGED-PROOF-READS-2026-09-22.md`.
 
-Next: install real independent principal/retained-evidence authority for the
-unregistered atomic release; consume pending imports repeatably;
+Next: connect the signed-principal adapter and real retained-evidence authority to
+the unregistered atomic release; consume pending imports repeatably;
 install metadata/read authorization and selected-source continuation; prove real
 Mac producer provenance, installed lifecycle/tenant boundaries and cloud contention.
 No local test total authorizes activation or substitutes for those results.
