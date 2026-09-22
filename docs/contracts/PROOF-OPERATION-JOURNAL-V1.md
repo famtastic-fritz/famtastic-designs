@@ -1,8 +1,9 @@
 # Managed proof paid-operation journal v1
 
 September 21, 2026. Source groundwork from fixed
-`4f139cf0ab71d78a7bfd887c97616eb25f690522`. UNRUN: no PHP, PHPUnit, Docker,
-provider, installation, network, authoritative database or production activity.
+`4f139cf0ab71d78a7bfd887c97616eb25f690522`. Parent verified the `aad9e14e`
+baseline below; three follow-up regression cases remain UNRUN. This helper ran
+no PHP, PHPUnit, Docker, provider, installation, network or authoritative DB work.
 The parent owns the runtime slot, disk guard, integration and Drive mirror.
 This is not provider exactly-once execution, connected automation or activation.
 
@@ -106,7 +107,29 @@ closed receipt fields/bounds, original month, ignored insert, receipt CAS,
 root rollback, real-commit acknowledgement loss and actual post-commit callback
 failure. The connection fixture surrounds actual Drupal SQLite commit APIs with
 deterministic faults. Lock API observation is NOT MariaDB contention proof.
-Tests and PHP syntax checks have NOT run. No test counts or pass receipt claimed.
+Parent-reported baseline receipt, exact `aad9e14e2d63a4b2287eae75f8794786ec1d187e`:
+257 tests / 1,689 assertions PASS, 0.707 seconds suite / 0.957 seconds guarded,
+34 MiB; protected inventories unchanged. Evidence:
+`/tmp/famtastic-phase2-review.NVAfPl/proof-operation-journal-first.H8Yaww`.
+This is synthetic SQLite evidence, not provider or real journal contention proof.
+
+Follow-up source adds three cases, NOT covered by that baseline receipt:
+
+- `testUnknownOperationBlocksSecondJobUntilVerifiedTerminalReceipt`: actually
+  admit/claim another request/job after the first deadline, assert the global
+  unknown guard, then positively authorize it after terminal receipt evidence.
+  Unknown billing and both original budget holds remain unchanged.
+- `testThreeExhaustedGenerationsRetainReceiptWithoutFourthClaim`: use actual
+  recovery/backoff for all three claims; late evidence retains the original
+  identity and three holds without reopening a claim, checkpoint or next slot.
+- `testPostCommitMonthRolloverWithLiveLeaseRetainsUnknownWithoutPermit`: advance
+  the clock through the real post-transaction callback, retaining 178 seconds of
+  lease. The exact month guard withholds permission after committed unknown;
+  retry reconciles and September holds are not moved into October.
+
+Only test-source/docs changed in this follow-up. No runtime or syntax checks ran;
+the parent owns the next guarded run. No production defect is established by
+source inspection, and no activation or capability upgrade follows from it.
 
 Parent-only next command, through its reviewed network/protected-data/disk wrapper:
 

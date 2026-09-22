@@ -81,10 +81,10 @@ final class ProofOperationJournalTest extends UnitTestCase {
 
   protected function tearDown(): void { new Settings([]); parent::tearDown(); }
   private function uuid(int $n): string { return '00000000-0000-0000-0000-' . str_pad((string) $n, 12, '0', STR_PAD_LEFT); }
-  private function makeJournal(): ProofOperationJournal {
+  private function makeJournal(int $expectedRequestId = 1): ProofOperationJournal {
     return new ProofOperationJournal($this->db, $this->clock, $this->admission, $this->coordinator, $this->catalog,
-      function (int $request, array $input): bool {
-        self::assertFalse($this->db->inTransaction()); self::assertSame(1, $request); $this->inputChecks++;
+      function (int $request, array $input) use ($expectedRequestId): bool {
+        self::assertFalse($this->db->inTransaction()); self::assertSame($expectedRequestId, $request); $this->inputChecks++;
         return $this->inputVerified; // Synthetic only: deliberately NOT real file-byte proof.
       }, function (array $identity, string $recorder, array $receipt): bool {
         self::assertFalse($this->db->inTransaction()); $this->receiptChecks++;
@@ -117,7 +117,10 @@ final class ProofOperationJournalTest extends UnitTestCase {
   private function replaceClaim(): void {
     $this->now += 1831; $this->worker = 'synthetic-cloud';
     $claim = $this->coordinator->claim($this->worker, [WorkerCapabilityPolicy::PROOF]);
-    if ($claim === NULL) { $this->now += 31; $claim = $this->coordinator->claim($this->worker, [WorkerCapabilityPolicy::PROOF]); }
+    if ($claim === NULL) {
+      $this->now += 30 * (2 ** ($this->claim['attempt'] - 1)) + 1;
+      $claim = $this->coordinator->claim($this->worker, [WorkerCapabilityPolicy::PROOF]);
+    }
     self::assertNotNull($claim); $this->claim = $claim;
   }
 
@@ -136,6 +139,59 @@ final class ProofOperationJournalTest extends UnitTestCase {
     self::assertSame($first['operation_id'], $this->authorize()['operation_id']);
     self::assertSame('synthetic-mac', json_decode($this->rows('famtastic_proof_operation')[0]['identity_wire'], TRUE)['producer_id']);
     self::assertCount(2, $this->rows('famtastic_worker_budget'));
+  }
+  public function testUnknownOperationBlocksSecondJobUntilVerifiedTerminalReceipt(): void {
+    $first = $this->authorize();
+    // A distinct prospect/request passes actual fresh admission without history adoption.
+    $tx = $this->db->startTransaction();
+    $this->db->insert('famtastic_prospect')->fields(['id' => 4])->execute();
+    $this->db->insert('famtastic_customer_resource')->fields(['organization_id' => 2, 'resource_type' => 'prospect', 'resource_id' => 4, 'created' => $this->now])->execute();
+    $this->db->insert('famtastic_project_request')->fields(['id' => 2, 'public_id' => $this->uuid(6), 'customer_id' => 1, 'organization_id' => 2, 'prospect_id' => 4,
+      'project_name' => 'Second synthetic', 'business_name' => 'Second synthetic', 'project_type' => 'website', 'status' => 'submitted', 'submitted_at' => $this->now,
+      'intake_data' => '{"primary_goal":"Second synthetic only"}', 'created' => $this->now, 'changed' => $this->now])->execute();
+    $jobId = $this->admission->admit(2, 1, 'portal.create', NULL); $tx->commitOrRelease(); unset($tx);
+    self::assertSame(2, $jobId);
+    // Expire job 1's full fence. Its recovery backoff lets job 2 claim normally.
+    $this->now += 1831;
+    $secondClaim = $this->coordinator->claim('synthetic-cloud', [WorkerCapabilityPolicy::PROOF]);
+    self::assertNotNull($secondClaim); self::assertSame($jobId, $secondClaim['job_id']); self::assertSame(1, $secondClaim['attempt']);
+    $secondJournal = $this->makeJournal(2);
+    $secondInput = array_replace($this->input, ['input_sha256' => hash('sha256', 'second synthetic input'), 'asset_ids' => []]);
+    $submit = fn() => $secondJournal->authorizeSubmission(2, $jobId, 'synthetic-cloud', $secondClaim['lease_token'], 1, [WorkerCapabilityPolicy::PROOF], 'research', $secondInput);
+    $before = $this->unchangedRecords(); $operations = $this->rows('famtastic_proof_operation');
+    $this->reject($submit, 'Unresolved paid operation requires reconciliation.');
+    self::assertSame($operations, $this->rows('famtastic_proof_operation')); self::assertSame($before, $this->unchangedRecords());
+    // Positive control: terminal execution evidence clears uncertainty, not billing holds.
+    $this->journal->recordReceipt($first['operation_id'], 'synthetic-cloud', $this->receipt($first));
+    $second = $submit(); self::assertSame('submit_once', $second['status']); self::assertSame($jobId, $second['identity']['job_id']);
+    self::assertNotSame($first['operation_id'], $second['operation_id']); self::assertCount(2, $this->rows('famtastic_proof_operation'));
+    self::assertSame($before, $this->unchangedRecords());
+  }
+  public function testThreeExhaustedGenerationsRetainReceiptWithoutFourthClaim(): void {
+    $first = $this->authorize();
+    foreach ([2, 3] as $attempt) {
+      $this->replaceClaim(); self::assertSame($attempt, $this->claim['attempt']);
+      self::assertSame(['status' => 'reconciliation_required', 'operation_id' => $first['operation_id']], $this->authorize());
+    }
+    $this->now += 1831;
+    self::assertNull($this->coordinator->claim($this->worker, [WorkerCapabilityPolicy::PROOF]));
+    self::assertSame('exception', $this->rows('famtastic_worker_claim')[0]['state']);
+    self::assertSame(3, (int) $this->rows('famtastic_worker_claim')[0]['attempt']);
+    self::assertSame('failed', $this->rows('famtastic_job')[0]['status']);
+    self::assertSame(3, (int) $this->rows('famtastic_job')[0]['attempts']);
+    $before = $this->unchangedRecords(); $identity = $this->rows('famtastic_proof_operation')[0]['identity_wire'];
+    self::assertSame(['status' => 'receipt_recorded', 'duplicate' => FALSE], $this->journal->recordReceipt($first['operation_id'], $this->worker, $this->receipt($first)));
+    self::assertSame($identity, $this->rows('famtastic_proof_operation')[0]['identity_wire']);
+    self::assertSame($before, $this->unchangedRecords());
+    // Beyond the third backoff too: receipt evidence cannot reopen attempts or use.
+    $this->now += 121;
+    self::assertNull($this->coordinator->claim($this->worker, [WorkerCapabilityPolicy::PROOF]));
+    $this->reject(fn() => $this->resume(), 'Proof execution deadline reached.');
+    $this->reject(fn() => $this->authorize('direction-a'), 'Proof execution deadline reached.');
+    self::assertSame($before, $this->unchangedRecords()); self::assertCount(1, $this->rows('famtastic_proof_operation'));
+    self::assertCount(3, $this->rows('famtastic_worker_budget'));
+    self::assertSame(300, array_sum(array_column($this->rows('famtastic_worker_budget'), 'reserved_cents')));
+    self::assertSame(['1:1', '1:2', '1:3'], array_column($this->rows('famtastic_worker_budget'), 'reservation_key'));
   }
   public function testLateReceiptThenPositiveCurrentGenerationResumeRetainsProducerAndHolds(): void {
     $first = $this->authorize(); $this->replaceClaim(); $before = $this->unchangedRecords(); $receipt = $this->receipt($first);
@@ -217,6 +273,28 @@ final class ProofOperationJournalTest extends UnitTestCase {
   public function testOriginalMonthHoldCannotAuthorizeAfterRollover(): void {
     $this->db->update('famtastic_worker_budget')->fields(['month' => '2026-08'])->execute(); $before = $this->unchangedRecords();
     $this->reject(fn() => $this->authorize(), 'current-month budget hold'); self::assertSame($before, $this->unchangedRecords());
+  }
+  public function testPostCommitMonthRolloverWithLiveLeaseRetainsUnknownWithoutPermit(): void {
+    $this->coordinator->fail(1, $this->worker, $this->claim['lease_token'], [WorkerCapabilityPolicy::PROOF], 1);
+    $this->now = (int) strtotime('2026-09-30 23:59:59 UTC'); $this->worker = 'synthetic-cloud';
+    $claim = $this->coordinator->claim($this->worker, [WorkerCapabilityPolicy::PROOF]);
+    self::assertNotNull($claim); $this->claim = $claim; self::assertSame(2, $claim['attempt']);
+    $before = $this->unchangedRecords();
+    $this->db->afterMutex = function () {
+      $this->db->transactionManager()->addPostTransactionCallback(function (bool $success) {
+        self::assertTrue($success); self::assertFalse($this->db->inTransaction()); $this->now += 2;
+      });
+    };
+    $this->reject(fn() => $this->authorize(), 'Operation clock changed after commit; reconciliation required.');
+    self::assertFalse($this->db->inTransaction()); self::assertSame('2026-10', gmdate('Y-m', $this->now));
+    self::assertSame(178, $this->claim['lease_until'] - $this->now); // Still exceeds the 60 + 5 second policy.
+    $operations = $this->rows('famtastic_proof_operation'); self::assertCount(1, $operations);
+    self::assertSame('submission_unknown', $operations[0]['state']);
+    $identity = json_decode($operations[0]['identity_wire'], TRUE);
+    self::assertSame('2026-09', $identity['month']); self::assertSame('1:2', $identity['reservation_key']);
+    self::assertSame(['status' => 'reconciliation_required', 'operation_id' => $operations[0]['operation_id']], $this->authorize());
+    self::assertSame($operations, $this->rows('famtastic_proof_operation')); self::assertSame($before, $this->unchangedRecords());
+    self::assertSame(['2026-09', '2026-09'], array_column($this->rows('famtastic_worker_budget'), 'month'));
   }
   public function testOuterTransactionRejectedBeforeVerifierAndLockedSeamsRequireTransaction(): void {
     $tx = $this->db->startTransaction(); $this->reject(fn() => $this->authorize(), 'own root transaction'); $tx->rollBack(); unset($tx);

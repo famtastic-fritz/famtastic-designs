@@ -6,8 +6,9 @@ Read `docs/contracts/PROOF-OPERATION-JOURNAL-V1.md` before connecting paid proof
 tools. The unregistered journal/catalog/verifiers default closed. Root-committed
 unknown state is not proof of submission or provider exactly-once behavior.
 Never retry an unresolved slot, refund unknown costs, store lease credentials,
-or interpret receipt metadata as proof import/QA authority. Current source tests
-are unrun; preserve the existing Mac routine and parent-owned runtime/Drive slot.
+or interpret receipt metadata as proof import/QA authority. Parent's aad9 baseline
+passes 257/1,689; three follow-up cases remain unrun. Preserve the existing Mac
+routine and parent-owned runtime/Drive slot. See the contract for exact evidence.
 
 ## September 21 - Additive execution, not a replacement Mac workflow
 
