@@ -85,6 +85,7 @@ function reviewAssetRace(ReviewPair $p, bool $withdraw): void {
   $stats = $p->a->call('stats'); reviewQuiet($stats);
   ProofGuard::check(count($stats['assets']) === 1 && $stats['assets'][0]['status'] === ($withdraw ? 'withdrawn' : 'active')
     && $stats['events']['draft'] === 1 && $stats['events']['review'] === 1 && $stats['events']['withdraw'] === (int) $withdraw
+    && $stats['counts']['famtastic_portal_activity'] === 1
     && $stats['counts']['fixture_file_metadata'] === 1 && $stats['counts']['fixture_file_usage'] === 1, 'asset_metadata_or_rights_mismatch');
   if ($withdraw) {
     $again = $p->b->call('upload', ['public_id' => $id]);
@@ -93,11 +94,18 @@ function reviewAssetRace(ReviewPair $p, bool $withdraw): void {
 }
 function reviewStaleEvent(ReviewPair $p): void {
   $p->a->call('attach'); $p->b->call('begin'); $before = $p->b->call('snapshot');
-  ProofGuard::check($before['events']['review'] === 1, 'stale_event_snapshot_not_established');
+  ProofGuard::check($before['events']['review'] === 1 && $before['counts']['famtastic_event'] === 1
+    && $before['counts']['famtastic_portal_activity'] === 1, 'stale_event_snapshot_not_established');
   $next = $p->a->call('attach', ['version' => 2]);
   ProofGuard::check($next['newly_attached'] && !$next['root_open'], 'second_review_not_committed');
   ProofGuard::check($p->b->call('snapshot')['events']['review'] === 1, 'event_snapshot_not_repeatable_read');
   $reply = $p->b->raw('attach', ['version' => 2]);
+  // Inspect B's own writes before rollback can conceal a spurious replay event
+  // or activity. Its established RR snapshot still contains only version 1.
+  $inside = $p->b->call('stats');
+  ProofGuard::check($inside['root_open'] && $inside['events'] === $before['events']
+    && $inside['counts']['famtastic_event'] === $before['counts']['famtastic_event']
+    && $inside['counts']['famtastic_portal_activity'] === $before['counts']['famtastic_portal_activity'], 'stale_replay_wrote_before_rollback');
   $p->b->call('rollback'); $stats = $p->a->call('stats'); reviewQuiet($stats);
   ProofGuard::check($stats['events']['review'] === 2 && $stats['requests'][0]['review_id'] === 'synthetic-version-2'
     && $stats['requests'][0]['digest'] === $next['manifest_sha256'], 'committed_review_was_changed');
@@ -129,12 +137,16 @@ function reviewNestedCaller(ReviewPair $p): void {
   $p->b->call('begin'); $p->b->call('sentinel');
   $retry = $p->b->call('create');
   ProofGuard::check($retry['root_open'] && !$retry['newly_created'] && !$retry['newly_attached'], 'nested_retry_committed_caller');
+  $inside = $p->b->call('stats');
+  ProofGuard::check($inside['root_open'] && $inside['organization_name'] === 'Uncommitted caller sentinel', 'nested_retry_lost_caller_write');
   ProofGuard::check($p->a->call('stats')['organization_name'] === 'Original synthetic organization', 'caller_write_became_visible');
   $p->b->call('rollback');
   reviewOneAttachment($p, $created['request_public_id']);
   $p->b->call('begin'); $p->b->call('sentinel');
   $refusal = $p->b->raw('create', ['key' => 'nested-new']);
   proofNeed(reviewRefused($refusal, 'New staff drafts require a fresh root transaction.'), 'new_nested_creation_not_refused');
-  ProofGuard::check($p->b->call('stats')['root_open'] && $p->a->call('stats')['organization_name'] === 'Original synthetic organization', 'nested_refusal_changed_caller_scope');
+  $inside = $p->b->call('stats');
+  ProofGuard::check($inside['root_open'] && $inside['organization_name'] === 'Uncommitted caller sentinel', 'nested_refusal_lost_caller_write');
+  ProofGuard::check($p->a->call('stats')['organization_name'] === 'Original synthetic organization', 'nested_refusal_changed_caller_scope');
   $p->b->call('rollback'); reviewOneAttachment($p, $created['request_public_id']);
 }

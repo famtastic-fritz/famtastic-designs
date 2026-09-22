@@ -2,6 +2,9 @@
 
 ## 2026-09-21 - Private-review MariaDB contention candidate, unrun
 
+- Strengthen pre-rollback own-transaction event/activity and sentinel assertions;
+  asset contention must preserve exactly one activity. Repin only scenarios in
+  the separate review lineage. Source-only follow-up; private cases remain unrun.
 - Add outside-webroot, separately pinned seven-case current/four-case frozen
   negative harness using the existing owned DB/bootstrap and bounded PHP peers.
   Actual review/asset methods; explicit metadata doubles; no production changes.

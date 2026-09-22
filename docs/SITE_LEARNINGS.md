@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Rollback is not evidence that a replay did not write
+
+Compare B's own event/activity counts against its established snapshot before
+rollback, and require its uncommitted sentinel after both retry and refusal.
+Another connection seeing original state proves isolation, not preservation of
+the caller's work. These source-only harness assertions are not executed proof.
+
 ## 2026-09-21 - Observe contention without manufacturing its outcome
 
 The private-review MariaDB candidate pauses only after actual Drupal SELECTs,

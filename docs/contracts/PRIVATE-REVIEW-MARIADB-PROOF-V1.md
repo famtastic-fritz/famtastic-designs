@@ -7,6 +7,16 @@ performed while authoring this candidate. Main owns the exclusive runtime slot.
 The 716/4,160 integration unit receipt and earlier root-worker MariaDB receipt
 are not evidence that this new harness passes.
 
+Independent source-review follow-up: before rollback, the stale-event case now
+compares B's own total events, review-event counts and activity count with its
+established RR snapshot. Both asset races require exactly one attachment activity.
+Nested retry and refusal must preserve B's own uncommitted sentinel, as well as
+keep it invisible to A. Rollback cannot conceal those failures. Only the scenarios
+hash changes in the separate lineage; root-worker pins and four expected negative
+tags remain untouched. Still no PHP/lint or runtime execution by this lane.
+Main reports the root-worker prerequisite on owned allocation `VcO6vU` passed
+16 cases / 103 checks in 115.201 seconds; that is not a private-review case receipt.
+
 ## Scope and identity
 
 Entrypoints are `backend/tests/private-review-mariadb/run.php` and `peer.php`,

@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Inspect caller state before cleanup hides it
+
+Observation: checking only another connection after rollback can hide spurious
+events/activity or loss of caller work. Guidance: inspect the caller's own RR
+counts and sentinel before rollback, then verify cross-connection isolation.
+The private-review candidate includes these assertions but remains unrun.
+
 ## 2026-09-21 - Separate DB ownership from source under test
 
 Observation: the reviewed worker allocation marker names frozen root-worker
