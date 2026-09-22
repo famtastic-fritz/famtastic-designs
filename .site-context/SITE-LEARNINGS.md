@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Separate DB ownership from source under test
+
+Observation: the reviewed worker allocation marker names frozen root-worker
+source, not later private-review code. Guidance: retain that marker and hashes;
+pin later source separately, reuse only the exact owned temp DB, isolate fixture
+tables, and reject source drift. New private-review harness is source-only/unrun;
+actual lock acquisition and exact invariant failures are required, not timeout
+success or a SQLite concurrency claim. Main owns execution and cleanup.
+
 ## 2026-09-21 - Account login and project access are different boundaries
 
 Observation: optional linked-interview repair runs before login finalization.

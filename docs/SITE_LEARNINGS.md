@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Observe contention without manufacturing its outcome
+
+The private-review MariaDB candidate pauses only after actual Drupal SELECTs,
+observes the exact other InnoDB thread, and retains unchanged query results.
+Frozen 7227 retry inversion must be observed as acquired membership while the
+asset writer owns request, not relabeled SQL timeout/deadlock. Separate frozen
+source hashes and outside-webroot fixtures avoid shallow-history dependency.
+Candidate remains entirely unrun; no production/concurrency status upgraded.
+
 ## 2026-09-21 - Non-autoload fixture names do not prevent source disclosure
 
 Observation: installed Drupal's `.htaccess` does not deny `.fixture` or the whole

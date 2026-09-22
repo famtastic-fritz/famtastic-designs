@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-21 - Private-review MariaDB contention candidate, unrun
+
+- Add outside-webroot, separately pinned seven-case current/four-case frozen
+  negative harness using the existing owned DB/bootstrap and bounded PHP peers.
+  Actual review/asset methods; explicit metadata doubles; no production changes.
+  Source only: no PHP/lint, Docker, tests, install, network or activation executed.
+  See `contracts/PRIVATE-REVIEW-MARIADB-PROOF-V1.md` for deferred proof boundaries.
+
 ## 2026-09-21 - Reconcile private reviews with additive automation
 
 - Preserve newer main 7227ceb6 private readers/routes and deployment fixes;

@@ -22,8 +22,14 @@ final class RemotePeer {
   private int $sequence = 0;
   private ?int $pending = NULL;
   public array $hello;
-  public function __construct(string $config, string $mode, string $hint, string $role) {
-    $this->process = proc_open([PHP_BINARY, '-d', 'memory_limit=64M', __DIR__ . '/peer.php', $config, $mode, $hint, $role],
+  public function __construct(string $config, string $mode, string $hint, string $role, string $entry = 'worker') {
+    // Fixed sibling only; never execute a caller-supplied path or shell command.
+    $script = match ($entry) {
+      'worker' => __DIR__ . '/peer.php',
+      'private-review' => __DIR__ . '/../private-review-mariadb/peer.php',
+      default => throw new RuntimeException('unknown_peer_entrypoint'),
+    };
+    $this->process = proc_open([PHP_BINARY, '-d', 'memory_limit=64M', $script, $config, $mode, $hint, $role],
       [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $this->pipes, __DIR__,
       ['FAMTASTIC_BACKEND_VENDOR' => getenv('FAMTASTIC_BACKEND_VENDOR'), 'PATH' => '/nonexistent/famtastic-proof-no-programs', 'TMPDIR' => sys_get_temp_dir()]);
     proofNeed(is_resource($this->process), 'cannot_start_peer');
