@@ -10,6 +10,16 @@ request before membership; competing first creation must release its root before
 switching to an existing request. Do not roll back a committed attachment when
 a post-transaction callback fails. Keep private readers and both DI registrations.
 
+## September 21 - Paid-operation journal source only
+
+Read `docs/contracts/PROOF-OPERATION-JOURNAL-V1.md` before connecting paid proof
+tools. The unregistered journal/catalog/verifiers default closed. Root-committed
+unknown state is not proof of submission or provider exactly-once behavior.
+Never retry an unresolved slot, refund unknown costs, store lease credentials,
+or interpret receipt metadata as proof import/QA authority. Parent's aad9 baseline
+passes 257/1,689; three follow-up cases remain unrun. Preserve the existing Mac
+routine and parent-owned runtime/Drive slot. See the contract for exact evidence.
+
 ## September 21 - Additive execution, not a replacement Mac workflow
 
 Read `docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md` before further automation

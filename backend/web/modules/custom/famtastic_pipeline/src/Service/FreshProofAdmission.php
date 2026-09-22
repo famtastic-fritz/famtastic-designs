@@ -94,6 +94,12 @@ final class FreshProofAdmission {
 
   /** Exact managed retry only, even when fresh admission has since been disabled. */
   public function reuse(int $requestId): int {
+    return (int) $this->lockCurrentBinding($requestId, $this->database)['job']['id'];
+  }
+
+  /** Transaction-only current records, NOT permission for a later external effect. */
+  public function lockCurrentBinding(int $requestId, Connection $connection): array {
+    if ($connection !== $this->database) throw new \LogicException('Proof binding requires the same database connection.');
     if (!$this->database->inTransaction()) throw new \RuntimeException('Managed proof reuse requires an outer request transaction.');
     $row = $this->locked('famtastic_project_request', 'id', $requestId);
     $event = FreshProofBinding::event($this->database, $requestId, TRUE);
@@ -110,7 +116,7 @@ final class FreshProofAdmission {
     $campaign = $this->locked('proof_campaign', 'id', (int) $row['proof_campaign_id']);
     if (!$campaign || $campaign['campaign_id'] !== $p['campaign_id'] || $campaign['studio_job_id'] !== $p['studio_job_id']
       || (int) $campaign['prospect_id'] !== (int) $row['prospect_id']) throw new \RuntimeException('Existing proof campaign differs.');
-    return (int) $record['job']['id'];
+    return $record;
   }
 
   private function locked(string $table, string $field, int $id): array|false {

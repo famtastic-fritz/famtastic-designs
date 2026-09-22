@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - A replacement lease cannot create a replacement bill
+
+Observation: an attempt-scoped call identity alone does not identify the same
+paid recipe step after worker replacement. Guidance: freeze one job/slot identity,
+record unknown before returning permission, retain cost holds and authenticate
+receipt recovery separately from the original producer. Parent reports aad9's
+real-SQLite baseline 257/1,689 PASS; three follow-up cases remain UNRUN. Actual
+three-generation recovery includes increasing backoff, not a fixed 31-second
+fixture wait. Late receipts must preserve exhausted attempts and original holds.
+No route/provider or activation exists; Drive/runtime remain parent-owned.
+
 ## 2026-09-21 - Non-autoload fixture names do not prevent source disclosure
 
 Observation: installed Drupal's `.htaccess` does not deny `.fixture` or the whole

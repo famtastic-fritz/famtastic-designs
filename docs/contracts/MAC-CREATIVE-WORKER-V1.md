@@ -3,6 +3,10 @@
 Status: proposed adapter contract backed by source and historical receipts;
 not an activated worker or unattended production proof.
 
+Unverified source follow-up: PROOF-OPERATION-JOURNAL-V1.md adds an unregistered,
+default-unconfigured journal. It does not connect or replace the Mac routine.
+No real provider/checkpoint verifier or paid-operation activation is installed.
+
 Later September 21 source milestone: default-OFF fresh portal create/draft-submit
 admission and managed generic-import denial are now implemented. See
 FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md for the exact 177-test synthetic receipt.

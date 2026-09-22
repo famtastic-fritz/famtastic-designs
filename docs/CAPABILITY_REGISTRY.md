@@ -18,6 +18,16 @@ credential/session doubles do not prove installed auth or MariaDB writer races.
 No production/creative/cloud capability promotion. See the private-review
 autopipeline compatibility contract for exact receipts and remaining gates.
 
+## 2026-09-21 - Paid-operation journal: source only, baseline SQLite verified
+
+Unregistered/default-unconfigured journal and bounded metadata checkpoint source
+now exist; no real verifier, recipe/price catalog, provider adapter or route is
+installed. Parent reports aad9 baseline 257 tests / 1,689 assertions PASS with
+protected inventories unchanged; three added fault cases remain unrun. This does
+not verify journal MariaDB contention or providers. No execution, import, QA,
+notification or cloud capability is promoted. Exact receipt and limitations:
+`contracts/PROOF-OPERATION-JOURNAL-V1.md`.
+
 ## 2026-09-21 - Real MariaDB worker contention verified, not activated
 
 Frozen worker source 1ac3bc26 passes 16 cases / 103 checks on independent real

@@ -22,6 +22,24 @@ and bounded FIFO coverage; see the managed artifact preparation contract.
   original lock/nesting/callback defects. Receipts and limits are in
   `contracts/PRIVATE-REVIEW-AUTOPIPELINE-COMPATIBILITY-V1.md`.
 
+## 2026-09-21 - Isolate journal cross-job, exhaustion and rollover regressions
+
+- Add three source-only cases: global unresolved-operation blocking with a second
+  admitted job and positive control, late receipt after three exhausted claims,
+  and post-commit month rollover with a still-sufficient lease. Production unchanged.
+- Parent reports aad9 baseline 257/1,689 PASS, protected unchanged; receipt
+  `proof-operation-journal-first.H8Yaww`. New cases remain unrun; runtime and Drive
+  mirror stay parent-owned. Details: `contracts/PROOF-OPERATION-JOURNAL-V1.md`.
+
+## 2026-09-21 - Unconfigured proof operation journal source
+
+- Add one-per-slot, cross-generation paid-operation metadata and explicit root
+  commit-before-permission; retain all budget holds and unknown outcomes.
+- Extract same-connection locked authority seams; add empty-table update 8067,
+  bounded receipt contract and real-SQLite fault regression source. No DI/routes.
+- Tests/lints unrun by owner instruction and disk/runtime coordination. No
+  provider, importer, messaging or activation. See `contracts/PROOF-OPERATION-JOURNAL-V1.md`.
+
 ## 2026-09-21 - Integrate real-database worker serialization evidence
 
 - Merge reviewed root-transaction coordination and its isolated MariaDB harness

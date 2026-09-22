@@ -227,6 +227,19 @@ final class WorkerCoordinator {
     return $row;
   }
 
+  /**
+   * Internal locked read only, never a submission permit. Caller must first lock
+   * current request/account/assets on this connection, then commit its own work.
+   */
+  public function lockOwnedProofClaim(int $id, string $worker, string $token, array $authorizedCapabilities, int $attempt, Connection $connection): array {
+    if ($connection !== $this->database) throw new \LogicException('Proof claim requires the same database connection.');
+    if (!$this->database->inTransaction()) throw new \LogicException('Proof ownership read requires an active transaction.');
+    WorkerCoordinatorMutex::acquire($this->database);
+    $row = $this->owned($id, $worker, $token, $authorizedCapabilities, $attempt);
+    if ($row['capability'] !== WorkerCapabilityPolicy::PROOF) throw new \RuntimeException('Paid operations require a proof claim.');
+    return $row;
+  }
+
   private function storedProfile(array $row): array {
     $profile = WorkerCapabilityPolicy::profile($row['capability']);
     if ($row['policy_version'] !== $profile['policy']) throw new \RuntimeException('Stored worker policy mismatch.');
