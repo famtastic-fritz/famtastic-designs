@@ -12,6 +12,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
 use Drupal\famtastic_pipeline\Service\CharacterAssetService;
+use Drupal\famtastic_pipeline\Service\FreshProofBinding;
 use Drupal\famtastic_pipeline\Service\ProofAssetContract;
 use Drupal\file\FileUsage\FileUsageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -67,12 +68,16 @@ final class WebsiteRequestProofController extends ControllerBase {
   }
 
   public function publicShare(Request $request, string $website_request, string $signature): JsonResponse {
+    if ($this->managedPublicRequest($website_request)) {
+      return $this->managedReadDenied(TRUE);
+    }
     $share = $this->portal->publicWebsiteProofShare($website_request, $signature);
     $response = new JsonResponse($share ? ['ok' => TRUE, 'proof_share' => $share] : ['ok' => FALSE, 'error' => 'proof_share_not_found'], $share ? 200 : 404);
     return $this->securePublicResponse($response);
   }
 
   public function publicPreview(Request $request, string $website_request, string $signature, string $direction): Response {
+    if ($this->managedPublicRequest($website_request)) return $this->managedReadDenied();
     $row = $this->portal->sharedWebsiteRequest($website_request, $signature);
     return $row ? $this->artifactResponse($row, $direction, $signature) : $this->securePublicResponse(new Response('Proof not found.', 404));
   }
@@ -89,6 +94,7 @@ final class WebsiteRequestProofController extends ControllerBase {
 
   /** Serves one frozen asset for an explicitly enabled, revocable proof share. */
   public function publicAsset(Request $request, string $website_request, string $signature, string $direction, string $asset_path): Response {
+    if ($this->managedPublicRequest($website_request)) return $this->managedReadDenied();
     $row = $this->portal->sharedWebsiteRequest($website_request, $signature);
     return $row ? $this->assetResponse($row, $direction, $asset_path) : $this->securePublicResponse(new Response('Proof asset not found.', 404));
   }
@@ -186,6 +192,7 @@ final class WebsiteRequestProofController extends ControllerBase {
   }
 
   private function artifactResponse(array $row, string $direction, ?string $shareSignature = NULL): Response {
+    if (FreshProofBinding::isManagedReadOnly($this->database, $row)) return $this->managedReadDenied();
     $direction = strtolower($direction);
     if (!in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE) || empty($row['proof_campaign_id'])) return new Response('Proof not found.', 404);
     $ids = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
@@ -240,6 +247,7 @@ final class WebsiteRequestProofController extends ControllerBase {
 
   /** Reads one declared asset without granting filesystem-path access. */
   private function assetResponse(array $row, string $direction, string $assetPath): Response {
+    if (FreshProofBinding::isManagedReadOnly($this->database, $row)) return $this->managedReadDenied();
     $direction = strtolower($direction);
     if (!in_array($direction, ['a', 'b', 'c', 'd', 'e', 'f'], TRUE) || empty($row['proof_campaign_id'])) {
       return new Response('Proof asset not found.', 404);
@@ -278,6 +286,21 @@ final class WebsiteRequestProofController extends ControllerBase {
     catch (\Throwable) {
       return new Response('Proof asset not found.', 404);
     }
+  }
+
+  /** Deny before the share helper can inspect legacy DNA or filesystem paths. */
+  private function managedPublicRequest(string $publicId): bool {
+    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('public_id', $publicId)->execute()->fetchAssoc();
+    return $row && FreshProofBinding::isManagedReadOnly($this->database, $row);
+  }
+
+  private function managedReadDenied(bool $json = FALSE): Response {
+    $response = $json
+      ? new JsonResponse(['ok' => FALSE, 'error' => 'proof_share_not_found'], 404)
+      : new Response('Proof not found.', 404, ['Content-Type' => 'text/plain; charset=UTF-8']);
+    $response->headers->set('X-Content-Type-Options', 'nosniff');
+    return $this->securePublicResponse($response);
   }
 
   private function securePublicResponse(Response $response): Response {
