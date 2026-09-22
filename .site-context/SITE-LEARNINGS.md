@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Pair runtime verification with the actual integrated source
+
+Observation: the integrated closed journal and immutable artifact verifier pass
+with the full Studio source/portal/dispatch fixtures (1588 tests) and full PHP
+(791/4804). Guidance: preserve the paired paths and protected inventories in
+each receipt. Local green source does not remove installed migration, authenticated
+provider, fresh delivery or cloud gates; do not enable a worker from test totals.
+
 ## 2026-09-21 - Verification layers are not interchangeable
 
 Observation: journal260/1,769 and artifact139/562 focused counts overlap the

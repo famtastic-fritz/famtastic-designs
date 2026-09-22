@@ -2,6 +2,14 @@
 
 Status: local repairs and verification; no live activation.
 
+Full integrated rerun now passes at Studioe470dfe / Designs9583766f:
+1,588 Studio tests/135files, both lints, both synthetic execution proofs, and
+791 PHP tests/4,804assertions (same68 existing deprecations), zero failed/skipped.
+Studio288.66s, PHP2.364s/60MiB, guarded292.917s. Receipt
+`journal-review-paired-final.zQmLl9`, protected data unchanged. This supersedes
+the earlier separate paired/combined source runs below. The new managed-package
+implementation remains separate work, not covered by this receipt.
+
 Latest integrated checkpoint `ee8f6d3871d122dada20a844a86f48113332221f` includes
 the reviewed default-closed paid journal, sealed prepared-bundle verifier and
 real private-review contention harness. Journal focused checks: 260/1,769;

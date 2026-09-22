@@ -1,5 +1,12 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Full cross-repository regression checkpoint
+
+Exact pair Studioe470dfe / Designs9583766f passes1,588 Studio tests/135files,
+both lints/proof commands and791 PHP tests/4,804assertions;68 existing PHP
+deprecations, zero failed/skipped tests, protected data unchanged. Receipt
+`journal-review-paired-final.zQmLl9`. No fresh creative/QA/release/cloud activation.
+
 ## 2026-09-21 - Combined closed journal / artifact verification
 
 Reviewed journal source69b834d2 passes 260 tests / 1,769 assertions, including
