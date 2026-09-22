@@ -154,3 +154,8 @@ the real authenticated session, all pages/documents, image/font rendering, navig
 the static request composer, an anonymous denial and another-customer denial against
 the served version. Preserve exact source and package hashes. No deployment or
 production account mutation was performed as part of this source implementation.
+
+
+## First release preflight recovery — 2026-09-21
+
+The f5d8c769 apply passed PHP 8.3 syntax, cache rebuild and service resolution, but its command-discovery check incorrectly used `drush list --filter=full-site-review` (Drush expects a command category). The error trap restored all prior runtime hashes, removed new files and rebuilt the prior cache successfully. No account attachment occurred. The check now uses exact `drush help famtastic:full-site-review-attach`. An explicit validated ancestor baseline permits a corrective release to compare against the actual restored f5bc140e runtime rather than claiming the failed release was live.
