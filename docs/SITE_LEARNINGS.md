@@ -1,5 +1,12 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 — Full-site handoff and portable source
+
+**Observation:** The prior portal represents concept selection, so a finished 14-page site cannot be attached as three concepts or a paid project. **Guidance:** Keep independent business source, immutable staff-assisted review metadata, true page counts and current tenant checks. Freeze response version across HTML/resource reads. Protect the completed review from later brief submissions starting the concept workflow. Preserve actor and owner-authority facts without attributing customer authorship, acceptance, payment or notices.
+
+**Observation:** Copying unrelated large public media during a local portal compile exhausted workstation space. **Guidance:** Compile with publicDir disabled for source validation, retain the full server build for release, and reclaim only task-owned generated output. Do not remove unrelated source or backups.
+
+
 ## 2026-09-21 — Connect sharing discovery
 
 **Observation:** A footer-only QR icon was easy to miss. The intro masks early hints, and native dialog boundaries needed explicit keyboard wrapping in Chromium.
