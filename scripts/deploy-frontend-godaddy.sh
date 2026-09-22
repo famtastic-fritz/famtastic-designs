@@ -175,6 +175,13 @@ nvm install
 nvm use
 set -u
 
+# The shared host can expose far more CPUs than this account's resource budget.
+# Bound both native worker pools and V8; resource limits affect build scheduling,
+# not authored inputs, runtime code, or publication validation.
+export RAYON_NUM_THREADS=2
+export TOKIO_WORKER_THREADS=2
+export NODE_OPTIONS="${NODE_OPTIONS:+$NODE_OPTIONS }--max-old-space-size=512"
+
 # The host can export production-mode npm configuration. The frontend build is
 # a release-time operation and Vite lives in devDependencies, so explicitly
 # retain build tooling instead of relying on the server environment.

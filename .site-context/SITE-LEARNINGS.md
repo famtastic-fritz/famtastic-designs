@@ -2868,3 +2868,8 @@ Historical migration receipts retain their original paths as evidence; this curr
 ## First release preflight recovery — 2026-09-21
 
 The f5d8c769 apply passed PHP 8.3 syntax, cache rebuild and service resolution, but its command-discovery check incorrectly used `drush list --filter=full-site-review` (Drush expects a command category). The error trap restored all prior runtime hashes, removed new files and rebuilt the prior cache successfully. No account attachment occurred. The check now uses exact `drush help famtastic:full-site-review-attach`. An explicit validated ancestor baseline permits a corrective release to compare against the actual restored f5bc140e runtime rather than claiming the failed release was live.
+
+
+## Frontend build recovery — 2026-09-21
+
+The first frontend build stopped before promotion because the private sparse source omitted the existing Why FAMtastic narration import. Materializing that exact committed input repaired module resolution. The next build was killed by the hosting account before completion; production frontend remained at 40ca506b. This does not by itself establish an OOM diagnosis. The release script now bounds native Rayon/Tokio workers to two and V8 old-space to 512 MiB, and the scoped source preparation includes the narration directory. The identical bounded local compile passes 618 modules; the full hosting build remains the release gate. See the [Rayon thread-pool environment contract](https://docs.rs/rayon/latest/rayon/struct.ThreadPoolBuilder.html).

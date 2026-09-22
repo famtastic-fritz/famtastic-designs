@@ -73,7 +73,7 @@ git --git-dir="$mirror" fetch origin
 mkdir -p "$release"
 if [[ ! -e "$source/.git" ]]; then
  git --git-dir="$mirror" worktree add --detach --no-checkout "$source" "$revision"
- git -C "$source" sparse-checkout set backend/web/modules/custom/famtastic_pipeline scripts frontend
+ git -C "$source" sparse-checkout set backend/web/modules/custom/famtastic_pipeline scripts frontend marketing/brands/famtastic/video-studio/whats-the-catch
  git -C "$source" read-tree -mu HEAD
 fi
 [[ "$(git -C "$source" rev-parse HEAD)" == "$revision" ]]
