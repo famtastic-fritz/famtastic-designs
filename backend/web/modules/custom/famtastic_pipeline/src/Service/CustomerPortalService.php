@@ -494,8 +494,18 @@ final class CustomerPortalService {
 
   /** Idempotently repairs or resumes a request already linked to a deep dive. */
   private function submitClaimedDeepDiveRequest(int $customerId, int $requestId): ?int {
+    $transaction = $this->database->startTransaction();
+    try {
+      $result = $this->writeClaimedDeepDiveRequest($customerId, $requestId);
+      unset($transaction);
+      return $result;
+    }
+    catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
+  }
+
+  private function writeClaimedDeepDiveRequest(int $customerId, int $requestId): ?int {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
-      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+      ->condition('id', $requestId)->range(0, 1)->forUpdate()->execute()->fetchAssoc();
     if (!$row || (int) $row['customer_id'] !== $customerId || !$this->isMember($customerId, (int) $row['organization_id'])) {
       throw new \RuntimeException('The completed interview is linked to a different customer request.');
     }
@@ -503,6 +513,7 @@ final class CustomerPortalService {
       return $requestId;
     }
     $intake = json_decode((string) $row['intake_data'], TRUE, flags: JSON_THROW_ON_ERROR);
+    $this->assertNoFullSiteReview($intake);
     $intake['proof_request'] = [
       'requested_count' => 3,
       'status' => 'queued',
@@ -573,6 +584,8 @@ final class CustomerPortalService {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->forUpdate()->execute()->fetchAssoc();
     if (!$row || (int) $row['customer_id'] !== $customerId || !$this->isMember($customerId, (int) $row['organization_id'])) throw new \RuntimeException('Website request not found.');
     if (in_array($row['status'], ['converted', 'cancelled'], TRUE)) throw new \InvalidArgumentException('This request can no longer be edited.');
+    $existingIntake = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    $this->assertNoFullSiteReview($existingIntake);
     $clean = $this->validateWebsiteRequest($input);
     $wasSubmitted = $row['status'] === 'submitted';
     if (in_array($row['status'], ['submitted', 'checkout_started'], TRUE) && $clean['status'] === 'draft') {
@@ -581,7 +594,6 @@ final class CustomerPortalService {
     // Customer edits may change answers, never server-authored audit metadata.
     // Original staff-assisted intake bytes remain in the immutable event ledger;
     // do not copy that ledger into the editable intake or trust echoed audit keys.
-    $existingIntake = json_decode((string) $row['intake_data'], TRUE) ?: [];
     $submission = SelectedRequestContent::record($input, $customerId, $rawInput);
     $clean['intake']['request_submission'] = ['raw_json' => $rawInput, 'sha256' => $rawInput === NULL ? NULL : hash('sha256', $rawInput)];
     $clean['intake']['authored_content'] = array_key_exists('page_content', $input)
@@ -989,6 +1001,9 @@ final class CustomerPortalService {
 
   private function serializeWebsiteRequest(array $row): array {
     $row['intake'] = json_decode((string) $row['intake_data'], TRUE) ?: [];
+    $row['full_site_review'] = FullSiteReviewPackage::projection((string) $row['public_id'], $row['intake']['staff_assisted_brief']['full_site_review'] ?? NULL);
+    // Customer APIs receive public review links, never the private file manifest.
+    unset($row['intake']['staff_assisted_brief']['full_site_review']);
     $row['customer_archived_at'] = (int) ($row['customer_archived_at'] ?? 0) ?: NULL;
     $row['customer_archived'] = $row['customer_archived_at'] !== NULL;
     $recommendation = (array) ($row['intake']['recommendation'] ?? []);
@@ -1518,23 +1533,37 @@ final class CustomerPortalService {
 
   /** Enqueues the canonical pre-purchase proof routine exactly once. */
   private function queueWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake): int {
-    $briefJson = json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
-    $briefHash = hash('sha256', $briefJson);
-    return $this->ledger->enqueue(
-      $this->websiteRequestProofJobKey($requestId, $briefHash),
-      'proof.generate',
-      [
-        'routine' => 'website_proof.generate.v1',
-        'brief_version' => 1,
-        'brief_sha256' => $briefHash,
-        'prospect_id' => $prospectId,
-        'website_request_id' => $requestId,
-        'website_request_public_id' => $publicId,
-        'website_discovery_v3' => $intake,
-        'website_discovery_v2' => $intake,
-      ],
-      $prospectId,
-    );
+    $transaction = $this->database->startTransaction();
+    try {
+      $stored = $this->database->select('famtastic_project_request', 'r')->fields('r', ['intake_data'])->condition('id', $requestId)->condition('public_id', $publicId)->forUpdate()->execute()->fetchField();
+      if ($stored === FALSE) throw new \RuntimeException('Website request not found.');
+      $this->assertNoFullSiteReview(json_decode((string) $stored, TRUE, 512, JSON_THROW_ON_ERROR));
+      $this->assertNoFullSiteReview($intake);
+      $briefJson = json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+      $briefHash = hash('sha256', $briefJson);
+      $jobId = $this->ledger->enqueue(
+        $this->websiteRequestProofJobKey($requestId, $briefHash),
+        'proof.generate',
+        [
+          'routine' => 'website_proof.generate.v1',
+          'brief_version' => 1,
+          'brief_sha256' => $briefHash,
+          'prospect_id' => $prospectId,
+          'website_request_id' => $requestId,
+          'website_request_public_id' => $publicId,
+          'website_discovery_v3' => $intake,
+          'website_discovery_v2' => $intake,
+        ],
+        $prospectId,
+      );
+      unset($transaction);
+      return $jobId;
+    }
+    catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
+  }
+
+  private function assertNoFullSiteReview(array $intake): void {
+    if (array_key_exists('full_site_review', (array) ($intake['staff_assisted_brief'] ?? []))) throw new \InvalidArgumentException('Your full website is ready for review. Use Messages to request changes.');
   }
 
   /** Stable job identity for one request and one exact normalized brief. */
@@ -1552,6 +1581,7 @@ final class CustomerPortalService {
       throw new \RuntimeException('Submitted website request not found.');
     }
     $intake = json_decode((string) $row['intake_data'], TRUE, flags: JSON_THROW_ON_ERROR);
+    $this->assertNoFullSiteReview($intake);
     return [
       'routine' => 'website_proof.generate.v1',
       'website_request_id' => (int) $row['id'],

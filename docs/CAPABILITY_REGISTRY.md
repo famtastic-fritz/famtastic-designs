@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 — Finished-site account review
+
+Locally implemented and independently reviewed: staff-bound immutable full-site reviews, customer/staff read paths, quiet draft attachment, hash validation and opaque-origin isolation. This is a manual owner-authorized delivery capability; no automated production or public launch claim. Travel Addicts source is privately verified and rebuilds in a clean remote clone. Production/account proof will be appended to the exact release report. See `docs/plans/FULL_SITE_REVIEW_2026-09-21.md`.
+
 ## 2026-09-21 — Connect QR discovery
 
 Production verified at `40ca506b`: prominent QR action, bounded/persisted pointer cue, accessible responsive scan dialog, and share/copy fallback. 23 contracts and 12 Chromium cases pass. QR asset bytes are preserved; QR repair/physical scan and actual OS sharing are not claimed. 24 live browser scenarios covered across apex/www, exact build bytes and main-site browser checks pass. GitHub hosted CI could not start due to billing. Evidence: `docs/evidence/connect-qr-discovery/`.

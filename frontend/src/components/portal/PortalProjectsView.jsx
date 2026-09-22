@@ -5,6 +5,9 @@ import PortalPageContentFields from './PortalPageContentFields.jsx';
 
 export function customerNextStep(request) {
   if (!request) return null;
+  if (request.full_site_review?.status === 'ready_for_review') {
+    return { owner: 'you', tone: 'action', label: 'Your full website is ready for review', detail: 'Open the website, explore the pages, and read the research behind the design.', action: 'full-site' };
+  }
   if (request.status === 'draft') {
     return { owner: 'you', tone: 'action', label: 'Finish your website brief', detail: 'Tell us what the business sells and what the site needs to accomplish.', action: 'brief' };
   }
@@ -65,12 +68,36 @@ export function StagingReview({ request, busy, onAccept }) {
 }
 
 function customerStage(request) {
+  if (request.full_site_review?.status === 'ready_for_review') return 'Ready for your review';
   if (request.proof_review_status === 'revision_requested') return 'We are making a new set from your feedback';
   if (['customer_ready', 'notified'].includes(request.proof_review_status)) return 'Your 3 directions are ready to review';
   if (request.proof_review_status === 'selected') return request.direct_checkout_available ? 'Your completed review is accepted — checkout is next' : ['failed', 'planning_failed', 'planning_blocked'].includes(request.staging_status) ? 'Your selection is saved — the build needs attention' : request.staging_preview?.status === 'deployed' ? 'Your completed website is ready for your review' : 'Your selected website is being prepared';
   if (request.status === 'draft') return 'Your brief needs a few more details';
   if (request.status === 'converted') return 'Your website build is underway';
   return 'FAMtastic is preparing your directions';
+}
+
+export function FullSiteReview({ request }) {
+  const review = request.full_site_review;
+  if (review?.status !== 'ready_for_review') return null;
+  return (
+    <section id={`full-site-review-${request.public_id}`} className="portal-proof-next" aria-label="Full website review">
+      <span className="eyebrow">Full website</span>
+      <h3>Ready for your review</h3>
+      <p>{review.title} · {review.page_count} pages</p>
+      <p>Explore your website and the research behind it. This is a private review; your website has not been launched.</p>
+      <div className="portal-proof-next__actions">
+        <a href={review.url} target="_blank" rel="noopener noreferrer" style={{ minHeight: 44 }}>Open your full website ↗</a>
+        <a href="/portal/?section=messages" style={{ minHeight: 44 }}>Request changes in Messages →</a>
+      </div>
+      {review.documents?.length > 0 && (
+        <details style={{ marginTop: '1rem' }}>
+          <summary style={{ minHeight: 44 }}>Design and research documents</summary>
+          <ul>{review.documents.map((document) => <li key={document.url}><a href={document.url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', minHeight: 44 }}>{document.label} ↗</a></li>)}</ul>
+        </details>
+      )}
+    </section>
+  );
 }
 
 function ProofDecisionGuide({ request }) {
@@ -1132,7 +1159,7 @@ export default function PortalProjectsView({
       </section>
 
       {/* When editing a brief */}
-      {editingRequest && (
+      {editingRequest && !editingRequest.full_site_review && (
         <WebsiteRequestIntakeEditor
           editingRequest={editingRequest}
           setEditingRequest={setEditingRequest}
@@ -1142,6 +1169,7 @@ export default function PortalProjectsView({
           busy={busy}
         />
       )}
+      {editingRequest?.full_site_review && <FullSiteReview request={editingRequest} />}
 
       {/* The landing stays a list. Details are intentionally a separate focus. */}
       {!editingRequest && !showingProject && activeRequests.length > 0 && (
@@ -1182,6 +1210,9 @@ export default function PortalProjectsView({
             {nextStep.action === 'review' && (
               <a href={`#staging-review-${activeRequest.public_id}`}>Review completed website ↓</a>
             )}
+            {nextStep.action === 'full-site' && (
+              <a href={`#full-site-review-${activeRequest.public_id}`}>Review full website ↓</a>
+            )}
             {nextStep.action === 'payment' && (
               <button type="button" onClick={() => navigate(`/buy?request=${encodeURIComponent(activeRequest.public_id)}`)}>Continue to payment →</button>
             )}
@@ -1205,7 +1236,7 @@ export default function PortalProjectsView({
           >
             <nav className="portal-project-tabs" aria-label="Project sections">
               <a href={`#today-${activeRequest.public_id}`}>Today</a>
-              <a href={`#concepts-${activeRequest.public_id}`}>Concepts</a>
+              <a href={activeRequest.full_site_review ? `#full-site-review-${activeRequest.public_id}` : `#concepts-${activeRequest.public_id}`}>{activeRequest.full_site_review ? 'Full website' : 'Concepts'}</a>
               <a href={`#plan-${activeRequest.public_id}`}>Plan</a>
               <a href={`#setup-${activeRequest.public_id}`}>Setup</a>
             </nav>
@@ -1225,8 +1256,10 @@ export default function PortalProjectsView({
 
             <StagingReview request={activeRequest} busy={busy} onAccept={onAcceptStaging} />
 
+            <FullSiteReview request={activeRequest} />
+
             {/* CONCEPT PROOFS OR DURABLE HANDOFF STATUS */}
-            {proofReady(activeRequest) && activeRequest.proof_review_status !== 'revision_requested' ? (
+            {!activeRequest.full_site_review && (proofReady(activeRequest) && activeRequest.proof_review_status !== 'revision_requested' ? (
               <div id={`concepts-${activeRequest.public_id}`} tabIndex={-1} style={{ marginTop: '1.5rem', scrollMarginTop: '5rem' }}>
                 <h3 style={{ margin: '0 0 0.35rem', fontSize: '1.3rem', color: '#fff' }}>
                   Choose one direction
@@ -1284,16 +1317,22 @@ export default function PortalProjectsView({
                   </div>
                 )}
               </div>
-            )}
+            ))}
 
             <details id={`plan-${activeRequest.public_id}`} className="portal-project-secondary" open style={{ marginTop: '1rem' }}>
               <summary>
                 Research &amp; growth plan
-                <span>Why these directions</span>
+                <span>{activeRequest.full_site_review ? 'Why this design' : 'Why these directions'}</span>
               </summary>
               <div className="portal-project-simple-section">
                 <h3>What we learned</h3>
-                <p>{activeRequest.proofs?.research_snapshot?.overview || 'We will add the research summary when the next proof set is ready.'}</p>
+                <p>{activeRequest.full_site_review?.research?.overview || activeRequest.proofs?.research_snapshot?.overview || 'We will add the research summary when the next proof set is ready.'}</p>
+                {activeRequest.full_site_review?.research?.sources?.length > 0 && (
+                  <details>
+                    <summary>Research sources</summary>
+                    <ul>{activeRequest.full_site_review.research.sources.map((source) => <li key={source.url}><a href={source.url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', minHeight: 44 }}>{source.title} ↗</a></li>)}</ul>
+                  </details>
+                )}
                 {activeRequest.proofs?.research_snapshot?.growth_plan && (
                   <div className="portal-growth-windows">
                     {[
@@ -1318,8 +1357,10 @@ export default function PortalProjectsView({
                 <span>{activeRequest.existing_domain || activeRequest.intake?.desired_domains || `${String(activeRequest.project_name || '').toLowerCase().replace(/[^a-z0-9]+/g, '')}.com (confirm)`}</span>
               </summary>
               <div className="portal-project-simple-section">
-                <p>We saved this from your intake as the proposed website address. You can correct it here before any domain is registered or connected.</p>
-                <ProjectDomainHostingManager request={activeRequest} busy={busy} onSave={onSaveWebsiteRequest} />
+                {activeRequest.full_site_review ? <p>Your website address will be confirmed before launch. Use Messages to request a change.</p> : <>
+                  <p>We saved this from your intake as the proposed website address. You can correct it here before any domain is registered or connected.</p>
+                  <ProjectDomainHostingManager request={activeRequest} busy={busy} onSave={onSaveWebsiteRequest} />
+                </>}
               </div>
             </details>
 
@@ -1353,16 +1394,16 @@ export default function PortalProjectsView({
                 </ul>
               ) : (
                 <p style={{ color: '#8e998e', fontSize: '0.85rem', margin: '0 0 0.75rem' }}>
-                  No logos or reference files attached yet. Add files via the brief editor anytime.
+                  {activeRequest.full_site_review ? 'Your full website, design and research documents are available above.' : 'No logos or reference files attached yet. Add files via the brief editor anytime.'}
                 </p>
               )}
               </div>
             </details>
 
             <div style={{ marginTop: '1rem', display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
-              <button type="button" onClick={() => setEditingRequest(activeRequest)}>
+              {!activeRequest.full_site_review && <button type="button" onClick={() => setEditingRequest(activeRequest)}>
                 Update my brief
-              </button>
+              </button>}
               <button
                 type="button"
                 className="quiet"

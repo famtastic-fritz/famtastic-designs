@@ -84,6 +84,12 @@ case "${1:-}" in
   *) usage >&2; exit 2 ;;
 esac
 
+# Bounded full-site review feature: code and router/container caches only.
+# No schema, catalog, scheduler, lifecycle, payment or notification mutation.
+if [[ "${FAMTASTIC_FULL_SITE_REVIEW_ONLY:-0}" == 1 ]]; then
+  exec bash "$SCRIPT_DIR/deploy-full-site-review-backend.sh" "$@"
+fi
+
 # Presentation-only retrofit: no Composer, database, config, cron, queue or cache mutation.
 if [[ "${FAMTASTIC_CREATOR_CREDIT_ONLY:-0}" == 1 ]]; then
   cd "$REPO_ROOT"

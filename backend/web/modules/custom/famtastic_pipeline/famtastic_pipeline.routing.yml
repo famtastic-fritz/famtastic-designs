@@ -453,6 +453,30 @@ famtastic_pipeline.customer_website_request:
   options:
     no_cache: 'TRUE'
 
+famtastic_pipeline.customer_full_site_review_file:
+  path: '/api/customer/website-requests/{website_request}/full-site/{artifact_path}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\FullSiteReviewController::file'
+  methods: [GET, HEAD]
+  requirements:
+    _access: 'TRUE'
+    website_request: '[0-9a-f-]{36}'
+    artifact_path: '.+'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.admin_full_site_review_file:
+  path: '/admin/famtastic/website-request/{website_request}/full-site/{artifact_path}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\FullSiteReviewController::adminFile'
+  methods: [GET, HEAD]
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    website_request: '\d+'
+    artifact_path: '.+'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_website_request_archive:
   path: '/api/customer/website-requests/{website_request}/archive'
   defaults:
