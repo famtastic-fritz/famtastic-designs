@@ -2,6 +2,12 @@
 
 Status: local repairs and verification; no live activation.
 
+Next coherent review slice is source-mapped in
+`RETAINED_QA_INTEGRATION_2026-09-22.md`: real retained evidence plus its actual
+release consumer, then shared review ownership. Existing screenshot hashes do
+not retain images or supply all nine QA judgments. This is a plan, not a worker
+or a claim that the customer journey is already unattended.
+
 September 22 signed-authority checkpoint: the existing HMAC/registry/nonce scheme
 now mints current request-scoped principals and the existing controller passes
 them into managed release. Real disposable nonce persistence and a deterministic

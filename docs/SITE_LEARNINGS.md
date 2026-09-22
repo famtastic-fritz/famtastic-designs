@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - A short-lived HTTP identity is not a long-running review lease
+
+The signed principal expires after90seconds; review ownership must be renewed
+through a separate shared job, with fresh signed reads/submission. Retained
+authenticated acceptance must remain verifiable without reusing that old HTTP
+signature. Preserve creative completion and reference the exact imported bytes.
+Static browser hashes/metadata cannot replace retained files or independent
+visual/rights/claims judgments. The source-mapped next review slice is a plan,
+not an installed worker or another owner approval gate.
+
 ## 2026-09-22 - Authentication needs insertion ownership, not just persistence
 
 Observation: a readback can match a concurrent winner after a losing nonce insert

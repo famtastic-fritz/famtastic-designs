@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-22 - Map the remaining retained-review integration
+
+- Record actual screenshot-retention, shared review-job, authenticated acceptance
+  and existing release-consumer seams; distinguish planned work from installed QA.
+- Preserve the completed creative job, nine substantive checks, current rights,
+  shared budgets and immutable retry behavior. No activation or runtime change.
+  See `plans/RETAINED_QA_INTEGRATION_2026-09-22.md`.
+
 ## 2026-09-22 - Bind existing worker requests to durable scoped principals
 
 - Reuse the existing registry/HMAC/nonce table in a request-scoped authenticator;

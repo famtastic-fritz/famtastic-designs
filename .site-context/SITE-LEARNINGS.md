@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - Screenshot hashes are not retained review evidence
+
+Observation: the existing static QA captures screenshots but discards the buffers,
+and its five checks do not establish the nine managed release judgments. Guidance:
+retain actual bytes and independent assessments through a committed authenticated
+review record; reuse the existing release verifier rather than another synthetic
+attestor. Give review its own shared claim without reopening the creative job.
+The next slice is planned in docs/plans/RETAINED_QA_INTEGRATION_2026-09-22.md;
+no runtime capability or production classification changed in that planning work.
+
 ## 2026-09-22 - A matching nonce row does not identify its winning writer
 
 Observation: independent review found that insert-ignore plus a concurrent winner
