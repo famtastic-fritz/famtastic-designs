@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Separate subprocess bootstrap errors from DB assertions
+
+Observation: after main's third provisioning succeeded, PahTfo exited 2 before any
+case/child because proc_open could not bind an uninitialized typed pipes property.
+Guidance: initialize the array and retain the protected-data-unchanged bootstrap
+failure as such. One-line source fix, no agent execution; main retains the owned
+server and runtime slot. Drive mirror remains main-owned.
+
 ## 2026-09-21 - Separate DB network reachability from PHP egress denial
 
 Observation: main's second internal-bridge allocation ran MariaDB without actual

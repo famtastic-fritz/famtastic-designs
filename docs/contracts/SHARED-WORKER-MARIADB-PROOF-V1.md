@@ -1,6 +1,6 @@
 # Isolated MariaDB shared-worker proof harness
 
-September 21, 2026. **PHP contention proof unrun; parent provisioning failed.**
+September 21, 2026. **Parent provisioning succeeded; PHP bootstrap failed.**
 At original source checkpoint `0972b8f7`, no PHP/Node execution, syntax check,
 test, container, pull, install, site bootstrap, provider, notification or migration
 was performed by this lane. The later parent-owned attempts are retained below.
@@ -8,7 +8,7 @@ Read-only source/fixture hash and Git whitespace checks are not runtime proof.
 The integrating parent separately reports frozen candidate full PHP 532 tests /
 2,824 assertions passing. That receipt does not establish MariaDB contention.
 
-## Retained parent provisioning failures
+## Retained parent run history
 
 Main reports its first attempt stopped before the container process started:
 container `cd0947f68e9d11cc78b6cf5626fb803f1faf8bd5f06990f2eb115a053e2d7497`,
@@ -37,6 +37,16 @@ using the pre-change `ed94d9bf` provisioner, which requires its internal bridge.
 The new guard intentionally does not accept that old network. No cleanup is
 claimed here. Independent orchestration review precedes any new allocation;
 this lane has not executed the revised provisioner or PHP runner.
+
+Main reports third provisioning succeeded for owned run suffix
+`/T/famtastic-worker-mariadb-Mj1XUG`, with actual endpoint `127.0.0.1:32768`.
+The subsequent guarded runner receipt `worker-mariadb-current.PahTfo` exited 2,
+with protected data unchanged, before any case execution or child process:
+`Cannot access uninitialized non-nullable property RemotePeer::$pipes by reference`.
+This is a runner bootstrap failure, not an assertion failure or contention proof.
+The narrow source repair initializes the typed array to `[]` before proc_open
+receives it by reference. Main holds the disposable server for its reviewed rerun;
+this lane performed no runtime, and candidate `1ac3bc26` remains unchanged.
 
 ## Frozen inputs and exact new source
 
@@ -90,8 +100,9 @@ run-labeled container: one CPU, 768 MiB memory with no additional swap allowance
 256 MiB `/var/lib/mysql`, 8 MiB `/run/mysqld`, 32 MiB `/tmp`. The first two mounts
 are 0700; container-only `/tmp` is bounded 1777 for the unprivileged mysql process.
 There are no bind/host/anonymous data volumes. Container logs are capped at one
-1 MiB file with compression explicitly disabled. Main reports process startup on
-the second attempt; successful end-to-end provisioning remains unproven here.
+1 MiB file with compression explicitly disabled. Main reports successful third
+provisioning and an actual published endpoint; PHP connection/bootstrap and
+contention verification remain pending after the retained runner failure.
 
 Publication is one dynamically assigned `127.0.0.1` port, excluding 3306/3400.
 The ordinary bridge permits container NAT egress: **container egress is not
@@ -158,9 +169,9 @@ below. Unexpected assertion failures exit 1 with `failed_not_negative_proof`;
 bootstrap/protocol/timeout/unexpected-pass failures exit **2**, never a useful
 negative proof. These are runner exit codes: the existing wrapper itself returns
 1 for any child failure, so inspect its recorded child status and JSON output,
-not the wrapper exit alone. Keep every red receipt. No PHP case receipt or
-syntax/bootstrap success exists here; the parent provisioning failures above are
-retained separately. Record the harness commit, wrapper
+not the wrapper exit alone. Keep every red receipt. No completed PHP case or
+successful runner bootstrap is recorded here; retain the provisioning history
+and `worker-mariadb-current.PahTfo` bootstrap failure separately. Record the harness commit, wrapper
 inventory result, actual versions, case outcomes and resource cleanup separately.
 
 ## Assertions and honest scope

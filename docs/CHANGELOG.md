@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-21 - Initialize subprocess pipes before by-reference bootstrap
+
+- Initialize the harness's typed pipes array for proc_open. Retain main's
+  `worker-mariadb-current.PahTfo` exit-2 bootstrap receipt, protected data unchanged,
+  with no case/child execution. Third provisioning succeeded; this one-line
+  source repair is unrun by this lane and changes no candidate production source.
+
 ## 2026-09-21 - Dedicated bridge for loopback MariaDB publication
 
 - Remove the harness bridge's internal flag and require Internal=false after

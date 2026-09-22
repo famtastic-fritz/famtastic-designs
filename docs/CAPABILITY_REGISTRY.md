@@ -1,17 +1,20 @@
 # FAMtastic Designs capability registry
 
-## 2026-09-21 - MariaDB contention harness prepared, not executed
+## 2026-09-21 - MariaDB provisioned; contention harness bootstrap blocked
 
 Outside-webroot source composes the actual coordinator/ledger with independent
 Drupal MySQL connections and a frozen old-coordinator control. Resource-bounded
 tmpfs provisioning is separate from sandboxed PHP tests. Main's first provisioning
 attempt failed before process start because compression conflicts with a one-file
 local-log limit. After disabling compression, main reports MariaDB startup but
-no published port on the internal bridge. The next unexecuted revision uses a
+no published port on the internal bridge. The next revision uses a
 dedicated ordinary bridge and retains the exact loopback publication guard.
 Container NAT egress is not firewall-disabled; PHP sandbox denial remains intact.
-No agent runtime or PHP bootstrap/test success is claimed. Real MariaDB contention
-remains unproven; independent orchestration review is still required.
+Main reports third provisioning succeeded (Mj1XUG, 127.0.0.1:32768), followed by
+runner bootstrap failure `worker-mariadb-current.PahTfo`: exit 2, protected data
+unchanged, before case/child execution. Initialize the typed pipes array for
+proc_open by reference. No agent runtime or PHP bootstrap/test success is claimed;
+real MariaDB contention remains unproven pending the main-owned reviewed rerun.
 See `contracts/SHARED-WORKER-MARIADB-PROOF-V1.md`; no activation
 or production capability classification changes.
 

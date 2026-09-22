@@ -16,7 +16,7 @@ final class ProofGuard {
 /** Pipes carry bounded synthetic facts only. Each child owns exactly one PDO. */
 final class RemotePeer {
   private mixed $process;
-  private array $pipes;
+  private array $pipes = [];
   private string $buffer = '';
   private array $messages = [];
   private int $sequence = 0;

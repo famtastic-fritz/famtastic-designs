@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Initialize typed arrays passed by reference to subprocess APIs
+
+Observation: main's provisioned DB harness could not start its first child because
+proc_open received an uninitialized non-nullable pipes property by reference.
+Guidance: initialize it to [], retain the exit-2 bootstrap receipt PahTfo, and do
+not report an assertion failure or concurrency result. Protected data was unchanged
+per main's receipt. Source-only fix; main owns the server and rerun.
+
 ## 2026-09-21 - Verify actual loopback publication, not requested bindings
 
 Observation: main's internal-bridge MariaDB container started, but actual 3306/tcp
