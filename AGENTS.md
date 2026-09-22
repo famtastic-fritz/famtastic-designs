@@ -1,5 +1,14 @@
 # Agent Instructions
 
+## September 21 - Paid-operation journal source only
+
+Read `docs/contracts/PROOF-OPERATION-JOURNAL-V1.md` before connecting paid proof
+tools. The unregistered journal/catalog/verifiers default closed. Root-committed
+unknown state is not proof of submission or provider exactly-once behavior.
+Never retry an unresolved slot, refund unknown costs, store lease credentials,
+or interpret receipt metadata as proof import/QA authority. Current source tests
+are unrun; preserve the existing Mac routine and parent-owned runtime/Drive slot.
+
 ## September 21 - Additive execution, not a replacement Mac workflow
 
 Read `docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md` before further automation

@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - A replacement lease cannot create a replacement bill
+
+Observation: an attempt-scoped call identity alone does not identify the same
+paid recipe step after worker replacement. Guidance: freeze one job/slot identity,
+record unknown before returning permission, retain cost holds and authenticate
+receipt recovery separately from the original producer. This journal source and
+its real-SQLite fault cases are UNRUN. No route/provider or activation exists;
+Drive and runtime verification remain parent-owned.
+
 ## 2026-09-21 - Non-autoload fixture names do not prevent source disclosure
 
 Observation: installed Drupal's `.htaccess` does not deny `.fixture` or the whole

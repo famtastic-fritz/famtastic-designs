@@ -10,6 +10,13 @@ final class WorkerCoordinatorSchema {
     $int = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
     $str = ['type' => 'varchar', 'length' => 191, 'not null' => TRUE, 'default' => ''];
     return [
+      'famtastic_proof_operation' => [
+        'description' => 'Unconfigured paid-operation journal. Unknown rows never authorize automatic resubmission.',
+        'fields' => ['operation_id' => $str, 'job_id' => $int, 'slot' => $str, 'identity_wire' => $text, 'identity_sha256' => $str,
+          'reserved_cents' => $int, 'state' => $str, 'receipt_wire' => $text,
+          'receipt_sha256' => $str, 'recorder_id' => $str, 'created' => $int, 'changed' => $int],
+        'primary key' => ['operation_id'], 'unique keys' => ['job_slot' => ['job_id', 'slot']], 'indexes' => ['state' => ['state']],
+      ],
       'famtastic_worker_mutex' => [
         'description' => 'Fixed singleton row: database transaction ownership only, no authority payload or TTL.',
         'fields' => ['id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE]],

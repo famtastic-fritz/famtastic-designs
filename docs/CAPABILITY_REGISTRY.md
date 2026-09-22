@@ -1,5 +1,13 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Paid-operation journal: source only, unverified
+
+Unregistered/default-unconfigured journal and bounded metadata checkpoint source
+now exist; no real verifier, recipe/price catalog, provider adapter or route is
+installed. Regression source is unrun. Existing coordination receipts do not
+verify this addition. No execution, import, QA, notification or cloud capability
+is promoted. Contract: `contracts/PROOF-OPERATION-JOURNAL-V1.md`.
+
 ## 2026-09-21 - Real MariaDB worker contention verified, not activated
 
 Frozen worker source 1ac3bc26 passes 16 cases / 103 checks on independent real

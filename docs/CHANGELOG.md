@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-21 - Unconfigured proof operation journal source
+
+- Add one-per-slot, cross-generation paid-operation metadata and explicit root
+  commit-before-permission; retain all budget holds and unknown outcomes.
+- Extract same-connection locked authority seams; add empty-table update 8067,
+  bounded receipt contract and real-SQLite fault regression source. No DI/routes.
+- Tests/lints unrun by owner instruction and disk/runtime coordination. No
+  provider, importer, messaging or activation. See `contracts/PROOF-OPERATION-JOURNAL-V1.md`.
+
 ## 2026-09-21 - Integrate real-database worker serialization evidence
 
 - Merge reviewed root-transaction coordination and its isolated MariaDB harness

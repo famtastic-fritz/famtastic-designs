@@ -6,6 +6,11 @@ It extends the established Mac creative process; it does not substitute static
 packaging or the fictional six-direction benchmark for customer proof creation.
 Read SHARED-PROOF-CLAIMS-V1.md and MAC-CREATIVE-WORKER-V1.md together.
 
+Unverified source follow-up: PROOF-OPERATION-JOURNAL-V1.md adds only an
+unregistered paid-operation journal and bounded receipt metadata. Admission
+reuse retains its checks through a same-connection locked-record helper. Tests
+are unrun; provider, current-byte verification, importer and activation stay closed.
+
 The later narrow `MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md` checkpoint extracts
 legacy artifact validation and adds unregistered private create-only preparation.
 Its 109 focused tests / 463 assertions pass with isolated DNA guards, a hash-pinned

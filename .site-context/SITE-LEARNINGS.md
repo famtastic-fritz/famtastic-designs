@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Permission must follow root commit and callback completion
+
+Observation: Drupal transaction release is not necessarily root commit, and
+post-transaction callbacks execute on object destruction after explicit commit.
+Guidance: the paid-operation journal rejects outer transactions and withholds
+permission on commit acknowledgement or callback failure. Retain a committed
+unknown row and original producer identity across retries. Added fault tests are
+unrun; no provider exactly-once, media recovery or activation claim. Parent owns
+guarded runtime and Drive mirroring. See PROOF-OPERATION-JOURNAL-V1.md.
+
 ## 2026-09-21 - Prove lock ownership beyond the advisory timeout
 
 Observation: frozen 1ac3bc26 passes independent MariaDB connections with three
