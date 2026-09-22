@@ -2,10 +2,21 @@
 
 Status: local repairs and verification; no live activation.
 
+The complete paired rerun now passes: Studio f527e8b plus fixture cleanup,
+Designs4998be27, 1,588 tests / 135 files, zero failed/skipped, both lints, both
+synthetic execution proofs, 291.94s suite/293.357s guarded. Receipt:
+`private-review-paired-cleanup.vq9vHH`. Protected Studio inventories unchanged.
+The predecessor was disk-guard interrupted; leaked batch/shadow test fixtures
+were fixed, and 13 exact interrupted-run roots were archived recoverably before
+removal. Details and SHA256 are in the paired Studio integration evidence.
+The later main f750a163 merge is delivery documentation only, not a runtime
+change. Paid-operation journal and private-review contention harness are separate
+unverified slices. No creative, import, delivery or cloud activation is claimed.
+
 Newer main 7227ceb6 private reviews are now reconciled locally, preserving both
 lifecycle boundaries and readers. Combined PHP 716/4,160, portal SSR 1/1 and
 design rules 34/34 pass; six upstream negative cases confirm old transaction
-defects. Full paired Studio rerun remains pending. See
+defects. The full paired rerun is recorded above. See
 `../contracts/PRIVATE-REVIEW-AUTOPIPELINE-COMPATIBILITY-V1.md`.
 
 Latest checkpoint: frozen worker source 1ac3bc26 passes real MariaDB 16 cases /
