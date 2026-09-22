@@ -11,6 +11,22 @@ three-generation recovery includes increasing backoff, not a fixed 31-second
 fixture wait. Late receipts must preserve exhausted attempts and original holds.
 No route/provider or activation exists; Drive/runtime remain parent-owned.
 
+## 2026-09-21 - Rollback is not evidence that a replay did not write
+
+Compare B's own event/activity counts against its established snapshot before
+rollback, and require its uncommitted sentinel after both retry and refusal.
+Another connection seeing original state proves isolation, not preservation of
+the caller's work. These source-only harness assertions are not executed proof.
+
+## 2026-09-21 - Observe contention without manufacturing its outcome
+
+The private-review MariaDB candidate pauses only after actual Drupal SELECTs,
+observes the exact other InnoDB thread, and retains unchanged query results.
+Frozen 7227 retry inversion must be observed as acquired membership while the
+asset writer owns request, not relabeled SQL timeout/deadlock. Separate frozen
+source hashes and outside-webroot fixtures avoid shallow-history dependency.
+Candidate remains entirely unrun; no production/concurrency status upgraded.
+
 ## 2026-09-21 - Non-autoload fixture names do not prevent source disclosure
 
 Observation: installed Drupal's `.htaccess` does not deny `.fixture` or the whole

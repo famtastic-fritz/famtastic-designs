@@ -9,6 +9,27 @@ normalizer; no route, publication or completion authority opens. Focused
 139 tests / 562 assertions pass after independent review strengthened symlink
 and bounded FIFO coverage; see the managed artifact preparation contract.
 
+## 2026-09-21 - Verify private-review contention on real MariaDB
+
+- Main repaired standalone PHPUnit mock context and exact MariaDB wait observation;
+  preserve source pins, table/thread identity, deadlines and all negative tags.
+- Seven current cases / 84 checks pass; four frozen controls / 22 checks fail
+  exactly as intended. Protected inventories unchanged. Remove only the owned
+  disposable DB/network/credentials, retaining receipts and fixture evidence.
+- This is frozen local concurrency evidence, not installed storage, migration,
+  paid-provider, customer delivery or activation. See the private-review DB contract.
+
+## 2026-09-21 - Private-review MariaDB contention candidate, unrun
+
+- Strengthen pre-rollback own-transaction event/activity and sentinel assertions;
+  asset contention must preserve exactly one activity. Repin only scenarios in
+  the separate review lineage. Source-only follow-up; private cases remain unrun.
+- Add outside-webroot, separately pinned seven-case current/four-case frozen
+  negative harness using the existing owned DB/bootstrap and bounded PHP peers.
+  Actual review/asset methods; explicit metadata doubles; no production changes.
+  Source only: no PHP/lint, Docker, tests, install, network or activation executed.
+  See `contracts/PRIVATE-REVIEW-MARIADB-PROOF-V1.md` for deferred proof boundaries.
+
 ## 2026-09-21 - Reconcile private reviews with additive automation
 
 - Preserve newer main 7227ceb6 private readers/routes and deployment fixes;

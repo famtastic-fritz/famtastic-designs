@@ -9,6 +9,31 @@ tenant, worker, producer and QA authority. A negative test must reach its intend
 guard: an extra sibling originally masked the directory-symlink assertion.
 Use bounded FIFO coverage to detect a regular-file check accidentally removed.
 
+## 2026-09-21 - A failed observer is not a successful contention test
+
+Observation: standalone PHPUnit doubles needed a real TestCase call context and
+in-memory configuration. MariaDB wait metadata then needed >100ms read idle time
+and exact ANSI_QUOTES-aware identifiers. Guidance: retain red diagnostics, verify
+actual holder/requester rows, and fix the observer without relaxing assertions.
+Seven current cases / 84 checks pass; all four old-source controls fail exactly.
+Only disposable owned resources/credentials were removed; evidence is retained.
+
+## 2026-09-21 - Inspect caller state before cleanup hides it
+
+Observation: checking only another connection after rollback can hide spurious
+events/activity or loss of caller work. Guidance: inspect the caller's own RR
+counts and sentinel before rollback, then verify cross-connection isolation.
+The private-review candidate includes these assertions but remains unrun.
+
+## 2026-09-21 - Separate DB ownership from source under test
+
+Observation: the reviewed worker allocation marker names frozen root-worker
+source, not later private-review code. Guidance: retain that marker and hashes;
+pin later source separately, reuse only the exact owned temp DB, isolate fixture
+tables, and reject source drift. New private-review harness is source-only/unrun;
+actual lock acquisition and exact invariant failures are required, not timeout
+success or a SQLite concurrency claim. Main owns execution and cleanup.
+
 ## 2026-09-21 - Account login and project access are different boundaries
 
 Observation: optional linked-interview repair runs before login finalization.

@@ -8,6 +8,16 @@ bytes. Independently reviewed with 139 focused tests / 562 assertions passing.
 No claim/tenant/QA/delivery permission, route or live provider is installed.
 See `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`.
 
+## 2026-09-21 - Frozen private-review MariaDB contention verified
+
+Main's guarded real database run of 4998be27 passes seven cases / 84 checks;
+four frozen 7227 controls produce all expected invariant failures (22 checks).
+Independent PDO/REPEATABLE READ observations retain exact lock ownership. All
+protected data is unchanged and the exact-owned temporary allocation is removed.
+File metadata remains explicitly doubled. No installed kernel/auth, later journal,
+creative provider, live pipeline or cloud capability is promoted. Receipts and
+retained failed-harness diagnostics: `contracts/PRIVATE-REVIEW-MARIADB-PROOF-V1.md`.
+
 ## 2026-09-21 - Private review integration, locally verified only
 
 Main 7227ceb6 is preserved with managed admission exclusions, authorized login

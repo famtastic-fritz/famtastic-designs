@@ -9,6 +9,10 @@ a retry or a presentation-validation gate. Existing attachment retries lock
 request before membership; competing first creation must release its root before
 switching to an existing request. Do not roll back a committed attachment when
 a post-transaction callback fails. Keep private readers and both DI registrations.
+The source-only real-DB contention candidate is documented in
+`docs/contracts/PRIVATE-REVIEW-MARIADB-PROOF-V1.md`. It reuses the exact owned
+worker DB with isolated fixture tables; preserve both lineage manifests and
+exact negative-control tags. No runtime or production capability is implied.
 
 ## September 21 - Paid-operation journal source only
 
