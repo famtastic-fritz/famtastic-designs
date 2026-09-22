@@ -8,6 +8,7 @@ namespace Drupal\famtastic_pipeline\Service;
 final class FullSiteReviewPackage {
 
   public const SCHEMA = 'famtastic.full-site-review.v1';
+  public const MAX_PATH_SEGMENTS = 3;
   private const TYPES = [
     'html' => 'text/html', 'css' => 'text/css', 'js' => 'text/javascript',
     'png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg',
@@ -99,7 +100,9 @@ final class FullSiteReviewPackage {
 
   public static function path(string $path): string {
     if ($path === '' || strlen($path) > 240 || str_contains($path, '\\') || str_contains($path, '%') || str_contains($path, '?') || str_contains($path, '#')) throw new \InvalidArgumentException('Invalid review path.');
-    foreach (explode('/', $path) as $part) {
+    $parts = explode('/', $path);
+    if (count($parts) > self::MAX_PATH_SEGMENTS) throw new \InvalidArgumentException('Review paths support at most three segments.');
+    foreach ($parts as $part) {
       if (!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,95}$/', $part) || $part === '.' || $part === '..') throw new \InvalidArgumentException('Invalid review path.');
     }
     return $path;
