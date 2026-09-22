@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Verify packaging before connecting authority
+
+Reuse canonical projection and preserve source bytes. Content hashes are facts,
+not access or completion; a trusted committed-receipt resolver remains required.
+Maximum local content was 21 files / 21,064,260 bytes; the case captured 174.86 MiB
+allocator peak under a 256 MiB CLI limit. Do not replace it with the lower final
+PHPUnit summary or claim installed Drupal/image-decoder proof. Full 848/5,228
+passes; no importer, HTTP reader or worker was activated.
+
 ## 2026-09-21 - A replacement lease cannot create a replacement bill
 
 Observation: an attempt-scoped call identity alone does not identify the same

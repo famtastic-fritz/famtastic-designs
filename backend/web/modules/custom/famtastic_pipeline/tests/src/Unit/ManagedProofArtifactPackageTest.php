@@ -296,6 +296,45 @@ final class ManagedProofArtifactPackageTest extends TestCase {
     }
   }
 
+  /** Max transport-sized image fixtures, not a browser/image-decoder QA proof. */
+  public function testMaximumAllowedInventoryRemainsBoundedAndReadable(): void {
+    $input = Input::input(); $shell = '<html><body></body></html>';
+    $html = str_replace('</body>', str_repeat('x', 500000 - strlen($shell)) . '</body>', $shell);
+    // Signature-prefixed synthetic bytes, not decodable PNG/image QA evidence.
+    $pngFixture = base64_decode(Input::asset()['base64'], TRUE);
+    $assetBytes = $pngFixture . str_repeat("\0", 750000 - strlen($pngFixture));
+    $thumbnailBytes = $pngFixture . str_repeat("\0", 1500000 - strlen($pngFixture));
+    $assets = [];
+    for ($i = 0; $i < 4; $i++) {
+      $image = $assetBytes; $image[strlen($image) - 1] = chr($i + 1);
+      $assets[] = ['asset_id' => 'asset_' . $i, 'relative_path' => 'image' . $i . '.png',
+        'media_type' => 'image/png', 'base64' => base64_encode($image), 'sha256' => hash('sha256', $image)];
+    }
+    foreach ($input['variants'] as &$variant) {
+      $variant['html'] = $html; $variant['assets'] = $assets;
+      $variant['thumbnail_base64'] = base64_encode($thumbnailBytes); $variant['thumbnail_media_type'] = 'image/png';
+    }
+    unset($variant);
+    $start = hrtime(TRUE); [$source, $p] = $this->prepared($input); $preparedAt = hrtime(TRUE);
+    $facts = $this->package()->verifyPreparedPackage($p['package_id'], $p['package_manifest_sha256'], basename($source['directory']), $source['manifest_sha256']);
+    $verifiedAt = hrtime(TRUE);
+    self::assertSame($p, $facts);
+    self::assertCount(21, $p['manifest']['files']);
+    $contentBytes = array_sum(array_column($p['manifest']['files'], 'size_bytes'));
+    self::assertSame(21064260, $contentBytes);
+    self::assertLessThanOrEqual(Package::MAX_PACKAGE_BYTES, $contentBytes + filesize($this->packages . '/' . $p['package_id'] . '/manifest.json'));
+    $binding = $this->binding($source, $p);
+    self::assertSame(500695, $this->readBinding($binding, 'c')['size_bytes']);
+    self::assertSame(base64_decode($assets[3]['base64'], TRUE), $this->readBinding($binding, 'b', 'asset', 'asset_3')['bytes']);
+    self::assertSame($thumbnailBytes, $this->readBinding($binding, 'a', 'thumbnail')['bytes']);
+    self::assertSame(Credit::policy()['system_asset']['sha256'], $this->readBinding($binding, 'c', 'system_logo')['sha256']);
+    echo json_encode(['synthetic_max_package' => TRUE, 'content_files' => 21, 'content_bytes' => $contentBytes,
+      'prepare_including_source_seconds' => ($preparedAt - $start) / 1e9,
+      'verify_seconds' => ($verifiedAt - $preparedAt) / 1e9,
+      'total_with_four_role_reads_seconds' => (hrtime(TRUE) - $start) / 1e9,
+      'php_allocator_peak_bytes' => memory_get_peak_usage(TRUE)], JSON_THROW_ON_ERROR) . "\n";
+  }
+
   public function testNoOverwriteNoPartialAdoptionAndNoPublicRoots(): void {
     $s = $this->source(); $storage = new ManagedProofPackageFiles($this->packages, $this->web);
     $package = new class($this->store, $storage, $this->logo) extends Package {

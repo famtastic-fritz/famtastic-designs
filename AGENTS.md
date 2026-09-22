@@ -54,6 +54,12 @@ Reopen preparation only by server bundle ID and expected manifest hash through
 `verifyPrepared`; it reconstructs canonical bytes and rejects extra inventory.
 Its result is content facts, not tenant/claim/QA authority. No worker filesystem
 path, adopted orphan or manifest-supplied file list is trusted as import authority.
+For credited packages read `docs/contracts/MANAGED-PROOF-PACKAGE-V1.md`. The
+unregistered packager retains originals and carries the separately pinned server
+logo without widening upload caps. Pre-receipt content verification grants no
+reads; role reads need an uninstalled trusted receipt resolver. Never use worker
+grants or preparation manifests as tenant/import authority. Maximum-size local
+tests need memory headroom; synthetic tests do not prove installed Drupal use.
 For reference uploads/withdrawals, read `docs/contracts/REQUEST-ASSET-MUTATION-V1.md`.
 Lock request before membership/assets, including an empty asset set. Prepare only
 private bytes outside the metadata transaction; FileRepository::writeData also

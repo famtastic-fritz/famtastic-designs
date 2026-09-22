@@ -2,6 +2,17 @@
 
 Status: local repairs and verification; no live activation.
 
+Latest managed-package milestone: reviewed 9e2bb083 integrated as f370b2ef,
+exact server-logo role/credited derivatives, immutable originals, pre-import
+verification and default-closed receipt-gated reads. Full PHP now passes 848
+tests / 5,228 assertions (same 68 existing deprecations), 8.493s suite / 9.042s
+guarded; zero failed/skipped, protected data unchanged. Receipt
+`managed-package-reviewed-php.CZdoxS`. Maximum package content: 21,064,260 bytes;
+captured PHP allocator peak: 174.86 MiB under a 256 MiB CLI limit. Installed
+kernel memory/authorization remains unproven. No real resolver/importer/provider
+is connected. The earlier Studio pair below predates these unregistered classes.
+See `../contracts/MANAGED-PROOF-PACKAGE-V1.md`.
+
 Review checkpoint pushed: Designs d2819326 / Studio754859e. PR42 and PR2 remain
 drafts, not merged/deployed. Hosted run35678844288 again ran no backend steps:
 the account billing lock remains. The exact annotation is retained in

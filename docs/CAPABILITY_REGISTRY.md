@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Managed credited packaging, local content verification only
+
+Unregistered packaging/reverification and resolver-gated reads pass full PHP
+848 tests / 5,228 assertions, same 68 existing deprecations; zero failed/skipped
+and protected data unchanged. Originals/logo, roles, tampering, collisions and
+maximum 21 MB content inventory are exercised. Resolver grants are synthetic;
+no installed tenant authority, importer, HTTP reader, provider, QA or delivery.
+Contract: `contracts/MANAGED-PROOF-PACKAGE-V1.md`.
+
 ## 2026-09-21 - Full cross-repository regression checkpoint
 
 Exact pair Studioe470dfe / Designs9583766f passes1,588 Studio tests/135files,

@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-21 - Verify exact credited packages without granting delivery authority
+
+- Add unregistered packages retaining originals, exact credit and separate pinned
+  server-logo role; ordinary upload caps and working legacy readers are unchanged.
+- Pre-receipt verification and default-closed role reads require distinct authority.
+  No routes, imported variants, provider or worker activation were added.
+- Independent review plus focused 106/664 and full 848/5,228 pass. Max-content
+  sizing captures 174.86 MiB PHP allocator peak; record actual installed headroom
+  as a separate gate. See MANAGED-PROOF-PACKAGE-V1.md for receipts and limits.
+
 ## 2026-09-21 - Full paired journal and review verification
 
 - Studioe470dfe / Designs9583766f passes1588 Studio tests/135files, both lints,

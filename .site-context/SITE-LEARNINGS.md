@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Separate content verification from read permission
+
+First import needs byte verification before a receipt exists; browser reads need
+current receipt-backed authority. Share verification, not permission. Preserve
+the exact 2,020,725-byte server logo without widening 2 MB uploads. Test maximum
+inventory and retain the higher captured allocator peak (174.86 MiB), not merely
+PHPUnit's final 60 MiB summary. Synthetic image signatures/receipt closures do
+not prove decoding or tenant access. Full PHP 848/5,228 passes; no activation.
+
 ## 2026-09-21 - Pair runtime verification with the actual integrated source
 
 Observation: the integrated closed journal and immutable artifact verifier pass
