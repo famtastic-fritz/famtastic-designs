@@ -2,7 +2,7 @@
 
 ## 2026-09-21 — Finished-site account review
 
-Locally implemented and independently reviewed: staff-bound immutable full-site reviews, customer/staff read paths, quiet draft attachment, hash validation and opaque-origin isolation. This is a manual owner-authorized delivery capability; no automated production or public launch claim. Travel Addicts source is privately verified and rebuilds in a clean remote clone. Production/account proof will be appended to the exact release report. See `docs/plans/FULL_SITE_REVIEW_2026-09-21.md`.
+Production-proven manual account delivery: the owner-authorized Travel Addicts full website is attached once to its verified existing account, with exact replay a no-op. All 29 file hashes, 14 renderings and 58 real customer/staff route matches pass; native staff Chrome verifies home, pricing, plan preselection, validation, an unsent draft and private design document. Anonymous and wrong-customer access is denied. Corrected backend 7227ceb6 and frontend cc8eada4 are live; independent business source is privately verified at 82a47502. No automatic delivery, customer view/acceptance, message, payment or public business launch is claimed. See `docs/plans/TRAVEL-ADDICTS-DELIVERY-2026-09-21.md`.
 
 ## 2026-09-21 — Connect QR discovery
 
