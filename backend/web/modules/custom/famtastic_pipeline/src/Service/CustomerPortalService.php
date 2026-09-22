@@ -685,14 +685,29 @@ final class CustomerPortalService {
 
   /** Withdraw future reference use while retaining the private audit record. */
   public function withdrawWebsiteRequestAsset(int $customerId, string $publicId, string $assetId): void {
-    $row = $this->ownedWebsiteRequest($customerId, $publicId);
-    if (!$row) throw new \InvalidArgumentException('Website request not found.');
-    $asset = $this->database->select('famtastic_request_asset', 'a')->fields('a')->condition('public_id', $assetId)->condition('website_request_id', (int) $row['id'])->condition('customer_id', $customerId)->execute()->fetchAssoc();
-    if (!$asset) throw new \InvalidArgumentException('Reference not found.');
-    if ($asset['status'] !== 'withdrawn') {
-      $this->database->update('famtastic_request_asset')->fields(['status' => 'withdrawn', 'changed' => $this->time->getRequestTime()])->condition('id', (int) $asset['id'])->execute();
-      $this->ledger->recordEvent('request-asset:withdrawn:' . $assetId, 'website_request.reference_withdrawn', ['request_id' => $publicId, 'asset_id' => $assetId, 'sha256' => $asset['sha256']], projectId: (int) ($row['project_id'] ?? 0));
+    // A nested savepoint cannot promise durable revocation before reconciliation.
+    // This customer mutation is a root operation, not a building-block callback.
+    if ($this->database->inTransaction()) throw new \LogicException('Asset withdrawal requires its own root transaction.');
+    $transaction = $this->database->startTransaction();
+    try {
+      $row = $this->ownedWebsiteRequest($customerId, $publicId, TRUE);
+      if (!$row) throw new \InvalidArgumentException('Website request not found.');
+      $asset = $this->database->select('famtastic_request_asset', 'a')->fields('a')->condition('public_id', $assetId)->condition('website_request_id', (int) $row['id'])->condition('customer_id', $customerId)->forUpdate()->execute()->fetchAssoc();
+      if (!$asset) throw new \InvalidArgumentException('Reference not found.');
+      if ($asset['status'] !== 'withdrawn') {
+        if ($asset['status'] !== 'active' || $this->database->update('famtastic_request_asset')
+          ->fields(['status' => 'withdrawn', 'changed' => $this->time->getCurrentTime()])
+          ->condition('id', (int) $asset['id'])->condition('status', 'active')->execute() !== 1) throw new \RuntimeException('Reference state changed.');
+        if (!$this->ledger->recordEvent('request-asset:withdrawn:' . $assetId, 'website_request.reference_withdrawn', ['request_id' => $publicId, 'asset_id' => $assetId, 'sha256' => $asset['sha256']], projectId: (int) ($row['project_id'] ?? 0))) throw new \RuntimeException('Reference withdrawal audit already exists for an active asset.');
+      }
+      $transaction->commitOrRelease();
     }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+    // Independent transaction: an unavailable selected artifact must never undo
+    // permission withdrawal. A retry reconciles the already-withdrawn record.
     $this->refreshSelectedWebsiteRequest($customerId, $publicId);
   }
 
@@ -887,9 +902,19 @@ final class CustomerPortalService {
   }
 
   /** Loads one request only when it belongs to the signed-in customer workspace. */
-  public function ownedWebsiteRequest(int $customerId, string $publicId): ?array {
-    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
-    return $row && (int) $row['customer_id'] === $customerId && $this->isMember($customerId, (int) $row['organization_id']) ? $row : NULL;
+  public function ownedWebsiteRequest(int $customerId, string $publicId, bool $lock = FALSE): ?array {
+    if ($lock && !$this->database->inTransaction()) throw new \LogicException('Locked request ownership requires a transaction.');
+    $query = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId);
+    if ($lock) $query->forUpdate();
+    $row = $query->execute()->fetchAssoc();
+    if (!$row || (int) $row['customer_id'] !== $customerId) return NULL;
+    if (!$lock) return $this->isMember($customerId, (int) $row['organization_id']) ? $row : NULL;
+    // Current row read, not COUNT over an old repeatable-read snapshot. Parent
+    // request first also serializes inserting the very first reference asset.
+    $member = $this->database->select('famtastic_membership', 'm')->fields('m', ['status'])
+      ->condition('customer_id', $customerId)->condition('organization_id', (int) $row['organization_id'])
+      ->forUpdate()->execute()->fetchAssoc();
+    return $member && $member['status'] === 'active' ? $row : NULL;
   }
 
   /** Atomically reserves a submitted request for one Commerce order. */

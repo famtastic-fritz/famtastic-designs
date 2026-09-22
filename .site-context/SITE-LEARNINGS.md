@@ -1,5 +1,19 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Revocation survives downstream failure; file preparation is not metadata
+
+Observation: the installed FileRepository::writeData persists a permanent entity,
+so a file-repository mock concealed metadata outside the authorization transaction.
+Guidance: prepare private bytes with FileSystem::saveData, recheck locked request/
+membership/assets, then atomically save file entity, asset and usage. Simulate
+metadata with real same-connection test writes, not counters alone. Withdrawal
+must root-commit with its audit before selected reconciliation; a failed build
+must not restore permission. Focused 20/135 and full PHP 611/3,229 pass, protected
+data unchanged; these are synthetic source checks, not MariaDB/installed storage
+or unattended delivery proof. Contract: REQUEST-ASSET-MUTATION-V1.md.
+An interrupted paired run is not a pass: preserve the guard receipt, archive the
+exact owned disposable fixture, and restore headroom without deleting owner work.
+
 ## 2026-09-21 - Frozen raw source belongs outside the webroot
 
 Observation: `.fixture` avoids autoloading, not HTTP disclosure under Drupal's

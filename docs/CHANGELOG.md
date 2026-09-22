@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-09-21 - Serialize customer reference permissions before automation
+
+- Local source: request-first upload/withdrawal locks, current membership reads,
+  duplicate/withdrawn-byte revalidation and atomic managed-file metadata.
+- Commit revocation/audit before separate selected reconciliation; reject nested
+  writers that cannot guarantee that boundary. No deployment or activation.
+- Independent review corrected permanent file persistence during preparation.
+  Focused 20/135 and full PHP 611/3,229 pass; 68 existing deprecations. Protected
+  data unchanged. Exact limits/receipts: `contracts/REQUEST-ASSET-MUTATION-V1.md`.
+- Update the paired legacy fixture's constructor, membership and transaction/file
+  doubles without weakening production checks. First paired run stopped at its
+  disk guard; retain the incomplete receipt and recoverable synthetic archive.
+
 ## 2026-09-21 - Keep frozen callback source outside the docroot
 
 - Move frozen service and provenance to `backend/tests/fixtures/managed-proof/`;

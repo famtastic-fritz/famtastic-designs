@@ -24,6 +24,12 @@ For artifact preparation, read `docs/contracts/MANAGED-PROOF-ARTIFACT-PREPARATIO
 Private prepared files and their hashes are not import, QA, completion or release
 authority. Keep generic managed imports closed until the fenced importer exists.
 Preserve validator parity and keep frozen executable test data outside the webroot.
+For reference uploads/withdrawals, read `docs/contracts/REQUEST-ASSET-MUTATION-V1.md`.
+Lock request before membership/assets, including an empty asset set. Prepare only
+private bytes outside the metadata transaction; FileRepository::writeData also
+persists an entity. Commit withdrawal before separate selected reconciliation;
+never let a later build failure restore permission. These writers require root
+transactions, not an outer transaction whose rollback could undo revocation.
 
 ## September 18 — Embedded build instructions must cover the current request
 

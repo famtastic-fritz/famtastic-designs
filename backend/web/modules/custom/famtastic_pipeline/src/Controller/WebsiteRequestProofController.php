@@ -13,7 +13,6 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
 use Drupal\famtastic_pipeline\Service\CharacterAssetService;
 use Drupal\famtastic_pipeline\Service\ProofAssetContract;
-use Drupal\file\FileRepositoryInterface;
 use Drupal\file\FileUsage\FileUsageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +28,6 @@ final class WebsiteRequestProofController extends ControllerBase {
     private readonly CustomerPortalService $portal,
     private readonly AccountProxyInterface $account,
     private readonly FileSystemInterface $fileSystem,
-    private readonly FileRepositoryInterface $fileRepository,
     private readonly FileUsageInterface $fileUsage,
     private readonly UuidInterface $uuid,
     private readonly CharacterAssetService $characterAssets,
@@ -42,7 +40,6 @@ final class WebsiteRequestProofController extends ControllerBase {
       $container->get('famtastic_pipeline.customer_portal'),
       $container->get('current_user'),
       $container->get('file_system'),
-      $container->get('file.repository'),
       $container->get('file.usage'),
       $container->get('uuid'),
       $container->get('famtastic_pipeline.character_assets'),
@@ -97,6 +94,7 @@ final class WebsiteRequestProofController extends ControllerBase {
   }
 
   public function uploadAsset(Request $request, string $website_request): JsonResponse {
+    if ($this->database->inTransaction()) throw new \LogicException('Asset upload requires its own root transaction.');
     $customer = $this->account->isAuthenticated() ? $this->portal->customerForUid((int) $this->account->id()) : NULL;
     $row = $customer ? $this->portal->ownedWebsiteRequest((int) $customer['id'], $website_request) : NULL;
     if (!$row) return new JsonResponse(['ok' => FALSE, 'error' => 'website_request_not_found', 'message' => 'Website request not found.'], 404);
@@ -125,20 +123,43 @@ final class WebsiteRequestProofController extends ControllerBase {
     $sha = hash('sha256', $bytes);
     $existing = $this->database->select('famtastic_request_asset', 'a')->fields('a')
       ->condition('website_request_id', (int) $row['id'])->condition('customer_id', (int) $customer['id'])->condition('sha256', $sha)->execute()->fetchAssoc();
-    if ($existing && ($existing['status'] ?? '') !== 'active') return new JsonResponse(['ok' => FALSE, 'error' => 'reference_inactive', 'message' => 'This reference was withdrawn and remains inactive. Uploading it again does not restore permission to use it.'], 409);
-    if ($existing) return new JsonResponse(['ok' => TRUE, 'duplicate' => TRUE, 'asset' => $this->assetPayload($existing)]);
-    $directory = 'private://famtastic-request-assets/' . preg_replace('/[^0-9a-f-]/', '', $website_request);
-    if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
-      return new JsonResponse(['ok' => FALSE, 'error' => 'private_storage_unavailable', 'message' => 'Secure uploads are temporarily unavailable.'], 503);
-    }
+    // This first read is advisory only: avoid preparing an unnecessary private
+    // file for ordinary retries. Every result is revalidated under the parent
+    // request lock, including a duplicate and an empty asset set.
+    $preparedUri = NULL;
     $original = mb_substr(basename((string) $upload->getClientOriginalName()), 0, 255);
-    $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $original) ?: 'reference';
-    $file = $this->fileRepository->writeData($bytes, $directory . '/' . bin2hex(random_bytes(10)) . '-' . $safeName, FileSystemInterface::EXISTS_ERROR);
-    $file->setPermanent();
-    $file->save();
-    $this->fileUsage->add($file, 'famtastic_pipeline', 'website_request', (int) $row['id']);
-    $now = time();
-    $id = (int) $this->database->insert('famtastic_request_asset')->fields([
+    if (!$existing) {
+      $directory = 'private://famtastic-request-assets/' . preg_replace('/[^0-9a-f-]/', '', $website_request);
+      if (!$this->fileSystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
+        return new JsonResponse(['ok' => FALSE, 'error' => 'private_storage_unavailable', 'message' => 'Secure uploads are temporarily unavailable.'], 503);
+      }
+      $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $original) ?: 'reference';
+      // FileRepository::writeData also persists a permanent entity. Preparation
+      // here is filesystem-only; all managed metadata belongs to the TX below.
+      $preparedUri = $this->fileSystem->saveData($bytes, $directory . '/' . bin2hex(random_bytes(10)) . '-' . $safeName, FileSystemInterface::EXISTS_ERROR);
+      if (!is_string($preparedUri) || !str_starts_with($preparedUri, $directory . '/')) throw new \RuntimeException('Private reference preparation failed.');
+    }
+    $transaction = $this->database->startTransaction();
+    try {
+      $row = $this->portal->ownedWebsiteRequest((int) $customer['id'], $website_request, TRUE);
+      if (!$row) {
+        $transaction->commitOrRelease();
+        return new JsonResponse(['ok' => FALSE, 'error' => 'website_request_not_found', 'message' => 'Website request not found.'], 404);
+      }
+      $existing = $this->database->select('famtastic_request_asset', 'a')->fields('a')
+        ->condition('website_request_id', (int) $row['id'])->condition('customer_id', (int) $customer['id'])
+        ->condition('sha256', $sha)->forUpdate()->execute()->fetchAssoc();
+      if ($existing) {
+        $transaction->commitOrRelease();
+        if ($existing['status'] !== 'active') return new JsonResponse(['ok' => FALSE, 'error' => 'reference_inactive', 'message' => 'This reference was withdrawn and remains inactive. Uploading it again does not restore permission to use it.'], 409);
+        return new JsonResponse(['ok' => TRUE, 'duplicate' => TRUE, 'asset' => $this->assetPayload($existing)]);
+      }
+      if (!$preparedUri) throw new \RuntimeException('Reference changed during upload; retry.');
+      $file = $this->entities->getStorage('file')->create(['uri' => $preparedUri, 'uid' => (int) $this->account->id()]);
+      $file->setPermanent();
+      $file->save();
+      $now = time();
+      $id = (int) $this->database->insert('famtastic_request_asset')->fields([
       'public_id' => $this->uuid->generate(), 'website_request_id' => (int) $row['id'], 'customer_id' => (int) $customer['id'],
       'file_id' => (int) $file->id(), 'original_name' => $original, 'mime_type' => $mime,
       'size_bytes' => $size, 'sha256' => $sha, 'ownership_confirmed' => 1,
@@ -149,8 +170,17 @@ final class WebsiteRequestProofController extends ControllerBase {
       'subject_permission_confirmed' => $subjectPermission ? 1 : 0,
       'ai_transformation_consent' => $aiTransformationConsent ? 1 : 0,
       'status' => 'active', 'created' => $now, 'changed' => $now,
-    ])->execute();
-    $asset = $this->database->select('famtastic_request_asset', 'a')->fields('a')->condition('id', $id)->execute()->fetchAssoc();
+      ])->execute();
+      $this->fileUsage->add($file, 'famtastic_pipeline', 'website_request', (int) $row['id']);
+      $asset = $this->database->select('famtastic_request_asset', 'a')->fields('a')->condition('id', $id)->execute()->fetchAssoc();
+      $transaction->commitOrRelease();
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+    // A losing race may leave only an unreferenced private file; it cannot grant
+    // asset-use authority. No destructive filesystem cleanup in this mutation.
     $this->portal->refreshSelectedWebsiteRequest((int) $customer['id'], $website_request);
     return new JsonResponse(['ok' => TRUE, 'duplicate' => FALSE, 'asset' => $this->assetPayload($asset)], 201);
   }

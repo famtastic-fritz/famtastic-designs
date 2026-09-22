@@ -2,13 +2,12 @@
 /** Real service writers with synthetic persistence, files and installation policy. */
 declare(strict_types=1);
 namespace Drupal\Core\Entity { interface EntityTypeManagerInterface { public function getStorage($name); } }
-namespace Drupal\Component\Datetime { interface TimeInterface { public function getRequestTime(); } }
+namespace Drupal\Component\Datetime { interface TimeInterface { public function getRequestTime(); public function getCurrentTime(); } }
 namespace Drupal\Core\Config { interface ConfigFactoryInterface { public function get($name); } }
 namespace Drupal\Core\File { interface FileSystemInterface { const CREATE_DIRECTORY = 1, MODIFY_PERMISSIONS = 2, EXISTS_REPLACE = 1, EXISTS_ERROR = 0; } }
 namespace Drupal\Core\Controller { class ControllerBase {} }
 namespace Drupal\Core\Session { interface AccountProxyInterface {} }
 namespace Drupal\Component\Uuid { interface UuidInterface {} }
-namespace Drupal\file { interface FileRepositoryInterface {} }
 namespace Drupal\file\FileUsage { interface FileUsageInterface {} }
 namespace Symfony\Component\HttpFoundation {
   class Response {} class JsonResponse extends Response { public function __construct(public array $data, public int $status = 200) {} }
@@ -50,7 +49,27 @@ namespace Drupal\Core\Database {
   }
   class Connection {
     public array $row = []; public array $writes = []; public array $tables = [];
-    public function startTransaction() { return new class { public function rollBack() {} }; }
+    private array $transactions = [];
+    private int $transactionId = 0;
+    public function inTransaction() { return $this->transactions !== []; }
+    // Snapshot this fixture's persisted dictionaries, not real SQL row locks.
+    // Managed fresh admission is still excluded and tested in real SQLite.
+    public function startTransaction() {
+      $id = ++$this->transactionId;
+      $this->transactions[$id] = [$this->row, $this->writes, $this->tables];
+      return new class($this, $id) {
+        private bool $active = TRUE;
+        public function __construct(private Connection $db, private int $id) {}
+        public function commitOrRelease() { if ($this->active) { $this->db->closeTransaction($this->id, FALSE); $this->active = FALSE; } }
+        public function rollBack() { if ($this->active) { $this->db->closeTransaction($this->id, TRUE); $this->active = FALSE; } }
+        public function __destruct() { $this->commitOrRelease(); }
+      };
+    }
+    public function closeTransaction(int $id, bool $rollback): void {
+      if (array_key_last($this->transactions) !== $id) throw new \LogicException('Fixture transaction close out of order');
+      if ($rollback) [$this->row, $this->writes, $this->tables] = $this->transactions[$id];
+      unset($this->transactions[$id]);
+    }
     public function escapeLike($s) { return $s; }
     public function select($table, ...$args) { return new Query($this, $table); }
     public function update($table) { return new Query($this, $table, TRUE); }
@@ -75,6 +94,7 @@ namespace Drupal\Core\Database {
       return $this;
     }
     private function asset() { $row = $this->db->tables['famtastic_request_asset'] ?? FALSE; if (!$row) return FALSE; $row += ['id' => 1]; foreach ($this->conditions as $key => $value) if ((string) ($row[$key] ?? '') !== (string) $value) return FALSE; return $row; }
+    private function member() { $row = $this->db->tables['famtastic_membership'] ?? FALSE; if (!$row) return FALSE; foreach ($this->conditions as $key => $value) if ((string) ($row[$key] ?? '') !== (string) $value) return FALSE; return $row; }
     public function __call($name, $args) { return $this; }
     public function execute() { if ($this->table === 'famtastic_event' && ($this->write || !empty($this->db->tables[$this->table]))) throw new \LogicException('This legacy fixture cannot model managed admission events; use the real SQLite suite.'); if ($this->write) { $this->db->writes[] = $this->table; $this->db->tables[$this->table] = $this->values + ($this->table === 'famtastic_request_asset' ? ($this->db->tables[$this->table] ?? []) : []); if ($this->table === 'famtastic_project_request') $this->db->row = $this->values + $this->db->row; return 1; } return $this; }
     public function fetchCol() {
@@ -82,8 +102,8 @@ namespace Drupal\Core\Database {
       foreach ($this->conditions as $key => $value) if ((string) ($this->db->row[$key] ?? '') !== (string) $value) return [];
       return isset($this->db->row['id']) ? [$this->db->row['id']] : [];
     }
-    public function fetchField() { return match ($this->table) { 'famtastic_membership' => 1, 'famtastic_website_proof_research_snapshot' => $this->db->tables[$this->table]['snapshot_json'] ?? FALSE, default => 0 }; }
-    public function fetchAssoc() { return match ($this->table) { 'famtastic_request_asset' => $this->asset(), 'famtastic_project_request' => $this->db->row, 'famtastic_customer_resource' => ['organization_id' => 907, 'resource_type' => 'project', 'resource_id' => 902], 'famtastic_customer' => ['id' => 903, 'display_name' => 'Synthetic owner', 'email' => 'owner@example.invalid'], 'famtastic_website_proof_research_snapshot' => $this->db->tables[$this->table] ?? FALSE, default => FALSE }; }
+    public function fetchField() { return match ($this->table) { 'famtastic_membership' => $this->member() ? 1 : 0, 'famtastic_website_proof_research_snapshot' => $this->db->tables[$this->table]['snapshot_json'] ?? FALSE, default => 0 }; }
+    public function fetchAssoc() { return match ($this->table) { 'famtastic_membership' => $this->member(), 'famtastic_request_asset' => $this->asset(), 'famtastic_project_request' => $this->db->row, 'famtastic_customer_resource' => ['organization_id' => 907, 'resource_type' => 'project', 'resource_id' => 902], 'famtastic_customer' => ['id' => 903, 'display_name' => 'Synthetic owner', 'email' => 'owner@example.invalid'], 'famtastic_website_proof_research_snapshot' => $this->db->tables[$this->table] ?? FALSE, default => FALSE }; }
     public function fetchAll(...$args) { return $this->table === 'famtastic_request_asset' && $this->asset() ? [$this->asset()] : []; }
   }
 }
@@ -103,13 +123,36 @@ namespace {
   $set = static function(object $object, array $fields): void { $r = new \ReflectionClass($object); foreach ($fields as $k => $v) $r->getProperty($k)->setValue($object, $v); };
   $project = empty($input['no_project']) ? new \Drupal\famtastic_pipeline\Entity\Project(['studio_json' => '{}'], 902) : NULL;
   $campaign = new \Drupal\famtastic_pipeline\Entity\ProofCampaign(['campaign_id' => json_decode($input['raw_callback'], TRUE, 512, JSON_THROW_ON_ERROR)['campaign_id'], 'studio_job_id' => 'normal-job', 'prospect_id' => 906, 'callback_event_ids' => '[]'], 904);
-  $entities = new class($project, $campaign) implements \Drupal\Core\Entity\EntityTypeManagerInterface {
+  $db = new \Drupal\Core\Database\Connection();
+  $db->tables['famtastic_membership'] = ['customer_id' => 903, 'organization_id' => 907, 'status' => 'active'];
+  // Keep the persistence double honest: nested release is not root commit.
+  $before = $db->tables; $outer = $db->startTransaction();
+  $db->tables['transaction_probe'] = 1; $inner = $db->startTransaction();
+  $db->tables['transaction_probe'] = 2; $inner->commitOrRelease();
+  if (!$db->inTransaction()) throw new \LogicException('Fixture nested release ended root transaction');
+  $outer->rollBack();
+  if ($db->inTransaction() || $db->tables !== $before) throw new \LogicException('Fixture rollback did not restore persisted dictionaries');
+  $entities = new class($project, $campaign, $db) implements \Drupal\Core\Entity\EntityTypeManagerInterface {
     public array $variants = []; public int $projectsCreated = 0;
-    public function __construct(public ?object $project, public object $campaign) {}
+    public function __construct(public ?object $project, public object $campaign, public object $db) {}
     public function getStorage($name) { return new class($this, $name) {
       public function __construct(private object $all, private string $name) {}
       public function load($id) { return match ($this->name) { 'famtastic_project' => $this->all->project, 'proof_campaign' => $this->all->campaign, 'proof_variant' => $this->all->variants[$id] ?? NULL, default => NULL }; }
-      public function create($data) { if ($this->name === 'famtastic_project') { $this->all->projectsCreated++; return $this->all->project = new \Drupal\famtastic_pipeline\Entity\Project($data, 902); } $id = 905 + count($this->all->variants); return $this->all->variants[$id] = new \Drupal\famtastic_pipeline\Entity\ProofVariant($data, $id); }
+      public function create($data) {
+        if ($this->name === 'file') return new class($this->all->db, $data) {
+          private bool $permanent = FALSE;
+          public function __construct(private object $db, private array $data) {}
+          public function setPermanent() { $this->permanent = TRUE; }
+          public function save() {
+            if (!$this->db->inTransaction() || !$this->permanent || !str_starts_with($this->data['uri'], 'private://')) throw new \LogicException('Unguarded fixture file metadata');
+            $this->db->tables['file_managed'] = $this->data; return 1;
+          }
+          public function id() { return 1001; }
+        };
+        if ($this->name === 'famtastic_project') { $this->all->projectsCreated++; return $this->all->project = new \Drupal\famtastic_pipeline\Entity\Project($data, 902); }
+        if ($this->name !== 'proof_variant') throw new \LogicException('Unsupported fixture entity creation');
+        $id = 905 + count($this->all->variants); return $this->all->variants[$id] = new \Drupal\famtastic_pipeline\Entity\ProofVariant($data, $id);
+      }
       public function loadMultiple($ids) { return array_intersect_key($this->all->variants, array_flip($ids)); }
       public function getQuery() { return new class($this->all, $this->name) {
         private ?string $direction = NULL; private bool $count = FALSE;
@@ -120,10 +163,9 @@ namespace {
       }; }
     }; }
   };
-  $db = new \Drupal\Core\Database\Connection();
   $db->row = ['id' => 901, 'public_id' => 'normal-request', 'project_id' => $project ? 902 : NULL, 'customer_id' => 903, 'organization_id' => 907, 'prospect_id' => 906, 'proof_campaign_id' => 904,
     'status' => 'draft', 'project_name' => 'Synthetic request', 'business_name' => 'Synthetic', 'intake_data' => '{}', 'proof_review_status' => 'building', 'submitted_at' => NULL];
-  $clock = new class implements \Drupal\Component\Datetime\TimeInterface { public int $now = 1789600000; public function getRequestTime() { return $this->now; } };
+  $clock = new class implements \Drupal\Component\Datetime\TimeInterface { public int $now = 1789600000; public function getRequestTime() { return $this->now; } public function getCurrentTime() { return $this->now; } };
   $config = new class($input['installation']) implements \Drupal\Core\Config\ConfigFactoryInterface {
     public function __construct(private array $installation) {} public function get($name) { return new class($this->installation) {
       public function __construct(private array $installation) {} public function get($key) { return $key === 'selected_staging' ? $this->installation : 'https://agency.example.invalid'; }
@@ -134,9 +176,19 @@ namespace {
   $portal = (new \ReflectionClass(\Drupal\famtastic_pipeline\Service\CustomerPortalService::class))->newInstanceWithoutConstructor();
   $set($portal, ['database' => $db, 'entities' => $entities, 'time' => $clock, 'configFactory' => $config, 'ledger' => $ledger, 'siteStudioPackets' => $registry]);
   $proofs = (new \ReflectionClass(\Drupal\famtastic_pipeline\Service\ProofCampaignService::class))->newInstanceWithoutConstructor();
-  $fs = new class implements \Drupal\Core\File\FileSystemInterface {
-    public function prepareDirectory($path, $flags) { return str_starts_with($path, 'private://') || is_dir($path) || mkdir($path, 0700, TRUE); }
-    public function saveData($bytes, $path, $flags) { file_put_contents($path, $bytes); return $path; }
+  $fs = new class($tmp) implements \Drupal\Core\File\FileSystemInterface {
+    public function __construct(private string $tmp) {}
+    private function local($path) {
+      $local = str_starts_with($path, 'private://') ? $this->tmp . '/private/' . substr($path, 10) : $path;
+      if (!str_starts_with($local, $this->tmp . '/') || str_contains($local, '..')) throw new \LogicException('Unsafe fixture file destination');
+      return $local;
+    }
+    public function prepareDirectory($path, $flags) { $local = $this->local($path); return is_dir($local) || mkdir($local, 0700, TRUE); }
+    public function saveData($bytes, $path, $flags) {
+      $local = $this->local($path);
+      if ($flags === self::EXISTS_ERROR && file_exists($local)) throw new \LogicException('Fixture destination already exists');
+      if (file_put_contents($local, $bytes) !== strlen($bytes)) throw new \RuntimeException('Fixture write incomplete'); return $path;
+    }
   };
   $set($proofs, ['entityTypeManager' => $entities, 'configFactory' => $config, 'time' => $clock, 'fileSystem' => $fs, 'ledger' => $ledger, 'database' => $db, 'portal' => $portal, 'previews' => new \Drupal\famtastic_pipeline\Service\PublicPreviewDeliveryService()]);
   try {
@@ -145,11 +197,10 @@ namespace {
       $upload = $input['upload']; file_put_contents($tmp . '/upload.png', base64_decode($upload['base64'], TRUE));
       $file = new class($tmp . '/upload.png') { public function __construct(private string $path) {} public function isValid() { return TRUE; } public function getSize() { return filesize($this->path); } public function getPathname() { return $this->path; } public function getClientOriginalName() { return 'logo.png'; } };
       $account = new class implements \Drupal\Core\Session\AccountProxyInterface { public function isAuthenticated() { return TRUE; } public function id() { return 777; } };
-      $repository = new class($tmp) implements \Drupal\file\FileRepositoryInterface { public function __construct(private string $tmp) {} public function writeData($bytes, $path, $flags) { file_put_contents($this->tmp . '/private-upload.png', $bytes); return new class { public function setPermanent() {} public function save() {} public function id() { return 1001; } }; } };
-      $usage = new class implements \Drupal\file\FileUsage\FileUsageInterface { public function add(...$args) {} };
+      $usage = new class($db) implements \Drupal\file\FileUsage\FileUsageInterface { public function __construct(private object $db) {} public function add(...$args) { if (!$this->db->inTransaction()) throw new \LogicException('Unguarded fixture file usage'); $this->db->tables['file_usage'] = ['file_id' => $args[0]->id()]; } };
       $uuid = new class implements \Drupal\Component\Uuid\UuidInterface { public function generate() { return 'normal-upload-1'; } };
       $character = (new \ReflectionClass(\Drupal\famtastic_pipeline\Service\CharacterAssetService::class))->newInstanceWithoutConstructor();
-      $controller = new \Drupal\famtastic_pipeline\Controller\WebsiteRequestProofController($db, $entities, $portal, $account, $fs, $repository, $usage, $uuid, $character);
+      $controller = new \Drupal\famtastic_pipeline\Controller\WebsiteRequestProofController($db, $entities, $portal, $account, $fs, $usage, $uuid, $character);
       $uploadResult = $controller->uploadAsset(new \Symfony\Component\HttpFoundation\Request($upload['fields'] ?? ['ownership_confirmed' => TRUE], $file), 'normal-request');
       if (isset($input['asset_changes'], $db->tables['famtastic_request_asset'])) $db->tables['famtastic_request_asset'] = $input['asset_changes'] + $db->tables['famtastic_request_asset'];
     }

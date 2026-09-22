@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Request-asset serialization, synthetic local only
+
+Actual customer upload/withdrawal methods use request-first current ownership
+and asset locking; managed-file metadata commits atomically, and later selected
+reconciliation cannot roll back revocation. 20 focused tests / 135 assertions
+and the full module's 611 / 3,229 pass; protected data unchanged, same 68 existing
+deprecations. File/entity interfaces and select interleavings are test doubles,
+not real MariaDB contention or installed storage proof. No worker/provider/cloud
+or production classification is promoted. Paired fixture rerun remains pending
+after a disk-guard interruption. See `contracts/REQUEST-ASSET-MUTATION-V1.md`.
+
 ## 2026-09-21 - Artifact preparation, synthetic local verification only
 
 Pure legacy validator extraction and an unregistered private create-only store

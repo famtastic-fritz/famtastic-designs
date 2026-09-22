@@ -18,6 +18,19 @@ remove the ordinary client acceptance/settlement/final-launch boundary.
 
 ## Latest integrated source checkpoint
 
+The next local source repair serializes the existing customer reference writers
+before future creative-provider/import rights checks. Request-first locking,
+filesystem-only preparation, atomic file/asset/usage metadata and durable
+withdrawal-before-reconciliation pass 20 focused tests / 135 assertions. Full
+PHP module: **611 tests / 3,229 assertions**, same 68 existing deprecations,
+no failures/skips; protected data unchanged. Receipt
+`request-asset-final-php.QO2EtZ`, 2.016 seconds guarded. See
+`../contracts/REQUEST-ASSET-MUTATION-V1.md`. This supersedes the PHP591 source
+total below, not the last paired Studio1588 run; root-mutex source is still
+separate pending actual database contention. The paired legacy fixture was
+updated; a disk-guard interrupted run is retained, not claimed green. No activation
+was performed.
+
 Private artifact preparation is integrated as `44caa869e1b48d16c1c56b295083f8eda13612a5`.
 The legacy validator extraction preserves behavior; preparation is unregistered,
 private and explicitly not deliverable. Independent review found test masking
