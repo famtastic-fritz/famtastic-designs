@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-22 — StockandShip98 scoped followup accepted
+
+**SMTP acceptance verified:** exact outboxes 877/878, one attempt each, existing
+standard/v2; owner copy inbox verified with matching Message-ID. This verifies
+the authorized client send and owner inbox copy only.
+Owner reports B chosen; portal selection and staging remain unstarted. Included
+20-agent daily research/cards/media are commitments, not active-runtime or delivery
+proof. See `docs/plans/STOCKANDSHIP98-CURATED-FOLLOWUP-2026-09-22.md`.
+
 ## 2026-09-21 — Exact public proof access and email verified
 
 **Production-proven for StockandShip98 request 17 only.** Existing revocable share

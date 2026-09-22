@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-22 — StockandShip98 choice followup
+
+- Recorded owner-relayed direction B and authorized included growth/media scope.
+  Sent customer followup 877 and owner copy 878 through standard/v2, one SMTP
+  attempt each. Staging remains not started; no choice or build was fabricated.
+  See `docs/plans/STOCKANDSHIP98-CURATED-FOLLOWUP-2026-09-22.md`.
+
 ## 2026-09-21 — StockandShip98 public proof links
 
 - Enabled existing view-only sharing at the owner's explicit request. Verified

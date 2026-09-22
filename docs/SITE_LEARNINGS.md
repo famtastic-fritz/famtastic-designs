@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 — Separate design choice, staging and promised service
+
+**Observation:** The owner relayed a B choice and asked for staging-ready wording,
+but live records showed no selection or staging receipt. **Guidance:** Record the
+actual reported authority, preserve the selected design, and describe staging as
+a future milestone until runtime evidence exists. An owner-authorized daily
+research offer is a delivery commitment, not proof that agents are already active.
+
 ## 2026-09-21 — Public proof sharing for urgent review
 
 **Observation:** Account-bound links and a phone walkthrough did not resolve the

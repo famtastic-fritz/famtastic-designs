@@ -1,0 +1,57 @@
+{
+  "recorded_at": "2026-09-22T17:56:06+00:00",
+  "request_id": 17,
+  "customer_id": 15,
+  "campaign_id": 56,
+  "owner_reported_choice": "b \u2014 Curated Finds",
+  "authorization": "Fritz requested a client followup and clarified 20 agents; earlier owner-copy instruction retained.",
+  "research_boundary": "Included future service plan authorized by owner; runtime schedule not verified or created.",
+  "staging_boundary": "Not started; email describes the next milestone truthfully.",
+  "request_unchanged": true,
+  "body_sha256": "00634baab8cd5500b865189b365549b71e503ed4c0e06a8f76a73fb2629eca23",
+  "customer_html_sha256": "af0972a9a6df54f461febea4b70cf526c0e73d470e75c652fd7041bde10fa892",
+  "dispatch": {
+    "processed": 2,
+    "claimed": 2,
+    "sent": 2,
+    "failed": 0,
+    "retried": 0,
+    "recovered_claims": 0
+  },
+  "receipts": [
+    {
+      "id": "877",
+      "notification_key": "website-request:17:owner-reported-choice-b:followup-20260922-v1",
+      "subject": "Curated Finds for StockandShip98 \u2014 here is what comes next",
+      "status": "sent",
+      "attempts": "1",
+      "max_attempts": "1",
+      "provider_message_id": "<f0vaHixOo5AfeDxnYnRCwwQNlBEQuBfVjL3PPcDTKU@famtasticdesigns.com>",
+      "template_id": "standard",
+      "template_version": "2",
+      "recipient_role": "verified_customer",
+      "recipient_matches_expected": true,
+      "sent_at_utc": "2026-09-22T17:55:51+00:00",
+      "body_sha256": "00634baab8cd5500b865189b365549b71e503ed4c0e06a8f76a73fb2629eca23"
+    },
+    {
+      "id": "878",
+      "notification_key": "website-request:17:owner-reported-choice-b:followup-owner-copy-20260922-v1",
+      "subject": "Copy: Curated Finds for StockandShip98 \u2014 here is what comes next",
+      "status": "sent",
+      "attempts": "1",
+      "max_attempts": "1",
+      "provider_message_id": "<2aZCCyTRot2hSKKp56nc2sroNzZ8GgAAdbsaq7jQjA@famtasticdesigns.com>",
+      "template_id": "standard",
+      "template_version": "2",
+      "recipient_role": "owner_copy",
+      "recipient_matches_expected": true,
+      "sent_at_utc": "2026-09-22T17:55:51+00:00",
+      "body_sha256": "00634baab8cd5500b865189b365549b71e503ed4c0e06a8f76a73fb2629eca23"
+    }
+  ],
+  "customer_inbox_or_readership_verified": false,
+  "owner_inbox_verified": true,
+  "owner_gmail_id": "1a0ca43b12c62d5a",
+  "owner_inbox_message_id_matches_smtp": true
+}
