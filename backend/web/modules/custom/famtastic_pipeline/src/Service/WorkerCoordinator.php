@@ -246,6 +246,20 @@ final class WorkerCoordinator {
     return $profile;
   }
 
+  /** Internal importer only: request/account/assets must already be locked. */
+  public function completeProofImportLocked(int $id, string $worker, string $token, array $grants, int $attempt, string $receiptHash, Connection $connection): void {
+    $row = $this->lockOwnedProofClaim($id, $worker, $token, $grants, $attempt, $connection);
+    $facts = ManagedProofImportReceipt::pendingLocked($connection, $id, $receiptHash);
+    $job = $this->job($id);
+    // Re-sample AFTER all receipt checks. The final CAS still cannot promise
+    // elapsed wall time stops during DB commit; this is not an HTTP transaction.
+    $row = $this->owned($id, $worker, $token, $grants, $attempt);
+    $now = $this->now();
+    $this->updateClaim($row, ['state' => 'proof_imported', 'lease_until' => 0, 'attempt_deadline' => 0, 'result_sha256' => $receiptHash, 'changed' => $now]);
+    $this->updateJob($job, ['status' => 'completed', 'result' => ManagedProofImportContract::result($facts['receipt']),
+      'completed_at' => $facts['receipt']['imported_at'], 'locked_at' => NULL, 'changed' => $now]);
+  }
+
   private function assertCapability(array $row, array $authorizedCapabilities): void {
     $this->storedProfile($row);
     if (!in_array($row['capability'], WorkerCapabilityPolicy::claimCapabilities($authorizedCapabilities), TRUE)) throw new \RuntimeException('Worker capability rejected.');

@@ -76,6 +76,28 @@ final class FreshProofBinding {
     $base = ['state' => 'needs_attention', 'label' => 'Proof preparation needs attention',
       'detail' => 'Your request is saved. No completed proof import is recorded.'];
     try {
+      // A committed import changes this ONE lifecycle field. Validate its actual
+      // receipt first; a ready campaign or manually set review state is not proof.
+      // This is a status projection, not provider, artifact-read or QA authority.
+      if (($request['proof_review_status'] ?? '') === 'owner_review') {
+        $admission = json_decode((string) $event['payload'], TRUE, 32, JSON_THROW_ON_ERROR);
+        if (!is_int($admission['job_id'] ?? NULL)
+          || ($admission['request_snapshot']['proof_review_status'] ?? '') !== 'not_started') return $base;
+        $facts = ManagedProofImportReceipt::committed($db, $admission['job_id']);
+        if ($facts['receipt']['request_id'] !== (int) $request['id']) return $base;
+        $beforeReview = $request;
+        $beforeReview['proof_review_status'] = 'not_started';
+        // FreshProofInput itself remains exact and unchanged. All authored,
+        // tenant, selection, project, commercial and asset fields must still match.
+        $record = self::read($db, $event, $beforeReview);
+        if ($record['binding']['asset_snapshot'] !== FreshProofInput::assets($db, $request, FALSE)) return $base;
+        return [
+          'state' => 'owner_review', 'label' => 'Proof files saved; independent review pending',
+          'detail' => 'Your three proof files have been saved. Independent quality review is pending; they have not been released to your account.',
+          'job_id' => (int) $record['job']['id'], 'job_status' => $record['job']['status'],
+          'attempts' => (int) $record['claim']['attempt'], 'max_attempts' => 3,
+        ];
+      }
       $record = self::read($db, $event, $request);
       if ($record['binding']['asset_snapshot'] !== FreshProofInput::assets($db, $request, FALSE)) return $base;
     }

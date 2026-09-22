@@ -144,6 +144,47 @@ final class ProofOperationJournal {
     return $identity;
   }
 
+  /**
+   * Internal import read: authority and mutex already owned on this connection.
+   * Required successful slots come from reviewed SOURCE policy, never a worker.
+   * Every recorded slot needs a trusted terminal receipt, not known billing.
+   * No verifier callback, provider operation, hold reduction or receipt repair.
+   */
+  public function lockImportEvidence(array $binding, array $completionPolicy, array $expected, Connection $connection): array {
+    if ($connection !== $this->database || !$connection->inTransaction()) throw new \LogicException('Import journal read requires the same active connection.');
+    ProofOperationContract::keys($completionPolicy, ['operation_policy_sha256', 'required_success_slots']);
+    $requiredSlots = $completionPolicy['required_success_slots'];
+    if (!$this->reviewedOperations || !array_is_list($requiredSlots) || !$requiredSlots || count($requiredSlots) > 32
+      || count(array_unique($requiredSlots)) !== count($requiredSlots)) throw new \RuntimeException('Import completion slots are unconfigured.');
+    $payload = $binding['payload']; $jobId = (int) $binding['job']['id'];
+    foreach ($requiredSlots as $slot) { ProofOperationContract::id($slot); ProofOperationContract::slot($payload, $this->reviewedOperations, $slot); }
+    $policyHash = hash('sha256', ProofOperationContract::wire($this->reviewedOperations[$payload['cost_policy']['id']]));
+    if ($completionPolicy['operation_policy_sha256'] !== $policyHash) throw new \RuntimeException('Import completion catalog differs from the journal policy.');
+    $rows = $connection->select('famtastic_proof_operation', 'o')->fields('o')->condition('job_id', $jobId)->orderBy('operation_id')->range(0, 33)->forUpdate()->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    if (count($rows) > min(32, $payload['cost_policy']['max_calls'])) throw new \RuntimeException('Import operation count exceeds the frozen bound.');
+    $facts = []; $succeeded = []; $reserved = 0;
+    foreach ($rows as $row) {
+      $i = $this->identity($row); $checkpoint = $this->checkpoint($row);
+      if ($checkpoint['status'] === 'reconciliation_required') throw new \RuntimeException('Import requires terminal operation evidence.');
+      $spec = ProofOperationContract::slot($payload, $this->reviewedOperations, $row['slot']);
+      if ($i['request_id'] !== $payload['website_request_id'] || $i['payload_sha256'] !== $binding['claim']['payload_sha256']
+        || $i['binding_sha256'] !== hash('sha256', FreshProofInput::wire($binding['binding'])) || $i['policy_sha256'] !== $policyHash
+        || $i['spec'] !== $spec || !is_int($i['authorizing_attempt']) || $i['authorizing_attempt'] < 1
+        || $i['authorizing_attempt'] > (int) $binding['claim']['attempt'] || $i['reservation_key'] !== $jobId . ':' . $i['authorizing_attempt']) throw new \RuntimeException('Import operation lineage differs.');
+      ProofOperationContract::input($i['input']); ProofOperationContract::rights($i['input'], $binding['binding']);
+      $hold = $connection->select('famtastic_worker_budget', 'b')->fields('b')->condition('reservation_key', $i['reservation_key'])->forUpdate()->execute()->fetchAssoc();
+      if (!$hold || (int) $hold['job_id'] !== $jobId || (int) $hold['attempt'] !== $i['authorizing_attempt']
+        || $hold['month'] !== $i['month'] || (int) $hold['reserved_cents'] !== (int) $binding['claim']['reservation_cents']) throw new \RuntimeException('Import operation original hold differs.');
+      $reserved += (int) $row['reserved_cents'];
+      if ($checkpoint['status'] === 'checkpoint') $succeeded[] = $row['slot'];
+      $facts[$row['operation_id']] = ['identity_sha256' => $row['identity_sha256'], 'receipt_sha256' => $row['receipt_sha256'],
+        'producer_id' => ManagedProofImportContract::workerIdentity($i['producer_id']), 'recorder_id' => ManagedProofImportContract::workerIdentity($row['recorder_id'])];
+    }
+    if ($reserved > $payload['cost_policy']['max_cost_cents'] || array_diff($requiredSlots, $succeeded)) throw new \RuntimeException('Import completion requirements are not satisfied.');
+    if ($facts !== $expected) throw new \RuntimeException('Import provenance differs from locked journal evidence.');
+    return $facts;
+  }
+
   private function receiptIdentity(array $row, array $identity, array $receipt): void {
     if ($receipt['operation_id'] !== $row['operation_id'] || $receipt['input_sha256'] !== $identity['input']['input_sha256']
       || $receipt['adapter'] !== $identity['spec']['adapter']
