@@ -1,0 +1,31 @@
+{
+  "schema": "famtastic.full-site-review-delivery-evidence.v1",
+  "phase": "attachment_and_direct_service_validation",
+  "browser_acceptance": "pending_nested_route_correction",
+  "source_repository": "https://github.com/famtastic-fritz/site-travel-addicts-courier-express",
+  "source_commit": "82a47502e01d07582c3b2721d5dae04aef5cfd91",
+  "raw_manifest_sha256": "3d4d3ccd753ad1f98b0dbfff214663b73aa2b39aac145439c540fc8a0e54736a",
+  "canonical_manifest_sha256": "1cb2de42c99bcd8e26e36e64c06ed5cb4c023796f38529381e68085bb41548a1",
+  "package": {
+    "pages": 14,
+    "documents": 5,
+    "files": 29,
+    "bytes": 4806241
+  },
+  "replay_created_or_attached": false,
+  "all_file_hashes_verified": true,
+  "direct_controller_pages_rendered": 14,
+  "other_customer_service_denied": true,
+  "new_notifications_jobs_orders": 0,
+  "anonymous_http_statuses": [
+    404,
+    404,
+    404,
+    403
+  ],
+  "private_receipt_location": "Dated private FAMtastic agency Drive mirror and local ignored review package",
+  "limitations": [
+    "Direct controller calls do not prove Drupal router matching. Native CUA found interior and document paths missing from route candidates; corrected release and actual HTTP/browser retest required.",
+    "No customer login, customer viewing, acceptance, payment, notification or public business launch is claimed."
+  ]
+}

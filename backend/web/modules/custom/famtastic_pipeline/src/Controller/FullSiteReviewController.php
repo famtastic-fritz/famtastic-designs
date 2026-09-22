@@ -21,21 +21,26 @@ final class FullSiteReviewController implements ContainerInjectionInterface {
     return new self($container->get('current_user'), $container->get('famtastic_pipeline.customer_portal'), $container->get('famtastic_pipeline.full_site_review'));
   }
 
-  public function file(string $website_request, string $artifact_path): Response {
+  public function file(string $website_request, string $artifact_path, string $artifact_part_2 = '', string $artifact_part_3 = ''): Response {
     $read = function (string $path) use ($website_request): array {
       $customer = $this->account->isAuthenticated() ? $this->portal->customerForUid((int) $this->account->id()) : NULL;
       if (!$customer) throw new \RuntimeException('Review not found.');
       return $this->reviews->read((int) $customer['id'], $website_request, $path);
     };
-    return $this->response($artifact_path, $read);
+    return $this->response($this->artifactPath($artifact_path, $artifact_part_2, $artifact_part_3), $read);
   }
 
-  public function adminFile(int $website_request, string $artifact_path): Response {
+  public function adminFile(int $website_request, string $artifact_path, string $artifact_part_2 = '', string $artifact_part_3 = ''): Response {
     $read = function (string $path) use ($website_request): array {
       if (!$this->account->isAuthenticated() || !$this->account->hasPermission('administer famtastic pipeline')) throw new \RuntimeException('Review not found.');
       return $this->reviews->readForStaff($website_request, $path);
     };
-    return $this->response($artifact_path, $read, static fn(string $path): string => FullSiteReviewPackage::staffUrl($website_request, $path));
+    return $this->response($this->artifactPath($artifact_path, $artifact_part_2, $artifact_part_3), $read, static fn(string $path): string => FullSiteReviewPackage::staffUrl($website_request, $path));
+  }
+
+  /** Drupal's database route provider requires one placeholder per path part. */
+  private function artifactPath(string $first, string $second, string $third): string {
+    return $first . ($second !== '' ? '/' . $second : '') . ($third !== '' ? '/' . $third : '');
   }
 
   private function response(string $artifactPath, callable $read, ?callable $url = NULL): Response {

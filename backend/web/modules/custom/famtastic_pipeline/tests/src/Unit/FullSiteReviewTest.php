@@ -226,14 +226,17 @@ final class FullSiteReviewTest extends UnitTestCase {
     self::assertStringNotContainsString('allow-same-origin', $policy);
     self::assertStringContainsString("connect-src 'none'", $policy);
     self::assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
-    $interior = $controller->file(self::PUBLIC_ID, 'services/index.html');
+    $interior = $controller->file(self::PUBLIC_ID, 'services', 'index.html');
+    self::assertSame(200, $interior->getStatusCode());
     self::assertStringContainsString('/full-site/index.html', $interior->getContent());
     self::assertStringContainsString('/full-site/services/index.html?plan=growth%20plan', $interior->getContent());
     self::assertStringContainsString('rel="noopener noreferrer"', $interior->getContent());
+    self::assertSame('wOF2fixture', $controller->file(self::PUBLIC_ID, 'assets', 'fonts', 'example.woff2')->getContent());
     $anonymous = $this->createMock(AccountProxyInterface::class); $anonymous->method('isAuthenticated')->willReturn(FALSE);
     self::assertSame(404, (new FullSiteReviewController($anonymous, $portal, $this->reviews))->file(self::PUBLIC_ID, 'index.html')->getStatusCode());
     $other = $this->createMock(AccountProxyInterface::class); $other->method('isAuthenticated')->willReturn(TRUE); $other->method('id')->willReturn(999);
     self::assertSame(404, (new FullSiteReviewController($other, $portal, $this->reviews))->file(self::PUBLIC_ID, 'index.html')->getStatusCode());
+    self::assertSame(404, (new FullSiteReviewController($other, $portal, $this->reviews))->file(self::PUBLIC_ID, 'assets', 'fonts', 'example.woff2')->getStatusCode());
     self::assertSame(404, $controller->adminFile(93, 'index.html')->getStatusCode());
   }
 
@@ -249,6 +252,8 @@ final class FullSiteReviewTest extends UnitTestCase {
     self::assertSame(200, $response->getStatusCode());
     self::assertStringContainsString('/web/admin/famtastic/website-request/93/full-site/services/index.html?plan=starter', $response->getContent());
     self::assertStringNotContainsString('/api/customer/', $response->getContent());
+    self::assertSame(200, $controller->adminFile(93, 'services', 'index.html')->getStatusCode());
+    self::assertSame('wOF2fixture', $controller->adminFile(93, 'assets', 'fonts', 'example.woff2')->getContent());
     self::assertSame(404, $controller->adminFile(999, 'index.html')->getStatusCode());
     self::assertSame(404, $controller->file(self::PUBLIC_ID, 'index.html')->getStatusCode());
     self::assertSame('draft', $this->db->select('famtastic_project_request', 'r')->fields('r', ['status'])->condition('id', 93)->execute()->fetchField());

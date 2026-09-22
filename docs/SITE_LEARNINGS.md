@@ -2,6 +2,8 @@
 
 ## 2026-09-21 — Full-site handoff and portable source
 
+**Observation:** A direct controller test accepted a nested artifact path that Drupal’s real route-provider SQL never selected. **Guidance:** Test actual YAML through MatcherDumper and RouteProvider, then real authenticated browser navigation. Match one route parameter to each supported path segment; validate the same depth in the package contract. Keep account identifiers, private destinations and operational counts in the private receipt when agency source is public.
+
 **Observation:** The prior portal represents concept selection, so a finished 14-page site cannot be attached as three concepts or a paid project. **Guidance:** Keep independent business source, immutable staff-assisted review metadata, true page counts and current tenant checks. Freeze response version across HTML/resource reads. Protect the completed review from later brief submissions starting the concept workflow. Preserve actor and owner-authority facts without attributing customer authorship, acceptance, payment or notices.
 
 **Observation:** Copying unrelated large public media during a local portal compile exhausted workstation space. **Guidance:** Compile with publicDir disabled for source validation, retain the full server build for release, and reclaim only task-owned generated output. Do not remove unrelated source or backups.

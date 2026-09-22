@@ -1,0 +1,49 @@
+{
+  "identifiers_redacted": true,
+  "routes": [
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/index.html",
+      "full_site_review_routes": [
+        "famtastic_pipeline.admin_full_site_review_file"
+      ]
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/pricing/index.html",
+      "full_site_review_routes": []
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/request-delivery/index.html",
+      "full_site_review_routes": []
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/review-documents/design.md",
+      "full_site_review_routes": []
+    },
+    {
+      "path": "/admin/famtastic/website-request/REQUEST_ID/full-site/assets/fonts/barlow-400-latin.woff2",
+      "full_site_review_routes": []
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/index.html",
+      "full_site_review_routes": [
+        "famtastic_pipeline.customer_full_site_review_file"
+      ]
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/pricing/index.html",
+      "full_site_review_routes": []
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/request-delivery/index.html",
+      "full_site_review_routes": []
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/review-documents/design.md",
+      "full_site_review_routes": []
+    },
+    {
+      "path": "/api/customer/website-requests/CUSTOMER_REQUEST_UUID/full-site/assets/fonts/barlow-400-latin.woff2",
+      "full_site_review_routes": []
+    }
+  ]
+}
