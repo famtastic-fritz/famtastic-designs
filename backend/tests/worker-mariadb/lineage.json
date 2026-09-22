@@ -1,0 +1,19 @@
+{
+  "schema": "famtastic.worker-mariadb-proof.v1",
+  "source_commit": "1ac3bc26bfc5c60462bf48a9556336880d2b556e",
+  "image": "sha256:ce66c7be32a03aabe7241d0a10993a2db827ef652a35d25727d92a832ac8ef73",
+  "baseline_commit": "f6621cfb6213ac69582b11a8cf267500456e03b0",
+  "baseline_fixture": "fixtures/WorkerCoordinator.f6621cfb.fixture",
+  "baseline_bytes": 17542,
+  "baseline_sha256": "88cde8bce9ad1f69ae553df7713ea56f63125900eab717cedbb58cb4a6310f70",
+  "files": {
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/WorkerCoordinator.php": "ecabd59acca0284122962001fddd587967044ba1c899bf1264833b6bf97d0d83",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/WorkerCoordinatorMutex.php": "1a3af92c060677041f38b3feb14e2b196a439768a63eaee58bf5cb03cd0e4896",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/WorkerCoordinatorSchema.php": "ba33511c58e3e408aa8af6214f3055f22f1263db4dd7517e3ddc1ccab81af5b5",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/WorkerCapabilityPolicy.php": "9be6fa7c0bd9d7155c380f9878dfdb7a23d39428c195b76e34763981dbd05d55",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/OperationalLedger.php": "a8a6e10491ea2a51e84bfb250beb29f108183ab2615a5dca827f330320ec9a4e",
+    "backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.install": "3c5eb5a8f53021af46f88c7c5180e8bae68d15fb67a24915909ba8353c672954",
+    "backend/composer.json": "4d12e1b5ca841342e75cde42b1bfb7e86f6e0ca1f853335e20a6e3c626437912",
+    "backend/composer.lock": "74e4984a628de3ad26b9d38aad05f97579baeb031ea6eefd2d6274f933a1e009"
+  }
+}

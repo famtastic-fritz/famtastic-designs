@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Prepare real contention tests without widening authority
+
+Observation: container startup and cleanup can outlive a timeout or leave an
+uncertain allocation. Guidance: record exact intent before allocation, bound all
+startup calls by 60 seconds, use container-only writable tmpfs, validate ownership
+and confirmed absence, and retain uncertainty instead of claiming cleanup. Run
+real Drupal MySQL children only through the unchanged protected-data/disk wrapper;
+keep Docker provisioning separate. No runtime has run for the new harness and no
+concurrency capability is promoted. See the MariaDB proof contract. No journal
+crash-durability promise; Drive and eventual execution remain parent-owned.
+
 ## 2026-09-21 - Worker exclusion belongs to the root transaction
 
 An expiring advisory lock is not the transaction lifetime. Acquire the fixed-row

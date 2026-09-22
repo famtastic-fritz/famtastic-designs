@@ -1,5 +1,17 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Isolated contention proof needs bounded, recoverable orchestration
+
+Observation: a root-owned 0700 container /tmp can block mysql; a readiness attempt
+count does not bound Docker command duration; lost allocation replies and partial
+cleanup make absent-resource assumptions unsafe. Guidance: bounded 1777 tmpfs only
+inside the owned container, one monotonic startup deadline, pre-allocation exact
+intent and ownership checks, resumable confirmed-absence cleanup, no success on
+unresolved allocation. Journals are not fsync/crash-durable. Keep Docker outside
+the protected PHP sandbox rather than relaxing its network/DB exclusions. Old-source
+controls must fail the intended invariant, not merely bootstrap. Harness is source
+only and unrun; full limits in SHARED-WORKER-MARIADB-PROOF-V1. Drive remains deferred.
+
 ## 2026-09-21 - Transaction-owned coordination needs current reads and writer fences
 
 Nested savepoint release does not commit the outer transaction. Use a fixed-row

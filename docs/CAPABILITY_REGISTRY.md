@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - MariaDB contention harness prepared, not executed
+
+Outside-webroot source composes the actual coordinator/ledger with independent
+Drupal MySQL connections and a frozen old-coordinator control. Resource-bounded
+tmpfs provisioning is separate from sandboxed PHP tests. No container, bootstrap,
+syntax or test receipt exists for this harness yet, so real MariaDB contention
+remains unproven. See `contracts/SHARED-WORKER-MARIADB-PROOF-V1.md`; no activation
+or production capability classification changes.
+
 ## 2026-09-21 - Root-transaction worker serialization (synthetic source only)
 
 One fixed database mutex row, current locking reads, CAS and legacy-job isolation

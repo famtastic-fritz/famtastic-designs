@@ -1,5 +1,9 @@
 # Shared worker root-transaction serialization
 
+Follow-up source: `SHARED-WORKER-MARIADB-PROOF-V1.md` describes the prepared,
+unexecuted real MariaDB harness against frozen 1ac3bc26. It does not satisfy the
+contention gate below until main reviews orchestration and retains actual receipts.
+
 September 21, 2026. Source-only change from `f6621cfb6213ac69582b11a8cf267500456e03b0`.
 Focused SQLite/SQL-contract verification below passes. Real MariaDB contention,
 installed-site migration and integration regression remain separate gates.
