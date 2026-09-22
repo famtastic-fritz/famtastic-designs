@@ -1,5 +1,128 @@
 # Agent Instructions
 
+## September 22 - Signed worker principals preserve the existing identity scheme
+
+Read `docs/contracts/WORKER-REQUEST-PRINCIPAL-V1.md` before worker/auth/review
+integration. The existing HMAC registry and real committed nonce insert mint
+opaque request-scoped principals; signed body identity is not authority. Require
+the current operation, exact integer request ID, current distinct reviewer key
+and all-producer exclusion. An identical signed request is a replay; a fresh
+nonce can reconcile the exact stored release but cannot resend or restore access.
+Never serialize principal facts: signed bodies may contain lease credentials.
+The auth adapter is wired to the existing controller with workers still off.
+Managed readers/release and real retained QA remain unregistered/uninstalled;
+synthetic signed traffic is not installed autonomous delivery.
+
+## September 22 - Managed release is atomic, not an installed QA worker
+
+Read `docs/contracts/MANAGED-PROOF-RELEASE-V1.md` before wiring managed QA or its
+customer read grant. Use the actual authenticated reviewer, exclude every producer,
+and verify retained evidence; do not install synthetic test attestors. Research,
+immutable decision, reveal and the existing v4 outbox commit together. Locked
+readback and final current-authority/receipt verification must precede commit;
+throwing after commit does not prove rollback. Historical acknowledgment is not a
+new read grant, selection or resend. Preserve pending-only locking and the existing
+mail renderer. Runtime registration, real provenance and complete unattended
+delivery remain unproved and off; source tests do not authorize activation.
+
+## September 22 - Managed reads require current receipt and release authority
+
+Read `docs/contracts/MANAGED-PROOF-READS-V1.md` before connecting managed QA,
+HTTP readers or portal metadata. Keep trusted principals and opaque read contexts;
+exclude every recorded producer from independent review. Exact private bytes and
+receipt hashes are not approval. Customer reads require an authoritative immutable
+release, never legacy flags or a caller attestation. Do not call the read API under
+a transaction or use read facts as a later write grant. Managed release source now
+exists under the contract above; service registration stays closed and tests use
+explicitly synthetic principal/retained-QA dependencies.
+Preserve exact credited HTML and relative assets, no legacy fallback or public share.
+
+## September 22 - Import receipts are not independent QA or public read grants
+
+Read `docs/contracts/MANAGED-PROOF-IMPORT-V1.md` and
+`docs/contracts/MANAGED-PROOF-LEGACY-READER-FENCE-V1.md` before extending managed
+delivery. Preserve the root-fenced receipt/claim commit, exact current rights,
+original producer identities and unknown-cost holds. Use actual Drupal field
+mapping in direct SQL and fixtures: ProofVariant text_long metadata has value
+and format columns, not a flat design_dna column. The pending-review handoff is
+receipt-backed status only, never proof that QA is queued or a new Fritz gate.
+Legacy token/share/path readers must not serve managed packages as a fallback.
+Default-closed services remain unregistered until real provenance, authorization,
+independent QA/release and the installed full journey are verified. Unit counts
+do not authorize sends, provider work, dispatch or live deployment.
+
+## September 21 - Preserve private reviews during automatic intake integration
+
+Read `docs/contracts/PRIVATE-REVIEW-AUTOPIPELINE-COMPATIBILITY-V1.md` when
+touching full-site attachments, login repair or proof enqueue. Existing review
+markers block explicit new proof work but never turn optional login repair into
+a retry or a presentation-validation gate. Existing attachment retries lock
+request before membership; competing first creation must release its root before
+switching to an existing request. Do not roll back a committed attachment when
+a post-transaction callback fails. Keep private readers and both DI registrations.
+The frozen real-DB contention proof is documented in
+`docs/contracts/PRIVATE-REVIEW-MARIADB-PROOF-V1.md`. It reuses the exact owned
+worker DB with isolated fixture tables; preserve both lineage manifests and
+exact negative-control tags. Seven current cases / 84 checks and all four exact
+negative controls are verified locally; this is not installed storage or delivery.
+
+## September 21 - Paid-operation journal source only
+
+Read `docs/contracts/PROOF-OPERATION-JOURNAL-V1.md` before connecting paid proof
+tools. The unregistered journal/catalog/verifiers default closed. Root-committed
+unknown state is not proof of submission or provider exactly-once behavior.
+Never retry an unresolved slot, refund unknown costs, store lease credentials,
+or interpret receipt metadata as proof import/QA authority. Main verified the full
+journal slice: 260 tests / 1,769 assertions, including all three follow-up cases.
+This is synthetic SQLite evidence, not real provider/MariaDB journal proof. Preserve the existing Mac
+routine and parent-owned runtime/Drive slot. See the contract for exact evidence.
+
+## September 21 - Additive execution, not a replacement Mac workflow
+
+Read `docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md` before further automation
+integration. Drupal remains the shared customer/job authority. The new
+`famtastic_fresh_selected_admission_enabled` Settings switch defaults off and
+admits only newly inserted supported static jobs, atomically with enqueue.
+Do not enable it until the real consumer, exact hosting binding and signed
+callback are verified. Never replay old jobs or route ecommerce through it.
+Preserve the Mac creative lane; Phase 2 is an additive disabled shadow pilot.
+An observe-only tick, simulated proof or successful handoff is not an unattended
+customer delivery. Read `docs/contracts/MAC-CREATIVE-WORKER-V1.md`; the old
+six-direction benchmark is not the executed customer proof routine. The owner
+authorized resolving the selected-consumer integration conflict. Keep the real
+consumer separate from mock admission, and verify both before live cutover.
+For fresh proof work, also read `docs/contracts/SHARED-PROOF-CLAIMS-V1.md` and
+`docs/contracts/FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md`. Shared ownership is not
+proof generation. Atomically bind fresh request/campaign/job admission, preserve
+legacy jobs, freeze current rights, fence generic import bypasses and verify
+independent QA before any automatic client release. Never infer delivery or
+remote acceptance from an allocated job ID alone.
+For artifact preparation, read `docs/contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`.
+Private prepared files and their hashes are not import, QA, completion or release
+authority. Keep generic managed imports closed until the fenced importer exists.
+Preserve validator parity and keep frozen executable test data outside the webroot.
+Reopen preparation only by server bundle ID and expected manifest hash through
+`verifyPrepared`; it reconstructs canonical bytes and rejects extra inventory.
+Its result is content facts, not tenant/claim/QA authority. No worker filesystem
+path, adopted orphan or manifest-supplied file list is trusted as import authority.
+For credited packages read `docs/contracts/MANAGED-PROOF-PACKAGE-V1.md`. The
+unregistered packager retains originals and carries the separately pinned server
+logo without widening upload caps. Pre-receipt content verification grants no
+reads; role reads need an uninstalled trusted receipt resolver. Never use worker
+grants or preparation manifests as tenant/import authority. Maximum-size local
+tests need memory headroom; synthetic tests do not prove installed Drupal use.
+For reference uploads/withdrawals, read `docs/contracts/REQUEST-ASSET-MUTATION-V1.md`.
+Lock request before membership/assets, including an empty asset set. Prepare only
+private bytes outside the metadata transaction; FileRepository::writeData also
+persists an entity. Commit withdrawal before separate selected reconciliation;
+never let a later build failure restore permission. These writers require root
+transactions, not an outer transaction whose rollback could undo revocation.
+
+Shared worker writes also follow `docs/contracts/SHARED-WORKER-ROOT-TRANSACTION-V1.md`:
+request/account/rights locks first, root-transaction mutex before job locks;
+no provider/file processing inside that transaction. SQLite tests and advisory
+lock expiration do not establish real MySQL/MariaDB concurrency proof.
+
 ## September 18 — Embedded build instructions must cover the current request
 
 Never reuse `selected_build_continuation` merely because it exists. Its producer

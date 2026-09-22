@@ -11,12 +11,33 @@ use Drupal\Component\Datetime\TimeInterface;
 /** Trusted staff/worker boundary, never a public or customer approval endpoint. */
 final class AutomatedProofRelease {
   public function __construct(private readonly Connection $database, private readonly EntityTypeManagerInterface $entities,
-    private readonly TimeInterface $time, private readonly OperationalLedger $ledger, private readonly CustomerPortalService $portal) {}
+    private readonly TimeInterface $time, private readonly OperationalLedger $ledger, private readonly CustomerPortalService $portal,
+    private readonly ?ManagedProofReader $managedReader = NULL,
+    private readonly ?ManagedProofRelease $managedRelease = NULL) {}
 
   /** Read-only current bytes and normalized research for independent QA binding. */
-  public function context(int $id, array $research): array {
+  public function context(int $id, array $research, ?object $authenticatedPrincipal = NULL): array {
     $row = $this->request($id);
     if (!$row || empty($row['proof_campaign_id'])) throw new \InvalidArgumentException('Request has no bound proof campaign.');
+    if (FreshProofBinding::isManagedReadOnly($this->database, $row)) {
+      // Imported references are opaque, not legacy paths. The reader verifies
+      // actual package bytes and current authority outside any transaction.
+      // A worker ID in request JSON must never become this server principal.
+      if ($this->managedReader === NULL || $authenticatedPrincipal === NULL) throw new \RuntimeException('Managed independent-review context is unconfigured.');
+      $handle = $this->managedReader->context($id, $authenticatedPrincipal, 'reviewer');
+      $facts = $this->managedReader->facts($handle);
+      return [
+        'request_id' => $id, 'customer_id' => $facts['customer_id'], 'campaign_id' => $facts['campaign_id'],
+        'artifact_hashes' => $facts['artifact_hashes'],
+        'research_sha256' => hash('sha256', json_encode($research, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)),
+        'policy_version' => AutomatedProofPolicy::VERSION,
+        'managed_import' => [
+          'receipt_id' => $facts['receipt_id'], 'receipt_sha256' => $facts['receipt_sha256'],
+          'package_manifest_sha256' => $facts['package_manifest_sha256'], 'producer_ids' => $facts['producer_ids'],
+        ],
+        'reviewer' => $facts['actor'],
+      ];
+    }
     $campaign = $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id']);
     if (!$campaign || $campaign->get('generation_status')->value !== 'ready'
       || (int) $campaign->get('prospect_id')->target_id !== (int) $row['prospect_id']) throw new \RuntimeException('Proof campaign is not ready or has a foreign owner.');
@@ -43,7 +64,14 @@ final class AutomatedProofRelease {
   }
 
   /** Atomic reveal + personal proof-ready outbox. No send; no generic mail. */
-  public function release(int $id, array $research, array $evidence, string $reviewer, array $notification): array {
+  public function release(int $id, array $research, array $evidence, string $reviewer, array $notification, ?object $authenticatedPrincipal = NULL): array {
+    $request = $this->request($id);
+    // Never fall through to legacy files or accept a claimed reviewer string as
+    // a managed principal. Production dependencies remain unregistered/closed.
+    if ($request && FreshProofBinding::isManagedReadOnly($this->database, $request)) {
+      if ($this->managedRelease === NULL || $authenticatedPrincipal === NULL) throw new \RuntimeException('Managed independent release requires its receipt-bound transaction adapter.');
+      return $this->managedRelease->release($id, $research, $evidence, $reviewer, $notification, $authenticatedPrincipal);
+    }
     $tx = $this->database->startTransaction();
     try {
       $row = $this->request($id);

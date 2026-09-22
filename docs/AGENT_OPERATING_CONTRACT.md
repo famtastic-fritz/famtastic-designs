@@ -1,5 +1,27 @@
 # FAMtastic agent operating contract
 
+## September 22 amendment — request-scoped worker authority
+
+Follow `contracts/WORKER-REQUEST-PRINCIPAL-V1.md`: use the existing HMAC/nonce
+authority and opaque principal, not a claimed reviewer string. Check current
+installed capability, exact signed request and independent credential; no body
+or credential echo. A nonce must be this statement's committed insertion, not a
+matching row another caller won. Preserve fresh-nonce historical reconciliation
+without duplicate release, notice or access restoration. Auth/controller source
+is locally verified, but workers remain disabled and managed QA/release wiring
+is incomplete. No production or laptop-independent claim follows from tests.
+
+## September 22 amendment — atomic managed QA release
+
+Follow `contracts/MANAGED-PROOF-RELEASE-V1.md`. Its unregistered source preserves
+the existing mail queue and customer_proof_ready/v4 renderer, with a trusted
+independent reviewer and retained evidence rather than worker booleans. Read back
+all release rows and revalidate current receipt/account/asset authority before
+commit. Silent writes and late hook changes must roll back reveal and mail too.
+Historical exact retry does not restore access or resend. The signed-principal
+adapter above exists; retained-evidence configuration, managed service wiring,
+pending-review consumption and installed full delivery remain gates.
+
 ## September 18 amendment — executable evidence is request-version-bound
 
 Embedded continuation evidence needs a producer-recorded request binding, not a

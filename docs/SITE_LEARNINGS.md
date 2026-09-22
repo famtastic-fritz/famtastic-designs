@@ -1,5 +1,334 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - A short-lived HTTP identity is not a long-running review lease
+
+The signed principal expires after90seconds; review ownership must be renewed
+through a separate shared job, with fresh signed reads/submission. Retained
+authenticated acceptance must remain verifiable without reusing that old HTTP
+signature. Preserve creative completion and reference the exact imported bytes.
+Static browser hashes/metadata cannot replace retained files or independent
+visual/rights/claims judgments. The source-mapped next review slice is a plan,
+not an installed worker or another owner approval gate.
+
+## 2026-09-22 - Authentication needs insertion ownership, not just persistence
+
+Observation: a readback can match a concurrent winner after a losing nonce insert
+is ignored. Guidance: verify this prepared statement inserted exactly one row,
+then verify its retained expiry. Test actual signed interleaving and preserve the
+winner while rejecting the loser. Authenticated malformed JSON still consumes
+the nonce; a fresh signature/nonce reconciles an immutable release without resend.
+Fixture failures were repaired at the actual SQLite statement/auth-service seams,
+not by weakening assertions. Final PHP 1,314/13,990, portal/email contracts and
+canonical legacy journey pass; managed automatic delivery remains unproved.
+
+## 2026-09-22 - Verify persisted release rows before losing rollback
+
+Observation: ignored inserts and late database hooks can commit reveal/mail even
+when a subsequent verifier throws. Guidance: read back the exact decision,
+research, full fresh outbox state and request inside the root transaction, then
+revalidate actual receipt/account/asset authority after the final write. Test
+RAISE(IGNORE) and late mutations with complete rollback assertions. Keep a narrow
+same-transaction reveal assertion separate from pending-only admission; historical
+retry is acknowledgment, not renewed access or another send. Full 1,232/13,616
+passes locally; real reviewer identity and installed managed delivery are separate.
+
+## 2026-09-22 - Preserve exact bytes without turning receipts into permission
+
+Observation: packaged HTML uses relative assets and already contains canonical
+credit; a legacy path renderer would rewrite its reviewed bytes. Guidance: use a
+file-shaped authenticated URL and exact role-based reads, with fresh current
+account/rights and receipt-bound independent release authority. Exclude every
+stored producer, not merely the producer named by a reviewer. Read-only snapshots
+are not a later transaction grant. Full 1,079/11,002 passes locally; synthetic
+release attestation and a legacy full journey do not prove managed delivery.
+
+## 2026-09-22 - Capture every actual mail boundary in disposable tests
+
+FAMtastic memory mail did not intercept Drupal core account messages. Network/MTA
+denial prevented external delivery but is not a working capture transport. Set
+the fresh sandbox's entire system.mail interface map to the existing core test
+collector, prove an actual write, and verify it remains unchanged afterward.
+The canonical run captures 4 core messages (one probe) plus 34 transactional
+messages. Never change production transport to make a test pass.
+
+## 2026-09-22 - Retain evidence outside ephemeral worktrees
+
+The prior temporary roots disappeared between continuations; tracked source was
+recoverable from Git, raw receipts were not. Do not call missing receipts retained
+or infer what deleted them. Keep private raw evidence in a durable owned directory,
+record exact source/dirty-diff hashes and rerun acceptance. A legacy owner-review
+journey remains regression proof, not the new unattended-delivery milestone.
+
+## 2026-09-22 - Entity input names are not physical SQL columns
+
+Independent review caught a real importer defect after 40 green synthetic tests:
+ProofVariant.design_dna is text_long, so Drupal stores design_dna__value and
+design_dna__format. The fixture's invented flat column masked a rollback on real
+storage. Use real field schema/table mapping in boundary tests; explicitly store
+JSON value with null format, verify those raw columns, and keep installed hooks
+as a separate gate. Also preserve campaign selected_variant as direction text.
+Final combined 983/6,731 passes; no deployment or installed-import claim.
+
+## 2026-09-22 - Sparse fixture failures and disk stops are not product passes
+
+Seven callback-parity failures all came from a missing tracked outside-webroot
+fixture in one sparse helper. Hydrate the exact fixture/provenance, never weaken
+the parity assertion. A separate importer run was stopped below 200 MiB free.
+Only clean tracked video copies in this task's temporary checkout were unhydrated;
+Git retains them and owner repositories/recovery archives were untouched. Later
+external headroom recovery allowed the full maximum-size case to run. Preserve
+both failed receipts and exact narrower versus full run classifications.
+
+## 2026-09-21 - Verify packaging before connecting authority
+
+Reuse canonical projection and preserve source bytes. Content hashes are facts,
+not access or completion; a trusted committed-receipt resolver remains required.
+Maximum local content was 21 files / 21,064,260 bytes; the case captured 174.86 MiB
+allocator peak under a 256 MiB CLI limit. Do not replace it with the lower final
+PHPUnit summary or claim installed Drupal/image-decoder proof. Full 848/5,228
+passes; no importer, HTTP reader or worker was activated.
+
+## 2026-09-21 - A replacement lease cannot create a replacement bill
+
+Observation: an attempt-scoped call identity alone does not identify the same
+paid recipe step after worker replacement. Guidance: freeze one job/slot identity,
+record unknown before returning permission, retain cost holds and authenticate
+receipt recovery separately from the original producer. Main verified69b834d2:
+260/1,769 including all three follow-up cases (synthetic SQLite). Actual
+three-generation recovery includes increasing backoff, not a fixed 31-second
+fixture wait. Late receipts must preserve exhausted attempts and original holds.
+No route/provider or activation exists; Drive/runtime remain parent-owned.
+
+## 2026-09-21 - Rollback is not evidence that a replay did not write
+
+Compare B's own event/activity counts against its established snapshot before
+rollback, and require its uncommitted sentinel after both retry and refusal.
+Another connection seeing original state proves isolation, not preservation of
+the caller's work. These assertions now pass in the seven-case real MariaDB run;
+see PRIVATE-REVIEW-MARIADB-PROOF-V1.md for exact frozen-source limits.
+
+## 2026-09-21 - Observe contention without manufacturing its outcome
+
+The private-review MariaDB candidate pauses only after actual Drupal SELECTs,
+observes the exact other InnoDB thread, and retains unchanged query results.
+Frozen 7227 retry inversion must be observed as acquired membership while the
+asset writer owns request, not relabeled SQL timeout/deadlock. Separate frozen
+source hashes and outside-webroot fixtures avoid shallow-history dependency.
+Seven current cases / 84 checks pass and four exact old-source controls fail.
+Only frozen local concurrency is verified, not production or installed storage.
+
+## 2026-09-21 - Non-autoload fixture names do not prevent source disclosure
+
+Observation: installed Drupal's `.htaccess` does not deny `.fixture` or the whole
+custom-module tests tree. Guidance: keep frozen raw service code and provenance
+outside `backend/web`, at `backend/tests/fixtures/managed-proof/`, preserving hashes.
+Use the outside-docroot path in actual parity tests, not an assumed server rule.
+One post-move three-file run passes 109 tests / 463 assertions, protected data
+unchanged. Prior mutation evidence remains valid; no production source changed.
+
+## 2026-09-21 - Reject for the guard the test claims to exercise
+
+Observation: default expected normalization made changed-DNA cases reject at
+raw/normalized mismatch even if the DNA guard were absent. Guidance: normalize
+the same DNA input outside the rejection assertion, prove legacy acceptance,
+assert the exact store guard message, and add a nondefault positive roundtrip.
+Do not normalize malformed assets before the store and count that as store proof.
+Only the three focused files pass, 109 tests / 463 assertions. A test-only
+in-memory mutant removes DNA guards and all nine targeted cases fail on missing
+rejection, not bootstrap errors; retain this red receipt. Production unchanged.
+
+## 2026-09-21 - Differential tests cannot require shallow-clone ancestors
+
+Observation: the old-service callback comparison used a Git ancestor absent from
+the default CI checkout. Guidance: freeze the exact reviewed source as bounded,
+hash-pinned non-autoload data with provenance, retaining actual callback execution.
+Run with Git unavailable and small child arguments, not broader history or skips.
+The first no-Git probe incorrectly assumed proc_open returns a resource for a
+missing executable; handle false or nonzero exit explicitly, keeping callbacks
+strict. Final three-file run: 106 tests / 414 assertions, protected data unchanged.
+Separately, file fsync alone does not persist directory entries or establish
+power-loss durability; private preparation never establishes import authority.
+
+## 2026-09-21 - File preparation is not a database transaction
+
+Observation: canonical callbacks replace HTML/media paths before final DB and
+delivery work. DB rollback cannot undo those overwrites. Extract validation only;
+prepare new immutable bytes privately, with no overwrite/adoption/cleanup, then
+require a separate authoritative receipt before any consumer can use them.
+The exact logo exceeds the generic image cap by 20,725 bytes; do not weaken caps.
+After the low-disk pause, 105 tests / 362 assertions pass with protected inventories
+unchanged. The initial fatal exposed a helper named result, a final PHPUnit method.
+Use descriptive helper names; lint alone cannot load/check the inherited runner
+API. Retain the failure and run the actual fixture before claiming verification.
+## 2026-09-21 - Initialize typed arrays passed by reference to subprocess APIs
+
+Observation: main's provisioned DB harness could not start its first child because
+proc_open received an uninitialized non-nullable pipes property by reference.
+Guidance: initialize it to [], retain the exit-2 bootstrap receipt PahTfo, and do
+not report an assertion failure or concurrency result. Protected data was unchanged
+per main's receipt. Source-only fix; main owns the server and rerun.
+
+## 2026-09-21 - Verify actual loopback publication, not requested bindings
+
+Observation: main's internal-bridge MariaDB container started, but actual 3306/tcp
+publication was null despite requested 127.0.0.1 binding. Guidance: preserve the
+actual-port rejection and use a dedicated ordinary bridge for this disposable
+harness. Do not call container NAT egress firewall-disabled; no external traffic
+is requested, and PHP's sandbox still denies it. No global firewall change.
+Retain the t5wRpU failure; old-network cleanup uses the old guarded provisioner.
+Revision is source-only pending independent review, not connectivity proof.
+
+## 2026-09-21 - Single-file Docker local logs require compression disabled
+
+Observation: main's owned MariaDB allocation remained created/PID 0 after the
+local driver rejected compression with max-file=1. Guidance: set compress=false
+explicitly, preserve the 1 MiB/one-file envelope, retain the failed allocation
+receipt and let main perform exact-owned cleanup. This source repair is unrun;
+the provisioning error is not a test assertion or concurrency proof.
+
+## 2026-09-21 - Isolated contention proof needs bounded, recoverable orchestration
+
+Observation: a root-owned 0700 container /tmp can block mysql; a readiness attempt
+count does not bound Docker command duration; lost allocation replies and partial
+cleanup make absent-resource assumptions unsafe. Guidance: bounded 1777 tmpfs only
+inside the owned container, one monotonic startup deadline, pre-allocation exact
+intent and ownership checks, resumable confirmed-absence cleanup, no success on
+unresolved allocation. Journals are not fsync/crash-durable. Keep Docker outside
+the protected PHP sandbox rather than relaxing its network/DB exclusions. Old-source
+controls must fail the intended invariant, not merely bootstrap. Harness is source
+only and unrun; full limits in SHARED-WORKER-MARIADB-PROOF-V1. Drive remains deferred.
+
+## 2026-09-21 - Transaction-owned coordination needs current reads and writer fences
+
+Nested savepoint release does not commit the outer transaction. Use a fixed-row
+write mutex until root commit/rollback, then current locking job/claim/budget
+reads and checked CAS. Do not rely on an expired PHP advisory lease or an old
+repeatable-read aggregate. Preserve request-first order in admission and deny
+legacy completion/failure/requeue for enrolled identities. The delimiter option
+belongs only to the test's single trigger definition, never a production default.
+244 focused tests / 1,312 assertions pass; retain both setup/fixture failures and
+17 failing baseline regressions. Real MariaDB contention is still unproven.
+
+## 2026-09-21 - New production guards need real fixture dependencies
+
+A dependency-free PHP harness manually loads services, unlike Drupal's autoloader.
+When the importer gained a durable admission guard, the stale class list caused
+20 cross-repository failures. Load the actual guard; do not stub it away. This
+legacy fixture may model an empty admission-event table only, and must throw for
+seeded events. All 20 affected tests pass; retain the failed full-run receipt and
+rerun the entire suite before claiming current combined verification.
+
+## 2026-09-21 - An imported-function test is not an executable-worker test
+
+The bounded worker silently skipped main when its argv used `/tmp` but Node's
+module URL used `/private/tmp`. Canonicalize both, including when the caller
+uses preserve-symlinks-main. Retain a subprocess test requiring the actual
+configuration failure, plus a silent-import assertion. The paired Studio test
+exercises its signed ingress and one static build, not actual cloud execution.
+
+## 2026-09-21 - Optional workflow repair must not become authentication
+
+Observation: strict managed-proof reuse in deep-dive resume ran before login
+finalization and rejected valid sign-in after brief/rights changes. Guidance:
+after existing account/ownership checks, return the managed request unchanged;
+do not retry its proof or swallow generic auth/system exceptions. Keep explicit
+resend strict and project current brief/asset reconciliation as attention. Test
+the real controller, not merely the service. 243 focused PHP tests pass with
+in-memory records and a finalization double; no real sessions or mail are used.
+
+## 2026-09-21 - Validate allocated IDs at their downstream boundary
+
+Observation: an inert admission campaign used `proof-*`, but canonical asset
+paths require `pc-*`. Guidance: keep the existing namespace and random suffix;
+test emitted IDs through the actual path validator before integration. Do not
+relax the validator, add business data or migrate historical IDs to repair this.
+90 admission tests / 521 assertions pass; importer remains unimplemented.
+
+## 2026-09-21 - Admission identity outlives its feature flag
+
+Observation: a fresh-only hook did not constrain later manual resend. Editing a
+managed brief then resending allocated a new legacy job outside shared claims,
+including after disabling admission. Deep-dive normalization and revision reset
+also mutate records before reaching the common helper.
+
+Guidance: lock the request and consult durable admission markers before ANY queue
+fallback. Reuse only exact current binding/account/rights, never silently enroll a
+replacement. Reject managed revisions before expiring prior campaigns and reuse
+managed deep-dive records before normalization. Keep malformed evidence closed.
+Test real public service callers, changed input and both flag states. Put test
+failure assertions outside expected-exception catches. The 224-test synthetic
+receipt and four original-source failures are in the fresh-proof contract.
+
+## 2026-09-21 - Freshness, immutable binding and import closure
+
+Observation: the proof queue helper also serves login repair, resend and revisions;
+generic callbacks trust event IDs and a legacy prospect fallback. An opaque job ID
+in a waiting campaign can incorrectly imply remote acceptance. Request locks alone
+also do not protect asset withdrawal.
+
+Guidance: admit only explicit trusted fresh writer events in their outer transaction;
+lock actual asset/account/resource rows, exclude history before campaign allocation,
+and use a direct unique job insert. Persist byte-bound admission evidence and deny
+generic imports before duplicate shortcuts. Project actual queue/lease facts and
+keep provider/import authority closed. New uploads or later rights changes require
+fresh checks before external work. Tests are SQLite with entity doubles, not MySQL
+or customer execution. See the fresh-proof admission/import contract for commands.
+
+## 2026-09-21 - Separate complete-source fixtures from proof callback ingress
+
+A finalized-source adoption test needs authoritative bytes and explicit rights
+for every exported file, including the creator PNG. Use the existing confined
+complete-source manifest for that fixture; do not raise general proof-asset limits
+or waive file authority to repair an outdated Home-only test. Derive fixture
+hashes from materialized bytes, keep one identity and retain numeric wire tests.
+
+## 2026-09-21 - Freeze attribution authority independently of output
+
+An approved original hash cannot describe a later mandatory-credit derivative.
+Freeze a signed versioned owner policy and independently compute only the exact
+Home projection from confined original proof bytes. A worker receipt or current
+build is not the original authority. Keep v1 assetless; require authored evidence
+for every included v2 non-Home page, not just records a worker chooses to supply.
+The legacy explicit-file-authority continuation remains fail-closed until all
+actual branded files have authority. See the selected creator-credit v2 contract.
+
+## 2026-09-21 - New claim roles must not widen old runners
+
+Observation: a registry with multiple capabilities could hand creative work to
+an unchanged static dispatcher if HTTP claim defaulted to every registry grant.
+Guidance: legacy requests stay static-only. A new adapter explicitly narrows
+the server grant to proof-creative-v1; renewal uses the stored profile. Keep
+creative costs absent by default and reject completion until an authoritative
+importer exists. Network-denied SQLite tests prove mechanics, not generation.
+
+Sparse-checkout caution: an absent path may still be tracked. Check `git ls-files`
+and `git show HEAD:<path>` before adding it. Final review caught and repaired an
+attempted learnings replacement here; historical content is preserved exactly.
+
+## 2026-09-21 - Preserve the executed creative routine
+
+Recent delivered proofs used active agents, managed imagery, customer build
+scripts and independent review. A six-direction benchmark and a packaging
+bridge are not interchangeable with that workflow. Automate the proven seams
+under one durable Drupal claim with explicit capability and cost bounds.
+
+## 2026-09-21 - Automatic admission must share the enqueue transaction
+
+Enrolling later permits a legacy worker to claim a just-created queued job.
+Enroll eligible new jobs atomically, never use repeated enqueue as a historical
+backlog drain, and roll back a failed admission. Share the same capability
+predicate between explicit and automatic enrollment. Static dispatch remains
+different from creative generation and backend implementation; a disabled
+source hook does not make the live pipeline autonomous.
+
+## 2026-09-21 - Frontend source dependencies belong in isolated proof inputs
+
+A new raw-text import outside frontend/ broke the disposable journey build.
+Allowlist that exact reviewed file, reject missing/symlink sources and compare
+copied bytes; never copy private marketing wholesale. On macOS, rsync -R does
+not reliably provide the expected /./ path stripping. Explicit destination
+directories and cp avoid that ambiguity. Passing the canonical legacy fixture
+is not proof of a newly unattended creative workflow.
 ## 2026-09-21 — Full-site handoff and portable source
 
 **Release:** The corrected protected account delivery is verified at backend 7227ceb6 / frontend cc8eada4. The same exact customer package survives route correction; 58 route matches, all file hashes, plan navigation and an unsent planner draft pass. A GitHub billing lock prevented hosted checks from starting. EDQUOT was recovered by deleting only five verified old, untracked/reproducible dist directories (1,099,176 KiB), retaining source/current build/backups.
@@ -2824,3 +3153,12 @@ Each site must own its Git root, common directory, manifest and verified remote.
 Studio/library checkouts retain their separately configured locations. Explicit sandbox roots remain supported. New customer identities should use `site-<business-slug>`; preserve existing IDs and registry bindings on continuation. Check existing source and registry before creating a duplicate. This rule does not automatically move existing repositories or authorize deployment, credentials, DNS or customer communication. Fritz assigned the StockandShip98 move to its own task.
 
 Historical migration receipts retain their original paths as evidence; this current rule supersedes their use as defaults. When an authorized move is performed, preserve history, dirty work and remotes, then update the local project/launcher mappings and current handoff documents. Confirm the actual new checkout before claiming migration complete.
+# 2026-09-21 - An import retry and a fresh build have different authority
+
+The current fresh snapshot includes review/selection fields by design. A committed
+import followed by real QA or selection cannot pass that same fresh snapshot.
+Keep strict fresh checks; implement historical receipt acknowledgment separately
+with no lifecycle writes. Do not reuse the legacy attachment writer, which queues
+owner approval mail. Internal `owner_review` is the existing independent QA input
+state, not permission to reinstate Fritz as the routine bottleneck. Full-journey
+storage preflight is a blocked execution, not evidence that this behavior works.

@@ -16,8 +16,11 @@ use Drupal\famtastic_pipeline\Service\FullSiteReviewService;
 use Drupal\famtastic_pipeline\Service\OperationalLedger;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\famtastic_pipeline\Unit\Fixtures\FullSiteReviewConnection;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 require_once dirname(__DIR__, 3) . '/famtastic_pipeline.install';
+require_once __DIR__ . '/Fixtures/FullSiteReviewConnection.php';
 // Use this worktree's module when the reusable Drupal test runtime lives elsewhere.
 spl_autoload_register(static function (string $class): void {
   $prefix = 'Drupal\\famtastic_pipeline\\';
@@ -37,7 +40,7 @@ final class FullSiteReviewTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $options = ['database' => ':memory:', 'prefix' => '', 'driver' => 'sqlite', 'namespace' => 'Drupal\\sqlite\\Driver\\Database\\sqlite'];
-    $this->db = new Connection(Connection::open($options), $options);
+    $this->db = new FullSiteReviewConnection(Connection::open($options), $options);
     $schemas = _famtastic_pipeline_customer_portal_schema() + _famtastic_pipeline_automation_schema() + _famtastic_pipeline_lifecycle_schema();
     foreach (['famtastic_customer', 'famtastic_organization', 'famtastic_membership', 'famtastic_project_request', 'famtastic_build_run', 'famtastic_event', 'famtastic_portal_activity', 'famtastic_notification_outbox', 'famtastic_job', 'famtastic_private_offer', 'famtastic_request_asset'] as $table) $this->db->schema()->createTable($table, $schemas[$table]);
     $this->db->insert('famtastic_customer')->fields(['id' => 91, 'uid' => 191, 'public_id' => 'fixture-customer', 'email' => 'fixture@example.invalid', 'display_name' => 'Fixture', 'created' => 1, 'changed' => 1])->execute();
@@ -123,8 +126,9 @@ final class FullSiteReviewTest extends UnitTestCase {
       try { $portal->updateWebsiteRequest(91, self::PUBLIC_ID, ['project_name' => 'Fixture', 'primary_goal' => 'Updated customer goal', 'products_services' => 'Delivery services', 'action' => $action, 'staff_assisted_brief' => ['full_site_review' => NULL]]); self::fail('Customer changed a full-site review into a proof request.'); }
       catch (\InvalidArgumentException $error) { self::assertStringContainsString('Use Messages', $error->getMessage()); }
     }
-    try { (new \ReflectionMethod($portal, 'submitClaimedDeepDiveRequest'))->invoke($portal, 91, 93); self::fail('Deep dive resumed a full-site review.'); }
-    catch (\InvalidArgumentException $error) { self::assertStringContainsString('Use Messages', $error->getMessage()); }
+    // This helper also runs during login/verification. Preserve the authorized
+    // request unchanged instead of preventing sign-in or resuming proof work.
+    self::assertSame(93, (new \ReflectionMethod($portal, 'submitClaimedDeepDiveRequest'))->invoke($portal, 91, 93));
     self::assertSame($row, $this->db->select('famtastic_project_request', 'r')->fields('r')->condition('id', 93)->execute()->fetchAssoc());
     // Even a preexisting submitted state cannot enter the staff dispatch path,
     // worker context or central queue helper with a stale intake snapshot.
@@ -171,6 +175,111 @@ final class FullSiteReviewTest extends UnitTestCase {
     catch (\RuntimeException $error) { self::assertStringContainsString('integrity failed', $error->getMessage()); }
     self::assertSame(1, (int) $this->db->select('famtastic_project_request', 'r')->countQuery()->execute()->fetchField());
     self::assertSame(0, (int) $this->db->select('famtastic_event', 'e')->countQuery()->execute()->fetchField());
+  }
+
+  public function testReplayLocksRequestBeforeMembershipAndPreservesOuterTransaction(): void {
+    $args = [91, 92, 'Staff ordered replay', 'ordered-replay', $this->directory . '/source', $this->manifest, 'codex:fixture', 'Synthetic owner instruction'];
+    $first = $this->reviews->createAndAttach(...$args);
+    $this->db->reads = [];
+    $outer = $this->db->startTransaction();
+    $this->db->update('famtastic_organization')->fields(['name' => 'Outer sentinel'])->condition('id', 92)->execute();
+    $again = $this->reviews->createAndAttach(...$args);
+    self::assertSame($first['request_public_id'], $again['request_public_id']);
+    self::assertFalse($again['newly_created']); self::assertTrue($this->db->inTransaction());
+    $locks = array_values(array_filter($this->db->reads, static fn(array $r): bool => $r['locking']));
+    self::assertStringContainsString('famtastic_project_request', $locks[0]['sql']);
+    self::assertStringContainsString('famtastic_membership', $locks[1]['sql']);
+    $outer->rollBack();
+    self::assertSame('Fixture organization', $this->db->select('famtastic_organization', 'o')->fields('o', ['name'])->condition('id', 92)->execute()->fetchField());
+    self::assertSame(2, (int) $this->db->select('famtastic_event', 'e')->countQuery()->execute()->fetchField());
+  }
+
+  public function testNewDraftRejectsUnknownOuterTransactionWithoutChangingCallerState(): void {
+    $outer = $this->db->startTransaction();
+    $this->db->update('famtastic_organization')->fields(['name' => 'Caller work'])->condition('id', 92)->execute();
+    $this->db->reads = [];
+    try {
+      $this->reviews->createAndAttach(91, 92, 'Nested new draft', 'nested-new', $this->directory . '/source', $this->manifest, 'codex:fixture', 'Synthetic owner instruction');
+      self::fail('Unproven outer snapshot accepted for draft creation.');
+    }
+    catch (\RuntimeException $error) { self::assertSame('New staff drafts require a fresh root transaction.', $error->getMessage()); }
+    self::assertTrue($this->db->inTransaction());
+    self::assertSame([], array_values(array_filter($this->db->reads, static fn(array $r): bool => $r['locking'])));
+    self::assertSame('Caller work', $this->db->select('famtastic_organization', 'o')->fields('o', ['name'])->condition('id', 92)->execute()->fetchField());
+    self::assertSame(1, (int) $this->db->select('famtastic_project_request', 'r')->countQuery()->execute()->fetchField());
+    self::assertSame(0, (int) $this->db->select('famtastic_event', 'e')->countQuery()->execute()->fetchField());
+    $outer->rollBack();
+  }
+
+  public function testAppearedDraftHintRollsBackRootBeforeRetryingExistingRequest(): void {
+    $args = [91, 92, 'Competing draft', 'appeared-draft', $this->directory . '/source', $this->manifest, 'codex:fixture', 'Synthetic owner instruction'];
+    $first = $this->reviews->createAndAttach(...$args);
+    $this->db->reads = []; $this->db->maskNextDraftHint = TRUE;
+    $wrote = FALSE; $observedRollback = FALSE;
+    $this->db->beforeRead = function (string $sql, bool $locking) use (&$wrote, &$observedRollback): void {
+      if ($locking && !$wrote && str_contains($sql, 'famtastic_membership')) {
+        $wrote = TRUE;
+        $this->db->update('famtastic_organization')->fields(['name' => 'Must roll back'])->condition('id', 92)->execute();
+      }
+      if ($locking && $wrote && str_contains($sql, 'famtastic_project_request')) {
+        $this->db->beforeRead = NULL;
+        self::assertSame('Fixture organization', $this->db->select('famtastic_organization', 'o')->fields('o', ['name'])->condition('id', 92)->execute()->fetchField());
+        $observedRollback = TRUE;
+      }
+    };
+    $again = $this->reviews->createAndAttach(...$args);
+    self::assertTrue($wrote); self::assertTrue($observedRollback);
+    self::assertSame($first['request_public_id'], $again['request_public_id']);
+    self::assertFalse($again['newly_created']); self::assertFalse($again['newly_attached']);
+    self::assertFalse($this->db->inTransaction());
+    self::assertSame(2, (int) $this->db->select('famtastic_project_request', 'r')->countQuery()->execute()->fetchField());
+    self::assertSame(2, (int) $this->db->select('famtastic_event', 'e')->countQuery()->execute()->fetchField());
+  }
+
+  public function testRetryRechecksMembershipAndDoesNotAdoptChangedDraftEvidence(): void {
+    $args = [91, 92, 'Bound draft', 'bound-draft', $this->directory . '/source', $this->manifest, 'codex:fixture', 'Synthetic owner instruction'];
+    $this->reviews->createAndAttach(...$args);
+    $this->db->update('famtastic_membership')->fields(['status' => 'inactive'])->condition('customer_id', 91)->execute();
+    try { $this->reviews->createAndAttach(...$args); self::fail('Inactive membership accepted.'); }
+    catch (\RuntimeException $error) { self::assertSame('The original staff draft binding is unavailable.', $error->getMessage()); }
+    $this->db->update('famtastic_membership')->fields(['status' => 'active'])->condition('customer_id', 91)->execute();
+    $this->db->beforeRead = function (string $sql, bool $locking): void {
+      if ($locking && str_contains($sql, 'famtastic_project_request')) {
+        $this->db->beforeRead = NULL;
+        $this->db->update('famtastic_event')->fields(['payload' => '{}'])->condition('event_key', 'full-site-review-draft:92:91:bound-draft')->execute();
+      }
+    };
+    try { $this->reviews->createAndAttach(...$args); self::fail('Changed draft evidence accepted.'); }
+    catch (\RuntimeException $error) { self::assertSame('The original staff draft binding changed.', $error->getMessage()); }
+    self::assertFalse($this->db->inTransaction());
+    self::assertNotSame('{}', $this->db->select('famtastic_event', 'e')->fields('e', ['payload'])->condition('event_key', 'full-site-review-draft:92:91:bound-draft')->execute()->fetchField());
+  }
+
+  #[DataProvider('postCommitCases')]
+  public function testPostTransactionFailurePreservesOriginalErrorAndCommittedAttachment(bool $create, bool $replay): void {
+    $args = [91, 92, 'Post-commit draft', 'post-commit-draft', $this->directory . '/source', $this->manifest, 'codex:fixture', 'Synthetic owner instruction'];
+    $operation = fn() => $create ? $this->reviews->createAndAttach(...$args) : $this->attach();
+    if ($replay) $operation();
+    $calls = 0;
+    $this->db->beforeRead = function (string $sql, bool $locking) use (&$calls): void {
+      if (!$locking) return;
+      $this->db->beforeRead = NULL;
+      $this->db->transactionManager()->addPostTransactionCallback(static function (bool $success) use (&$calls): void {
+        $calls++; self::assertTrue($success);
+        throw new \RuntimeException('Synthetic post-commit failure; do not retry.');
+      });
+    };
+    try { $operation(); self::fail('Post-commit exception was swallowed.'); }
+    catch (\RuntimeException $error) { self::assertSame('Synthetic post-commit failure; do not retry.', $error->getMessage()); }
+    self::assertSame(1, $calls); self::assertFalse($this->db->inTransaction());
+    self::assertSame($create ? 2 : 1, (int) $this->db->select('famtastic_event', 'e')->countQuery()->execute()->fetchField());
+    $request = $this->db->select('famtastic_project_request', 'r')->fields('r')->condition('project_name', $create ? 'Post-commit draft' : 'Fixture')->execute()->fetchAssoc();
+    self::assertNotFalse($request);
+    self::assertSame('The customer design guide.', $this->reviews->read(91, $request['public_id'], 'review-documents/design.txt')['bytes']);
+    self::assertSame(0, (int) $this->db->select('famtastic_notification_outbox', 'o')->countQuery()->execute()->fetchField());
+  }
+  public static function postCommitCases(): iterable {
+    foreach ([FALSE, TRUE] as $create) foreach ([FALSE, TRUE] as $replay) yield ($create ? 'create' : 'attach') . ($replay ? '-replay' : '-first') => [$create, $replay];
   }
 
   public function testExistingProofJobPreventsAttachment(): void {

@@ -3261,6 +3261,22 @@ function famtastic_pipeline_update_8065(&$sandbox) {
   return 'Created bounded worker coordination tables; no jobs enrolled and no scheduler activated.';
 }
 
+/** Add the empty root-transaction mutex table; no enrollment or activation. */
+function famtastic_pipeline_update_8066(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $table = 'famtastic_worker_mutex';
+  if (!$schema->tableExists($table)) $schema->createTable($table, \Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema::tables()[$table]);
+  return 'Created empty worker mutex table; no jobs, holds, settings or services changed.';
+}
+
+/** Add an empty journal only. No provider/catalog/route, enrollment or refund. */
+function famtastic_pipeline_update_8067(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $table = 'famtastic_proof_operation';
+  if (!$schema->tableExists($table)) $schema->createTable($table, \Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema::tables()[$table]);
+  return 'Created empty proof operation journal; no paid operation or service activated.';
+}
+
 /**
  * Maps every known content_id to the campaign it belongs to, by reading
  * every campaign's posting-schedule.json plus the legacy 55-cents-17-day

@@ -1,5 +1,234 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-22 - Signed worker authority: source integrated, locally verified
+
+Existing HMAC and real disposable nonce persistence now produce scoped principals
+for the existing controller/managed-release seam. Full PHP **1,314 / 13,990**,
+portal DNA **34/34**, email presentation **86** and canonical **legacy** journey
+pass. The independent nonce-race finding is fixed and deterministically tested.
+No installed TLS/worker, real visual QA, managed unattended journey or cloud
+capability is promoted. Auth service wiring preserves the default-off switch;
+managed reader/release dependencies remain unregistered. Hosted CI ran no steps
+because of the GitHub account billing lock. See
+`evidence/WORKER-REQUEST-PRINCIPAL-2026-09-22.md`.
+
+## 2026-09-22 - Atomic managed release: locally verified, not installed
+
+Receipt-bound research/QA decision/reveal/existing v4 outbox and stored customer
+read grant now exist as unregistered source. Full PHP **1,232 / 13,616**, portal
+DNA **34/34**, email presentation **86**, and canonical **legacy** journey pass.
+Independent review's two late-write gaps are repaired and rollback-tested.
+Real reviewer/retained-evidence authority, pending-review consumption, metadata/
+selection and actual Mac creative generation remain integration work. Synthetic
+identity/QA tests do not establish autonomous customer delivery or deployment.
+See `evidence/MANAGED-PROOF-RELEASE-2026-09-22.md`; no live capability promotion.
+
+## 2026-09-22 - Managed private reads: local verified, not installed
+
+Receipt/current-authority reader plus initial QA/HTTP consumers pass full PHP
+1,079/11,002, portal DNA 34/34 and canonical **legacy** journey regression.
+Customer-release and producer/reviewer authority use explicit test doubles; no
+real managed QA/release/metadata or installed auth/browser claim. The reader is
+unregistered and managed release stays closed. No live capability promotion.
+See `evidence/MANAGED-PROOF-READS-2026-09-22.md`; it supersedes earlier reader
+absence statements while retaining their activation gates.
+
+## 2026-09-22 - Recovered local regression and mail-isolation evidence
+
+PHP 983/6,731 and paired Studio 1,588 tests/135 files pass; the canonical fresh
+Drupal journey's root and both child receipts are verified. Core account mail is
+captured separately from FAMtastic transactional memory mail. This upgrades test
+isolation evidence only: the journey still uses the legacy owner-review fixture,
+not managed unattended delivery. Importer/reader fences exist locally; protected
+managed reads, independent QA, real creative execution and cloud activation remain
+unfinished. Historical `/tmp` receipts are now unavailable, not reverified.
+See `evidence/AUTOPIPELINE-RECOVERED-VERIFICATION-2026-09-22.md`.
+
+## 2026-09-21 - Managed credited packaging, local content verification only
+
+Unregistered packaging/reverification and resolver-gated reads pass full PHP
+848 tests / 5,228 assertions, same 68 existing deprecations; zero failed/skipped
+and protected data unchanged. Originals/logo, roles, tampering, collisions and
+maximum 21 MB content inventory are exercised. Resolver grants are synthetic;
+no installed tenant authority, importer, HTTP reader, provider, QA or delivery.
+Contract: `contracts/MANAGED-PROOF-PACKAGE-V1.md`.
+
+## 2026-09-21 - Full cross-repository regression checkpoint
+
+Exact pair Studioe470dfe / Designs9583766f passes1,588 Studio tests/135files,
+both lints/proof commands and791 PHP tests/4,804assertions;68 existing PHP
+deprecations, zero failed/skipped tests, protected data unchanged. Receipt
+`journal-review-paired-final.zQmLl9`. No fresh creative/QA/release/cloud activation.
+
+## 2026-09-21 - Combined closed journal / artifact verification
+
+Reviewed journal source69b834d2 passes 260 tests / 1,769 assertions, including
+cross-job unknown outcome, three-generation exhaustion and live-lease month
+rollover. Integration3325fd4e passes 791 tests / 4,804 assertions, same68 existing
+deprecations, no failed/skipped tests. Protected data unchanged. Provider/input
+verifiers remain unwired, generic managed imports closed and all activation off.
+This supersedes the journal follow-up's earlier unrun status below, not its gates.
+
+## 2026-09-21 - Prepared proof content verification, not import authority
+
+Unregistered `verifyPrepared` reopens only server-resolved bundle IDs, verifies
+sealed bounded reads and reconstructs exact inventory from canonical callback
+bytes. Independently reviewed with 139 focused tests / 562 assertions passing.
+No claim/tenant/QA/delivery permission, route or live provider is installed.
+See `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`.
+
+## 2026-09-21 - Frozen private-review MariaDB contention verified
+
+Main's guarded real database run of 4998be27 passes seven cases / 84 checks;
+four frozen 7227 controls produce all expected invariant failures (22 checks).
+Independent PDO/REPEATABLE READ observations retain exact lock ownership. All
+protected data is unchanged and the exact-owned temporary allocation is removed.
+File metadata remains explicitly doubled. No installed kernel/auth, later journal,
+creative provider, live pipeline or cloud capability is promoted. Receipts and
+retained failed-harness diagnostics: `contracts/PRIVATE-REVIEW-MARIADB-PROOF-V1.md`.
+
+## 2026-09-21 - Private review integration, locally verified only
+
+Main 7227ceb6 is preserved with managed admission exclusions, authorized login
+no-op, request-first attachment retries and committed-error preservation.
+Actual PHP suite 716/4,160, portal SSR 1/1, design rules 34/34 pass with protected
+data unchanged. Six upstream negative cases reproduce old defects. SQLite and
+credential/session doubles do not prove installed auth or MariaDB writer races.
+No production/creative/cloud capability promotion. See the private-review
+autopipeline compatibility contract for exact receipts and remaining gates.
+
+## 2026-09-21 - Paid-operation journal: source only, baseline SQLite verified
+
+Unregistered/default-unconfigured journal and bounded metadata checkpoint source
+now exist; no real verifier, recipe/price catalog, provider adapter or route is
+installed. Parent reports aad9 baseline 257 tests / 1,689 assertions PASS with
+protected inventories unchanged; three added fault cases remain unrun. This does
+not verify journal MariaDB contention or providers. No execution, import, QA,
+notification or cloud capability is promoted. Exact receipt and limitations:
+`contracts/PROOF-OPERATION-JOURNAL-V1.md`.
+
+## 2026-09-21 - Real MariaDB worker contention verified, not activated
+
+Frozen worker source 1ac3bc26 passes 16 cases / 103 checks on independent real
+MariaDB connections. Four old-coordinator negative controls fail at the expected
+invariants. Both protected inventories are unchanged; all owned temporary DB
+resources and credentials are removed. This upgrades the frozen coordination
+test classification only, not installed migration, asset-writer contention,
+creative generation, importer, cloud or unattended customer delivery. See
+`contracts/SHARED-WORKER-MARIADB-PROOF-V1.md`. Later `main` drift to 7227ceb6
+is not covered by this receipt; combined-source reconciliation remains required.
+
+## 2026-09-21 - Request-asset serialization, synthetic local only
+
+Actual customer upload/withdrawal methods use request-first current ownership
+and asset locking; managed-file metadata commits atomically, and later selected
+reconciliation cannot roll back revocation. 20 focused tests / 135 assertions
+and the full module's 611 / 3,229 pass; protected data unchanged, same 68 existing
+deprecations. File/entity interfaces and select interleavings are test doubles,
+not real MariaDB contention or installed storage proof. No worker/provider/cloud
+or production classification is promoted. Paired fixture rerun remains pending
+after a disk-guard interruption. See `contracts/REQUEST-ASSET-MUTATION-V1.md`.
+
+## 2026-09-21 - Artifact preparation, synthetic local verification only
+
+Pure legacy validator extraction and an unregistered private create-only store
+are source groundwork only. 109 focused tests / 463 assertions pass under the
+200 MiB watch guard with Git unavailable and a hash-pinned historical service
+fixture outside the docroot with its provenance; protected inventories unchanged.
+The post-move three-file run preserves those totals. Same-input DNA cases assert exact guard
+errors; an in-memory DNA mutant fails all nine cases as intended. Prior failures
+and receipts are retained. This test repair changes no production code.
+File fsync is not directory fsync or a power-loss guarantee. No provider/production
+capability promotion; no authoritative importer, producer, QA or delivery exists.
+See `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md` for bounds and open gates.
+## 2026-09-21 - MariaDB provisioned; contention harness bootstrap blocked
+
+Outside-webroot source composes the actual coordinator/ledger with independent
+Drupal MySQL connections and a frozen old-coordinator control. Resource-bounded
+tmpfs provisioning is separate from sandboxed PHP tests. Main's first provisioning
+attempt failed before process start because compression conflicts with a one-file
+local-log limit. After disabling compression, main reports MariaDB startup but
+no published port on the internal bridge. The next revision uses a
+dedicated ordinary bridge and retains the exact loopback publication guard.
+Container NAT egress is not firewall-disabled; PHP sandbox denial remains intact.
+Main reports third provisioning succeeded (Mj1XUG, 127.0.0.1:32768), followed by
+runner bootstrap failure `worker-mariadb-current.PahTfo`: exit 2, protected data
+unchanged, before case/child execution. Initialize the typed pipes array for
+proc_open by reference. No agent runtime or PHP bootstrap/test success is claimed;
+real MariaDB contention remains unproven pending the main-owned reviewed rerun.
+See `contracts/SHARED-WORKER-MARIADB-PROOF-V1.md`; no activation
+or production capability classification changes.
+
+## 2026-09-21 - Root-transaction worker serialization (synthetic source only)
+
+One fixed database mutex row, current locking reads, CAS and legacy-job isolation
+pass 244 focused tests / 1,312 assertions with SQLite and SQL-contract checks.
+Old-source regressions and initial fixture failures are retained. No real
+MariaDB contention, schema deployment, paid checkpoint, importer or activation
+is claimed. See `contracts/SHARED-WORKER-ROOT-TRANSACTION-V1.md`.
+
+## 2026-09-21 - Login independent of managed proof retry (synthetic source only)
+
+Managed deep-dive resume preserves the owned request without attempting work;
+changed brief/rights show attention separately. Actual controller login passes
+with credential/session doubles while auth denials remain intact. 243 focused
+PHP tests / 1,427 assertions pass (106 admission/login / 763). No live auth session,
+provider, customer delivery, importer or activation proof is claimed.
+
+## 2026-09-21 - Canonical admission media namespace (synthetic source only)
+
+New campaign IDs satisfy the existing `pc-*` asset-path validator; legacy IDs
+remain untouched and excluded from admission. 90 admission tests / 521 assertions
+pass. This verifies path compatibility, not artifact import or worker activation.
+
+## 2026-09-21 - Managed resend isolation (synthetic local source only)
+
+Persisted managed identity now prevents manual resend, deep-dive repair or revision
+from falling into legacy execution. Exact live-authority retries reuse the existing
+job even when admission is disabled. 224 focused PHP tests / 1,170 assertions pass;
+four regressions fail against original abfd3fed source as expected. No capability
+is promoted to provider-, cloud- or production-proven. Import and activation stay
+closed. Exact receipt: `contracts/FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md`.
+
+## 2026-09-21 - Fresh portal proof admission (synthetic local source only)
+
+Default-off create/draft-submit hooks atomically bind request, inert campaign,
+immutable input, same Drupal job and proof claim. Exact retries/history exclusions,
+rollback, tenant/rights checks, generic-import denial and truthful status projection
+pass focused tests: 177 PHP / 926 assertions, including 43 new / 286. SQLite and
+entity doubles are not installed-kernel/MySQL concurrency or customer delivery
+proof. No production recipe/cost catalog, creative adapter, fenced importer,
+provider, cloud or activation exists. Older claim-only entries are historical.
+See `docs/contracts/FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md`.
+
+## 2026-09-21 - Signed creator-credit projection (local source only)
+
+PHP independently computes the pinned owner-credit Home derivative from confined
+original proof bytes and validates v2 grant/mapping, exact system PNG and complete
+authored-page evidence. 89 focused dependency-free assertions, three existing
+portal-selection cases and five exact PHP/Node JSON-byte parity fixtures pass.
+Existing v1 and explicit-file-authority boundaries remain intact. No provider,
+customer, first-association end-to-end, deployment or production claim. See
+`docs/contracts/SELECTED-CREATOR-CREDIT-POLICY-V2.md`.
+
+## 2026-09-21 - Shared proof claim groundwork (synthetic local only)
+
+Capability-specific Drupal claims, bounded renewal/generation and shared budget
+holds pass 88 focused PHP tests / 356 assertions plus 8 static Node tests.
+The proof cost catalog is empty, no fresh-proof caller exists, and completion
+is closed pending the authoritative importer. This is not connected creative
+automation, provider execution, MySQL concurrency, Commerce or cloud proof.
+See `docs/contracts/SHARED-PROOF-CLAIMS-V1.md`.
+
+## 2026-09-21 - Fresh selected-static admission (local source only)
+
+Default-off, atomic fresh-job enrollment in the existing Drupal claim ledger is
+locally tested: duplicate/history exclusion, admission rollback, capability
+limits and competing Mac/cloud claim identities. 313 PHP tests / 1,587 assertions,
+85 installed selected-staging checks and the canonical disposable journey pass.
+This does not prove automatic creative generation, live consumer integration,
+MySQL contention, real cloud execution or laptop independence. See
+`docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md`.
 ## 2026-09-21 — Finished-site account review
 
 Production-proven manual account delivery: the owner-authorized Travel Addicts full website is attached once to its verified existing account, with exact replay a no-op. All 29 file hashes, 14 renderings and 58 real customer/staff route matches pass; native staff Chrome verifies home, pricing, plan preselection, validation, an unsent draft and private design document. Anonymous and wrong-customer access is denied. Corrected backend 7227ceb6 and frontend cc8eada4 are live; independent business source is privately verified at 82a47502. No automatic delivery, customer view/acceptance, message, payment or public business launch is claimed. See `docs/plans/TRAVEL-ADDICTS-DELIVERY-2026-09-21.md`.

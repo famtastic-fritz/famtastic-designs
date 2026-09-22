@@ -117,6 +117,14 @@ if [[ "$mode" == --canonical ]]; then
   cp "$repo_root/backend/setup-commerce.sh" "$sandbox/backend/"
   rsync -a "$repo_root/docs/architecture/" "$sandbox/docs/architecture/"
   rsync -a --exclude '.env*' --exclude node_modules --exclude dist --exclude public/video --exclude public/showcase "$repo_root/frontend/" "$sandbox/frontend/"
+  frontend_content='marketing/brands/famtastic/video-studio/whats-the-catch/user-script.txt'
+  test -f "$repo_root/$frontend_content" && test ! -L "$repo_root/$frontend_content" || {
+    echo "ERROR: required canonical frontend narration is missing or a symlink: $frontend_content" >&2
+    exit 1
+  }
+  mkdir -p "$sandbox/$(dirname "$frontend_content")"
+  cp "$repo_root/$frontend_content" "$sandbox/$frontend_content"
+  cmp "$repo_root/$frontend_content" "$sandbox/$frontend_content"
   frontend_dependencies="${FAMTASTIC_FRONTEND_DEPENDENCIES:-$repo_root/frontend/node_modules}"
   if [[ -d "$frontend_dependencies" ]]; then ln -s "$frontend_dependencies" "$sandbox/frontend/node_modules"; fi
   # A private empty Git repository meets the skill entrypoint's path guard.

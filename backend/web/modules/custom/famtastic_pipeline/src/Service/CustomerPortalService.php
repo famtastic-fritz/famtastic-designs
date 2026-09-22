@@ -42,6 +42,7 @@ final class CustomerPortalService {
     private readonly AttributionService $attribution,
     private readonly PublicPreviewDeliveryService $previews,
     private readonly ?WebformIntakeBridgeService $webformBridge = NULL,
+    private readonly ?FreshProofAdmission $freshProofAdmission = NULL,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -333,6 +334,17 @@ final class CustomerPortalService {
 
   /** Creates a draft or submitted request and its distinct Drupal lead record. */
   public function createWebsiteRequest(int $customerId, string $organizationPublicId, array $input, ?string $rawInput = NULL): array {
+    if (!FreshProofAdmission::enabled()) return $this->writeWebsiteRequestCreate($customerId, $organizationPublicId, $input, $rawInput);
+    $transaction = $this->database->startTransaction();
+    try {
+      $result = $this->writeWebsiteRequestCreate($customerId, $organizationPublicId, $input, $rawInput);
+      unset($transaction);
+      return $result;
+    }
+    catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
+  }
+
+  private function writeWebsiteRequestCreate(int $customerId, string $organizationPublicId, array $input, ?string $rawInput): array {
     $organization = $this->authorizedOrganization($customerId, $organizationPublicId);
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
     $clean = $this->validateWebsiteRequest($input);
@@ -366,12 +378,17 @@ final class CustomerPortalService {
       'intake_data' => json_encode($clean['intake'], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES),
       'submitted_at' => $clean['status'] === 'submitted' ? $now : NULL, 'created' => $now, 'changed' => $now,
     ])->execute();
+    if (FreshProofAdmission::enabled()) {
+      $owner = $this->database->select('famtastic_customer_resource', 'r')->fields('r', ['organization_id'])
+        ->condition('resource_type', 'prospect')->condition('resource_id', (int) $prospect->id())->forUpdate()->execute()->fetchField();
+      if ($owner !== FALSE && (int) $owner !== (int) $organization['id']) throw new \RuntimeException('Prospect belongs to a different workspace.');
+    }
     $this->claimResource((int) $organization['id'], 'prospect', (int) $prospect->id());
     $this->previews->attachClaimedRequest($customerId, $id, $clean['status']);
     $this->activity((int) $organization['id'], 'website_request.created', $clean['status'] === 'submitted' ? 'A new website request was submitted.' : 'A website request draft was saved.');
     if ($clean['status'] === 'submitted') {
       $this->queueWebsiteRequestNotifications($id, $publicId, $customer, $clean);
-      $this->queueWebsiteRequestProofJob($id, (int) $prospect->id(), $publicId, $clean['intake']);
+      $this->queueWebsiteRequestProofJob($id, (int) $prospect->id(), $publicId, $clean['intake'], ['customer_id' => $customerId, 'source' => 'portal.create', 'prior_status' => NULL]);
     }
     return $this->serializeWebsiteRequest($this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $id)->execute()->fetchAssoc());
   }
@@ -500,7 +517,10 @@ final class CustomerPortalService {
       unset($transaction);
       return $result;
     }
-    catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
   }
 
   private function writeClaimedDeepDiveRequest(int $customerId, int $requestId): ?int {
@@ -509,11 +529,18 @@ final class CustomerPortalService {
     if (!$row || (int) $row['customer_id'] !== $customerId || !$this->isMember($customerId, (int) $row['organization_id'])) {
       throw new \RuntimeException('The completed interview is linked to a different customer request.');
     }
+    if (FreshProofBinding::isManaged($this->database, $row)) {
+      // Login/verification repair is not a proof retry. Keep the existing owned
+      // request unchanged; its handoff projects reconciliation independently.
+      return $requestId;
+    }
     if (!in_array((string) $row['status'], ['draft', 'submitted'], TRUE)) {
       return $requestId;
     }
     $intake = json_decode((string) $row['intake_data'], TRUE, flags: JSON_THROW_ON_ERROR);
-    $this->assertNoFullSiteReview($intake);
+    // Optional login/verification repair must not turn an existing private
+    // review into a new proof request, or prevent its authorized owner signing in.
+    if (array_key_exists('full_site_review', (array) ($intake['staff_assisted_brief'] ?? []))) return $requestId;
     $intake['proof_request'] = [
       'requested_count' => 3,
       'status' => 'queued',
@@ -624,7 +651,8 @@ final class CustomerPortalService {
       }
       $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
       $this->queueWebsiteRequestNotifications((int) $row['id'], (string) $row['public_id'], $customer, $clean);
-      $this->queueWebsiteRequestProofJob((int) $row['id'], (int) $row['prospect_id'], (string) $row['public_id'], $clean['intake']);
+      $this->queueWebsiteRequestProofJob((int) $row['id'], (int) $row['prospect_id'], (string) $row['public_id'], $clean['intake'],
+        $row['status'] === 'draft' ? ['customer_id' => $customerId, 'source' => 'portal.update', 'prior_status' => 'draft'] : NULL);
       $this->activity((int) $row['organization_id'], 'website_request.submitted', 'A website request was submitted for review.');
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
@@ -661,14 +689,29 @@ final class CustomerPortalService {
 
   /** Withdraw future reference use while retaining the private audit record. */
   public function withdrawWebsiteRequestAsset(int $customerId, string $publicId, string $assetId): void {
-    $row = $this->ownedWebsiteRequest($customerId, $publicId);
-    if (!$row) throw new \InvalidArgumentException('Website request not found.');
-    $asset = $this->database->select('famtastic_request_asset', 'a')->fields('a')->condition('public_id', $assetId)->condition('website_request_id', (int) $row['id'])->condition('customer_id', $customerId)->execute()->fetchAssoc();
-    if (!$asset) throw new \InvalidArgumentException('Reference not found.');
-    if ($asset['status'] !== 'withdrawn') {
-      $this->database->update('famtastic_request_asset')->fields(['status' => 'withdrawn', 'changed' => $this->time->getRequestTime()])->condition('id', (int) $asset['id'])->execute();
-      $this->ledger->recordEvent('request-asset:withdrawn:' . $assetId, 'website_request.reference_withdrawn', ['request_id' => $publicId, 'asset_id' => $assetId, 'sha256' => $asset['sha256']], projectId: (int) ($row['project_id'] ?? 0));
+    // A nested savepoint cannot promise durable revocation before reconciliation.
+    // This customer mutation is a root operation, not a building-block callback.
+    if ($this->database->inTransaction()) throw new \LogicException('Asset withdrawal requires its own root transaction.');
+    $transaction = $this->database->startTransaction();
+    try {
+      $row = $this->ownedWebsiteRequest($customerId, $publicId, TRUE);
+      if (!$row) throw new \InvalidArgumentException('Website request not found.');
+      $asset = $this->database->select('famtastic_request_asset', 'a')->fields('a')->condition('public_id', $assetId)->condition('website_request_id', (int) $row['id'])->condition('customer_id', $customerId)->forUpdate()->execute()->fetchAssoc();
+      if (!$asset) throw new \InvalidArgumentException('Reference not found.');
+      if ($asset['status'] !== 'withdrawn') {
+        if ($asset['status'] !== 'active' || $this->database->update('famtastic_request_asset')
+          ->fields(['status' => 'withdrawn', 'changed' => $this->time->getCurrentTime()])
+          ->condition('id', (int) $asset['id'])->condition('status', 'active')->execute() !== 1) throw new \RuntimeException('Reference state changed.');
+        if (!$this->ledger->recordEvent('request-asset:withdrawn:' . $assetId, 'website_request.reference_withdrawn', ['request_id' => $publicId, 'asset_id' => $assetId, 'sha256' => $asset['sha256']], projectId: (int) ($row['project_id'] ?? 0))) throw new \RuntimeException('Reference withdrawal audit already exists for an active asset.');
+      }
+      $transaction->commitOrRelease();
     }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+    // Independent transaction: an unavailable selected artifact must never undo
+    // permission withdrawal. A retry reconciles the already-withdrawn record.
     $this->refreshSelectedWebsiteRequest($customerId, $publicId);
   }
 
@@ -863,9 +906,19 @@ final class CustomerPortalService {
   }
 
   /** Loads one request only when it belongs to the signed-in customer workspace. */
-  public function ownedWebsiteRequest(int $customerId, string $publicId): ?array {
-    $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
-    return $row && (int) $row['customer_id'] === $customerId && $this->isMember($customerId, (int) $row['organization_id']) ? $row : NULL;
+  public function ownedWebsiteRequest(int $customerId, string $publicId, bool $lock = FALSE): ?array {
+    if ($lock && !$this->database->inTransaction()) throw new \LogicException('Locked request ownership requires a transaction.');
+    $query = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId);
+    if ($lock) $query->forUpdate();
+    $row = $query->execute()->fetchAssoc();
+    if (!$row || (int) $row['customer_id'] !== $customerId) return NULL;
+    if (!$lock) return $this->isMember($customerId, (int) $row['organization_id']) ? $row : NULL;
+    // Current row read, not COUNT over an old repeatable-read snapshot. Parent
+    // request first also serializes inserting the very first reference asset.
+    $member = $this->database->select('famtastic_membership', 'm')->fields('m', ['status'])
+      ->condition('customer_id', $customerId)->condition('organization_id', (int) $row['organization_id'])
+      ->forUpdate()->execute()->fetchAssoc();
+    return $member && $member['status'] === 'active' ? $row : NULL;
   }
 
   /** Atomically reserves a submitted request for one Commerce order. */
@@ -1065,6 +1118,9 @@ final class CustomerPortalService {
       ];
     }
 
+    $managed = FreshProofBinding::event($this->database, (int) $row['id'])
+      ? FreshProofBinding::handoff($this->database, $row, $this->time->getCurrentTime()) : NULL;
+    if ($managed !== NULL) return $managed;
     $requestId = (int) ($row['id'] ?? 0);
     $jobKey = 'website_proof.generate.v1:request:' . $requestId;
     $query = $this->database->select('famtastic_job', 'j')->fields('j', ['id', 'status', 'attempts', 'max_attempts']);
@@ -1227,6 +1283,7 @@ final class CustomerPortalService {
   public function sharedWebsiteRequest(string $publicId, string $signature): ?array {
     if (!preg_match('/^[0-9a-f]{64}$/', $signature)) return NULL;
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
+    if ($row && FreshProofBinding::isManagedReadOnly($this->database, $row)) return NULL;
     if (!$row || empty($row['proof_share_enabled']) || !$this->requestProofsAreCustomerVisible($row) || $this->proofContainsPrivateReference($row)) return NULL;
     return hash_equals($this->proofShareSignature($row), $signature) ? $row : NULL;
   }
@@ -1252,11 +1309,18 @@ final class CustomerPortalService {
   }
 
   private function changeWebsiteProofShare(array $row, string $action, int $uid): void {
-    if ($action !== 'disable' && $this->proofContainsPrivateReference($row)) {
-      throw new \InvalidArgumentException('Uploaded project references are restricted to private review.');
+    if (FreshProofBinding::isManagedReadOnly($this->database, $row)) {
+      if ($action !== 'disable') throw new \RuntimeException('Website proofs are not available for sharing.');
+      // Revocation remains possible even with incomplete or malformed evidence.
+      // Use the original update/audit below, under the caller's existing auth.
     }
-    if (!$this->requestProofsAreCustomerVisible($row) || !$this->serializeRequestProof($row)) {
-      throw new \RuntimeException('Only a complete owner-approved proof set can be shared.');
+    else {
+      if ($action !== 'disable' && $this->proofContainsPrivateReference($row)) {
+        throw new \InvalidArgumentException('Uploaded project references are restricted to private review.');
+      }
+      if (!$this->requestProofsAreCustomerVisible($row) || !$this->serializeRequestProof($row)) {
+        throw new \RuntimeException('Only a complete owner-approved proof set can be shared.');
+      }
     }
     if (!in_array($action, ['enable', 'disable', 'rotate'], TRUE)) {
       throw new \InvalidArgumentException('Choose a valid proof-sharing action.');
@@ -1284,6 +1348,10 @@ final class CustomerPortalService {
   }
 
   private function proofSharePayload(array $row): array {
+    if (FreshProofBinding::isManagedReadOnly($this->database, $row)) return [
+      'enabled' => FALSE, 'url' => '',
+      'changed_at' => !empty($row['proof_share_changed_at']) ? (int) $row['proof_share_changed_at'] : NULL,
+    ];
     $enabled = !empty($row['proof_share_enabled']) && $this->requestProofsAreCustomerVisible($row) && !$this->proofContainsPrivateReference($row) && (bool) $this->serializeRequestProof($row);
     $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
     return [
@@ -1318,6 +1386,7 @@ final class CustomerPortalService {
 
   /** Returns customer-safe proof metadata only after explicit owner approval. */
   private function serializeRequestProof(array $row): ?array {
+    if (FreshProofBinding::isManagedReadOnly($this->database, $row)) return NULL;
     if (!in_array((string) ($row['proof_review_status'] ?? ''), ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) return NULL;
     $campaignId = (int) ($row['proof_campaign_id'] ?? 0);
     if (!$campaignId) return NULL;
@@ -1428,6 +1497,7 @@ final class CustomerPortalService {
   /** Saves the owner-reviewed research brief before the customer proof gate. */
   public function saveWebsiteRequestProofResearchSnapshot(int $requestId, int $uid, array $input): void {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+    if ($row && FreshProofBinding::isManagedReadOnly($this->database, $row)) throw new \RuntimeException('Managed research must commit with its independent QA release.');
     if (!$row || $row['proof_review_status'] !== 'owner_review' || empty($row['proof_campaign_id'])) {
       throw new \RuntimeException('Research can only be saved for a proof set awaiting owner review.');
     }
@@ -1532,34 +1602,55 @@ final class CustomerPortalService {
   }
 
   /** Enqueues the canonical pre-purchase proof routine exactly once. */
-  private function queueWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake): int {
+  private function queueWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake, ?array $freshness = NULL): int {
     $transaction = $this->database->startTransaction();
     try {
-      $stored = $this->database->select('famtastic_project_request', 'r')->fields('r', ['intake_data'])->condition('id', $requestId)->condition('public_id', $publicId)->forUpdate()->execute()->fetchField();
-      if ($stored === FALSE) throw new \RuntimeException('Website request not found.');
-      $this->assertNoFullSiteReview(json_decode((string) $stored, TRUE, 512, JSON_THROW_ON_ERROR));
+      // Serialize with admission before any legacy fallback, regardless of flag
+      // or caller freshness. A changed brief never creates a new managed round.
+      $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->forUpdate()->execute()->fetchAssoc();
+      if (!$row || $row['public_id'] !== $publicId) throw new \RuntimeException('Website request not found.');
+      $this->assertNoFullSiteReview(json_decode((string) $row['intake_data'], TRUE, 512, JSON_THROW_ON_ERROR));
       $this->assertNoFullSiteReview($intake);
-      $briefJson = json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
-      $briefHash = hash('sha256', $briefJson);
-      $jobId = $this->ledger->enqueue(
-        $this->websiteRequestProofJobKey($requestId, $briefHash),
-        'proof.generate',
-        [
-          'routine' => 'website_proof.generate.v1',
-          'brief_version' => 1,
-          'brief_sha256' => $briefHash,
-          'prospect_id' => $prospectId,
-          'website_request_id' => $requestId,
-          'website_request_public_id' => $publicId,
-          'website_discovery_v3' => $intake,
-          'website_discovery_v2' => $intake,
-        ],
-        $prospectId,
-      );
+      if (FreshProofBinding::isManaged($this->database, $row)) {
+        if ((int) $row['prospect_id'] !== $prospectId || $row['public_id'] !== $publicId || $row['intake_data'] !== FreshProofInput::wire($intake)) throw new \RuntimeException('Managed proof queue input differs from the current request.');
+        if (!$this->freshProofAdmission) throw new \RuntimeException('Managed proof admission service is not installed.');
+        $jobId = $this->freshProofAdmission->reuse($requestId);
+      }
+      else {
+        $jobId = $this->queueUnmanagedWebsiteRequestProofJob($requestId, $prospectId, $publicId, $intake, $freshness);
+      }
       unset($transaction);
       return $jobId;
     }
-    catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+  }
+
+  /** Caller holds the request lock and has excluded durable managed identity. */
+  private function queueUnmanagedWebsiteRequestProofJob(int $requestId, int $prospectId, string $publicId, array $intake, ?array $freshness): int {
+    if ($freshness !== NULL && FreshProofAdmission::enabled()) {
+      if (!$this->freshProofAdmission) throw new \RuntimeException('Fresh proof admission service is not installed.');
+      return $this->freshProofAdmission->admit($requestId, $freshness['customer_id'], $freshness['source'], $freshness['prior_status']);
+    }
+    $briefJson = json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+    $briefHash = hash('sha256', $briefJson);
+    return $this->ledger->enqueue(
+      $this->websiteRequestProofJobKey($requestId, $briefHash),
+      'proof.generate',
+      [
+        'routine' => 'website_proof.generate.v1',
+        'brief_version' => 1,
+        'brief_sha256' => $briefHash,
+        'prospect_id' => $prospectId,
+        'website_request_id' => $requestId,
+        'website_request_public_id' => $publicId,
+        'website_discovery_v3' => $intake,
+        'website_discovery_v2' => $intake,
+      ],
+      $prospectId,
+    );
   }
 
   private function assertNoFullSiteReview(array $intake): void {
@@ -1623,22 +1714,23 @@ final class CustomerPortalService {
   }
 
   /** Trusted staff/worker QA context. This is deliberately not a customer route. */
-  public function websiteRequestAutomatedProofQaContext(int $requestId, array $research): array {
+  public function websiteRequestAutomatedProofQaContext(int $requestId, array $research, ?object $authenticatedPrincipal = NULL): array {
     $normalized = $this->normalizeProofResearchSnapshot($research);
     if (!$normalized) throw new \InvalidArgumentException('Complete sourced research and three direction rationales are required.');
-    return \Drupal::service('famtastic_pipeline.automated_proof_release')->context($requestId, $normalized);
+    return \Drupal::service('famtastic_pipeline.automated_proof_release')->context($requestId, $normalized, $authenticatedPrincipal);
   }
 
   /** Trusted staff/worker caller supplies independent QA and owner-authorized copy. */
-  public function releaseWebsiteRequestProofAfterQa(int $requestId, array $research, array $evidence, string $authenticatedReviewer, array $notification): array {
+  public function releaseWebsiteRequestProofAfterQa(int $requestId, array $research, array $evidence, string $authenticatedReviewer, array $notification, ?object $authenticatedPrincipal = NULL): array {
     $normalized = $this->normalizeProofResearchSnapshot($research);
     if (!$normalized) throw new \InvalidArgumentException('Complete sourced research and three direction rationales are required.');
-    return \Drupal::service('famtastic_pipeline.automated_proof_release')->release($requestId, $normalized, $evidence, $authenticatedReviewer, $notification);
+    return \Drupal::service('famtastic_pipeline.automated_proof_release')->release($requestId, $normalized, $evidence, $authenticatedReviewer, $notification, $authenticatedPrincipal);
   }
 
   /** Owner approval reveals proofs and queues one transactional customer email. */
   public function approveWebsiteRequestProof(int $requestId, int $uid): array {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $requestId)->execute()->fetchAssoc();
+    if ($row && FreshProofBinding::isManagedReadOnly($this->database, $row)) throw new \RuntimeException('Managed proofs require receipt-bound independent QA, not legacy owner approval.');
     if (!$row || !$row['proof_campaign_id'] || $row['proof_review_status'] !== 'owner_review') throw new \RuntimeException('Website proofs are not awaiting owner review.');
     $campaign = $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id']);
     $variantCount = (int) $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
@@ -2127,8 +2219,22 @@ final class CustomerPortalService {
    * does not send mail, charge, register a domain, or release a proof.
    */
   public function prepareWebsiteRequestRevisionRebuild(int $requestId, int $uid, string $reason): array {
+    $transaction = $this->database->startTransaction();
+    try {
+      $result = $this->writeWebsiteRequestRevisionRebuild($requestId, $uid, $reason);
+      unset($transaction);
+      return $result;
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+  }
+
+  private function writeWebsiteRequestRevisionRebuild(int $requestId, int $uid, string $reason): array {
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')
-      ->condition('id', $requestId)->range(0, 1)->execute()->fetchAssoc();
+      ->condition('id', $requestId)->range(0, 1)->forUpdate()->execute()->fetchAssoc();
+    if ($row && FreshProofBinding::isManaged($this->database, $row)) throw new \RuntimeException('Managed proof replacement requires a separate reviewed replacement policy.');
     if (!$row || (string) $row['proof_review_status'] !== 'revision_requested' || !empty($row['commerce_order_id'])) {
       throw new \RuntimeException('Only a pre-purchase website proof revision can be rebuilt.');
     }
@@ -2139,7 +2245,6 @@ final class CustomerPortalService {
     // The rejected campaign, request reset, and replacement job are one
     // durable transition. A production schema failure must not strand the
     // customer with an expired proof set and no replacement queued.
-    $transaction = $this->database->startTransaction();
     $intake = json_decode((string) ($row['intake_data'] ?? '{}'), TRUE) ?: [];
     $now = $this->time->getRequestTime();
     $oldCampaignId = (int) ($row['proof_campaign_id'] ?? 0);
@@ -2474,8 +2579,9 @@ final class CustomerPortalService {
   /** Serializes the latest complete proof campaign attached to a project. */
   private function projectProofs(object $project): ?array {
     $prospectId = (int) $project->get('prospect_ref')->target_id;
-    $request = $this->database->select('famtastic_project_request', 'r')->fields('r', ['public_id', 'proof_campaign_id', 'proof_review_status'])
+    $request = $this->database->select('famtastic_project_request', 'r')->fields('r', ['id', 'public_id', 'proof_campaign_id', 'proof_review_status'])
       ->condition('project_id', (int) $project->id())->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    if ($request && FreshProofBinding::isManagedReadOnly($this->database, $request)) return NULL;
     if ($request && !in_array($request['proof_review_status'], ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) {
       return NULL;
     }
@@ -2486,6 +2592,7 @@ final class CustomerPortalService {
     }
     $campaignIds = $campaignQuery->execute();
     if (!$campaignIds) return NULL;
+    if (FreshProofBinding::isManagedCampaignReadOnly($this->database, (int) reset($campaignIds))) return NULL;
     $campaign = $this->entities->getStorage('proof_campaign')->load(reset($campaignIds));
     $variantIds = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
       ->condition('campaign_id', (int) $campaign->id())->sort('direction_id')->execute();

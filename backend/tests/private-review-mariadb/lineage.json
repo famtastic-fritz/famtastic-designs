@@ -1,0 +1,28 @@
+{
+  "schema": "famtastic.private-review-mariadb-proof.v1",
+  "source_commit": "4998be27695f5e3940212d9cebedb31d923c04a6",
+  "owner_lineage": "../worker-mariadb/lineage.json",
+  "baseline_commit": "7227ceb63f742e438f151b430bb6bc93a32cce41",
+  "baseline_fixture": "fixtures/FullSiteReviewService.7227ceb6.fixture",
+  "baseline_bytes": 17575,
+  "baseline_sha256": "5d8b7c9957396702fe432f7c265cb3a0d69f90f159a48120442010ba6161c67a",
+  "files": {
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/FullSiteReviewService.php": "1356ea35ded141d7337f65c36289330174bbf36be53db9a00e276ab71a066da8",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/FullSiteReviewPackage.php": "ee2f69d45daab1876079255723c8355cb8cae13ab1fd1f01c33111832e82e338",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/FullSiteReviewRenderer.php": "43658c3c66c54ef95e2463789e1cf8f382f4d5860f3038f874333ecb88086829",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/CustomerPortalService.php": "24fc5077d437d2121e24c0316b19031dff64c6626084710261041db0d5490564",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/CharacterAssetService.php": "9affcb7ccee0c3599447793c4a00765c5350f7d6ce3b5420253d242ed3fe27ce",
+    "backend/web/modules/custom/famtastic_pipeline/src/Controller/WebsiteRequestProofController.php": "4ef72af2f9cfb291df745fd94ca2ea304fb556e0bedc4e1c7aa416fb69067bf1",
+    "scripts/automation-test-bootstrap.php": "641bab08988890821a236dddb17ca9c3d47e4976e86a72cec7c098f7ea2b0c89",
+    "backend/tests/worker-mariadb/bootstrap.php": "c21780e80c148dcef21cd9d10156b0b1e72c1b1fbae6a8b4514a33c2c29af26f",
+    "backend/tests/worker-mariadb/lineage.json": "0e937159a9ca5377c0516ee946f1da45a756e7ef13f5a037a46e5931a3f79410",
+    "backend/tests/worker-mariadb/process.php": "828205e4f5e1a58cc85c0398bf525d4ad4936c9d41409a08eb4bc13101614087",
+    "backend/tests/worker-mariadb/provision.mjs": "2b5e5193e69be57a40bf5d9dfb7458af8cecc6273a7769bf989864d3932952ec",
+    "backend/tests/worker-mariadb/inputs.php": "b1e28c3ad523949948dd1f4ad3156d75b5f46aaa23ec41ab81d8f81a75314d7c",
+    "backend/tests/private-review-mariadb/bootstrap.php": "873d78c163e514138ebb7ed0c2d538cc2fa0419b136648f0fc9349e7ba6d29ab",
+    "backend/tests/private-review-mariadb/fixtures.php": "e021b47ea4e7545a85b7a3904a998c48457dd175a1df900fddfb1981e33481fd",
+    "backend/tests/private-review-mariadb/peer.php": "09e558765c06ba9397c6abd9d63c7b9f3293f27a9294306d87813cc80040c229",
+    "backend/tests/private-review-mariadb/run.php": "8ea1e4d266bde0c112e145a08a79496d23fcdfa7a2f942a153255ead6fe510f1",
+    "backend/tests/private-review-mariadb/scenarios.php": "d98b0003d920122b0c5e7e70ddda42070ea302d47147e7c716b345b05840f64c"
+  }
+}

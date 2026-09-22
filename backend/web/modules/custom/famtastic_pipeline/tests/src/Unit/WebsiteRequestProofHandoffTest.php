@@ -28,6 +28,7 @@ final class WebsiteRequestProofHandoffTest extends UnitTestCase {
     parent::setUp();
     $options = ['database' => ':memory:', 'prefix' => '', 'driver' => 'sqlite', 'namespace' => 'Drupal\\sqlite\\Driver\\Database\\sqlite'];
     $this->database = new Connection(Connection::open($options), $options);
+    $this->database->query('CREATE TABLE famtastic_event (id INTEGER PRIMARY KEY, event_key TEXT, event_type TEXT, campaign_id INTEGER, payload TEXT)');
     $this->database->query('CREATE TABLE famtastic_project_request (id INTEGER PRIMARY KEY, customer_id INTEGER, project_name TEXT, status TEXT, proof_review_status TEXT, proof_campaign_id INTEGER)');
     $this->database->query('CREATE TABLE famtastic_customer (id INTEGER PRIMARY KEY, display_name TEXT, email TEXT)');
     $this->database->query('CREATE TABLE famtastic_job (id INTEGER PRIMARY KEY, job_key TEXT, job_type TEXT, status TEXT, attempts INTEGER, max_attempts INTEGER)');

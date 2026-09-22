@@ -1,5 +1,360 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - Screenshot hashes are not retained review evidence
+
+Observation: the existing static QA captures screenshots but discards the buffers,
+and its five checks do not establish the nine managed release judgments. Guidance:
+retain actual bytes and independent assessments through a committed authenticated
+review record; reuse the existing release verifier rather than another synthetic
+attestor. Give review its own shared claim without reopening the creative job.
+The next slice is planned in docs/plans/RETAINED_QA_INTEGRATION_2026-09-22.md;
+no runtime capability or production classification changed in that planning work.
+
+## 2026-09-22 - A matching nonce row does not identify its winning writer
+
+Observation: independent review found that insert-ignore plus a concurrent winner
+could make two signed requests appear accepted. Guidance: require exactly one
+affected row from this INSERT before cleanup/readback; retain the winning nonce
+when rejecting the loser. The deterministic interleaving uses two real HMAC
+authentications and SQLite persistence, not multi-process MariaDB proof. Existing
+controller fixtures also need the actual auth service/clock after DI changes.
+Final full PHP 1,314/13,990 and legacy canonical journey pass with protected data
+unchanged. Distinct reviewer keys prove identity separation, not quality of QA.
+
+## 2026-09-22 - A post-commit exception cannot prove atomic rejection
+
+Independent review found silent-write and late-authority changes after earlier
+green tests. Locked pre-commit row readback plus a final actual receipt/account/
+asset check now closes both gaps. Guidance: test ignored inserts and late hooks
+against the entire pre-release snapshot, including absence of research and mail.
+Do not widen pending-only eligibility or restore permissions during an exact
+historical acknowledgment. Full PHP 1,232/13,616, portal/email contracts and legacy
+canonical journey pass; unregistered source is not installed automatic delivery.
+
+## 2026-09-22 - Exact managed reads need separate current release authority
+
+Observation: receipt-aware QA/HTTP readers now verify exact package bytes and
+active account/rights, but read context cannot approve a proof. Guidance: preserve
+opaque handles, all-producer exclusion, relative links and original creator credit;
+never fall back to legacy paths or enable customer reads from flags alone. Full
+PHP 1,079/11,002 and legacy canonical journey pass; real managed release, installed
+auth/browser and unattended delivery remain separate tests, not implied results.
+
+## 2026-09-22 - Whole-journey mail capture and durable evidence
+
+Observation: the agency memory mailer did not capture core account mail, and
+prior temporary evidence roots are no longer present. Guidance: prove the actual
+Drupal collector in the verified disposable site; retain source hashes and raw
+receipts outside ephemeral worktrees. The recovered canonical journey, PHP983/6731
+and Studio1588/135 pass without protected-data changes. This is legacy regression
+and isolated mail capture, not managed QA/release or live cloud operation.
+
+## 2026-09-22 - Test the real persistence representation
+
+The initial managed importer fixture used a nonexistent flat design_dna column,
+masking actual Drupal text_long storage. Review found it; main now uses raw
+__value/__format columns, explicit null format and a real core mapping regression.
+Full combined 983/6,731 passes. Original green tests remain historical, not proof
+of installed storage. Receipt-backed pending QA is not customer release or a
+new owner gate; managed legacy readers stay closed until authorized adapters exist.
+
+## 2026-09-21 - Separate content verification from read permission
+
+First import needs byte verification before a receipt exists; browser reads need
+current receipt-backed authority. Share verification, not permission. Preserve
+the exact 2,020,725-byte server logo without widening 2 MB uploads. Test maximum
+inventory and retain the higher captured allocator peak (174.86 MiB), not merely
+PHPUnit's final 60 MiB summary. Synthetic image signatures/receipt closures do
+not prove decoding or tenant access. Full PHP 848/5,228 passes; no activation.
+
+## 2026-09-21 - Pair runtime verification with the actual integrated source
+
+Observation: the integrated closed journal and immutable artifact verifier pass
+with the full Studio source/portal/dispatch fixtures (1588 tests) and full PHP
+(791/4804). Guidance: preserve the paired paths and protected inventories in
+each receipt. Local green source does not remove installed migration, authenticated
+provider, fresh delivery or cloud gates; do not enable a worker from test totals.
+
+## 2026-09-21 - Verification layers are not interchangeable
+
+Observation: journal260/1,769 and artifact139/562 focused counts overlap the
+combined PHP791/4,804 result; frozen review MariaDB7/84 proves another boundary.
+Guidance: retain exact source/receipt pairs and do not sum counts or reuse the
+review database result as paid-journal/provider evidence. Preserve reviewed
+root-worker ownership/source lineage when later schema changes are integrated.
+
+## 2026-09-21 - Verify prepared content independently of its manifest
+
+A saved manifest hash alone does not prove every file still matches the callback.
+Reconstruct the exact finite inventory from canonical input, reject extra/link
+entries, and bound every sealed read. Keep these content facts separate from
+tenant, worker, producer and QA authority. A negative test must reach its intended
+guard: an extra sibling originally masked the directory-symlink assertion.
+Use bounded FIFO coverage to detect a regular-file check accidentally removed.
+
+## 2026-09-21 - A failed observer is not a successful contention test
+
+Observation: standalone PHPUnit doubles needed a real TestCase call context and
+in-memory configuration. MariaDB wait metadata then needed >100ms read idle time
+and exact ANSI_QUOTES-aware identifiers. Guidance: retain red diagnostics, verify
+actual holder/requester rows, and fix the observer without relaxing assertions.
+Seven current cases / 84 checks pass; all four old-source controls fail exactly.
+Only disposable owned resources/credentials were removed; evidence is retained.
+
+## 2026-09-21 - Inspect caller state before cleanup hides it
+
+Observation: checking only another connection after rollback can hide spurious
+events/activity or loss of caller work. Guidance: inspect the caller's own RR
+counts and sentinel before rollback, then verify cross-connection isolation.
+The private-review candidate includes these assertions but remains unrun.
+
+## 2026-09-21 - Separate DB ownership from source under test
+
+Observation: the reviewed worker allocation marker names frozen root-worker
+source, not later private-review code. Guidance: retain that marker and hashes;
+pin later source separately, reuse only the exact owned temp DB, isolate fixture
+tables, and reject source drift. New private-review harness is source-only/unrun;
+actual lock acquisition and exact invariant failures are required, not timeout
+success or a SQLite concurrency claim. Main owns execution and cleanup.
+
+## 2026-09-21 - Account login and project access are different boundaries
+
+Observation: optional linked-interview repair runs before login finalization.
+An attached review must not throw solely because it should not be rebuilt. An
+account without an active workspace may still sign in while project access stays
+denied. Guidance: test actual controllers and assert both boundaries separately.
+Also preserve request-first attachment retries, and mark successful transaction
+closure before destructor callbacks; a later callback error cannot undo a commit.
+Combined source passes 716/4,160 PHP, 1/1 portal SSR and 34/34 design rules;
+upstream negative controls expose the original lock/nesting/callback defects.
+
+## 2026-09-21 - Permission must follow root commit and callback completion
+
+Observation: Drupal transaction release is not necessarily root commit, and
+post-transaction callbacks execute on object destruction after explicit commit.
+Guidance: the paid-operation journal rejects outer transactions and withholds
+permission on commit acknowledgement or callback failure. Retain a committed
+unknown row and original producer identity across retries. Parent reports aad9
+baseline 257/1,689 PASS; three follow-up cases remain unrun. Isolate global unknown
+blocking using a valid second-job claim and positive control; isolate month change
+after commit while the lease is still sufficient. No provider exactly-once, media
+recovery or activation claim. Parent owns runtime/Drive. See PROOF-OPERATION-JOURNAL-V1.md.
+
+## 2026-09-21 - Prove lock ownership beyond the advisory timeout
+
+Observation: frozen 1ac3bc26 passes independent MariaDB connections with three
+actual root-lock waits exceeding 35 seconds; old coordinator controls expose
+ownership, stale active/budget and overwritten-renewal defects. Guidance: retain
+both green and exact-negative receipts, protect authoritative inventories, and
+remove only exact-owned temporary DB resources. Neither source tests nor this
+contention result establishes live migration, importer or customer delivery.
+Reconcile new main 7227ceb6 private reviews separately; request/member lock order
+and login repair must remain compatible with the managed pipeline.
+
+## 2026-09-21 - Revocation survives downstream failure; file preparation is not metadata
+
+Observation: the installed FileRepository::writeData persists a permanent entity,
+so a file-repository mock concealed metadata outside the authorization transaction.
+Guidance: prepare private bytes with FileSystem::saveData, recheck locked request/
+membership/assets, then atomically save file entity, asset and usage. Simulate
+metadata with real same-connection test writes, not counters alone. Withdrawal
+must root-commit with its audit before selected reconciliation; a failed build
+must not restore permission. Focused 20/135 and full PHP 611/3,229 pass, protected
+data unchanged; these are synthetic source checks, not MariaDB/installed storage
+or unattended delivery proof. Contract: REQUEST-ASSET-MUTATION-V1.md.
+An interrupted paired run is not a pass: preserve the guard receipt, archive the
+exact owned disposable fixture, and restore headroom without deleting owner work.
+
+## 2026-09-21 - Frozen raw source belongs outside the webroot
+
+Observation: `.fixture` avoids autoloading, not HTTP disclosure under Drupal's
+installed rules. Guidance: store both old service and provenance outside the
+docroot in `backend/tests/fixtures/managed-proof/`. Their hashes remain unchanged;
+the single post-move three-file run passes 109 tests / 463 assertions. Protected
+data unchanged, earlier mutation/red receipts retained, no production change.
+Drive mirroring stays deferred to the parent under the isolated/offline scope.
+
+## 2026-09-21 - Independent DNA rejection needs matching normalized input
+
+Observation: a default normalized fixture masked missing DNA guards by causing
+an unrelated mismatch. Guidance: normalize the same DNA-only input first, assert
+the exact guard error and verify valid nondefault DNA roundtrips. Invalid assets
+must still enter the store before normalization. Three focused files pass,
+109 tests / 463 assertions. The subprocess-only DNA mutant executes all nine
+targeted cases and fails each for missing rejection. Keep that intentional red
+receipt separate from earlier bootstrap failures. Production and protected data
+unchanged; Drive mirror remains deferred under the isolated/offline scope.
+
+## 2026-09-21 - Freeze parity evidence, not a dependency on Git history
+
+Observation: default shallow CI has no pre-extraction ancestor. Guidance: use the
+byte-exact 63,318-byte old service as bounded/hash-pinned non-autoload test data,
+with provenance. Actual old/new callbacks still run; the child environment proves
+Git unavailable and keeps argv bounded. 106 tests / 414 assertions pass under the
+watch guard; protected data unchanged. Retain the first probe failure, not a skip.
+File fsync does not include directory fsync or promise power-loss durability.
+Preparation is private source groundwork, never fenced import authority. Drive
+mirroring remains deferred to the parent under the isolated/offline scope.
+
+## 2026-09-21 - Keep artifact preparation separate from import authority
+
+Observation: filesystem replacement is not rolled back with Drupal records.
+Guidance: reuse pure validation, prepare create-only private bytes and require a
+later fenced DB receipt. No default root, producer credentials in raw envelopes,
+automatic adoption or generic cap exception for the 2,020,725-byte logo. After
+the low-disk pause, 105 tests / 362 assertions pass with inventories unchanged.
+Retain the initial PHPUnit final-method collision: syntax checks alone did not
+expose it. Rename only the helper and run the actual tests under the watch guard.
+## 2026-09-21 - Separate subprocess bootstrap errors from DB assertions
+
+Observation: after main's third provisioning succeeded, PahTfo exited 2 before any
+case/child because proc_open could not bind an uninitialized typed pipes property.
+Guidance: initialize the array and retain the protected-data-unchanged bootstrap
+failure as such. One-line source fix, no agent execution; main retains the owned
+server and runtime slot. Drive mirror remains main-owned.
+
+## 2026-09-21 - Separate DB network reachability from PHP egress denial
+
+Observation: main's second internal-bridge allocation ran MariaDB without actual
+host-port publication. Guidance: require real 127.0.0.1 publication on a dedicated
+ordinary bridge, retain all resource/sandbox guards, and state that container NAT
+egress is not firewall-disabled. No external traffic is requested or zero-egress
+proof claimed. Preserve the failed t5wRpU run; cleanup/review/rerun and Drive remain
+main-owned. This source-only revision does not establish PHP contention proof.
+
+## 2026-09-21 - Keep the log bound when fixing container startup
+
+Observation: main's first owned MariaDB container failed before process start
+because local-log compression disallows max-file=1. Guidance: disable compression
+explicitly rather than enlarge logs. Preserve the red run rooted at the temp
+directory ending /T/famtastic-worker-mariadb-3Fh2DZ. Repair is source-only;
+cleanup, rerun and Drive mirroring remain main-owned. No concurrency proof yet.
+
+## 2026-09-21 - Prepare real contention tests without widening authority
+
+Observation: container startup and cleanup can outlive a timeout or leave an
+uncertain allocation. Guidance: record exact intent before allocation, bound all
+startup calls by 60 seconds, use container-only writable tmpfs, validate ownership
+and confirmed absence, and retain uncertainty instead of claiming cleanup. Run
+real Drupal MySQL children only through the unchanged protected-data/disk wrapper;
+keep Docker provisioning separate. No runtime has run for the new harness and no
+concurrency capability is promoted. See the MariaDB proof contract. No journal
+crash-durability promise; Drive and eventual execution remain parent-owned.
+
+## 2026-09-21 - Worker exclusion belongs to the root transaction
+
+An expiring advisory lock is not the transaction lifetime. Acquire the fixed-row
+database mutex after request/account/rights locks and before job/history writes;
+use current base-row reads, not snapshot aggregates, plus checked CAS. Drupal's
+key-only MySQL upsert is INSERT IGNORE, so use explicit duplicate-key update.
+Legacy writers must exclude claims even after exhaustion. Focused SQLite tests
+pass; actual MariaDB contention remains a separate gate. See the root-transaction
+contract for retained red/green receipts; Drive and integration remain parent-owned.
+
+## 2026-09-21 - Legacy fixtures must not bypass managed admission guards
+
+Load the real new binding dependencies in the manual PHP bootstrap. Permit only
+the fixture's empty event table; seeded managed events require the real SQLite
+suite. Twenty affected tests pass after a retained failed combined run. No
+production guard changed. Full rerun and Drive checkpoint remain parent work.
+
+## 2026-09-21 - Bound worker executable identity
+
+Compare canonical module and argv paths before CLI main. Node's macOS symlink
+normalization otherwise permits exit zero without execution. Verify a real
+child process as well as imported functions; preserve silent imports. Static
+continuation through a synthetic loopback fixture is not customer automation.
+
+## 2026-09-21 - Sign-in cannot depend on retrying managed proof work
+
+Observation: optional deep-dive repair blocked valid login on changed proof input.
+Guidance: preserve existing ownership checks, return managed request identity
+without queue/reuse, and show brief/rights attention separately. Do not catch
+generic auth/system errors. 243 focused PHP tests / 1,427 assertions pass, with
+real controller and synthetic credentials/session finalizer. No live auth or
+activation. Drive mirror/browser verification remain parent-deferred.
+
+## 2026-09-21 - Campaign allocation must satisfy canonical media paths
+
+Observation: `proof-*` allocation failed the real `pc-*` asset-path validator.
+Guidance: change only the new allocation prefix, preserve random identity and
+all history, and test the actual validator. 90 admission tests / 521 assertions
+pass; no import or activation. Drive mirroring remains parent-deferred.
+
+## 2026-09-21 - Managed queue identity cannot revert to legacy
+
+Observation: edited managed requests could create a legacy job through manual
+resend because fresh intent and a flag were the only router. Guidance: use stored
+admission identity under the request lock before fallback, revalidate live account
+and asset rights for exact reuse, and reject replacements before mutations. This
+also protects deep-dive resume; unmanaged behavior is retained. 224 focused PHP
+tests / 1,170 assertions pass; four cases reproduce the original escape. Source
+only, no provider/import/activation. Drive mirror remains parent-deferred.
+
+## 2026-09-21 - Fresh proof admission is not completed proof generation
+
+Observation: enqueue callers include historical repairs, asset withdrawal is not
+serialized by a request lock alone, and legacy import/status inference can bypass
+a new worker claim. Guidance: use explicit fresh writer intent, an outer atomic
+request/campaign/job/enrollment transaction, actual asset locks and immutable
+event bytes; deny generic imports for managed campaigns and display actual claim
+facts. 177 focused PHP tests / 926 assertions pass using synthetic SQLite and
+entity doubles. Cost catalog, producer, fenced importer and activation stay closed.
+Full details: docs/contracts/FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md. Drive mirror
+and remote fetch are deferred to the integrating parent for this offline milestone.
+
+## 2026-09-21 - Completed-source fixture authority
+
+Observation: the legacy export fixture omitted the required PNG and selected old
+Home bytes against a branded export. Guidance: materialize complete authoritative
+bytes through the existing confined source manifest, with explicit rights for each
+file. Keep callback asset caps and finalized-source checks unchanged. The paired
+offline roundtrip and default PHP harness pass; Drive mirroring remains deferred.
+
+## 2026-09-21 - Signed original-to-credit projection
+
+Observation: deterministic creator attribution changes the approved Home hash;
+trusting a current build or worker receipt as its own original would erase the
+source boundary. Iterating supplied authored records also misses omitted pages.
+
+Guidance: freeze the canonical owner policy in v2 grants; independently recompute
+the exact Home projection from confined original proof bytes. Permit only the
+exact system PNG, require one authored record/evidence per included non-Home page,
+and preserve legacy v1 asset restrictions and explicit file authority. Evidence:
+`docs/contracts/SELECTED-CREATOR-CREDIT-POLICY-V2.md`. Drive mirroring is deferred
+because this isolated milestone prohibits network activity.
+
+## 2026-09-21 - Shared worker policy is not connected automation
+
+Observation: proof generation needs a separate bounded claim profile without
+changing the existing selected-static worker. Guidance: default claims remain
+static-only, proof cost profiles require explicit reviewed source and proof
+completion stays closed until authoritative import exists. See
+`docs/contracts/SHARED-PROOF-CLAIMS-V1.md` for synthetic local evidence and gaps.
+No Drive mirror was written outside the assigned isolated checkout.
+
+## 2026-09-21 - Automatic-workflow integration remains additive
+
+Read docs/contracts/MAC-CREATIVE-WORKER-V1.md before extending intake claims.
+Use the existing Mac agent/build/import/QA flow, not the fictional benchmark.
+The integration conflict is authorized for repair; actual activation still
+requires source, rights, ownership, recovery and full-journey evidence.
+
+## 2026-09-21 - Fresh selection admission is not worker activation
+
+Use the same Drupal transaction and claims for fresh selected-static jobs.
+Do not enroll history, expose a transient legacy queued state or silently treat
+ecommerce as static. The default-off hook is locally proven; the real Studio
+consumer has an endpoint merge conflict with Phase 1. Record that blocker before
+any activation claim or Chat Web handoff.
+
+## 2026-09-21 - Isolated proof builds need external frontend imports
+
+Copy only the reviewed narration text imported from marketing/, preserve its
+exact relative path and compare bytes. Missing/symlink inputs fail closed.
+The canonical fresh lifecycle passes with captured mail and fixture providers;
+this does not activate automatic Mac or cloud generation. See
+`docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md`.
 ## 2026-09-21 — Full-site handoff and portable source
 
 **Release:** The corrected protected account delivery is verified at backend 7227ceb6 / frontend cc8eada4. The same exact customer package survives route correction; 58 route matches, all file hashes, plan navigation and an unsent planner draft pass. A GitHub billing lock prevented hosted checks from starting. EDQUOT was recovered by deleting only five verified old, untracked/reproducible dist directories (1,099,176 KiB), retaining source/current build/backups.
@@ -2877,3 +3232,13 @@ The f5d8c769 apply passed PHP 8.3 syntax, cache rebuild and service resolution, 
 ## Frontend build recovery — 2026-09-21
 
 The first frontend build stopped before promotion because the private sparse source omitted the existing Why FAMtastic narration import. Materializing that exact committed input repaired module resolution. The next build was killed by the hosting account before completion; production frontend remained at 40ca506b. This does not by itself establish an OOM diagnosis. The release script now bounds native Rayon/Tokio workers to two and V8 old-space to 512 MiB, and the scoped source preparation includes the narration directory. The identical bounded local compile passes 618 modules; the full hosting build remains the release gate. See the [Rayon thread-pool environment contract](https://docs.rs/rayon/latest/rayon/struct.ThreadPoolBuilder.html).
+# 2026-09-21 - Keep current operational evidence separate from local source tests
+
+Observation: the running Mac PID changed to32011 without this task restarting it;
+its clean source is still bf1ef9ca and health is OK on loopback3400. Latest hosted
+CI for66434a3f started no steps because of billing. The full disposable journey
+cannot fit safely in approximately330MiB (vendor/core alone258MiB).
+Guidance: refresh runtime identity rather than reusing a historical PID; retain
+not-started CI and storage preflight as blockers, never test passes. Continue
+bounded source verification without deleting unrelated owner files. A future
+managed import uses internal pending-QA state, not the legacy owner-notice writer.

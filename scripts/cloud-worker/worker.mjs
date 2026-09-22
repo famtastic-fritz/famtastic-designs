@@ -1,6 +1,6 @@
 import { createHash, createHmac, randomBytes } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { pathToFileURL } from 'node:url';
+import { realpathSync } from 'node:fs';
 
 const digest = value => createHash('sha256').update(value).digest('hex');
 
@@ -106,6 +106,14 @@ async function main() {
   console.log(JSON.stringify(await runOnce({ api, dispatch })));
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+function isDirectExecution() {
+  if (!process.argv[1]) return false;
+  // Node resolves the module URL through symlinks, including macOS /tmp.
+  // Compare both canonical paths so a real CLI run cannot silently do nothing.
+  try { return realpathSync(new URL(import.meta.url)) === realpathSync(process.argv[1]); }
+  catch { return false; }
+}
+
+if (isDirectExecution()) {
   main().catch(() => { console.error('bounded_worker_failed: inspect the redacted authority receipt; no automatic restart'); process.exitCode = 1; });
 }

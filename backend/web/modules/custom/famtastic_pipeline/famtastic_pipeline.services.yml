@@ -1,7 +1,13 @@
 services:
+  famtastic_pipeline.fresh_proof_admission:
+    class: Drupal\famtastic_pipeline\Service\FreshProofAdmission
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@famtastic_pipeline.worker_coordinator']
   famtastic_pipeline.worker_coordinator:
     class: Drupal\famtastic_pipeline\Service\WorkerCoordinator
     arguments: ['@database', '@datetime.time', '@lock']
+  famtastic_pipeline.worker_request_authenticator:
+    class: Drupal\famtastic_pipeline\Service\WorkerRequestAuthenticator
+    arguments: ['@famtastic_pipeline.worker_coordinator', '@datetime.time']
   famtastic_pipeline.automated_proof_release:
     class: Drupal\famtastic_pipeline\Service\AutomatedProofRelease
     arguments: ['@database', '@entity_type.manager', '@datetime.time', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.customer_portal']
@@ -38,7 +44,7 @@ services:
 
   famtastic_pipeline.operational_ledger:
     class: Drupal\famtastic_pipeline\Service\OperationalLedger
-    arguments: ['@database', '@datetime.time']
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.worker_coordinator']
 
   famtastic_pipeline.prospect_lists:
     class: Drupal\famtastic_pipeline\Service\ProspectListService
@@ -212,7 +218,7 @@ services:
 
   famtastic_pipeline.customer_portal:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.site_studio_build_packets', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.site_studio_build_packets', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge', '@famtastic_pipeline.fresh_proof_admission']
 
   famtastic_pipeline.full_site_review:
     class: Drupal\famtastic_pipeline\Service\FullSiteReviewService

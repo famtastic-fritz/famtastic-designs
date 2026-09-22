@@ -8,6 +8,7 @@ $core = dirname($vendor) . '/web/core';
 $loader->addPsr4('Drupal\\Core\\', $core . '/lib/Drupal/Core', TRUE);
 $loader->addPsr4('Drupal\\Component\\', $core . '/lib/Drupal/Component', TRUE);
 $loader->addPsr4('Drupal\\sqlite\\', $core . '/modules/sqlite/src', TRUE);
+$loader->addPsr4('Drupal\\text\\', $core . '/modules/text/src', TRUE);
 $loader->addPsr4('Drupal\\Tests\\', $core . '/tests/Drupal/Tests', TRUE);
 $loader->addPsr4('Drupal\\TestTools\\', $core . '/tests/Drupal/TestTools', TRUE);
 $loader->addPsr4('Drupal\\famtastic_pipeline\\', dirname(__DIR__) . '/backend/web/modules/custom/famtastic_pipeline/src', TRUE);

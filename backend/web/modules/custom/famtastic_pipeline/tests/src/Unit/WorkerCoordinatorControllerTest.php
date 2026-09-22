@@ -4,8 +4,13 @@ namespace Drupal\Tests\famtastic_pipeline\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Site\Settings;
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\famtastic_pipeline\Controller\WorkerCoordinatorController;
 use Drupal\famtastic_pipeline\Service\WorkerCoordinator;
+use Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema;
+use Drupal\famtastic_pipeline\Service\WorkerRequestAuthenticator;
+use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -13,26 +18,32 @@ use Symfony\Component\HttpFoundation\Request;
 final class WorkerCoordinatorControllerTest extends UnitTestCase {
   private object $coordinator;
   private object $portal;
+  private WorkerRequestAuthenticator $authenticator;
   protected function setUp(): void {
     parent::setUp();
     $this->coordinator = new class {
-      public array $nonces = [];
       public int $claims = 0;
-      public function rememberNonce(string $worker, string $nonce): void {
-        $key = $worker . ':' . $nonce;
-        if (isset($this->nonces[$key])) throw new \RuntimeException('Replay');
-        $this->nonces[$key] = TRUE;
-      }
       public function claim(string $worker): ?array { $this->claims++; return NULL; }
     };
     $this->portal = new class {
       public array $calls = [];
-      public function releaseWebsiteRequestProofAfterQa(int $request, array $research, array $evidence, string $reviewer, array $notice): array {
+      public ?object $principal = NULL;
+      public function releaseWebsiteRequestProofAfterQa(int $request, array $research, array $evidence, string $reviewer, array $notice, ?object $principal = NULL): array {
+        $this->principal = $principal;
         $this->calls[] = [$request, $reviewer];
         return ['email_sent_by_this_operation' => FALSE];
       }
     };
+    // Authentication and nonce persistence are real; downstream claim/release
+    // remain explicit doubles in this controller-focused test.
+    $options = ['database' => ':memory:', 'prefix' => '', 'driver' => 'sqlite', 'namespace' => 'Drupal\\sqlite\\Driver\\Database\\sqlite'];
+    $db = new Connection(Connection::open($options), $options);
+    $db->schema()->createTable('famtastic_worker_nonce', WorkerCoordinatorSchema::tables()['famtastic_worker_nonce']);
+    $clock = $this->createMock(TimeInterface::class); $clock->method('getCurrentTime')->willReturnCallback(fn() => time());
+    $lock = $this->createMock(LockBackendInterface::class);
+    $this->authenticator = new WorkerRequestAuthenticator(new WorkerCoordinator($db, $clock, $lock), $clock);
     $container = new ContainerBuilder();
+    $container->set('famtastic_pipeline.worker_request_authenticator', $this->authenticator);
     $container->set('famtastic_pipeline.worker_coordinator', $this->coordinator);
     $container->set('famtastic_pipeline.customer_portal', $this->portal);
     $container->set('famtastic_pipeline.pilot_exact_dispatch_lock', new class { public function isActive(): bool { return FALSE; } });
@@ -86,6 +97,8 @@ final class WorkerCoordinatorControllerTest extends UnitTestCase {
     $response = (new WorkerCoordinatorController())->handle($request, 'review');
     self::assertSame(200, $response->getStatusCode());
     self::assertSame([[901, 'automation:qa-reviewer']], $this->portal->calls);
+    self::assertSame('automation:qa-reviewer', $this->authenticator->reviewer($this->portal->principal, 901));
+    self::assertNull($this->authenticator->reviewer($this->portal->principal, 902));
     self::assertFalse(json_decode($response->getContent(), TRUE)['result']['email_sent_by_this_operation']);
   }
 }

@@ -12,6 +12,11 @@ test -x "$vendor_source/bin/drush" || {
   exit 1
 }
 runtime_backend="$(cd -P "$vendor_source/.." && pwd)"
+frontend_content='marketing/brands/famtastic/video-studio/whats-the-catch/user-script.txt'
+test -f "$repo_root/$frontend_content" && test ! -L "$repo_root/$frontend_content" || {
+  echo "ERROR: required canonical frontend narration is missing or a symlink: $frontend_content" >&2
+  exit 1
+}
 test -d "$runtime_backend/web/core" || {
   echo "ERROR: supplied Drupal runtime is incomplete (missing web/core)." >&2
   exit 1
@@ -75,6 +80,11 @@ rsync -a \
   --exclude 'public/showcase' \
   "$repo_root/frontend/" "$runtime_repo/frontend/"
 ln -s "$repo_root/frontend/node_modules" "$runtime_repo/frontend/node_modules"
+# The live frontend imports this exact reviewed source outside frontend/.
+# Copy only its declared text dependency, never the private marketing tree.
+mkdir -p "$runtime_repo/$(dirname "$frontend_content")"
+cp "$repo_root/$frontend_content" "$runtime_repo/$frontend_content"
+cmp "$repo_root/$frontend_content" "$runtime_repo/$frontend_content"
 
 # Build a complete matching Drupal runtime beside the copied module source.
 rsync -aL "$vendor_source/" "$runtime_repo/backend/vendor/"
@@ -109,6 +119,25 @@ if [[ "$actual_root" != "$expected_root" || ! -s "$runtime_repo/backend/web/site
   exit 1
 fi
 
+# FAMtastic's memory transport does not intercept Drupal core account mail.
+# Configure and prove the real core collector in this verified disposable site.
+# Never inherit a module-specific SMTP/PhpMail override from copied configuration.
+env -u DB_HOST -u DB_NAME -u DB_USER -u DB_PASSWORD -u DB_PORT -u PLATFORM_RELATIONSHIPS -u STRIPE_SECRET_KEY \
+  "${drush[@]}" php:eval '
+    \Drupal::configFactory()->getEditable("system.mail")->set("interface", ["default" => "test_mail_collector"])->save();
+    $mail = \Drupal::service("plugin.manager.mail");
+    if (!($mail->getInstance(["module" => "user", "key" => "register_admin_created"]) instanceof \Drupal\Core\Mail\Plugin\Mail\TestMailCollector)) {
+      throw new \RuntimeException("Disposable core mail capture is not installed.");
+    }
+    $before = count(\Drupal::state()->get("system.test_mail_collector", []));
+    $plugin = $mail->getInstance(["module" => "system", "key" => "synthetic_capture_probe"]);
+    if (!$plugin->mail(["id" => "synthetic_capture_probe", "to" => "capture@example.test", "subject" => "Capture isolation probe", "body" => ["Never send."]])
+      || count(\Drupal::state()->get("system.test_mail_collector", [])) !== $before + 1) {
+      throw new \RuntimeException("Disposable core mail capture failed its actual write probe.");
+    }
+    print "PASS: Drupal core mail is captured without an external transport." . PHP_EOL;
+  '
+
 run_status=0
 env -u DB_HOST -u DB_NAME -u DB_USER -u DB_PASSWORD -u DB_PORT -u PLATFORM_RELATIONSHIPS -u STRIPE_SECRET_KEY \
   FAMTASTIC_PROOF_RUNTIME_READY=1 \
@@ -137,6 +166,15 @@ if [[ "$run_status" -ne 0 ]]; then
   exit "$run_status"
 fi
 
+env -u DB_HOST -u DB_NAME -u DB_USER -u DB_PASSWORD -u DB_PORT -u PLATFORM_RELATIONSHIPS -u STRIPE_SECRET_KEY \
+  "${drush[@]}" php:eval '
+    if (\Drupal::config("system.mail")->get("interface") !== ["default" => "test_mail_collector"]) {
+      throw new \RuntimeException("Disposable core mail capture changed during the journey.");
+    }
+    print json_encode(["transport" => "test_mail_collector", "captured_count" => count(\Drupal::state()->get("system.test_mail_collector", [])), "external_send" => FALSE], JSON_THROW_ON_ERROR) . PHP_EOL;
+  ' > "$evidence_dir/core-mail-safety.json"
+jq -e '.transport == "test_mail_collector" and .captured_count >= 1 and .external_send == false' "$evidence_dir/core-mail-safety.json" >/dev/null
+
 proof_evidence="$(find "$evidence_dir/proof-runs" -name evidence.json -type f -print -quit)"
 lifecycle_evidence="$(find "$evidence_dir/lifecycle-runs" -name evidence.json -type f -print -quit)"
 test -n "$proof_evidence"
@@ -152,6 +190,7 @@ jq -n \
   --arg lifecycle_evidence "${lifecycle_evidence#$evidence_dir/}" \
   --slurpfile proof "$proof_evidence" \
   --slurpfile lifecycle "$lifecycle_evidence" \
+  --slurpfile core_mail "$evidence_dir/core-mail-safety.json" \
   '{
     schema: "famtastic.fresh-customer-journey.v1",
     status: "passed",
@@ -161,6 +200,7 @@ jq -n \
     safety: {
       drupal_runtime: "fresh_sqlite_sandbox",
       email: "memory",
+      drupal_core_email: $core_mail[0],
       payment: "signed_synthetic_webhook",
       domain: "fixture",
       deployment: "local_sandbox",
@@ -170,7 +210,8 @@ jq -n \
       research_and_exactly_three_proofs: ($proof[0].checks.proofs == 3),
       selected_proof_enables_bound_checkout: $proof[0].checks.website_request_commerce_binding,
       account_and_portal_ownership: $proof[0].checks.portal_ownership,
-      lifecycle_operations: $lifecycle[0].status == "passed"
+      lifecycle_operations: $lifecycle[0].status == "passed",
+      drupal_core_mail_capture: ($core_mail[0].transport == "test_mail_collector" and $core_mail[0].captured_count >= 1 and $core_mail[0].external_send == false)
     },
     artifacts: {
       customer_journey: $proof_evidence,

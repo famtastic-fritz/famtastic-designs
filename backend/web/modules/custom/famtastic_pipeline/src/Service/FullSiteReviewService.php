@@ -30,38 +30,58 @@ final class FullSiteReviewService {
     $binding = ['customer_id' => $customerId, 'organization_id' => $organizationId, 'project_name' => $projectName, 'request_key' => $requestKey];
     $bindingDigest = hash('sha256', json_encode($binding, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
     $eventKey = 'full-site-review-draft:' . $organizationId . ':' . $customerId . ':' . $requestKey;
-    $transaction = $this->database->startTransaction();
-    try {
-      // Serialize draft creation for this exact membership, including retries.
-      $membership = $this->database->select('famtastic_membership', 'm')->fields('m', ['id'])->condition('customer_id', $customerId)->condition('organization_id', $organizationId)->condition('status', 'active')->forUpdate()->execute()->fetchField();
-      $customer = $this->database->select('famtastic_customer', 'c')->fields('c', ['id'])->condition('id', $customerId)->execute()->fetchField();
-      $organization = $this->database->select('famtastic_organization', 'o')->fields('o', ['id'])->condition('id', $organizationId)->condition('status', 'active')->execute()->fetchField();
-      if (!$membership || !$customer || !$organization) throw new \RuntimeException('Exact active customer organization membership is required.');
-      $prior = $this->database->select('famtastic_event', 'e')->fields('e', ['payload'])->condition('event_key', $eventKey)->execute()->fetchField();
-      $created = $prior === FALSE;
-      if (!$created) {
-        $event = json_decode((string) $prior, TRUE, 512, JSON_THROW_ON_ERROR);
-        if (!hash_equals($bindingDigest, (string) ($event['binding_sha256'] ?? ''))) throw new \RuntimeException('This staff request key already has a different binding.');
-        $publicId = (string) ($event['request_public_id'] ?? '');
-        $row = $this->ownedRequest($customerId, $publicId, TRUE);
-        if (!$row || (int) $row['id'] !== (int) ($event['website_request_id'] ?? 0) || (int) $row['organization_id'] !== $organizationId) throw new \RuntimeException('The original staff draft binding is unavailable.');
-        $requestId = (int) $row['id'];
+    $ownsRoot = !$this->database->inTransaction();
+    // Routing hint only. Existing requests must lock request before membership,
+    // like customer asset writers; the event is revalidated under those locks.
+    $hint = $this->draftEvent($eventKey);
+    if ($hint === FALSE && !$ownsRoot) throw new \RuntimeException('New staff drafts require a fresh root transaction.');
+    for ($pass = 0; $pass < 2; $pass++) {
+      $transaction = $this->database->startTransaction();
+      $closed = FALSE;
+      try {
+        $created = $hint === FALSE;
+        if (!$created) {
+          $event = json_decode((string) $hint, TRUE, 512, JSON_THROW_ON_ERROR);
+          if (!hash_equals($bindingDigest, (string) ($event['binding_sha256'] ?? ''))) throw new \RuntimeException('This staff request key already has a different binding.');
+          $publicId = (string) ($event['request_public_id'] ?? '');
+          $row = $this->ownedRequest($customerId, $publicId, TRUE);
+          if (!$row || (int) $row['id'] !== (int) ($event['website_request_id'] ?? 0) || (int) $row['organization_id'] !== $organizationId) throw new \RuntimeException('The original staff draft binding is unavailable.');
+          if ($this->draftEvent($eventKey, TRUE) !== $hint) throw new \RuntimeException('The original staff draft binding changed.');
+          $requestId = (int) $row['id'];
+        }
+        else {
+          // There is no existing request to lock. Membership serializes creation.
+          // Do not establish a repeatable-read snapshot before this locking read.
+          if (!$this->activeMembership($customerId, $organizationId, TRUE)) throw new \RuntimeException('Exact active customer organization membership is required.');
+          $prior = $this->draftEvent($eventKey, TRUE);
+          if ($prior !== FALSE) {
+            // A competing creator committed while we waited. Release our ROOT
+            // before acquiring its request, never invert membership -> request.
+            $transaction->rollBack(); $closed = TRUE; unset($transaction);
+            $hint = $prior;
+            continue;
+          }
+        }
+        $customer = $this->database->select('famtastic_customer', 'c')->fields('c', ['id'])->condition('id', $customerId)->execute()->fetchField();
+        $organization = $this->database->select('famtastic_organization', 'o')->fields('o', ['id'])->condition('id', $organizationId)->condition('status', 'active')->execute()->fetchField();
+        if (!$customer || !$organization) throw new \RuntimeException('Exact active customer organization membership is required.');
+        if ($created) {
+          $matching = $this->database->select('famtastic_project_request', 'r')->condition('customer_id', $customerId)->condition('organization_id', $organizationId)->condition('project_name', $projectName)->countQuery()->execute()->fetchField();
+          if ($matching) throw new \RuntimeException('A matching request exists; attach using its verified exact public UUID.');
+          $publicId = $this->uuid->generate();
+          $now = $this->time->getRequestTime();
+          $intake = ['staff_assisted_brief' => ['schema' => 'famtastic.staff-assisted-brief.v1', 'actor' => $actor, 'authority' => $authority, 'customer_supplied' => FALSE, 'purpose' => 'Owner-authorized full website review, created by staff without customer submission.', 'request_key' => $requestKey]];
+          $requestId = (int) $this->database->insert('famtastic_project_request')->fields(['public_id' => $publicId, 'customer_id' => $customerId, 'organization_id' => $organizationId, 'project_name' => $projectName, 'business_name' => $projectName, 'project_type' => 'new_website', 'domain_choice' => 'undecided', 'status' => 'draft', 'proof_review_status' => 'not_started', 'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), 'created' => $now, 'changed' => $now])->execute();
+          $payload = $binding + ['binding_sha256' => $bindingDigest, 'website_request_id' => $requestId, 'request_public_id' => $publicId, 'actor' => $actor, 'authority_ref' => $authority, 'execution_uid' => (int) $this->account->id(), 'customer_supplied' => FALSE, 'customer_submission' => FALSE, 'notification_queued' => FALSE, 'proof_job_queued' => FALSE, 'payment_changed' => FALSE];
+          if (!$this->ledger->recordEvent($eventKey, 'website_request.staff_full_site_review_draft', $payload, provider: 'staff_full_site_review')) throw new \RuntimeException('Staff draft changed concurrently; retry the exact request key.');
+        }
+        $result = $this->attach($publicId, $customerId, $organizationId, $sourceDirectory, $input, $actor, $authority);
+        $transaction->commitOrRelease(); $closed = TRUE; unset($transaction);
+        return ['newly_created' => $created, 'request_id' => $requestId, 'request_public_id' => $publicId] + $result;
       }
-      else {
-        $matching = $this->database->select('famtastic_project_request', 'r')->condition('customer_id', $customerId)->condition('organization_id', $organizationId)->condition('project_name', $projectName)->countQuery()->execute()->fetchField();
-        if ($matching) throw new \RuntimeException('A matching request exists; attach using its verified exact public UUID.');
-        $publicId = $this->uuid->generate();
-        $now = $this->time->getRequestTime();
-        $intake = ['staff_assisted_brief' => ['schema' => 'famtastic.staff-assisted-brief.v1', 'actor' => $actor, 'authority' => $authority, 'customer_supplied' => FALSE, 'purpose' => 'Owner-authorized full website review, created by staff without customer submission.', 'request_key' => $requestKey]];
-        $requestId = (int) $this->database->insert('famtastic_project_request')->fields(['public_id' => $publicId, 'customer_id' => $customerId, 'organization_id' => $organizationId, 'project_name' => $projectName, 'business_name' => $projectName, 'project_type' => 'new_website', 'domain_choice' => 'undecided', 'status' => 'draft', 'proof_review_status' => 'not_started', 'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), 'created' => $now, 'changed' => $now])->execute();
-        $payload = $binding + ['binding_sha256' => $bindingDigest, 'website_request_id' => $requestId, 'request_public_id' => $publicId, 'actor' => $actor, 'authority_ref' => $authority, 'execution_uid' => (int) $this->account->id(), 'customer_supplied' => FALSE, 'customer_submission' => FALSE, 'notification_queued' => FALSE, 'proof_job_queued' => FALSE, 'payment_changed' => FALSE];
-        if (!$this->ledger->recordEvent($eventKey, 'website_request.staff_full_site_review_draft', $payload, provider: 'staff_full_site_review')) throw new \RuntimeException('Staff draft changed concurrently; retry the exact request key.');
-      }
-      $result = $this->attach($publicId, $customerId, $organizationId, $sourceDirectory, $input, $actor, $authority);
-      unset($transaction);
-      return ['newly_created' => $created, 'request_id' => $requestId, 'request_public_id' => $publicId] + $result;
+      catch (\Throwable $error) { if (!$closed && isset($transaction)) $transaction->rollBack(); throw $error; }
     }
-    catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
+    throw new \RuntimeException('Staff draft changed concurrently; retry the exact request key.');
   }
 
   /** Installs only allowlisted bytes into private storage, then records ownership. */
@@ -73,6 +93,7 @@ final class FullSiteReviewService {
     $source = realpath($sourceDirectory);
     if (!$source) throw new \InvalidArgumentException('Static package is unavailable.');
     $transaction = $this->database->startTransaction();
+    $closed = FALSE;
     try {
       $row = $this->ownedRequest($customerId, $requestPublicId, TRUE);
       if (!$row || (int) $row['organization_id'] !== $organizationId) throw new \RuntimeException('Exact customer, organization and request binding is required.');
@@ -80,20 +101,20 @@ final class FullSiteReviewService {
       $jobKey = 'website_proof.generate.v1:request:' . $row['id'];
       $jobs = $this->database->select('famtastic_job', 'j');
       $scope = $jobs->orConditionGroup()->condition('job_key', $jobKey)->condition('job_key', $this->database->escapeLike($jobKey . ':brief:') . '%', 'LIKE');
-      if ($jobs->condition($scope)->countQuery()->execute()->fetchField()) throw new \RuntimeException('Full-site review cannot replace an existing proof routine.');
+      if ($jobs->fields('j', ['id'])->condition($scope)->range(0, 1)->forUpdate()->execute()->fetchField() !== FALSE) throw new \RuntimeException('Full-site review cannot replace an existing proof routine.');
       $build = $this->database->select('famtastic_build_run', 'b')->fields('b', ['source_sha', 'artifact_checksum'])->condition('build_key', 'build-dna:' . $manifest['build_id'])->execute()->fetchAssoc();
       if (!$build || !hash_equals((string) $build['source_sha'], $manifest['source_commit']) || !preg_match('/^[a-f0-9]{64}$/', (string) $build['artifact_checksum'])) throw new \RuntimeException('Register the matching source Build DNA before attachment.');
       $intake = json_decode((string) $row['intake_data'], TRUE, 512, JSON_THROW_ON_ERROR);
       $existing = $intake['staff_assisted_brief']['full_site_review'] ?? NULL;
       $eventKey = 'full-site-review:' . $row['id'] . ':' . $manifest['review_id'];
-      $prior = $this->database->select('famtastic_event', 'e')->fields('e', ['payload'])->condition('event_key', $eventKey)->execute()->fetchField();
+      $prior = $this->draftEvent($eventKey, TRUE);
       if ($prior !== FALSE) {
         $event = json_decode((string) $prior, TRUE, 512, JSON_THROW_ON_ERROR);
         if (!hash_equals((string) ($event['manifest_sha256'] ?? ''), $digest)) throw new \RuntimeException('This immutable review id already has different bytes or metadata.');
         if (!is_array($existing) || ($existing['manifest_sha256'] ?? '') !== $digest || ($existing['manifest']['review_id'] ?? '') !== $manifest['review_id']) throw new \RuntimeException('Historical review retries cannot replace the current version.');
         $root = $this->packageRoot($requestPublicId, $digest, FALSE);
         foreach ($manifest['files'] as $file) FullSiteReviewPackage::read($root, $file);
-        unset($transaction);
+        $transaction->commitOrRelease(); $closed = TRUE; unset($transaction);
         return ['newly_attached' => FALSE, 'manifest_sha256' => $digest, 'review' => FullSiteReviewPackage::projection($requestPublicId, $existing)];
       }
       // Validate every authored reference before creating the private copy.
@@ -129,10 +150,10 @@ final class FullSiteReviewService {
       $intake['staff_assisted_brief'] = $staff;
       $this->database->update('famtastic_project_request')->fields(['intake_data' => json_encode($intake, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES), 'changed' => $now])->condition('id', $row['id'])->execute();
       $this->database->insert('famtastic_portal_activity')->fields(['organization_id' => $organizationId, 'event_type' => 'website_request.full_site_review_attached', 'summary' => 'Your full website and research are ready for review.', 'created' => $now])->execute();
-      unset($transaction);
+      $transaction->commitOrRelease(); $closed = TRUE; unset($transaction);
       return ['newly_attached' => TRUE, 'manifest_sha256' => $digest, 'review' => FullSiteReviewPackage::projection($requestPublicId, $record)];
     }
-    catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
+    catch (\Throwable $error) { if (!$closed && isset($transaction)) $transaction->rollBack(); throw $error; }
   }
 
   /** Each page, resource and document read independently verifies current tenancy. */
@@ -170,7 +191,19 @@ final class FullSiteReviewService {
     if ($lock) $query->forUpdate();
     $row = $query->execute()->fetchAssoc();
     if (!$row) return FALSE;
-    return $this->database->select('famtastic_membership', 'm')->condition('customer_id', $customerId)->condition('organization_id', (int) $row['organization_id'])->condition('status', 'active')->countQuery()->execute()->fetchField() ? $row : FALSE;
+    return $this->activeMembership($customerId, (int) $row['organization_id'], $lock) ? $row : FALSE;
+  }
+
+  private function activeMembership(int $customerId, int $organizationId, bool $lock): bool {
+    $query = $this->database->select('famtastic_membership', 'm')->fields('m', ['id'])->condition('customer_id', $customerId)->condition('organization_id', $organizationId)->condition('status', 'active');
+    if ($lock) $query->forUpdate();
+    return $query->execute()->fetchField() !== FALSE;
+  }
+
+  private function draftEvent(string $eventKey, bool $lock = FALSE): string|false {
+    $query = $this->database->select('famtastic_event', 'e')->fields('e', ['payload'])->condition('event_key', $eventKey);
+    if ($lock) $query->forUpdate();
+    return $query->execute()->fetchField();
   }
 
   private function packageRoot(string $publicId, string $digest, bool $create): string {
