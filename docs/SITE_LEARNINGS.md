@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Verify actual loopback publication, not requested bindings
+
+Observation: main's internal-bridge MariaDB container started, but actual 3306/tcp
+publication was null despite requested 127.0.0.1 binding. Guidance: preserve the
+actual-port rejection and use a dedicated ordinary bridge for this disposable
+harness. Do not call container NAT egress firewall-disabled; no external traffic
+is requested, and PHP's sandbox still denies it. No global firewall change.
+Retain the t5wRpU failure; old-network cleanup uses the old guarded provisioner.
+Revision is source-only pending independent review, not connectivity proof.
+
 ## 2026-09-21 - Single-file Docker local logs require compression disabled
 
 Observation: main's owned MariaDB allocation remained created/PID 0 after the

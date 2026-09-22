@@ -54,7 +54,7 @@ function ownedRoot(root) {
 async function networkOwned(id, run, name) {
   need(/^[a-f0-9]{64}$/.test(id), 'invalid_network_id');
   const n = JSON.parse(await docker(['network', 'inspect', id]))[0];
-  need(n.Id === id && n.Name === name && n.Labels?.[label] === run && n.Internal === true && n.Driver === 'bridge', 'foreign_network');
+  need(n.Id === id && n.Name === name && n.Labels?.[label] === run && n.Internal === false && n.Driver === 'bridge', 'foreign_network');
   return n;
 }
 async function containerOwned(id, run, net, name) {
@@ -111,7 +111,7 @@ async function create() {
   // Print only an owned recovery path, before any resource allocation.
   console.log(JSON.stringify({ status: 'allocating', run_root: root }));
   save(root, 'network-intent.json', { name, run, phase: 'before_network_create' });
-  const net = await docker(['network', 'create', '--internal', '--driver', 'bridge', '--label', `${label}=${run}`, name]);
+  const net = await docker(['network', 'create', '--driver', 'bridge', '--label', `${label}=${run}`, name]);
   save(root, 'network.json', { id: net });
   await networkOwned(net, run, name); disk();
   save(root, 'container-intent.json', { name, run, network_id: net, phase: 'before_container_create' });

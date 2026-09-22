@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Separate DB network reachability from PHP egress denial
+
+Observation: main's second internal-bridge allocation ran MariaDB without actual
+host-port publication. Guidance: require real 127.0.0.1 publication on a dedicated
+ordinary bridge, retain all resource/sandbox guards, and state that container NAT
+egress is not firewall-disabled. No external traffic is requested or zero-egress
+proof claimed. Preserve the failed t5wRpU run; cleanup/review/rerun and Drive remain
+main-owned. This source-only revision does not establish PHP contention proof.
+
 ## 2026-09-21 - Keep the log bound when fixing container startup
 
 Observation: main's first owned MariaDB container failed before process start

@@ -3,12 +3,12 @@
 September 21, 2026. **PHP contention proof unrun; parent provisioning failed.**
 At original source checkpoint `0972b8f7`, no PHP/Node execution, syntax check,
 test, container, pull, install, site bootstrap, provider, notification or migration
-was performed by this lane. The later parent-owned attempt is retained below.
+was performed by this lane. The later parent-owned attempts are retained below.
 Read-only source/fixture hash and Git whitespace checks are not runtime proof.
 The integrating parent separately reports frozen candidate full PHP 532 tests /
 2,824 assertions passing. That receipt does not establish MariaDB contention.
 
-## Retained parent provisioning failure
+## Retained parent provisioning failures
 
 Main reports its first attempt stopped before the container process started:
 container `cd0947f68e9d11cc78b6cf5626fb803f1faf8bd5f06990f2eb115a053e2d7497`,
@@ -22,6 +22,21 @@ The source-only repair adds `--log-opt compress=false`, preserving the local
 driver's `max-size=1m` and `max-file=1` bounds and every other orchestration guard.
 No agent runtime was used to validate the repair. Exact-owned cleanup of the old
 allocation and any reviewed rerun remain main-owned; neither is claimed complete.
+
+Main reports the second attempt, with run-directory suffix
+`/T/famtastic-worker-mariadb-t5wRpU`, started MariaDB but failed the
+`unsafe_published_port` guard. Inspection showed requested HostIp `127.0.0.1`,
+empty requested HostPort, actual `NetworkSettings.Ports["3306/tcp"]` null and
+network `Internal: true`. No PHP database test ran. This report establishes
+container process startup, not host-loopback connectivity or contention proof.
+
+The next source-only revision removes `--internal` and requires `Internal: false`
+on the dedicated bridge. The exact `127.0.0.1` actual-published-port gate remains
+unchanged; no missing/null publication is accepted. Main owns cleanup of t5wRpU
+using the pre-change `ed94d9bf` provisioner, which requires its internal bridge.
+The new guard intentionally does not accept that old network. No cleanup is
+claimed here. Independent orchestration review precedes any new allocation;
+this lane has not executed the revised provisioner or PHP runner.
 
 ## Frozen inputs and exact new source
 
@@ -68,16 +83,24 @@ RAM for the additional 768 MiB cap, and exclusive runtime ownership. Reported
 engine total RAM is not free RAM. Do not touch existing owner containers, volumes,
 WordPress, Postiz, Temporal or any installed Drupal database.
 
-The isolated resource envelope is one internal bridge and one generated-name,
+The isolated resource envelope is one dedicated ordinary bridge (`Internal: false`)
+and one generated-name,
 run-labeled container: one CPU, 768 MiB memory with no additional swap allowance,
 128 PIDs, read-only rootfs and no-new-privileges. All database state is tmpfs:
 256 MiB `/var/lib/mysql`, 8 MiB `/run/mysqld`, 32 MiB `/tmp`. The first two mounts
 are 0700; container-only `/tmp` is bounded 1777 for the unprivileged mysql process.
 There are no bind/host/anonymous data volumes. Container logs are capped at one
-1 MiB file with compression explicitly disabled. Actual image initialization
-fitting this envelope remains untested.
+1 MiB file with compression explicitly disabled. Main reports process startup on
+the second attempt; successful end-to-end provisioning remains unproven here.
 
 Publication is one dynamically assigned `127.0.0.1` port, excluding 3306/3400.
+The ordinary bridge permits container NAT egress: **container egress is not
+firewall-disabled**. No external traffic, external SQL, provider operation or
+remote connection is requested by this harness, but no zero-egress observation
+or firewall-denial proof is claimed. The DB contains only generated synthetic
+credentials and fixture data. PHP children still inherit the unchanged wrapper's
+external-network denial and protected-database exclusions. This revision makes
+no global Docker, host-firewall or sandbox-policy change.
 No external port, existing socket database or ambient DSN is accepted. Creation
 uses `--pull=never`. Buffer pool is 32 MiB, redo log 16 MiB, max connections eight,
 performance schema and binary log disabled. Each operation checks the inspected
@@ -136,7 +159,7 @@ bootstrap/protocol/timeout/unexpected-pass failures exit **2**, never a useful
 negative proof. These are runner exit codes: the existing wrapper itself returns
 1 for any child failure, so inspect its recorded child status and JSON output,
 not the wrapper exit alone. Keep every red receipt. No PHP case receipt or
-syntax/bootstrap success exists here; the parent provisioning failure above is
+syntax/bootstrap success exists here; the parent provisioning failures above are
 retained separately. Record the harness commit, wrapper
 inventory result, actual versions, case outcomes and resource cleanup separately.
 

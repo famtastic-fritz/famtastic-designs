@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-09-21 - Dedicated bridge for loopback MariaDB publication
+
+- Remove the harness bridge's internal flag and require Internal=false after
+  main's second attempt started MariaDB but had no actual published port. Keep
+  exact 127.0.0.1 publication checks, tmpfs/resources and PHP sandbox unchanged.
+  Document that container NAT egress is not firewall-disabled; no external
+  traffic is requested. Source-only, awaiting independent review; no agent run.
+
 ## 2026-09-21 - Preserve bounded logs without incompatible compression
 
 - Explicitly disable local-log compression while retaining the one-file, 1 MiB

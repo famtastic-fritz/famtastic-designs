@@ -6,8 +6,12 @@ Outside-webroot source composes the actual coordinator/ledger with independent
 Drupal MySQL connections and a frozen old-coordinator control. Resource-bounded
 tmpfs provisioning is separate from sandboxed PHP tests. Main's first provisioning
 attempt failed before process start because compression conflicts with a one-file
-local-log limit. The source repair disables compression; no agent rerun or PHP
-bootstrap/test success is claimed. Real MariaDB contention remains unproven.
+local-log limit. After disabling compression, main reports MariaDB startup but
+no published port on the internal bridge. The next unexecuted revision uses a
+dedicated ordinary bridge and retains the exact loopback publication guard.
+Container NAT egress is not firewall-disabled; PHP sandbox denial remains intact.
+No agent runtime or PHP bootstrap/test success is claimed. Real MariaDB contention
+remains unproven; independent orchestration review is still required.
 See `contracts/SHARED-WORKER-MARIADB-PROOF-V1.md`; no activation
 or production capability classification changes.
 
