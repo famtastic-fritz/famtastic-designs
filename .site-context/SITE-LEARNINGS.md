@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - Test the real persistence representation
+
+The initial managed importer fixture used a nonexistent flat design_dna column,
+masking actual Drupal text_long storage. Review found it; main now uses raw
+__value/__format columns, explicit null format and a real core mapping regression.
+Full combined 983/6,731 passes. Original green tests remain historical, not proof
+of installed storage. Receipt-backed pending QA is not customer release or a
+new owner gate; managed legacy readers stay closed until authorized adapters exist.
+
 ## 2026-09-21 - Separate content verification from read permission
 
 First import needs byte verification before a receipt exists; browser reads need

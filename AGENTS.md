@@ -1,5 +1,19 @@
 # Agent Instructions
 
+## September 22 - Import receipts are not independent QA or public read grants
+
+Read `docs/contracts/MANAGED-PROOF-IMPORT-V1.md` and
+`docs/contracts/MANAGED-PROOF-LEGACY-READER-FENCE-V1.md` before extending managed
+delivery. Preserve the root-fenced receipt/claim commit, exact current rights,
+original producer identities and unknown-cost holds. Use actual Drupal field
+mapping in direct SQL and fixtures: ProofVariant text_long metadata has value
+and format columns, not a flat design_dna column. The pending-review handoff is
+receipt-backed status only, never proof that QA is queued or a new Fritz gate.
+Legacy token/share/path readers must not serve managed packages as a fallback.
+Default-closed services remain unregistered until real provenance, authorization,
+independent QA/release and the installed full journey are verified. Unit counts
+do not authorize sends, provider work, dispatch or live deployment.
+
 ## September 21 - Preserve private reviews during automatic intake integration
 
 Read `docs/contracts/PRIVATE-REVIEW-AUTOPIPELINE-COMPATIBILITY-V1.md` when

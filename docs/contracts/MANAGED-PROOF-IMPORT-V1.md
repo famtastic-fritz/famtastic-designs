@@ -1,9 +1,11 @@
 # Managed proof import v1
 
-September 21, 2026. **Unrun source candidate**, based on
-`66434a3fea9d7e0025d3c523cf2df9d769a6498b`. Main owns independent review, all
-runtime verification, integration and documentation mirrors. No installed schema,
-provider, customer, cloud, notification or production action occurred here.
+September 22, 2026. **Locally verified, default-closed source**, integrated as
+75e0cb94, then combined with the legacy-reader fence in 0c698fb7. Independent
+review caught and main repaired the real Drupal text_long SQL mapping defect
+that the original synthetic fixture masked. Full combined PHP: 983 tests / 6,731
+assertions; no failures/skips, 68 existing deprecations. No installed schema,
+provider, customer, cloud, notification or production activation occurred.
 
 ## Scope and authority
 
@@ -69,6 +71,11 @@ No approval, selection, notification, activity or outbox writer is invoked.
 Variants store opaque `managed-proof:mp-<id>:<direction>:<role>` references and
 nested worker description separate from server projection facts. They are not
 legacy filesystem paths, source_capture records, or generic asset manifests.
+Entity writes explicitly use `design_dna.value` and null `design_dna.format`.
+Raw locked SQL reads use the real shared-table columns `design_dna__value` and
+`design_dna__format`; no fictitious flat column or filtered JSON fallback. The
+test schema exercises actual Drupal TextLongItem/DefaultTableMapping behavior.
+Campaign selection fixtures retain the actual direction string, not a row ID.
 Receipt-aware HTTP/QA/selection adapters remain absent. A known receipt cannot
 serve artifacts through the package's still-unconfigured trusted read resolver.
 
@@ -94,10 +101,18 @@ compare advanced review/selection/brief fields to the original fresh snapshot.
 requires a separate trusted authorization closure, default NULL. That dependency
 must authenticate current access to this exact historical account/receipt. ACK
 does not renew a claim, import again, grant reads or alter later QA/selection.
-Public reads MUST NOT use ACK as their authorization. Main owns the separate
-receipt-aware handoff projection; FreshProofBinding is untouched by this slice.
+Public reads MUST NOT use ACK as their authorization.
 
-## Unrun test source and remaining gates
+The integrated FreshProofBinding handoff projects "Proof files saved; independent
+review pending" only with an actual committed receipt and matching current
+request/asset snapshot. It locally reverses only the receipt-proven review-state
+transition for the unchanged strict freshness validator; it does not alter stored
+state or weaken FreshProofInput. All other authored, tenant, commercial, project,
+selection and asset facts remain exact. No QA queue, approval, read permission or
+client release follows from this status. Later legacy review flags alone still
+fail closed until a separate managed release adapter exists.
+
+## Verification and remaining gates
 
 ManagedProofImporterTest composes actual admission/coordinator/journal/importer,
 real in-memory SQLite, and real private preparation/package files. Entity storage
@@ -109,7 +124,7 @@ immutable files and exact historical ACK after changed QA/selection/rights.
 Fixture protected `import`, `snapshot`, `rows`, `reject` support main's separate
 handoff tests. No synthetic case establishes deliverability or provider execution.
 
-Main may run, ONLY through its reviewed network/protected-data/disk guard:
+Main ran through its reviewed network/protected-data/disk guard:
 
 ```sh
 FAMTASTIC_TEST_CANONICAL_LOGO=/tmp/famtastic-phase2-review.NVAfPl/designs/frontend/public/brand/famtastic-designs-logo-v1.png \
@@ -119,9 +134,28 @@ FAMTASTIC_BACKEND_VENDOR=/Users/famtastic-fritz/Development/FAMtastic/worktrees/
   backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/ManagedProofImporterTest.php
 ```
 
-Still required: lint/focused and integration tests, independent source review,
-real MariaDB import contention/root rollback, installed entity/cache/hook behavior
+Retained receipts under `/tmp/famtastic-phase2-review.NVAfPl/`:
+
+- `managed-import-first.IE9Vr8`: disk watch stopped the first attempt; not a pass.
+- `managed-import-focused.71ORTb`: original candidate 40/478, 5.405s; superseded
+  by independent review identifying the fixture-masked SQL mapping defect.
+- `managed-import-handoff.I0Vbdz`: original candidate plus status tests 57/621;
+  same limitation. These early green counts are not installed-schema evidence.
+- `managed-import-mapped-storage.rSOK55`: 59 tests, one missing text-module
+  class-loader error. Main fixed the isolated bootstrap namespace, not production.
+- `managed-import-mapped-storage-fixed.5sxhIO`: 59/768, 7.415s suite / 7.727s
+  guarded, 28 MiB, before the selection-fixture alignment.
+- `managed-import-reader-integrated.mq7WoA`: final combined source at 0c698fb7,
+  **983/6,731**, 16.558s suite / 17.666s guarded, 66 MiB final summary, all changed
+  PHP syntax and Git whitespace checks pass. Includes maximum package sizing;
+  retain its separately measured higher allocator peak, not this final summary.
+
+No overlapping counts are summed. Protected data inventories remained unchanged.
+The fixture contains actual services/SQLite/files but mocked entity persistence
+and trusted producer verifiers; the real mapping regression is not a kernel test.
+
+Still required: real MariaDB import contention/root rollback, installed entity/cache/hook behavior
 and memory headroom, immutable producer/evidence resolver and real policy review,
 receipt-aware protected reads, independent QA/release adapter and separate approved
-notification. No activation follows from this source checkpoint. No runtime tests,
-fixture media staging, installs, network, containers or cleanup ran in this helper.
+notification. No activation follows from this source checkpoint. The helper
+authored source only; main performed runtime verification and repairs.

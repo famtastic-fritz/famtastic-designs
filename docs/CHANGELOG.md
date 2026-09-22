@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-09-22 - Verify managed import and preserve reader boundaries
+
+- Integrate root-fenced variants/Build DNA/receipt/job completion with no QA,
+  notification or activity side effects; record honest pending-review status.
+- Independent review found a fixture-masked Drupal text_long SQL mismatch.
+  Repair production value/format reads and test against actual core mapping.
+- Fence legacy readers/shares for managed identities, retaining existing
+  unmanaged delivery and authenticated share revocation.
+- Full combined PHP 983/6,731, changed-file lint and whitespace pass; protected
+  data unchanged. No runtime service, provider, customer or cloud activation.
+
 ## 2026-09-21 - Refresh activation evidence without claiming deployment
 
 - Recheck canonical clean Mac source, loopback-only service/health, cloud CLI

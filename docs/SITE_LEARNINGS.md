@@ -1,5 +1,25 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - Entity input names are not physical SQL columns
+
+Independent review caught a real importer defect after 40 green synthetic tests:
+ProofVariant.design_dna is text_long, so Drupal stores design_dna__value and
+design_dna__format. The fixture's invented flat column masked a rollback on real
+storage. Use real field schema/table mapping in boundary tests; explicitly store
+JSON value with null format, verify those raw columns, and keep installed hooks
+as a separate gate. Also preserve campaign selected_variant as direction text.
+Final combined 983/6,731 passes; no deployment or installed-import claim.
+
+## 2026-09-22 - Sparse fixture failures and disk stops are not product passes
+
+Seven callback-parity failures all came from a missing tracked outside-webroot
+fixture in one sparse helper. Hydrate the exact fixture/provenance, never weaken
+the parity assertion. A separate importer run was stopped below 200 MiB free.
+Only clean tracked video copies in this task's temporary checkout were unhydrated;
+Git retains them and owner repositories/recovery archives were untouched. Later
+external headroom recovery allowed the full maximum-size case to run. Preserve
+both failed receipts and exact narrower versus full run classifications.
+
 ## 2026-09-21 - Verify packaging before connecting authority
 
 Reuse canonical projection and preserve source bytes. Content hashes are facts,

@@ -1,8 +1,8 @@
 # Managed proof legacy-reader fence v1
 
-September 21, 2026. Source-only candidate from `00e228d4`; no PHP execution,
-tests, installation, network, providers, installed DB, route rebuild or activation.
-Runtime verification belongs to main. This closes existing callers; it does not
+September 22, 2026. Candidate ab1f254d integrated as 0c698fb7 after main's source
+review and runtime verification. No installed DB, route rebuild or activation.
+Focused 76/735 and combined full PHP 983/6,731 pass. This closes existing callers; it does not
 install a receipt resolver or claim that managed proofs can now be served.
 
 ## Stored identity, never a feature flag or worker assertion
@@ -47,7 +47,7 @@ changed in this bounded slice; it still exposes its existing campaign summary,
 not artifact bytes/DNA. A future receipt-aware reader must explicitly inventory
 other callers rather than claim this fence provides a universal access policy.
 
-## Tests authored, not executed
+## Executed tests and limits
 
 `ManagedProofLegacyReaderFenceTest.php` uses actual controllers, the final portal,
 actual classifiers/SQL and in-memory SQLite. Account, token repository, entity
@@ -67,8 +67,20 @@ exception catches; there are no skips, broad error-to-success conversions or
 missing-table fallbacks. Existing fixture schema gaps must be repaired in tests,
 not by weakening production checks.
 
-Main should run this file plus fresh-admission, portal, private-review and legacy
-paired regressions through its existing network-denial/protected-data wrapper,
-serially above 200 MiB free. This branch ran only source review and Git whitespace
-checks. Syntax and test results remain unverified. Broad changelog/AGENTS/Drive
-updates and runtime receipts are parent-owned by explicit task scope.
+Main ran through the existing network-denial/protected-data wrapper, serially
+above the 200 MiB watch floor. Retained receipts under
+`/tmp/famtastic-phase2-review.NVAfPl/`:
+
+- `managed-reader-fence-first.XuN9gH`: 76 tests / 735 assertions, 0.249s suite.
+- `managed-reader-regression.bCynm3`: seven failures, all missing the exact
+  tracked outside-webroot callback-parity fixture in the sparse helper. Retained.
+- `managed-reader-regression-hydrated.NwfRWQ`: after hydrating that fixture and
+  its provenance, 923/5,951 pass, 6.506s suite. This run excluded exactly the
+  maximum-size package case for disk headroom and is NOT the full suite.
+- `managed-import-reader-integrated.mq7WoA`: full combined suite, including that
+  sizing case and repaired importer/handoff: 983/6,731, 16.558s suite / 17.666s
+  guarded, all changed PHP syntax and whitespace checks pass. No failures/skips;
+  same 68 existing PHPUnit deprecations. Protected data unchanged.
+
+The helper authored source only. These local controller/service tests are not
+installed HTTP authentication, route matching, Drupal hooks or concurrency proof.

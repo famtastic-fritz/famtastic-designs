@@ -2,6 +2,26 @@
 
 Status: local repairs and verification; no live activation.
 
+September 22 managed-import checkpoint: source75e0cb94 and reader integration
+0c698fb7 pass the full PHP module suite, **983 tests / 6,731 assertions**, zero
+failures/skips, 68 existing deprecations; changed-file syntax/whitespace pass.
+Receipt `managed-import-reader-integrated.mq7WoA`, 16.558s suite / 17.666s guarded,
+protected data unchanged. Independent review caught and repaired the fixture-masked
+Drupal text_long column mismatch; early candidate passes are not schema evidence.
+See the managed-import and legacy-reader-fence contracts for all retained runs.
+
+The importer now atomically saves the exact three variants, Build DNA and receipt
+with fenced job completion, preserving paid-operation holds and original producers.
+It does not register itself or queue QA/send a notice. Status truthfully says
+independent review pending; existing managed legacy readers remain closed. These
+are local foundations, not fresh unattended generation or client delivery.
+
+Storage subsequently fell below the 200 MiB guard, then recovered: only this
+temporary checkout's clean tracked frontend/public/video copies were unhydrated
+(recoverable from Git); later an external free-space change reached about 2.1 GiB.
+The full package sizing test was rerun, but the earlier withheld complete journey
+below remains a withheld result until its actual canonical runner is executed.
+
 September 21 late-evening verification refresh (September 22 UTC): agency
 `origin/main` remains f750a163 after an explicit main-ref fetch. At source66434a3f,
 hosted run35680098183 again executed no backend steps because of the account
@@ -87,8 +107,8 @@ paid-operation recovery, authoritative import or full unattended journey gates.
 | Milestone | Implemented/verified locally | Still required |
 | --- | --- | --- |
 | 1. Phase 2 | Mac YAML, source/security repairs, executable entrypoints and filtered-container closure; synthetic verification | Safe provisioning implementation, Linux image/provenance and real concurrency/canary evidence; no activation |
-| 2. Existing Mac workflow | Default-off fresh admission, shared claims, managed retry isolation, real selected-static CLI; locally tested closed journal and artifact verification | Existing creative-tool adapter, trusted provider/input/receipt recovery, fenced artifact import; no fresh creative trigger enabled |
-| 3. Complete customer journey | Legacy controlled journey and actual selected-static continuation fixtures | New unattended fresh-artifact/QA/portal/captured-notice/selection/one-staging journey; no customer send or live site proof |
+| 2. Existing Mac workflow | Default-off fresh admission, shared claims, managed retry isolation, real selected-static CLI; tested closed journal, package and root-fenced import | Existing creative-tool adapter, trusted provider/input/receipt recovery, installed importer/storage proof and wiring; no fresh creative trigger enabled |
+| 3. Complete customer journey | Legacy controlled journey, selected-static continuation fixtures, receipt-backed pending-review status and managed legacy-reader fences | Authorized package reads, independent QA/release, then new unattended fresh-artifact/portal/captured-notice/selection/one-staging journey; no customer send or live site proof |
 | 4. Additive cloud | Shared Drupal capability/ownership protocol; isolated Phase 2 shadow source; existing project verified in Console | CLI authorization, safe provisioning, real shared-claim execution and laptop-unavailable proof |
 
 Routine green delivery must not wait for Fritz. These are unfinished engineering
