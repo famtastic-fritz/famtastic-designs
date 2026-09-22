@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Worker exclusion belongs to the root transaction
+
+An expiring advisory lock is not the transaction lifetime. Acquire the fixed-row
+database mutex after request/account/rights locks and before job/history writes;
+use current base-row reads, not snapshot aggregates, plus checked CAS. Drupal's
+key-only MySQL upsert is INSERT IGNORE, so use explicit duplicate-key update.
+Legacy writers must exclude claims even after exhaustion. Focused SQLite tests
+pass; actual MariaDB contention remains a separate gate. See the root-transaction
+contract for retained red/green receipts; Drive and integration remain parent-owned.
+
 ## 2026-09-21 - Legacy fixtures must not bypass managed admission guards
 
 Load the real new binding dependencies in the manual PHP bootstrap. Permit only

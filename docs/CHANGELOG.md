@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-09-21 - Serialize shared workers through the root transaction
+
+- Add an empty-table update 8066 and one fixed-row MySQL/MariaDB/SQLite mutex;
+  preserve outer transaction ownership, current reads, CAS rollback and holds.
+- Lock before fresh/selected job insertion; isolate legacy writers from every
+  enrolled claim while preserving unowned jobs. No DI/default-policy activation.
+- Focused six-file verification passes 244 tests / 1,312 assertions. Retain the
+  setup/fixture failures and 17 failing old-source regressions in
+  `contracts/SHARED-WORKER-ROOT-TRANSACTION-V1.md`. Actual MariaDB contention,
+  full integration and installed-site migration are not yet proven/performed.
+
 ## 2026-09-21 - Keep the legacy cross-repository fixture honest
 
 - Load the real fresh-proof binding dependencies in the manually bootstrapped

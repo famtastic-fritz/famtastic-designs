@@ -41,7 +41,7 @@ final class FreshProofBinding {
   }
 
   /** Return only a byte-identical binding with its exact job and claim. */
-  public static function read(Connection $db, array $event, array $request): array {
+  public static function read(Connection $db, array $event, array $request, bool $lock = FALSE): array {
     $b = json_decode((string) $event['payload'], TRUE, flags: JSON_THROW_ON_ERROR);
     if (!is_array($b) || array_keys($b) !== ['schema', 'freshness', 'request_snapshot', 'asset_snapshot', 'job_id', 'job_key', 'payload_wire', 'payload_sha256']
       || FreshProofInput::wire($b) !== $event['payload'] || ($b['request_snapshot']['freshness'] ?? NULL) !== $b['freshness']
@@ -49,8 +49,11 @@ final class FreshProofBinding {
       || $event['event_key'] !== self::key((int) $request['id']) || $event['event_type'] !== self::EVENT
       || (int) $event['campaign_id'] !== (int) $request['proof_campaign_id']
       || (int) $event['prospect_id'] !== (int) $request['prospect_id']) throw new \RuntimeException('Proof admission evidence changed.');
-    $job = $db->select('famtastic_job', 'j')->fields('j')->condition('id', $b['job_id'] ?? 0)->execute()->fetchAssoc();
-    $claim = $db->select('famtastic_worker_claim', 'c')->fields('c')->condition('job_id', $b['job_id'] ?? 0)->execute()->fetchAssoc();
+    $jobs = $db->select('famtastic_job', 'j')->fields('j')->condition('id', $b['job_id'] ?? 0);
+    $claims = $db->select('famtastic_worker_claim', 'c')->fields('c')->condition('job_id', $b['job_id'] ?? 0);
+    if ($lock) { $jobs->forUpdate(); $claims->forUpdate(); }
+    $job = $jobs->execute()->fetchAssoc();
+    $claim = $claims->execute()->fetchAssoc();
     $p = json_decode((string) ($job['payload'] ?? ''), TRUE, flags: JSON_THROW_ON_ERROR);
     if (!$job || !$claim || $job['job_type'] !== 'proof.generate' || $job['job_key'] !== ($b['job_key'] ?? NULL)
       || (int) $job['max_attempts'] !== 3 || (int) $job['prospect_id'] !== (int) $request['prospect_id']

@@ -21,6 +21,11 @@ legacy jobs, freeze current rights, fence generic import bypasses and verify
 independent QA before any automatic client release. Never infer delivery or
 remote acceptance from an allocated job ID alone.
 
+Shared worker writes also follow `docs/contracts/SHARED-WORKER-ROOT-TRANSACTION-V1.md`:
+request/account/rights locks first, root-transaction mutex before job locks;
+no provider/file processing inside that transaction. SQLite tests and advisory
+lock expiration do not establish real MySQL/MariaDB concurrency proof.
+
 ## September 18 — Embedded build instructions must cover the current request
 
 Never reuse `selected_build_continuation` merely because it exists. Its producer

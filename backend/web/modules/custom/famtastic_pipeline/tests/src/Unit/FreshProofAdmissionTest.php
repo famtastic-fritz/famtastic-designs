@@ -11,12 +11,13 @@ use Drupal\Core\Site\Settings;
 use Drupal\famtastic_pipeline\Entity\ProofCampaign;
 use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\{AttributionService, CustomerPortalService, FreshProofAdmission, FreshProofBinding, FreshProofInput, OperationalLedger, ProofAssetContract, ProofCampaignService, PublicPreviewDeliveryService, SiteStudioBuildPacketService, WorkerCapabilityPolicy, WorkerCoordinator, WorkerCoordinatorSchema};
-use Drupal\sqlite\Driver\Database\sqlite\Connection;
+use Drupal\Tests\famtastic_pipeline\Unit\Fixtures\WorkerMutexConnection as Connection;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 require_once dirname(__DIR__, 3) . '/famtastic_pipeline.install';
 require_once __DIR__ . '/Fixtures/FreshProofLoginControllerCases.php';
+require_once __DIR__ . '/Fixtures/WorkerMutexConnection.php';
 
 /** Real writers, coordinator and SQLite transactions; entity storage is doubled. */
 final class FreshProofAdmissionTest extends UnitTestCase {
@@ -42,7 +43,7 @@ final class FreshProofAdmissionTest extends UnitTestCase {
     $o = ['database' => ':memory:', 'prefix' => '', 'driver' => 'sqlite', 'namespace' => 'Drupal\\sqlite\\Driver\\Database\\sqlite'];
     $this->db = new Connection(Connection::open($o), $o);
     $schemas = _famtastic_pipeline_customer_portal_schema() + _famtastic_pipeline_automation_schema() + _famtastic_pipeline_lifecycle_schema() + _famtastic_pipeline_preview_delivery_schema() + WorkerCoordinatorSchema::tables();
-    foreach (['famtastic_project_request', 'famtastic_customer', 'famtastic_membership', 'famtastic_organization', 'famtastic_customer_resource', 'famtastic_request_asset', 'famtastic_private_offer', 'famtastic_job', 'famtastic_event', 'famtastic_notification_outbox', 'famtastic_portal_activity', 'famtastic_preview_delivery', 'famtastic_worker_claim', 'famtastic_worker_budget', 'famtastic_worker_nonce'] as $table) $this->db->schema()->createTable($table, $schemas[$table]);
+    foreach (['famtastic_project_request', 'famtastic_customer', 'famtastic_membership', 'famtastic_organization', 'famtastic_customer_resource', 'famtastic_request_asset', 'famtastic_private_offer', 'famtastic_job', 'famtastic_event', 'famtastic_notification_outbox', 'famtastic_portal_activity', 'famtastic_preview_delivery', 'famtastic_worker_mutex', 'famtastic_worker_claim', 'famtastic_worker_budget', 'famtastic_worker_nonce'] as $table) $this->db->schema()->createTable($table, $schemas[$table]);
     // These two schemas model only entity fields touched here, not a Drupal kernel.
     $this->db->query('CREATE TABLE famtastic_prospect (id INTEGER PRIMARY KEY AUTOINCREMENT, business_name TEXT, public_email TEXT, contact_name TEXT, contact_method TEXT, contact_value TEXT, campaign TEXT, source TEXT, authorized INTEGER, confirmed_at INTEGER, status TEXT, owner_uid INTEGER, utm_json TEXT)');
     $this->db->query('CREATE TABLE proof_campaign (id INTEGER PRIMARY KEY AUTOINCREMENT, campaign_id TEXT UNIQUE, prospect_id INTEGER, business_name TEXT, status TEXT, generation_status TEXT, studio_job_id TEXT, expires_at INTEGER)');
@@ -169,6 +170,31 @@ final class FreshProofAdmissionTest extends UnitTestCase {
     $this->db->update('famtastic_job')->fields(['status' => 'completed'])->condition('id', 1)->execute();
     $this->db->update('proof_campaign')->fields(['generation_status' => 'ready'])->condition('id', 1)->execute();
     self::assertSame('needs_attention', $this->portal->websiteRequestProofHandoff(1)['state']);
+  }
+
+  public function testFreshAndReuseLockAuthorityBeforeMutexAndJobReadsAfterIt(): void {
+    $this->enable(); $this->db->observed = [];
+    $this->create();
+    $events = $this->db->observed;
+    $mutex = array_search(TRUE, array_map(fn($r) => str_starts_with($r['sql'], 'INSERT INTO {famtastic_worker_mutex}'), $events), TRUE);
+    self::assertNotFalse($mutex);
+    foreach (['famtastic_project_request', 'famtastic_customer', 'famtastic_membership', 'famtastic_request_asset'] as $table) {
+      $reads = array_keys(array_filter($events, fn($r) => str_contains($r['sql'], $table) && $r['locking']));
+      self::assertNotEmpty($reads, $table); self::assertLessThan($mutex, min($reads), $table);
+    }
+    $jobs = array_keys(array_filter($events, fn($r) => str_contains($r['sql'], 'famtastic_job') && $r['locking']));
+    self::assertNotEmpty($jobs); self::assertGreaterThan($mutex, min($jobs));
+
+    $this->db->observed = [];
+    $outer = $this->db->startTransaction();
+    self::assertSame(1, $this->admission->reuse(1));
+    foreach (['famtastic_job', 'famtastic_worker_claim'] as $table) {
+      $reads = array_filter($this->db->observed, fn($r) => str_starts_with($r['sql'], 'SELECT') && str_contains($r['sql'], $table));
+      self::assertNotEmpty($reads, $table);
+      foreach ($reads as $read) self::assertTrue($read['locking'], $read['sql']);
+    }
+    self::assertTrue($this->db->inTransaction());
+    $outer->rollBack();
   }
 
   public function testDraftUpdateFreezesExactPrivateAssetsAndDoesNotReenroll(): void {

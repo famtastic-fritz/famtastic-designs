@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Transaction-owned coordination needs current reads and writer fences
+
+Nested savepoint release does not commit the outer transaction. Use a fixed-row
+write mutex until root commit/rollback, then current locking job/claim/budget
+reads and checked CAS. Do not rely on an expired PHP advisory lease or an old
+repeatable-read aggregate. Preserve request-first order in admission and deny
+legacy completion/failure/requeue for enrolled identities. The delimiter option
+belongs only to the test's single trigger definition, never a production default.
+244 focused tests / 1,312 assertions pass; retain both setup/fixture failures and
+17 failing baseline regressions. Real MariaDB contention is still unproven.
+
 ## 2026-09-21 - New production guards need real fixture dependencies
 
 A dependency-free PHP harness manually loads services, unlike Drupal's autoloader.

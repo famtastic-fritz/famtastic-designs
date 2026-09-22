@@ -1,5 +1,13 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Root-transaction worker serialization (synthetic source only)
+
+One fixed database mutex row, current locking reads, CAS and legacy-job isolation
+pass 244 focused tests / 1,312 assertions with SQLite and SQL-contract checks.
+Old-source regressions and initial fixture failures are retained. No real
+MariaDB contention, schema deployment, paid checkpoint, importer or activation
+is claimed. See `contracts/SHARED-WORKER-ROOT-TRANSACTION-V1.md`.
+
 ## 2026-09-21 - Login independent of managed proof retry (synthetic source only)
 
 Managed deep-dive resume preserves the owned request without attempting work;
