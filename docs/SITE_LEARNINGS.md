@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Single-file Docker local logs require compression disabled
+
+Observation: main's owned MariaDB allocation remained created/PID 0 after the
+local driver rejected compression with max-file=1. Guidance: set compress=false
+explicitly, preserve the 1 MiB/one-file envelope, retain the failed allocation
+receipt and let main perform exact-owned cleanup. This source repair is unrun;
+the provisioning error is not a test assertion or concurrency proof.
+
 ## 2026-09-21 - Isolated contention proof needs bounded, recoverable orchestration
 
 Observation: a root-owned 0700 container /tmp can block mysql; a readiness attempt

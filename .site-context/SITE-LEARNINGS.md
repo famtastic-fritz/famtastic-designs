@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Keep the log bound when fixing container startup
+
+Observation: main's first owned MariaDB container failed before process start
+because local-log compression disallows max-file=1. Guidance: disable compression
+explicitly rather than enlarge logs. Preserve the red run rooted at the temp
+directory ending /T/famtastic-worker-mariadb-3Fh2DZ. Repair is source-only;
+cleanup, rerun and Drive mirroring remain main-owned. No concurrency proof yet.
+
 ## 2026-09-21 - Prepare real contention tests without widening authority
 
 Observation: container startup and cleanup can outlive a timeout or leave an

@@ -4,9 +4,11 @@
 
 Outside-webroot source composes the actual coordinator/ledger with independent
 Drupal MySQL connections and a frozen old-coordinator control. Resource-bounded
-tmpfs provisioning is separate from sandboxed PHP tests. No container, bootstrap,
-syntax or test receipt exists for this harness yet, so real MariaDB contention
-remains unproven. See `contracts/SHARED-WORKER-MARIADB-PROOF-V1.md`; no activation
+tmpfs provisioning is separate from sandboxed PHP tests. Main's first provisioning
+attempt failed before process start because compression conflicts with a one-file
+local-log limit. The source repair disables compression; no agent rerun or PHP
+bootstrap/test success is claimed. Real MariaDB contention remains unproven.
+See `contracts/SHARED-WORKER-MARIADB-PROOF-V1.md`; no activation
 or production capability classification changes.
 
 ## 2026-09-21 - Root-transaction worker serialization (synthetic source only)

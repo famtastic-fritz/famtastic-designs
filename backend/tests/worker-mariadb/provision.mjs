@@ -118,7 +118,7 @@ async function create() {
   const args = ['create', '--pull=never', '--name', name, '--hostname', `fwc-${run}`, '--label', `${label}=${run}`,
     '--cidfile', path.join(root, 'container.id'), '--network', net, '--publish', '127.0.0.1::3306',
     '--read-only', '--security-opt', 'no-new-privileges', '--cpus', '1', '--memory', '768m', '--memory-swap', '768m', '--pids-limit', '128',
-    '--log-driver', 'local', '--log-opt', 'max-size=1m', '--log-opt', 'max-file=1',
+    '--log-driver', 'local', '--log-opt', 'max-size=1m', '--log-opt', 'max-file=1', '--log-opt', 'compress=false',
     ...Object.entries({ '/var/lib/mysql': 256 * MiB, '/run/mysqld': 8 * MiB, '/tmp': 32 * MiB })
       .flatMap(([target, size]) => ['--mount', `type=tmpfs,destination=${target},tmpfs-size=${size},tmpfs-mode=${target === '/tmp' ? '1777' : '0700'}`]),
     '--env', 'MARIADB_ROOT_PASSWORD', '--env', 'MARIADB_PASSWORD', '--env', `MARIADB_DATABASE=${database}`, '--env', `MARIADB_USER=${username}`,

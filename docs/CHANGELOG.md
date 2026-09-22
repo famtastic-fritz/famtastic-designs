@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-21 - Preserve bounded logs without incompatible compression
+
+- Explicitly disable local-log compression while retaining the one-file, 1 MiB
+  MariaDB harness limit. Retain main's pre-process startup failure (created, PID 0,
+  exit 128) in the MariaDB proof contract. Source-only repair, no agent runtime;
+  cleanup and rerun remain main-owned. No production code changes.
+
 ## 2026-09-21 - Prepare isolated MariaDB contention harness (unrun source)
 
 - Add outside-webroot, two-process real Drupal MySQL harness for frozen 1ac3bc26,

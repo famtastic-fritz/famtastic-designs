@@ -1,11 +1,27 @@
 # Isolated MariaDB shared-worker proof harness
 
-September 21, 2026. **Source ready for orchestration review, NOT EXECUTED.**
-No PHP/Node execution, syntax check, test, container, pull, install, site bootstrap,
-provider, notification or migration was performed for this harness milestone.
+September 21, 2026. **PHP contention proof unrun; parent provisioning failed.**
+At original source checkpoint `0972b8f7`, no PHP/Node execution, syntax check,
+test, container, pull, install, site bootstrap, provider, notification or migration
+was performed by this lane. The later parent-owned attempt is retained below.
 Read-only source/fixture hash and Git whitespace checks are not runtime proof.
 The integrating parent separately reports frozen candidate full PHP 532 tests /
 2,824 assertions passing. That receipt does not establish MariaDB contention.
+
+## Retained parent provisioning failure
+
+Main reports its first attempt stopped before the container process started:
+container `cd0947f68e9d11cc78b6cf5626fb803f1faf8bd5f06990f2eb115a053e2d7497`,
+status `created`, PID 0, exit 128. Error:
+`failed to initialize logging driver: compression cannot be enabled when max file count is 1`.
+Retain the main-owned run directory ending in
+`/T/famtastic-worker-mariadb-3Fh2DZ`; the full temp-root prefix is not supplied here.
+This is a provisioning failure, not a PHP assertion or concurrency result.
+
+The source-only repair adds `--log-opt compress=false`, preserving the local
+driver's `max-size=1m` and `max-file=1` bounds and every other orchestration guard.
+No agent runtime was used to validate the repair. Exact-owned cleanup of the old
+allocation and any reviewed rerun remain main-owned; neither is claimed complete.
 
 ## Frozen inputs and exact new source
 
@@ -58,7 +74,8 @@ run-labeled container: one CPU, 768 MiB memory with no additional swap allowance
 256 MiB `/var/lib/mysql`, 8 MiB `/run/mysqld`, 32 MiB `/tmp`. The first two mounts
 are 0700; container-only `/tmp` is bounded 1777 for the unprivileged mysql process.
 There are no bind/host/anonymous data volumes. Container logs are capped at one
-1 MiB file. Actual image initialization fitting this envelope remains untested.
+1 MiB file with compression explicitly disabled. Actual image initialization
+fitting this envelope remains untested.
 
 Publication is one dynamically assigned `127.0.0.1` port, excluding 3306/3400.
 No external port, existing socket database or ambient DSN is accepted. Creation
@@ -118,8 +135,9 @@ below. Unexpected assertion failures exit 1 with `failed_not_negative_proof`;
 bootstrap/protocol/timeout/unexpected-pass failures exit **2**, never a useful
 negative proof. These are runner exit codes: the existing wrapper itself returns
 1 for any child failure, so inspect its recorded child status and JSON output,
-not the wrapper exit alone. Keep every red receipt. No actual receipt exists for this source
-milestone, including syntax/bootstrap success. Record the harness commit, wrapper
+not the wrapper exit alone. Keep every red receipt. No PHP case receipt or
+syntax/bootstrap success exists here; the parent provisioning failure above is
+retained separately. Record the harness commit, wrapper
 inventory result, actual versions, case outcomes and resource cleanup separately.
 
 ## Assertions and honest scope
