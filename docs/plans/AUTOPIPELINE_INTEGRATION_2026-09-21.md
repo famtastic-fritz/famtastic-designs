@@ -2,6 +2,12 @@
 
 Status: local repairs and verification; no live activation.
 
+Newer main 7227ceb6 private reviews are now reconciled locally, preserving both
+lifecycle boundaries and readers. Combined PHP 716/4,160, portal SSR 1/1 and
+design rules 34/34 pass; six upstream negative cases confirm old transaction
+defects. Full paired Studio rerun remains pending. See
+`../contracts/PRIVATE-REVIEW-AUTOPIPELINE-COMPATIBILITY-V1.md`.
+
 Latest checkpoint: frozen worker source 1ac3bc26 passes real MariaDB 16 cases /
 103 checks; four negative controls expose the old defects. Resources cleaned up,
 protected data unchanged. Source and harness are being integrated on the review

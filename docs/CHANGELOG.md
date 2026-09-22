@@ -1,5 +1,18 @@
 # Product changelog
 
+## 2026-09-21 - Reconcile private reviews with additive automation
+
+- Preserve newer main 7227ceb6 private readers/routes and deployment fixes;
+  combine full-site exclusions with managed freshness and exact reuse.
+- Keep login/verification repair a no-op after authorization; no customer
+  notification, job, selection, payment or launch is created by attachment.
+- Repair retry lock order, bounded root restart and post-commit exception handling;
+  preserve caller transactions. Source-only; no production changes.
+- Combined PHP passes 716 tests / 4,160 assertions, same 68 existing deprecations;
+  portal SSR 1/1 and DNA 34/34 pass. Six frozen upstream cases reproduce the
+  original lock/nesting/callback defects. Receipts and limits are in
+  `contracts/PRIVATE-REVIEW-AUTOPIPELINE-COMPATIBILITY-V1.md`.
+
 ## 2026-09-21 - Integrate real-database worker serialization evidence
 
 - Merge reviewed root-transaction coordination and its isolated MariaDB harness
@@ -206,6 +219,13 @@ Both isolated proof runners copy and byte-check the exact narration text now
 imported by the frontend. The fresh canonical journey passes with disposable
 SQLite, captured email, synthetic payments and local deployment. Live automation
 remains observe-only. See `docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md`.
+## 2026-09-21 — Complete customer website review
+
+- Corrected private review routing for nested pages, documents and fonts with explicit bounded path segments and a regression through Drupal’s actual route-candidate database.
+
+- Added a staff-authorized, tenant-bound full-site review attachment with an immutable private package, per-read hashes, source/Build DNA binding, a sandboxed reader and truthful portal presentation. This lane does not queue proof work, messages, payments, selection or acceptance. Local security/browser evidence and the scoped release procedure are in `docs/plans/FULL_SITE_REVIEW_2026-09-21.md`.
+- Built Travel Addicts Courier Express in its independent private repository: 14 pages, design/type/texture contracts, 23 primary research sources, self-hosted licensed fonts, original illustration, responsive QA and clean-clone proof. Source `82a47502e01d07582c3b2721d5dae04aef5cfd91`; account attachment and exact replay verified; final nested-route/browser acceptance is recorded in `docs/plans/TRAVEL-ADDICTS-DELIVERY-2026-09-21.md`. Public business launch remains pending owner details and review.
+
 
 ## 2026-09-21 — Connect QR discovery
 

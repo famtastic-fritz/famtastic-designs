@@ -18,7 +18,7 @@ require_once __DIR__ . '/PortalLoginSessionDouble.php';
 
 /** Actual final controller/services; only credential, user and session doubles. */
 trait FreshProofLoginControllerCases {
-  private function loginContext(bool $credentials = TRUE, bool $active = TRUE, bool $floodAllowed = TRUE): array {
+  private function loginContext(bool $credentials = TRUE, bool $active = TRUE, bool $floodAllowed = TRUE, bool $expectsLogin = TRUE): array {
     // The offline bootstrap intentionally does not install or boot user.module.
     foreach (['UserAuthInterface', 'UserInterface'] as $interface) {
       if (!interface_exists('Drupal\\user\\' . $interface)) require_once dirname((string) getenv('FAMTASTIC_BACKEND_VENDOR')) . '/web/core/modules/user/src/' . $interface . '.php';
@@ -38,7 +38,7 @@ trait FreshProofLoginControllerCases {
     $account->method('id')->willReturnCallback(fn() => $state->uid);
     $account->method('hasPermission')->willReturn(FALSE);
     $auth = $this->createMock(UserAuthInterface::class);
-    $auth->expects($floodAllowed ? $this->once() : $this->never())->method('authenticate')
+    $auth->expects($expectsLogin && $floodAllowed ? $this->once() : $this->never())->method('authenticate')
       ->with('synthetic@example.test', 'synthetic-test-only')->willReturn($credentials ? 1 : FALSE);
     $user = $this->createMock(UserInterface::class);
     $user->method('id')->willReturn(1);
@@ -141,5 +141,62 @@ trait FreshProofLoginControllerCases {
     self::assertNotNull($error);
     self::assertSame(0, $state->finalized); self::assertSame(0, $state->cleared);
     self::assertFalse($this->db->inTransaction());
+  }
+
+  #[DataProvider('fullSiteLoginCases')]
+  public function testRealLoginLeavesFullSiteMarkerAloneAndRetainsAuthGates(string $status, mixed $marker, string $reason): void {
+    $this->create('save');
+    $row = $this->row('famtastic_project_request');
+    $intake = json_decode($row['intake_data'], TRUE, flags: JSON_THROW_ON_ERROR);
+    // Marker presence, not successful presentation, is the lifecycle exclusion.
+    $intake['staff_assisted_brief']['full_site_review'] = $marker;
+    $this->db->update('famtastic_project_request')->fields(['status' => $status, 'intake_data' => json_encode($intake, JSON_THROW_ON_ERROR)])->condition('id', 1)->execute();
+    if ($reason === 'unverified') $this->db->update('famtastic_customer')->fields(['verified_at' => NULL])->condition('id', 1)->execute();
+    if ($reason === 'foreign') $this->db->update('famtastic_project_request')->fields(['customer_id' => 99])->condition('id', 1)->execute();
+    if ($reason === 'membership') $this->db->update('famtastic_membership')->fields(['status' => 'inactive'])->condition('customer_id', 1)->execute();
+    [$controller, $request, $state] = $this->loginContext($reason !== 'credentials', $reason !== 'inactive', $reason !== 'flood');
+    $before = $this->proofRecords(); $invitation = $this->row('famtastic_deep_dive_invitation');
+    $canSignIn = in_array($reason, ['ok', 'membership'], TRUE);
+    if ($reason === 'foreign') $this->reject(fn() => $controller->login($request), 'different customer request');
+    else self::assertSame($canSignIn ? 200 : 403, $controller->login($request)->getStatusCode());
+    self::assertSame($canSignIn ? 1 : 0, $state->finalized);
+    if ($reason === 'membership') {
+      // Account sign-in remains valid without a workspace. Existing deep-dive
+      // repair skips it, but cannot restore membership or private request access.
+      self::assertSame([], $this->portal->organizations(1));
+      self::assertNull($this->portal->ownedWebsiteRequest(1, $row['public_id']));
+      $this->reject(fn() => (new \ReflectionMethod($this->portal, 'submitClaimedDeepDiveRequest'))->invoke($this->portal, 1, 1), 'different customer request');
+    }
+    self::assertSame($before, $this->proofRecords());
+    self::assertSame($invitation, $this->row('famtastic_deep_dive_invitation'));
+    self::assertFalse($this->db->inTransaction());
+  }
+
+  public static function fullSiteLoginCases(): iterable {
+    foreach (['draft', 'submitted'] as $status) foreach ([NULL, ['review_id' => 'private-review']] as $marker) {
+      foreach (['ok', 'credentials', 'inactive', 'unverified', 'flood', 'foreign', 'membership'] as $reason) {
+        yield $status . '-' . ($marker === NULL ? 'null' : 'present') . '-' . $reason => [$status, $marker, $reason];
+      }
+    }
+  }
+
+  public function testRealVerificationDoesNotResumeAnAttachedFullSiteReview(): void {
+    $this->create('save');
+    $intake = json_decode($this->row('famtastic_project_request')['intake_data'], TRUE, flags: JSON_THROW_ON_ERROR);
+    $intake['staff_assisted_brief']['full_site_review'] = NULL;
+    $this->db->update('famtastic_project_request')->fields(['intake_data' => json_encode($intake, JSON_THROW_ON_ERROR)])->condition('id', 1)->execute();
+    $this->db->update('famtastic_customer')->fields(['verified_at' => NULL])->condition('id', 1)->execute();
+    $this->db->schema()->createTable('famtastic_portal_token', _famtastic_pipeline_customer_portal_schema()['famtastic_portal_token']);
+    [$controller, , $state] = $this->loginContext(expectsLogin: FALSE);
+    $token = $this->portal->issueToken(1, 'synthetic@example.test', 'verify');
+    $request = Request::create('https://example.test/web/api/customer/verify', 'POST', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode(['token' => $token], JSON_THROW_ON_ERROR));
+    $before = $this->proofRecords();
+    self::assertSame(200, $controller->verify($request)->getStatusCode());
+    self::assertSame($this->now, (int) $this->row('famtastic_customer')['verified_at']);
+    self::assertSame($this->now, (int) $this->row('famtastic_portal_token')['used_at']);
+    self::assertSame(0, $state->finalized);
+    self::assertSame($before, $this->proofRecords());
+    self::assertSame(422, $controller->verify($request)->getStatusCode());
+    self::assertSame($before, $this->proofRecords());
   }
 }

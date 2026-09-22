@@ -1,5 +1,15 @@
 # Agent Instructions
 
+## September 21 - Preserve private reviews during automatic intake integration
+
+Read `docs/contracts/PRIVATE-REVIEW-AUTOPIPELINE-COMPATIBILITY-V1.md` when
+touching full-site attachments, login repair or proof enqueue. Existing review
+markers block explicit new proof work but never turn optional login repair into
+a retry or a presentation-validation gate. Existing attachment retries lock
+request before membership; competing first creation must release its root before
+switching to an existing request. Do not roll back a committed attachment when
+a post-transaction callback fails. Keep private readers and both DI registrations.
+
 ## September 21 - Additive execution, not a replacement Mac workflow
 
 Read `docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md` before further automation

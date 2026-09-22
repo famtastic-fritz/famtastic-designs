@@ -217,6 +217,10 @@ services:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
     arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.site_studio_build_packets', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge', '@famtastic_pipeline.fresh_proof_admission']
 
+  famtastic_pipeline.full_site_review:
+    class: Drupal\famtastic_pipeline\Service\FullSiteReviewService
+    arguments: ['@database', '@file_system', '@datetime.time', '@current_user', '@famtastic_pipeline.operational_ledger', '@uuid']
+
   famtastic_pipeline.character_assets:
     class: Drupal\famtastic_pipeline\Service\CharacterAssetService
     arguments: ['@database', '@datetime.time', '@uuid']

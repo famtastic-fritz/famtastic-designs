@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Account login and project access are different boundaries
+
+Observation: optional linked-interview repair runs before login finalization.
+An attached review must not throw solely because it should not be rebuilt. An
+account without an active workspace may still sign in while project access stays
+denied. Guidance: test actual controllers and assert both boundaries separately.
+Also preserve request-first attachment retries, and mark successful transaction
+closure before destructor callbacks; a later callback error cannot undo a commit.
+Combined source passes 716/4,160 PHP, 1/1 portal SSR and 34/34 design rules;
+upstream negative controls expose the original lock/nesting/callback defects.
+
 ## 2026-09-21 - Prove lock ownership beyond the advisory timeout
 
 Observation: frozen 1ac3bc26 passes independent MariaDB connections with three
@@ -215,6 +226,14 @@ exact relative path and compare bytes. Missing/symlink inputs fail closed.
 The canonical fresh lifecycle passes with captured mail and fixture providers;
 this does not activate automatic Mac or cloud generation. See
 `docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md`.
+## 2026-09-21 — Full-site handoff and portable source
+
+**Observation:** A direct controller test accepted a nested artifact path that Drupal’s real route-provider SQL never selected. **Guidance:** Test actual YAML through MatcherDumper and RouteProvider, then real authenticated browser navigation. Match one route parameter to each supported path segment; validate the same depth in the package contract. Keep account identifiers, private destinations and operational counts in the private receipt when agency source is public.
+
+**Observation:** The prior portal represents concept selection, so a finished 14-page site cannot be attached as three concepts or a paid project. **Guidance:** Keep independent business source, immutable staff-assisted review metadata, true page counts and current tenant checks. Freeze response version across HTML/resource reads. Protect the completed review from later brief submissions starting the concept workflow. Preserve actor and owner-authority facts without attributing customer authorship, acceptance, payment or notices.
+
+**Observation:** Copying unrelated large public media during a local portal compile exhausted workstation space. **Guidance:** Compile with publicDir disabled for source validation, retain the full server build for release, and reclaim only task-owned generated output. Do not remove unrelated source or backups.
+
 
 ## 2026-09-21 — Make in-person sharing discoverable
 
@@ -3072,3 +3091,13 @@ Each site must own its Git root, common directory, manifest and verified remote.
 Studio/library checkouts retain their separately configured locations. Explicit sandbox roots remain supported. New customer identities should use `site-<business-slug>`; preserve existing IDs and registry bindings on continuation. Check existing source and registry before creating a duplicate. This rule does not automatically move existing repositories or authorize deployment, credentials, DNS or customer communication. Fritz assigned the StockandShip98 move to its own task.
 
 Historical migration receipts retain their original paths as evidence; this current rule supersedes their use as defaults. When an authorized move is performed, preserve history, dirty work and remotes, then update the local project/launcher mappings and current handoff documents. Confirm the actual new checkout before claiming migration complete.
+
+
+## First release preflight recovery — 2026-09-21
+
+The f5d8c769 apply passed PHP 8.3 syntax, cache rebuild and service resolution, but its command-discovery check incorrectly used `drush list --filter=full-site-review` (Drush expects a command category). The error trap restored all prior runtime hashes, removed new files and rebuilt the prior cache successfully. No account attachment occurred. The check now uses exact `drush help famtastic:full-site-review-attach`. An explicit validated ancestor baseline permits a corrective release to compare against the actual restored f5bc140e runtime rather than claiming the failed release was live.
+
+
+## Frontend build recovery — 2026-09-21
+
+The first frontend build stopped before promotion because the private sparse source omitted the existing Why FAMtastic narration import. Materializing that exact committed input repaired module resolution. The next build was killed by the hosting account before completion; production frontend remained at 40ca506b. This does not by itself establish an OOM diagnosis. The release script now bounds native Rayon/Tokio workers to two and V8 old-space to 512 MiB, and the scoped source preparation includes the narration directory. The identical bounded local compile passes 618 modules; the full hosting build remains the release gate. See the [Rayon thread-pool environment contract](https://docs.rs/rayon/latest/rayon/struct.ThreadPoolBuilder.html).

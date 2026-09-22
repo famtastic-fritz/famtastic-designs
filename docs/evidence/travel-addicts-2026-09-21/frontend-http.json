@@ -1,0 +1,50 @@
+[
+  {
+    "host": "famtasticdesigns.com",
+    "path": "/",
+    "status": 200,
+    "final_url": "https://famtasticdesigns.com/",
+    "content_type": "text/html",
+    "sha256": "aed7cd13f9b342a5282925d71f224bbd8664ffcfe9ddb9016e23783389d4ef91"
+  },
+  {
+    "host": "famtasticdesigns.com",
+    "path": "/assets/index-CjPeH27E.js",
+    "status": 200,
+    "final_url": "https://famtasticdesigns.com/assets/index-CjPeH27E.js",
+    "content_type": "text/javascript",
+    "sha256": "2861df31b1f09cc7ecbba4c55b90bffee4a1f0cb0f44da3fad55a8dd99fdee47"
+  },
+  {
+    "host": "famtasticdesigns.com",
+    "path": "/assets/index-DMOYzV8m.css",
+    "status": 200,
+    "final_url": "https://famtasticdesigns.com/assets/index-DMOYzV8m.css",
+    "content_type": "text/css",
+    "sha256": "ef13586e8d44756d0b60fa7d3f55d859c58d27662270e5e8e684690d9e352ca0"
+  },
+  {
+    "host": "www.famtasticdesigns.com",
+    "path": "/",
+    "status": 200,
+    "final_url": "https://www.famtasticdesigns.com/",
+    "content_type": "text/html",
+    "sha256": "aed7cd13f9b342a5282925d71f224bbd8664ffcfe9ddb9016e23783389d4ef91"
+  },
+  {
+    "host": "www.famtasticdesigns.com",
+    "path": "/assets/index-CjPeH27E.js",
+    "status": 200,
+    "final_url": "https://www.famtasticdesigns.com/assets/index-CjPeH27E.js",
+    "content_type": "text/javascript",
+    "sha256": "2861df31b1f09cc7ecbba4c55b90bffee4a1f0cb0f44da3fad55a8dd99fdee47"
+  },
+  {
+    "host": "www.famtasticdesigns.com",
+    "path": "/assets/index-DMOYzV8m.css",
+    "status": 200,
+    "final_url": "https://www.famtasticdesigns.com/assets/index-DMOYzV8m.css",
+    "content_type": "text/css",
+    "sha256": "ef13586e8d44756d0b60fa7d3f55d859c58d27662270e5e8e684690d9e352ca0"
+  }
+]

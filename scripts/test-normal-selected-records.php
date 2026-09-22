@@ -112,6 +112,7 @@ namespace {
   if (!function_exists('mb_substr')) { function mb_substr($s, $start, $length) { return substr($s, $start, $length); } }
   if (!function_exists('mb_strtolower')) { function mb_strtolower($s) { return strtolower($s); } }
   $root = dirname(__DIR__) . '/backend/web/modules/custom/famtastic_pipeline/src/Service/';
+  require $root . 'FullSiteReviewPackage.php';
   foreach (['OutreachMailer', 'ProofAssetContract', 'ProofCallbackArtifacts', 'FreshProofInput', 'FreshProofBinding', 'FreshProofAdmission', 'SelectedAssetRights', 'SelectedSourceCapture', 'SelectedRequestContent', 'SelectedRecordResolver', 'SelectedSourceIntent', 'SelectedFinalizedSource', 'SelectedStagingContinuation', 'SelectedPlanningPacket', 'SiteStudioBuildPacketService', 'CustomerPortalService', 'ProofCampaignService', 'StagingReceiptService', 'SiteStudioStagingClient', 'AutomationWorker'] as $class) require $root . $class . '.php';
   require $root . 'CharacterAssetService.php';
   require $root . 'SelectedSourceAssociation.php';

@@ -1,5 +1,15 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Private review integration, locally verified only
+
+Main 7227ceb6 is preserved with managed admission exclusions, authorized login
+no-op, request-first attachment retries and committed-error preservation.
+Actual PHP suite 716/4,160, portal SSR 1/1, design rules 34/34 pass with protected
+data unchanged. Six upstream negative cases reproduce old defects. SQLite and
+credential/session doubles do not prove installed auth or MariaDB writer races.
+No production/creative/cloud capability promotion. See the private-review
+autopipeline compatibility contract for exact receipts and remaining gates.
+
 ## 2026-09-21 - Real MariaDB worker contention verified, not activated
 
 Frozen worker source 1ac3bc26 passes 16 cases / 103 checks on independent real
@@ -122,6 +132,9 @@ limits and competing Mac/cloud claim identities. 313 PHP tests / 1,587 assertion
 This does not prove automatic creative generation, live consumer integration,
 MySQL contention, real cloud execution or laptop independence. See
 `docs/plans/AUTOPIPELINE_INTEGRATION_2026-09-21.md`.
+## 2026-09-21 — Finished-site account review
+
+Locally implemented and independently reviewed: staff-bound immutable full-site reviews, customer/staff read paths, quiet draft attachment, hash validation and opaque-origin isolation. This is a manual owner-authorized delivery capability; no automated production or public launch claim. Travel Addicts source is privately verified and rebuilds in a clean remote clone. Production/account proof will be appended to the exact release report. See `docs/plans/FULL_SITE_REVIEW_2026-09-21.md`.
 
 ## 2026-09-21 — Connect QR discovery
 
