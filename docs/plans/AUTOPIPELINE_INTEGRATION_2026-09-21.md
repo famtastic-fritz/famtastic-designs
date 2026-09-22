@@ -2,6 +2,23 @@
 
 Status: local repairs and verification; no live activation.
 
+Latest September 22 recovery: former temporary work/evidence roots are absent;
+their historical reports below are not currently inspectable raw receipts.
+Recovered source and new evidence now live under
+`/Users/famtastic-fritz/Development/FAMtastic/worktrees/autopipeline-recovery.ggJXc1`.
+The fresh canonical journey passes with verified core-mail capture, PHP983/6,731
+and paired Studio1,588/135 pass, protected inventories unchanged. This supersedes
+the earlier withheld journey result, but it is still the legacy owner-review
+fixture, NOT a managed unattended journey. Exact source, timing and boundaries:
+`../evidence/AUTOPIPELINE-RECOVERED-VERIFICATION-2026-09-22.md`.
+
+Next implementation sequence: receipt/current-authority reader connected to
+protected routes and QA context; receipt-bound independent release and resumable
+review; selected-source continuation; then the real Mac creative runner and
+authenticated provenance. Reuse existing portal, mail and shared job ownership.
+Cloud CLI still has no active account/project; no activation is authorized by
+these local receipts. Existing service health below is a historical observation.
+
 September 22 managed-import checkpoint: source75e0cb94 and reader integration
 0c698fb7 pass the full PHP module suite, **983 tests / 6,731 assertions**, zero
 failures/skips, 68 existing deprecations; changed-file syntax/whitespace pass.

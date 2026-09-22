@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - Whole-journey mail capture and durable evidence
+
+Observation: the agency memory mailer did not capture core account mail, and
+prior temporary evidence roots are no longer present. Guidance: prove the actual
+Drupal collector in the verified disposable site; retain source hashes and raw
+receipts outside ephemeral worktrees. The recovered canonical journey, PHP983/6731
+and Studio1588/135 pass without protected-data changes. This is legacy regression
+and isolated mail capture, not managed QA/release or live cloud operation.
+
 ## 2026-09-22 - Test the real persistence representation
 
 The initial managed importer fixture used a nonexistent flat design_dna column,

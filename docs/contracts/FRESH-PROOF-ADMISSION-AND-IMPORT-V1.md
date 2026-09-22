@@ -1,7 +1,10 @@
 # Fresh proof admission and fenced import
 
-Source milestone, September 21, 2026. Fresh portal admission is implemented but
-default OFF. The importer and creative adapter below remain design, not active code.
+Current September 22 status: fresh portal admission is implemented but default
+OFF. The fenced importer now exists as locally verified, unregistered code; see
+MANAGED-PROOF-IMPORT-V1.md. Its receipt does not grant reads or independent QA.
+The creative adapter and activation remain unfinished. Earlier milestone
+descriptions below are historical, not the current importer implementation state.
 It extends the established Mac creative process; it does not substitute static
 packaging or the fictional six-direction benchmark for customer proof creation.
 Read SHARED-PROOF-CLAIMS-V1.md and MAC-CREATIVE-WORKER-V1.md together.
@@ -11,7 +14,7 @@ paid-operation journal and bounded receipt metadata, with 260 focused tests /
 1,769 assertions. Admission reuse retains its checks through a same-connection
 locked-record helper. Current-byte and credited-package verification are now
 locally tested (MANAGED-PROOF-PACKAGE-V1.md), but do not grant authority. Real
-provider verification, the fenced importer and activation remain unfinished.
+provider verification, managed protected reads/QA and activation remain unfinished.
 
 The later narrow `MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md` checkpoint extracts
 legacy artifact validation and adds unregistered private create-only preparation.

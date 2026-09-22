@@ -1,5 +1,22 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - Capture every actual mail boundary in disposable tests
+
+FAMtastic memory mail did not intercept Drupal core account messages. Network/MTA
+denial prevented external delivery but is not a working capture transport. Set
+the fresh sandbox's entire system.mail interface map to the existing core test
+collector, prove an actual write, and verify it remains unchanged afterward.
+The canonical run captures 4 core messages (one probe) plus 34 transactional
+messages. Never change production transport to make a test pass.
+
+## 2026-09-22 - Retain evidence outside ephemeral worktrees
+
+The prior temporary roots disappeared between continuations; tracked source was
+recoverable from Git, raw receipts were not. Do not call missing receipts retained
+or infer what deleted them. Keep private raw evidence in a durable owned directory,
+record exact source/dirty-diff hashes and rerun acceptance. A legacy owner-review
+journey remains regression proof, not the new unattended-delivery milestone.
+
 ## 2026-09-22 - Entity input names are not physical SQL columns
 
 Independent review caught a real importer defect after 40 green synthetic tests:

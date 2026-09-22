@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-22 - Recovered local regression and mail-isolation evidence
+
+PHP 983/6,731 and paired Studio 1,588 tests/135 files pass; the canonical fresh
+Drupal journey's root and both child receipts are verified. Core account mail is
+captured separately from FAMtastic transactional memory mail. This upgrades test
+isolation evidence only: the journey still uses the legacy owner-review fixture,
+not managed unattended delivery. Importer/reader fences exist locally; protected
+managed reads, independent QA, real creative execution and cloud activation remain
+unfinished. Historical `/tmp` receipts are now unavailable, not reverified.
+See `evidence/AUTOPIPELINE-RECOVERED-VERIFICATION-2026-09-22.md`.
+
 ## 2026-09-21 - Managed credited packaging, local content verification only
 
 Unregistered packaging/reverification and resolver-gated reads pass full PHP

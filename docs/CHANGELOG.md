@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-22 - Isolate core mail and rerun recovered customer-delivery source
+
+- Capture Drupal core account mail in the verified disposable journey, in addition
+  to the existing FAMtastic memory transport; prove capture before and after.
+- Recover isolated work/evidence outside temporary storage and rerun the canonical
+  customer journey, PHP 983/6,731 and paired Studio 1,588/135 with protected data
+  unchanged. Preserve the legacy owner-review versus managed-automation distinction.
+- Record unavailable historical raw receipts honestly; no live pipeline activation.
+  See `evidence/AUTOPIPELINE-RECOVERED-VERIFICATION-2026-09-22.md`.
+
 ## 2026-09-22 - Verify managed import and preserve reader boundaries
 
 - Integrate root-fenced variants/Build DNA/receipt/job completion with no QA,
