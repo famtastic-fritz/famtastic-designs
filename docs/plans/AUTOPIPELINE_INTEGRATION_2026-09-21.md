@@ -2,6 +2,13 @@
 
 Status: local repairs and verification; no live activation.
 
+Latest checkpoint: frozen worker source 1ac3bc26 passes real MariaDB 16 cases /
+103 checks; four negative controls expose the old defects. Resources cleaned up,
+protected data unchanged. Source and harness are being integrated on the review
+branch. Agency main advanced to 7227ceb6 with private full-site review features;
+preserve and reconcile them before release. This does not close creative adapter,
+paid-operation recovery, authoritative import or full unattended journey gates.
+
 ## Current four-milestone status
 
 | Milestone | Implemented/verified locally | Still required |

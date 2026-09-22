@@ -1,5 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Real MariaDB worker contention verified, not activated
+
+Frozen worker source 1ac3bc26 passes 16 cases / 103 checks on independent real
+MariaDB connections. Four old-coordinator negative controls fail at the expected
+invariants. Both protected inventories are unchanged; all owned temporary DB
+resources and credentials are removed. This upgrades the frozen coordination
+test classification only, not installed migration, asset-writer contention,
+creative generation, importer, cloud or unattended customer delivery. See
+`contracts/SHARED-WORKER-MARIADB-PROOF-V1.md`. Later `main` drift to 7227ceb6
+is not covered by this receipt; combined-source reconciliation remains required.
+
 ## 2026-09-21 - Request-asset serialization, synthetic local only
 
 Actual customer upload/withdrawal methods use request-first current ownership
@@ -23,6 +34,31 @@ and receipts are retained. This test repair changes no production code.
 File fsync is not directory fsync or a power-loss guarantee. No provider/production
 capability promotion; no authoritative importer, producer, QA or delivery exists.
 See `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md` for bounds and open gates.
+## 2026-09-21 - MariaDB provisioned; contention harness bootstrap blocked
+
+Outside-webroot source composes the actual coordinator/ledger with independent
+Drupal MySQL connections and a frozen old-coordinator control. Resource-bounded
+tmpfs provisioning is separate from sandboxed PHP tests. Main's first provisioning
+attempt failed before process start because compression conflicts with a one-file
+local-log limit. After disabling compression, main reports MariaDB startup but
+no published port on the internal bridge. The next revision uses a
+dedicated ordinary bridge and retains the exact loopback publication guard.
+Container NAT egress is not firewall-disabled; PHP sandbox denial remains intact.
+Main reports third provisioning succeeded (Mj1XUG, 127.0.0.1:32768), followed by
+runner bootstrap failure `worker-mariadb-current.PahTfo`: exit 2, protected data
+unchanged, before case/child execution. Initialize the typed pipes array for
+proc_open by reference. No agent runtime or PHP bootstrap/test success is claimed;
+real MariaDB contention remains unproven pending the main-owned reviewed rerun.
+See `contracts/SHARED-WORKER-MARIADB-PROOF-V1.md`; no activation
+or production capability classification changes.
+
+## 2026-09-21 - Root-transaction worker serialization (synthetic source only)
+
+One fixed database mutex row, current locking reads, CAS and legacy-job isolation
+pass 244 focused tests / 1,312 assertions with SQLite and SQL-contract checks.
+Old-source regressions and initial fixture failures are retained. No real
+MariaDB contention, schema deployment, paid checkpoint, importer or activation
+is claimed. See `contracts/SHARED-WORKER-ROOT-TRANSACTION-V1.md`.
 
 ## 2026-09-21 - Login independent of managed proof retry (synthetic source only)
 

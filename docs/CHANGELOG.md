@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-21 - Integrate real-database worker serialization evidence
+
+- Merge reviewed root-transaction coordination and its isolated MariaDB harness
+  into the delivery review branch, preserving both documentation histories.
+- Frozen source passes 16 real MariaDB cases / 103 checks; all four old-source
+  controls fail as intended. Protected data unchanged and exact-owned cleanup
+  complete. No installed migration, service restart or activation.
+- Record newer `main` 7227ceb6 private-review changes as a separate reconciliation
+  gate. Never overwrite its routes, private readers or deployment-resource fixes.
+
 ## 2026-09-21 - Serialize customer reference permissions before automation
 
 - Local source: request-first upload/withdrawal locks, current membership reads,
@@ -53,6 +63,48 @@
   retain the red receipt and original low-disk pause. Syntax/whitespace pass.
   Guarded run leaves both protected inventories unchanged. Receipt and open gates:
   `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`. Nothing is activated.
+## 2026-09-21 - Initialize subprocess pipes before by-reference bootstrap
+
+- Initialize the harness's typed pipes array for proc_open. Retain main's
+  `worker-mariadb-current.PahTfo` exit-2 bootstrap receipt, protected data unchanged,
+  with no case/child execution. Third provisioning succeeded; this one-line
+  source repair is unrun by this lane and changes no candidate production source.
+
+## 2026-09-21 - Dedicated bridge for loopback MariaDB publication
+
+- Remove the harness bridge's internal flag and require Internal=false after
+  main's second attempt started MariaDB but had no actual published port. Keep
+  exact 127.0.0.1 publication checks, tmpfs/resources and PHP sandbox unchanged.
+  Document that container NAT egress is not firewall-disabled; no external
+  traffic is requested. Source-only, awaiting independent review; no agent run.
+
+## 2026-09-21 - Preserve bounded logs without incompatible compression
+
+- Explicitly disable local-log compression while retaining the one-file, 1 MiB
+  MariaDB harness limit. Retain main's pre-process startup failure (created, PID 0,
+  exit 128) in the MariaDB proof contract. Source-only repair, no agent runtime;
+  cleanup and rerun remain main-owned. No production code changes.
+
+## 2026-09-21 - Prepare isolated MariaDB contention harness (unrun source)
+
+- Add outside-webroot, two-process real Drupal MySQL harness for frozen 1ac3bc26,
+  plus exact old-coordinator fixture controls. Sixteen cases/four controls are
+  written, not executed; no syntax/bootstrap/runtime success is claimed.
+- Separate main-owned tmpfs Docker provisioning/cleanup from the unchanged
+  protected-data wrapper. Pin the cached image, resource bounds, exact allocation
+  intent, resumable cleanup and 60-second startup deadline. Review/run gate and
+  commands: `contracts/SHARED-WORKER-MARIADB-PROOF-V1.md`. No production edits.
+
+## 2026-09-21 - Serialize shared workers through the root transaction
+
+- Add an empty-table update 8066 and one fixed-row MySQL/MariaDB/SQLite mutex;
+  preserve outer transaction ownership, current reads, CAS rollback and holds.
+- Lock before fresh/selected job insertion; isolate legacy writers from every
+  enrolled claim while preserving unowned jobs. No DI/default-policy activation.
+- Focused six-file verification passes 244 tests / 1,312 assertions. Retain the
+  setup/fixture failures and 17 failing old-source regressions in
+  `contracts/SHARED-WORKER-ROOT-TRANSACTION-V1.md`. Actual MariaDB contention,
+  full integration and installed-site migration are not yet proven/performed.
 
 ## 2026-09-21 - Keep the legacy cross-repository fixture honest
 

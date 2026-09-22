@@ -43,6 +43,54 @@ After the low-disk pause, 105 tests / 362 assertions pass with protected invento
 unchanged. The initial fatal exposed a helper named result, a final PHPUnit method.
 Use descriptive helper names; lint alone cannot load/check the inherited runner
 API. Retain the failure and run the actual fixture before claiming verification.
+## 2026-09-21 - Initialize typed arrays passed by reference to subprocess APIs
+
+Observation: main's provisioned DB harness could not start its first child because
+proc_open received an uninitialized non-nullable pipes property by reference.
+Guidance: initialize it to [], retain the exit-2 bootstrap receipt PahTfo, and do
+not report an assertion failure or concurrency result. Protected data was unchanged
+per main's receipt. Source-only fix; main owns the server and rerun.
+
+## 2026-09-21 - Verify actual loopback publication, not requested bindings
+
+Observation: main's internal-bridge MariaDB container started, but actual 3306/tcp
+publication was null despite requested 127.0.0.1 binding. Guidance: preserve the
+actual-port rejection and use a dedicated ordinary bridge for this disposable
+harness. Do not call container NAT egress firewall-disabled; no external traffic
+is requested, and PHP's sandbox still denies it. No global firewall change.
+Retain the t5wRpU failure; old-network cleanup uses the old guarded provisioner.
+Revision is source-only pending independent review, not connectivity proof.
+
+## 2026-09-21 - Single-file Docker local logs require compression disabled
+
+Observation: main's owned MariaDB allocation remained created/PID 0 after the
+local driver rejected compression with max-file=1. Guidance: set compress=false
+explicitly, preserve the 1 MiB/one-file envelope, retain the failed allocation
+receipt and let main perform exact-owned cleanup. This source repair is unrun;
+the provisioning error is not a test assertion or concurrency proof.
+
+## 2026-09-21 - Isolated contention proof needs bounded, recoverable orchestration
+
+Observation: a root-owned 0700 container /tmp can block mysql; a readiness attempt
+count does not bound Docker command duration; lost allocation replies and partial
+cleanup make absent-resource assumptions unsafe. Guidance: bounded 1777 tmpfs only
+inside the owned container, one monotonic startup deadline, pre-allocation exact
+intent and ownership checks, resumable confirmed-absence cleanup, no success on
+unresolved allocation. Journals are not fsync/crash-durable. Keep Docker outside
+the protected PHP sandbox rather than relaxing its network/DB exclusions. Old-source
+controls must fail the intended invariant, not merely bootstrap. Harness is source
+only and unrun; full limits in SHARED-WORKER-MARIADB-PROOF-V1. Drive remains deferred.
+
+## 2026-09-21 - Transaction-owned coordination needs current reads and writer fences
+
+Nested savepoint release does not commit the outer transaction. Use a fixed-row
+write mutex until root commit/rollback, then current locking job/claim/budget
+reads and checked CAS. Do not rely on an expired PHP advisory lease or an old
+repeatable-read aggregate. Preserve request-first order in admission and deny
+legacy completion/failure/requeue for enrolled identities. The delimiter option
+belongs only to the test's single trigger definition, never a production default.
+244 focused tests / 1,312 assertions pass; retain both setup/fixture failures and
+17 failing baseline regressions. Real MariaDB contention is still unproven.
 
 ## 2026-09-21 - New production guards need real fixture dependencies
 

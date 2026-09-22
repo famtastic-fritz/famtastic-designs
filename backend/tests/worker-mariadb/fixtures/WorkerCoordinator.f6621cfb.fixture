@@ -68,7 +68,8 @@ final class WorkerCoordinator {
         'job_id' => $jobId, 'policy_version' => $profile['policy'], 'payload_sha256' => $payloadHash,
         'capability' => $capability, 'reservation_cents' => $reservationCents, 'state' => 'pending', 'changed' => $this->now(),
       ])->execute();
-      $this->updateJob($job, ['status' => 'worker_queued', 'changed' => $this->now()]);
+      if ($this->database->update('famtastic_job')->fields(['status' => 'worker_queued', 'changed' => $this->now()])
+        ->condition('id', $jobId)->condition('status', 'queued')->execute() !== 1) throw new \RuntimeException('A legacy worker already owns the job.');
       return ['status' => 'enrolled', 'job_id' => $jobId];
     });
   }
@@ -82,14 +83,13 @@ final class WorkerCoordinator {
       $now = $this->now();
       $this->recoverExpired($now);
       // A lost heartbeat is not proof a process stopped. Fence its full runtime.
-      $active = $this->database->select('famtastic_worker_claim', 'c')->fields('c', ['job_id'])
-        ->condition('attempt_deadline', $now, '>')->orderBy('job_id')->range(0, 1)->forUpdate()->execute()->fetchField();
+      $active = $this->database->select('famtastic_worker_claim', 'c')->condition('attempt_deadline', $now, '>')->countQuery()->execute()->fetchField();
       if ($active) return NULL;
       $query = $this->database->select('famtastic_worker_claim', 'c');
       $query->join('famtastic_job', 'j', 'j.id = c.job_id');
       $row = $query->fields('c')->condition('c.state', 'pending')->condition('j.status', 'worker_queued')
         ->condition('c.capability', $capabilities, 'IN')
-        ->condition('j.available_at', $now, '<=')->orderBy('c.job_id')->range(0, 1)->forUpdate()->execute()->fetchAssoc();
+        ->condition('j.available_at', $now, '<=')->orderBy('c.job_id')->range(0, 1)->execute()->fetchAssoc();
       if (!$row) return NULL;
       $job = $this->job((int) $row['job_id']);
       if (!hash_equals($row['payload_sha256'], hash('sha256', (string) $job['payload']))) throw new \RuntimeException('Enrolled payload changed; exception review required.');
@@ -97,12 +97,8 @@ final class WorkerCoordinator {
       if ($row['capability'] === WorkerCapabilityPolicy::PROOF) WorkerCapabilityPolicy::assertProof($job, (int) $row['reservation_cents'], $this->reviewedProofCostPolicies);
       $attempt = (int) $row['attempt'] + 1;
       if ($attempt > min($profile['attempts'], (int) $job['max_attempts'])) throw new \RuntimeException('Retry bound exceeded.');
-      $month = gmdate('Y-m', $this->now());
-      $used = $this->reserved($month, TRUE);
-      // Row/mutex acquisition may wait. Never issue an already-aged lease or
-      // charge a new-month attempt to the month sampled before a lock wait.
-      $now = $this->now();
-      if ($month !== gmdate('Y-m', $now)) throw new \RuntimeException('Budget month changed while locking; retry.');
+      $month = gmdate('Y-m', $now);
+      $used = $this->reserved($month);
       // Unknown previous-month usage remains held in that month; no refund or reset of a job.
       if ($used + (int) $row['reservation_cents'] > self::STOP_CENTS) throw new \RuntimeException('worker_budget_exhausted');
       $token = bin2hex(random_bytes(32));
@@ -110,12 +106,13 @@ final class WorkerCoordinator {
         'reservation_key' => $job['id'] . ':' . $attempt, 'month' => $month, 'job_id' => $job['id'], 'attempt' => $attempt,
         'reserved_cents' => (int) $row['reservation_cents'], 'created' => $now,
       ])->execute();
-      $this->updateClaim($row, [
+      $this->database->update('famtastic_worker_claim')->fields([
         'state' => 'leased', 'worker_id' => $worker, 'token_hash' => hash('sha256', $token),
         'lease_until' => $now + $profile['lease'], 'attempt_deadline' => $now + $profile['execution'] + $profile['grace'],
         'attempt' => $attempt, 'changed' => $now,
-      ]);
-      $this->updateJob($job, ['status' => 'worker_running', 'locked_at' => $now, 'changed' => $now]);
+      ])->condition('job_id', $job['id'])->execute();
+      if ($this->database->update('famtastic_job')->fields(['status' => 'worker_running', 'locked_at' => $now, 'changed' => $now])
+        ->condition('id', $job['id'])->condition('status', 'worker_queued')->execute() !== 1) throw new \RuntimeException('Queue state changed.');
       return [
         'job_id' => (int) $job['id'], 'job_key' => $job['job_key'], 'attempt' => $attempt, 'lease_token' => $token,
         'lease_until' => $now + $profile['lease'], 'execution_deadline' => $now + $profile['execution'],
@@ -130,10 +127,9 @@ final class WorkerCoordinator {
     return $this->atomic(function () use ($jobId, $worker, $token, $authorizedCapabilities, $attempt): array {
       $row = $this->owned($jobId, $worker, $token, $authorizedCapabilities, $attempt);
       $profile = $this->storedProfile($row);
-      $now = $this->now();
-      $until = min($now + $profile['lease'], (int) $row['attempt_deadline'] - $profile['grace']);
-      if ($until <= $now || (int) $row['lease_until'] <= $now) throw new \RuntimeException('Execution deadline reached or lease expired.');
-      $this->updateClaim($row, ['lease_until' => $until, 'changed' => $now]);
+      $until = min($this->now() + $profile['lease'], (int) $row['attempt_deadline'] - $profile['grace']);
+      if ($until <= $this->now()) throw new \RuntimeException('Execution deadline reached.');
+      $this->database->update('famtastic_worker_claim')->fields(['lease_until' => $until, 'changed' => $this->now()])->condition('job_id', $jobId)->execute();
       return ['lease_until' => $until];
     });
   }
@@ -151,16 +147,14 @@ final class WorkerCoordinator {
       if ($row && $row['state'] === 'handoff_completed' && $row['worker_id'] === $worker && hash_equals($row['token_hash'], hash('sha256', $token)) && hash_equals($row['result_sha256'], $hash)) {
         return ['status' => 'handoff_completed', 'duplicate' => TRUE];
       }
-      $row = $this->owned($jobId, $worker, $token, $authorizedCapabilities, $attempt);
+      $this->owned($jobId, $worker, $token, $authorizedCapabilities, $attempt);
       $job = $this->job($jobId);
       $packet = json_decode($job['payload'], TRUE, flags: JSON_THROW_ON_ERROR)['packet'];
       if (($result['status'] ?? '') !== 'accepted_waiting_callback' || empty($result['receipt_id'])
         || ($result['packet_id'] ?? '') !== ($packet['packet_id'] ?? NULL)
         || ($result['idempotency_key'] ?? '') !== ($packet['idempotency_key'] ?? NULL)) throw new \InvalidArgumentException('Dispatch receipt does not prove this exact packet handoff.');
-      $now = $this->now();
-      if ((int) $row['lease_until'] <= $now) throw new \RuntimeException('Lease lost before completion.');
-      $this->updateClaim($row, ['state' => 'handoff_completed', 'lease_until' => 0, 'attempt_deadline' => 0, 'result_sha256' => $hash, 'changed' => $now]);
-      $this->updateJob($job, ['status' => 'completed', 'result' => $wire, 'completed_at' => $now, 'locked_at' => NULL, 'changed' => $now]);
+      $this->database->update('famtastic_worker_claim')->fields(['state' => 'handoff_completed', 'lease_until' => 0, 'attempt_deadline' => 0, 'result_sha256' => $hash, 'changed' => $this->now()])->condition('job_id', $jobId)->execute();
+      $this->database->update('famtastic_job')->fields(['status' => 'completed', 'result' => $wire, 'completed_at' => $this->now(), 'locked_at' => NULL, 'changed' => $this->now()])->condition('id', $jobId)->condition('status', 'worker_running')->execute();
       return ['status' => 'handoff_completed', 'duplicate' => FALSE];
     });
   }
@@ -189,21 +183,17 @@ final class WorkerCoordinator {
   }
 
   private function recoverExpired(int $now): void {
-    $rows = $this->database->select('famtastic_worker_claim', 'c')->fields('c')->condition('state', 'leased')->condition('lease_until', $now, '<=')->orderBy('job_id')->forUpdate()->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $rows = $this->database->select('famtastic_worker_claim', 'c')->fields('c')->condition('state', 'leased')->condition('lease_until', $now, '<=')->execute()->fetchAll(\PDO::FETCH_ASSOC);
     foreach ($rows as $row) $this->retry($row, $now);
   }
 
   private function retry(array $row, int $now): array {
     $job = $this->job((int) $row['job_id']);
-    if (!$job || $job['status'] !== 'worker_running' || !hash_equals($row['payload_sha256'], hash('sha256', (string) $job['payload']))) {
-      throw new \RuntimeException('Worker retry job state or payload changed; reconciliation required.');
-    }
-    $now = max($now, $this->now());
     $exhausted = (int) $row['attempt'] >= min($this->storedProfile($row)['attempts'], (int) $job['max_attempts']);
-    $this->updateClaim($row, ['state' => $exhausted ? 'exception' : 'pending', 'token_hash' => '', 'lease_until' => 0, 'changed' => $now]);
-    $this->updateJob($job, ['status' => $exhausted ? 'failed' : 'worker_queued', 'attempts' => $row['attempt'], 'locked_at' => NULL,
+    $this->database->update('famtastic_worker_claim')->fields(['state' => $exhausted ? 'exception' : 'pending', 'token_hash' => '', 'lease_until' => 0, 'changed' => $now])->condition('job_id', $row['job_id'])->execute();
+    $this->database->update('famtastic_job')->fields(['status' => $exhausted ? 'failed' : 'worker_queued', 'attempts' => $row['attempt'], 'locked_at' => NULL,
       'available_at' => max((int) $row['attempt_deadline'], $now + 30 * (2 ** ((int) $row['attempt'] - 1))),
-      'last_error' => 'Worker interrupted or dispatch unconfirmed; retained cost reservation and immutable packet for idempotent retry.', 'changed' => $now]);
+      'last_error' => 'Worker interrupted or dispatch unconfirmed; retained cost reservation and immutable packet for idempotent retry.', 'changed' => $now])->condition('id', $row['job_id'])->execute();
     return ['status' => $exhausted ? 'exception' : 'retry', 'attempt' => (int) $row['attempt']];
   }
 
@@ -238,45 +228,24 @@ final class WorkerCoordinator {
     if (!in_array($row['capability'], WorkerCapabilityPolicy::claimCapabilities($authorizedCapabilities), TRUE)) throw new \RuntimeException('Worker capability rejected.');
   }
 
-  private function reserved(string $month, bool $lock = FALSE): int {
+  private function reserved(string $month): int {
     $query = $this->database->select('famtastic_worker_budget', 'b')->condition('month', $month);
-    if ($lock) {
-      // Lock base rows: a SUM/COUNT can otherwise reuse an outer TX snapshot.
-      $rows = $query->fields('b', ['reservation_key', 'reserved_cents'])->orderBy('reservation_key')->forUpdate()->execute()->fetchAll(\PDO::FETCH_ASSOC);
-      return (int) array_sum(array_column($rows, 'reserved_cents'));
-    }
     $query->addExpression('COALESCE(SUM(reserved_cents), 0)', 'reserved');
     return (int) $query->execute()->fetchField();
   }
 
-  private function claimRow(int $id): array|false { return $this->database->select('famtastic_worker_claim', 'c')->fields('c')->condition('job_id', $id)->forUpdate()->execute()->fetchAssoc(); }
-  private function job(int $id): array|false { return $this->database->select('famtastic_job', 'j')->fields('j')->condition('id', $id)->forUpdate()->execute()->fetchAssoc(); }
+  private function claimRow(int $id): array|false { return $this->database->select('famtastic_worker_claim', 'c')->fields('c')->condition('job_id', $id)->execute()->fetchAssoc(); }
+  private function job(int $id): array|false { return $this->database->select('famtastic_job', 'j')->fields('j')->condition('id', $id)->execute()->fetchAssoc(); }
   private function now(): int { return $this->time->getCurrentTime(); }
   private function assertWorker(string $worker): void { if (!preg_match('/^[a-z][a-z0-9._-]{2,63}$/', $worker)) throw new \InvalidArgumentException('Invalid worker identity.'); }
 
   private function atomic(callable $operation): mixed {
-    return WorkerCoordinatorMutex::run($this->database, function () use ($operation): mixed {
-      // Optional busy hint ONLY, acquired after the correctness mutex. Its TTL
-      // and early release cannot release the root transaction's database lock.
-      $name = 'famtastic:bounded-worker-coordinator:v1';
-      if (!$this->lock->acquire($name, 30)) throw new \RuntimeException('Worker coordinator busy; retry with jitter.');
-      try { return $operation(); }
-      finally { $this->lock->release($name); }
-    });
-  }
-
-  private function updateClaim(array $before, array $fields): void {
-    $query = $this->database->update('famtastic_worker_claim')->fields($fields);
-    foreach (['job_id', 'state', 'attempt', 'worker_id', 'token_hash', 'lease_until', 'attempt_deadline',
-      'policy_version', 'capability', 'payload_sha256', 'reservation_cents', 'result_sha256', 'changed'] as $key) $query->condition($key, $before[$key]);
-    if ($query->execute() !== 1) throw new \RuntimeException('Worker claim changed; transaction rolled back.');
-  }
-
-  private function updateJob(array $before, array $fields): void {
-    $query = $this->database->update('famtastic_job')->fields($fields);
-    foreach (['id', 'status', 'attempts', 'max_attempts', 'job_key', 'job_type', 'payload', 'available_at', 'locked_at', 'changed'] as $key) {
-      $before[$key] === NULL ? $query->isNull($key) : $query->condition($key, $before[$key]);
-    }
-    if ($query->execute() !== 1) throw new \RuntimeException('Worker job changed; transaction rolled back.');
+    // Drupal's shared database lock serializes enrollment, budget reservations and leases.
+    $name = 'famtastic:bounded-worker-coordinator:v1';
+    if (!$this->lock->acquire($name, 30)) throw new \RuntimeException('Worker coordinator busy; retry with jitter.');
+    $transaction = $this->database->startTransaction();
+    try { $result = $operation(); unset($transaction); return $result; }
+    catch (\Throwable $e) { $transaction->rollBack(); throw $e; }
+    finally { $this->lock->release($name); }
   }
 }

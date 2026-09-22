@@ -10,6 +10,11 @@ final class WorkerCoordinatorSchema {
     $int = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
     $str = ['type' => 'varchar', 'length' => 191, 'not null' => TRUE, 'default' => ''];
     return [
+      'famtastic_worker_mutex' => [
+        'description' => 'Fixed singleton row: database transaction ownership only, no authority payload or TTL.',
+        'fields' => ['id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE]],
+        'primary key' => ['id'],
+      ],
       'famtastic_worker_claim' => [
         'description' => 'Explicitly enrolled shared queue jobs. No automatic historical enrollment.',
         'fields' => ['job_id' => $int, 'policy_version' => $str, 'payload_sha256' => $str,

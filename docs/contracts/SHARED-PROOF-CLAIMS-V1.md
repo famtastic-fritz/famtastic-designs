@@ -1,5 +1,12 @@
 # Shared proof claim groundwork v1
 
+Later source amendment: `SHARED-WORKER-ROOT-TRANSACTION-V1.md` replaces TTL-based
+correctness with one transaction-owned database mutex, current locking reads,
+CAS rollback and legacy-writer isolation. Update 8066 creates its empty table;
+it has NOT run on an installed site. Focused source tests pass; real MariaDB
+contention and activation remain unproven. Earlier schema/lock statements below
+describe their dated checkpoint, not this amendment.
+
 Later source milestone: FRESH-PROOF-ADMISSION-AND-IMPORT-V1.md now records
 default-OFF portal create/draft-submit admission, immutable bindings, generic
 import denial and actual-claim status projection. Its 177 focused PHP tests are

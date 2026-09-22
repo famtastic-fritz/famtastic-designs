@@ -1,5 +1,16 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Prove lock ownership beyond the advisory timeout
+
+Observation: frozen 1ac3bc26 passes independent MariaDB connections with three
+actual root-lock waits exceeding 35 seconds; old coordinator controls expose
+ownership, stale active/budget and overwritten-renewal defects. Guidance: retain
+both green and exact-negative receipts, protect authoritative inventories, and
+remove only exact-owned temporary DB resources. Neither source tests nor this
+contention result establishes live migration, importer or customer delivery.
+Reconcile new main 7227ceb6 private reviews separately; request/member lock order
+and login repair must remain compatible with the managed pipeline.
+
 ## 2026-09-21 - Revocation survives downstream failure; file preparation is not metadata
 
 Observation: the installed FileRepository::writeData persists a permanent entity,
@@ -54,6 +65,51 @@ automatic adoption or generic cap exception for the 2,020,725-byte logo. After
 the low-disk pause, 105 tests / 362 assertions pass with inventories unchanged.
 Retain the initial PHPUnit final-method collision: syntax checks alone did not
 expose it. Rename only the helper and run the actual tests under the watch guard.
+## 2026-09-21 - Separate subprocess bootstrap errors from DB assertions
+
+Observation: after main's third provisioning succeeded, PahTfo exited 2 before any
+case/child because proc_open could not bind an uninitialized typed pipes property.
+Guidance: initialize the array and retain the protected-data-unchanged bootstrap
+failure as such. One-line source fix, no agent execution; main retains the owned
+server and runtime slot. Drive mirror remains main-owned.
+
+## 2026-09-21 - Separate DB network reachability from PHP egress denial
+
+Observation: main's second internal-bridge allocation ran MariaDB without actual
+host-port publication. Guidance: require real 127.0.0.1 publication on a dedicated
+ordinary bridge, retain all resource/sandbox guards, and state that container NAT
+egress is not firewall-disabled. No external traffic is requested or zero-egress
+proof claimed. Preserve the failed t5wRpU run; cleanup/review/rerun and Drive remain
+main-owned. This source-only revision does not establish PHP contention proof.
+
+## 2026-09-21 - Keep the log bound when fixing container startup
+
+Observation: main's first owned MariaDB container failed before process start
+because local-log compression disallows max-file=1. Guidance: disable compression
+explicitly rather than enlarge logs. Preserve the red run rooted at the temp
+directory ending /T/famtastic-worker-mariadb-3Fh2DZ. Repair is source-only;
+cleanup, rerun and Drive mirroring remain main-owned. No concurrency proof yet.
+
+## 2026-09-21 - Prepare real contention tests without widening authority
+
+Observation: container startup and cleanup can outlive a timeout or leave an
+uncertain allocation. Guidance: record exact intent before allocation, bound all
+startup calls by 60 seconds, use container-only writable tmpfs, validate ownership
+and confirmed absence, and retain uncertainty instead of claiming cleanup. Run
+real Drupal MySQL children only through the unchanged protected-data/disk wrapper;
+keep Docker provisioning separate. No runtime has run for the new harness and no
+concurrency capability is promoted. See the MariaDB proof contract. No journal
+crash-durability promise; Drive and eventual execution remain parent-owned.
+
+## 2026-09-21 - Worker exclusion belongs to the root transaction
+
+An expiring advisory lock is not the transaction lifetime. Acquire the fixed-row
+database mutex after request/account/rights locks and before job/history writes;
+use current base-row reads, not snapshot aggregates, plus checked CAS. Drupal's
+key-only MySQL upsert is INSERT IGNORE, so use explicit duplicate-key update.
+Legacy writers must exclude claims even after exhaustion. Focused SQLite tests
+pass; actual MariaDB contention remains a separate gate. See the root-transaction
+contract for retained red/green receipts; Drive and integration remain parent-owned.
 
 ## 2026-09-21 - Legacy fixtures must not bypass managed admission guards
 

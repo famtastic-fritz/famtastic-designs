@@ -212,6 +212,15 @@ final class OperationalLedger {
     $payloadWire = json_encode($payload, JSON_THROW_ON_ERROR);
     $now = $this->time->getRequestTime();
     try {
+      if ($autoAdmit) {
+        // Outer callers already hold request authority. Never insert/lock a job
+        // before taking the same mutex as the coordinator's pending selector.
+        WorkerCoordinatorMutex::acquire($this->database);
+        $existing = $this->database->select('famtastic_job', 'j')->fields('j', ['id'])
+          ->condition('job_key', $jobKey)->forUpdate()->execute()->fetchField();
+        if ($existing) { $transaction->commitOrRelease(); return (int) $existing; }
+        $now = $this->time->getCurrentTime();
+      }
       $id = (int) $this->database->insert('famtastic_job')
         ->fields([
           'job_key' => $jobKey,
@@ -250,9 +259,15 @@ final class OperationalLedger {
    * Atomically claims the next available job with optional scope constraints.
    */
   public function claimNext(?string $jobType = NULL, ?array $prospectIds = NULL): ?array {
+    return WorkerCoordinatorMutex::run($this->database, fn() => $this->claimUnmanagedNext($jobType, $prospectIds));
+  }
+
+  private function claimUnmanagedNext(?string $jobType, ?array $prospectIds): ?array {
     $now = $this->time->getRequestTime();
+    $managed = $this->database->select('famtastic_worker_claim', 'c')->fields('c', ['job_id'])->where('c.job_id = j.id');
     $query = $this->database->select('famtastic_job', 'j')
       ->fields('j')
+      ->notExists($managed)
       ->condition('status', 'queued')
       ->condition('available_at', $now, '<=')
       ->orderBy('available_at', 'ASC')
@@ -268,7 +283,7 @@ final class OperationalLedger {
       }
       $query->condition('prospect_id', $prospectIds, 'IN');
     }
-    $job = $query->execute()->fetchAssoc();
+    $job = $query->forUpdate()->execute()->fetchAssoc();
     if (!$job) {
       return NULL;
     }
@@ -292,6 +307,10 @@ final class OperationalLedger {
    * Marks a job complete. Repeated completion is harmless.
    */
   public function completeJob(int $jobId, array $result): void {
+    $this->unmanagedJobWrite($jobId, fn() => $this->completeUnmanagedJob($jobId, $result));
+  }
+
+  private function completeUnmanagedJob(int $jobId, array $result): void {
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_job')
       ->fields([
@@ -311,11 +330,10 @@ final class OperationalLedger {
    * Schedules retry with exponential backoff or opens an exception.
    */
   public function failJob(int $jobId, string $message): array {
-    $job = $this->database->select('famtastic_job', 'j')
-      ->fields('j')
-      ->condition('id', $jobId)
-      ->execute()
-      ->fetchAssoc();
+    return $this->unmanagedJobWrite($jobId, fn($job) => $this->failUnmanagedJob($jobId, $message, $job));
+  }
+
+  private function failUnmanagedJob(int $jobId, string $message, array|false $job): array {
     if (!$job) {
       throw new \InvalidArgumentException('Unknown job.');
     }
@@ -350,8 +368,10 @@ final class OperationalLedger {
 
   /** Explicitly rearms one exact exhausted job after operator intervention. */
   public function requeueFailedJob(int $jobId, string $expectedJobKey): bool {
-    $job = $this->database->select('famtastic_job', 'j')->fields('j')
-      ->condition('id', $jobId)->range(0, 1)->execute()->fetchAssoc();
+    return $this->unmanagedJobWrite($jobId, fn($job) => $this->requeueUnmanagedJob($jobId, $expectedJobKey, $job));
+  }
+
+  private function requeueUnmanagedJob(int $jobId, string $expectedJobKey, array|false $job): bool {
     if (!$job || !hash_equals((string) $job['job_key'], $expectedJobKey)) {
       throw new \InvalidArgumentException('The exact failed job was not found.');
     }
@@ -382,6 +402,18 @@ final class OperationalLedger {
       (int) ($job['prospect_id'] ?? 0) ?: NULL,
     );
     return TRUE;
+  }
+
+  /** Claim identity, including exhausted/completed rows, never enters legacy writes. */
+  private function unmanagedJobWrite(int $jobId, callable $operation): mixed {
+    return WorkerCoordinatorMutex::run($this->database, function () use ($jobId, $operation): mixed {
+      $job = $this->database->select('famtastic_job', 'j')->fields('j')->condition('id', $jobId)->forUpdate()->execute()->fetchAssoc();
+      $claim = $this->database->select('famtastic_worker_claim', 'c')->fields('c', ['job_id'])->condition('job_id', $jobId)->forUpdate()->execute()->fetchField();
+      if ($claim || ($job && str_starts_with((string) $job['status'], 'worker_'))) {
+        throw new \RuntimeException('Coordinator-owned jobs cannot use legacy completion, failure or requeue.');
+      }
+      return $operation($job);
+    });
   }
 
   /**

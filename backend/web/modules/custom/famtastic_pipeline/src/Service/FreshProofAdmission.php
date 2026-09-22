@@ -32,8 +32,11 @@ final class FreshProofAdmission {
     $this->assertAccount($row);
     $assets = FreshProofInput::assets($this->database, $row);
     $prior = FreshProofBinding::event($this->database, $requestId, TRUE);
+    // Request/account/assets precede the shared mutex; job history and inserts
+    // must follow it. Enrollment's nested savepoint cannot release this lock.
+    WorkerCoordinatorMutex::acquire($this->database);
     if ($prior) {
-      $record = FreshProofBinding::read($this->database, $prior, $row);
+      $record = FreshProofBinding::read($this->database, $prior, $row, TRUE);
       $b = $record['binding'];
       if (($b['freshness'] ?? NULL) !== $freshness || ($b['request_snapshot'] ?? NULL) !== FreshProofInput::request($row, $freshness)
         || ($b['asset_snapshot'] ?? NULL) !== $assets) throw new \RuntimeException('Existing proof admission differs from current input.');
@@ -97,7 +100,8 @@ final class FreshProofAdmission {
     if (!$row || !$event) throw new \RuntimeException('Managed proof admission evidence is missing; replacement requires reconciliation.');
     $this->assertAccount($row);
     $assets = FreshProofInput::assets($this->database, $row);
-    $record = FreshProofBinding::read($this->database, $event, $row);
+    WorkerCoordinatorMutex::acquire($this->database);
+    $record = FreshProofBinding::read($this->database, $event, $row, TRUE);
     if ($record['binding']['asset_snapshot'] !== $assets) throw new \RuntimeException('Existing proof admission differs from current input; replacement policy is required.');
     $reservation = $this->reviewedPolicy['cost_policy']['reservation_cents'] ?? NULL;
     if (!is_int($reservation)) throw new \RuntimeException('No reviewed creative cost policy is installed.');

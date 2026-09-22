@@ -31,6 +31,11 @@ persists an entity. Commit withdrawal before separate selected reconciliation;
 never let a later build failure restore permission. These writers require root
 transactions, not an outer transaction whose rollback could undo revocation.
 
+Shared worker writes also follow `docs/contracts/SHARED-WORKER-ROOT-TRANSACTION-V1.md`:
+request/account/rights locks first, root-transaction mutex before job locks;
+no provider/file processing inside that transaction. SQLite tests and advisory
+lock expiration do not establish real MySQL/MariaDB concurrency proof.
+
 ## September 18 — Embedded build instructions must cover the current request
 
 Never reuse `selected_build_continuation` merely because it exists. Its producer
