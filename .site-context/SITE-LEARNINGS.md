@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - A failed observer is not a successful contention test
+
+Observation: standalone PHPUnit doubles needed a real TestCase call context and
+in-memory configuration. MariaDB wait metadata then needed >100ms read idle time
+and exact ANSI_QUOTES-aware identifiers. Guidance: retain red diagnostics, verify
+actual holder/requester rows, and fix the observer without relaxing assertions.
+Seven current cases / 84 checks pass; all four old-source controls fail exactly.
+Only disposable owned resources/credentials were removed; evidence is retained.
+
 ## 2026-09-21 - Inspect caller state before cleanup hides it
 
 Observation: checking only another connection after rollback can hide spurious

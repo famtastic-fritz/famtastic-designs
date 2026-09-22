@@ -23,7 +23,14 @@ final class ReviewPair {
     while (!$this->files->has($mark)) {
       ProofGuard::tick();
       if ($inversion !== NULL) ProofGuard::check(!$this->files->has('b.member'), $inversion);
-      foreach ($busy as $role) proofNeed($this->$role->poll() === NULL, 'operation_finished_before_lock_checkpoint');
+      foreach ($busy as $role) {
+        $reply = $this->$role->poll();
+        if ($reply !== NULL) {
+          // Closed peer errors only, never SQL, environment, credentials or values.
+          echo json_encode(['phase' => 'early_peer_result', 'role' => $role, 'ok' => $reply['ok'], 'error' => $reply['error'] ?? NULL]) . "\n";
+          proofNeed(FALSE, 'operation_finished_before_lock_checkpoint');
+        }
+      }
       proofNeed(hrtime(TRUE) / 1e9 < $deadline, 'missing_real_lock_checkpoint'); usleep(20000);
     }
     if ($inversion !== NULL) ProofGuard::check(!$this->files->has('b.member'), $inversion);

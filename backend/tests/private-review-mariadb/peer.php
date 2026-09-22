@@ -12,7 +12,8 @@ function reviewError(Throwable $e): array {
     'Review changed concurrently; retry the exact manifest.',
     'New staff drafts require a fresh root transaction.',
   ];
-  return ['class' => $e::class, 'message' => $e::class === RuntimeException::class && in_array($e->getMessage(), $allowed, TRUE) ? $e->getMessage() : 'unrecognized_operation_failure'];
+  return ['class' => $e::class, 'message' => $e::class === RuntimeException::class && in_array($e->getMessage(), $allowed, TRUE) ? $e->getMessage() : 'unrecognized_operation_failure',
+    'source' => basename($e->getFile()) . ':' . $e->getLine()];
 }
 final class ReviewPeer {
   private ?Drupal\Core\Database\Transaction $root = NULL;
@@ -36,18 +37,40 @@ final class ReviewPeer {
       proofNeed($this->db->inTransaction(), 'locking_read_without_transaction');
       $this->files->mark($this->role . '.' . $r['table']);
       if (!$r['pause']) return;
+      // Drupal enables ANSI_QUOTES. MariaDB reports lock_table using the
+      // observer's SQL-mode quoting, so compare the exact qualified identifier
+      // in that mode rather than silently dropping schema/table ownership.
+      $modes = explode(',', (string) $this->db->query('SELECT @@SESSION.sql_mode')->fetchField());
+      $quote = in_array('ANSI_QUOTES', $modes, TRUE) ? '"' : '`';
+      $expectedTable = $quote . $this->config['database'] . $quote . '.' . $quote . 'pr_' . $table . $quote;
       $deadline = hrtime(TRUE) / 1e9 + 12;
       while (!$this->files->has($this->role . '.release')) {
         ProofGuard::tick(); proofNeed(hrtime(TRUE) / 1e9 < $deadline, 'barrier_timeout');
+        if (hrtime(TRUE) / 1e9 > $deadline - 10 && !$this->files->has($this->role . '.states')) {
+          $states = $this->db->query('SELECT trx_mysql_thread_id AS thread_id, trx_state FROM information_schema.INNODB_TRX WHERE trx_mysql_thread_id = CONNECTION_ID() OR trx_mysql_thread_id = :peer', [':peer' => $r['peer']])->fetchAll(PDO::FETCH_ASSOC);
+          $this->files->write('barriers/' . $this->role . '.states.json', json_encode(['transactions' => $states,
+            'holder' => (int) $this->db->query('SELECT CONNECTION_ID()')->fetchField(), 'contender' => $r['peer']], JSON_THROW_ON_ERROR));
+          $this->files->mark($this->role . '.states');
+        }
         // Same holder PDO observes the other actual InnoDB transaction waiting.
-        $waiting = $this->db->query('SELECT COUNT(*) FROM information_schema.INNODB_LOCK_WAITS w
+        $waitingTables = $this->db->query('SELECT l.lock_table FROM information_schema.INNODB_LOCK_WAITS w
           JOIN information_schema.INNODB_TRX b ON b.trx_id = w.blocking_trx_id
           JOIN information_schema.INNODB_TRX r ON r.trx_id = w.requesting_trx_id
           JOIN information_schema.INNODB_LOCKS l ON l.lock_id = w.requested_lock_id
-          WHERE b.trx_mysql_thread_id = CONNECTION_ID() AND r.trx_mysql_thread_id = :peer AND l.lock_table = :table',
-          [':peer' => $r['peer'], ':table' => '`' . $this->config['database'] . '`.`pr_' . $table . '`'])->fetchField();
+          WHERE b.trx_mysql_thread_id = CONNECTION_ID() AND r.trx_mysql_thread_id = :peer',
+          [':peer' => $r['peer']])->fetchCol();
+        $waiting = in_array($expectedTable, $waitingTables, TRUE);
+        if ($waitingTables && !$this->files->has($this->role . '.wait-observed')) {
+          $this->files->write('barriers/' . $this->role . '.wait-tables.json', json_encode([
+            'expected' => str_replace($this->config['database'], 'OWNED_DB', $expectedTable),
+            'observed' => array_map(fn($v) => str_replace($this->config['database'], 'OWNED_DB', $v), $waitingTables)], JSON_THROW_ON_ERROR));
+          $this->files->mark($this->role . '.wait-observed');
+        }
         if ($waiting) $this->files->mark($this->role . '.wait');
-        usleep(20000);
+        // MariaDB 10.11.19 refreshes this metadata only >100ms after its last
+        // read. A 20ms loop perpetually pins an initially empty cache snapshot.
+        // Leave room for refresh; never change the held production transaction.
+        usleep(250000);
       }
     };
   }
@@ -125,6 +148,10 @@ try {
   proofNeed(PHP_SAPI === 'cli' && $argc === 5, 'review_peer_arguments');
   ProofGuard::tick(); umask(0077);
   $config = proofConfig($argv[1]); reviewLoad($argv[2]); require __DIR__ . '/fixtures.php';
+  // Configure only PHPUnit's in-memory mock/event context. Do not discover XML,
+  // run a suite, load installed Drupal settings or write a result cache.
+  (new PHPUnit\TextUI\Configuration\Builder())->build(['phpunit', '--no-configuration', '--do-not-cache-result']);
+  $testContext = new ReviewMocks('withContext');
   $files = new ReviewFiles($argv[1], $argv[3]);
   // Validate identity with the unchanged bootstrap, then wrap that SAME PDO.
   $validated = proofConnection($config); $options = $validated->getConnectionOptions(); $options['prefix'] = 'pr_';
@@ -139,7 +166,7 @@ try {
     $r = json_decode($line, TRUE, flags: JSON_THROW_ON_ERROR);
     proofNeed(is_int($r['id']) && is_string($r['op']), 'invalid_review_command');
     reviewEmit(['phase' => 'started', 'id' => $r['id']]);
-    try { reviewEmit(['phase' => 'done', 'id' => $r['id'], 'ok' => TRUE, 'value' => $peer->command($r)]); }
+    try { reviewEmit(['phase' => 'done', 'id' => $r['id'], 'ok' => TRUE, 'value' => $testContext->withContext(fn() => $peer->command($r))]); }
     catch (Throwable $e) { reviewEmit(['phase' => 'done', 'id' => $r['id'], 'ok' => FALSE, 'error' => reviewError($e)]); }
   }
 } catch (Throwable $e) {

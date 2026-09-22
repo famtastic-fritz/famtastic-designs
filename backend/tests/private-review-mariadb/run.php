@@ -48,7 +48,10 @@ try {
 } catch (Throwable $e) {
   $exit = 2;
   // Even unexpected assertion failures are NOT accepted baseline evidence.
-  $code = $e instanceof ProofAssertion ? $e->getMessage() : 'setup_protocol_or_operation_failed';
-  echo json_encode(['status' => 'failed_not_negative_proof', 'class' => $e::class, 'code' => $code, 'completed_cases' => $results]) . "\n";
+  $safe = ['peer_bootstrap_failed', 'peer_stderr_not_empty', 'peer_exited_without_response', 'peer_response_timeout',
+    'unexpected_operation_failure:unrecognized_operation_failure', 'operation_finished_before_lock_checkpoint', 'missing_real_lock_checkpoint'];
+  $code = $e instanceof ProofAssertion || in_array($e->getMessage(), $safe, TRUE) ? $e->getMessage() : 'setup_protocol_or_operation_failed';
+  echo json_encode(['status' => 'failed_not_negative_proof', 'class' => $e::class, 'code' => $code,
+    'source' => basename($e->getFile()) . ':' . $e->getLine(), 'completed_cases' => $results]) . "\n";
 } finally { if ($pair !== NULL) $pair->close(); }
 exit($exit);

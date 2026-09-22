@@ -1,5 +1,15 @@
 # Product changelog
 
+## 2026-09-21 - Verify private-review contention on real MariaDB
+
+- Main repaired standalone PHPUnit mock context and exact MariaDB wait observation;
+  preserve source pins, table/thread identity, deadlines and all negative tags.
+- Seven current cases / 84 checks pass; four frozen controls / 22 checks fail
+  exactly as intended. Protected inventories unchanged. Remove only the owned
+  disposable DB/network/credentials, retaining receipts and fixture evidence.
+- This is frozen local concurrency evidence, not installed storage, migration,
+  paid-provider, customer delivery or activation. See the private-review DB contract.
+
 ## 2026-09-21 - Private-review MariaDB contention candidate, unrun
 
 - Strengthen pre-rollback own-transaction event/activity and sentinel assertions;

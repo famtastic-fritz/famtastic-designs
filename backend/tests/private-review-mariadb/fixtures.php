@@ -34,6 +34,9 @@ final class ReviewSelect extends Select {
 /** Interface doubles ONLY: actual final services + actual MySQL transactions. */
 final class ReviewMocks extends PHPUnit\Framework\TestCase {
   public function stub(string $class): object { return $this->createMock($class); }
+  // PHPUnit 11 mock invocations require a TestCase on the call stack, even in
+  // this standalone peer. Keep real services/SQL inside this neutral wrapper.
+  public function withContext(Closure $operation): mixed { return $operation(); }
 }
 final class ReviewServices {
   public FullSiteReviewService $reviews;
