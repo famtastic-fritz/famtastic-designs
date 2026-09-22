@@ -2,6 +2,12 @@
 
 Status: local repairs and verification; no live activation.
 
+Review checkpoint pushed: Designs d2819326 / Studio754859e. PR42 and PR2 remain
+drafts, not merged/deployed. Hosted run35678844288 again ran no backend steps:
+the account billing lock remains. The exact annotation is retained in
+`../evidence/AUTOPIPELINE-HOSTED-CI-2026-09-21.json`. No billing or required-check
+settings were changed; local verification is not a hosted CI pass.
+
 Full integrated rerun now passes at Studioe470dfe / Designs9583766f:
 1,588 Studio tests/135files, both lints, both synthetic execution proofs, and
 791 PHP tests/4,804assertions (same68 existing deprecations), zero failed/skipped.
