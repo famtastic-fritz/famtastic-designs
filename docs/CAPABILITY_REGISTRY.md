@@ -1,5 +1,13 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-21 - Prepared proof content verification, not import authority
+
+Unregistered `verifyPrepared` reopens only server-resolved bundle IDs, verifies
+sealed bounded reads and reconstructs exact inventory from canonical callback
+bytes. Independently reviewed with 139 focused tests / 562 assertions passing.
+No claim/tenant/QA/delivery permission, route or live provider is installed.
+See `contracts/MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md`.
+
 ## 2026-09-21 - Private review integration, locally verified only
 
 Main 7227ceb6 is preserved with managed admission exclusions, authorized login

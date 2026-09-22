@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-21 - Verify prepared content independently of its manifest
+
+A saved manifest hash alone does not prove every file still matches the callback.
+Reconstruct the exact finite inventory from canonical input, reject extra/link
+entries, and bound every sealed read. Keep these content facts separate from
+tenant, worker, producer and QA authority. A negative test must reach its intended
+guard: an extra sibling originally masked the directory-symlink assertion.
+Use bounded FIFO coverage to detect a regular-file check accidentally removed.
+
 ## 2026-09-21 - Account login and project access are different boundaries
 
 Observation: optional linked-interview repair runs before login finalization.

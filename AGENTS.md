@@ -34,6 +34,10 @@ For artifact preparation, read `docs/contracts/MANAGED-PROOF-ARTIFACT-PREPARATIO
 Private prepared files and their hashes are not import, QA, completion or release
 authority. Keep generic managed imports closed until the fenced importer exists.
 Preserve validator parity and keep frozen executable test data outside the webroot.
+Reopen preparation only by server bundle ID and expected manifest hash through
+`verifyPrepared`; it reconstructs canonical bytes and rejects extra inventory.
+Its result is content facts, not tenant/claim/QA authority. No worker filesystem
+path, adopted orphan or manifest-supplied file list is trusted as import authority.
 For reference uploads/withdrawals, read `docs/contracts/REQUEST-ASSET-MUTATION-V1.md`.
 Lock request before membership/assets, including an empty asset set. Prepare only
 private bytes outside the metadata transaction; FileRepository::writeData also

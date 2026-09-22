@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-21 — Verify immutable prepared proof bytes without importing
+
+Add unregistered read-only bundle verification by server ID and manifest hash,
+with canonical callback-derived inventory, sealed bounded reads and rejection of
+extra/missing/tampered/link entries. Preparation shares the unchanged pure
+normalizer; no route, publication or completion authority opens. Focused
+139 tests / 562 assertions pass after independent review strengthened symlink
+and bounded FIFO coverage; see the managed artifact preparation contract.
+
 ## 2026-09-21 - Reconcile private reviews with additive automation
 
 - Preserve newer main 7227ceb6 private readers/routes and deployment fixes;

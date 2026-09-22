@@ -1,5 +1,56 @@
 # Managed proof artifact preparation v1
 
+## Read-only prepared-bundle verification (September 21 follow-up)
+
+`verifyPrepared(bundleId, manifestSha256)` now reopens a server-resolved private
+bundle without accepting a worker filesystem path. It reads only owner-owned,
+0400 regular files with one hard link, explicit byte limits and before/after
+inode/stat checks. Required directories remain 0700 with no symlink components.
+The 64 KiB manifest bound is separate from the unchanged 24 MiB callback bound.
+
+The verifier regenerates the exact manifest and all expected bytes from canonical
+callback JSON through the same pure normalization used by preparation. A forged
+manifest cannot redefine HTML, DNA, assets, thumbnails or file roles. Enumeration
+visits only validated expected directories and stops on the first undeclared
+entry; no arbitrary recursive tree walk. Missing files, extra directories,
+unsealed files, hard links and altered callback/manifest/content reject. No
+adoption, repair, cleanup or file/database writes occur. Preparation still uses
+new create-only server IDs and preserves its existing normalized-input check.
+
+Returned data is content evidence only: bundle ID, private-preparation manifest,
+manifest hash, raw callback and normalized variants. It is NOT tenant access,
+producer/Build DNA authority, independent QA, an import receipt or permission to
+send/publish. A future importer must obtain the expected hash from its own trusted
+record and recheck current authority in its final transaction; a worker naming
+another otherwise valid bundle is not authorized by this method. No service,
+route, caller, logo exception or generic managed callback was enabled.
+
+The private root and OS principal remain trusted. File checks do not claim
+atomic protection from another process with the same filesystem authority, nor
+directory-fsync/reboot durability. Prepared files remain unreferenced until the
+future fenced importer commits an authoritative receipt.
+
+Independent source review found a masked directory-symlink test: an extra sibling
+caused rejection before the symlink guard. Its target now lives outside the
+bundle but within the test-owned root. A new FIFO case uses a two-second alarm
+to prove nonregular-file rejection before a potentially blocking open. Platforms
+without Unix FIFO/alarm support must report this case skipped, not proven.
+Reviewed focused receipt `prepared-verification-reviewed.x9OOBF` passes
+**139 tests / 562 assertions**, 1.093s suite/1.506s guarded, 22 MiB, zero skipped
+or failed, protected inventories unchanged. These counts supersede the first
+run for this slice; they are not added to it. No production bypass or preparation
+regression was identified in independent source review. Full integration remains
+separate.
+
+Initial focused verification: **138 tests / 558 assertions**, 1.032s suite,
+1.405s guarded, PHP 8.5.9 / PHPUnit 11.5.56, 22 MiB peak, zero failures/skips.
+Receipt `prepared-verification-first.gWckHs` under
+`/tmp/famtastic-phase2-review.NVAfPl`; both protected inventories unchanged.
+This includes 29 new verification cases and the existing 109 preparation,
+normalization and frozen legacy-service parity tests. Review follow-up is above;
+full-module integration remains a separate gate. No provider or customer
+effects occurred. Older receipts below are retained history.
+
 September 21, 2026. Source groundwork only, based on `3bc4e9baf`.
 Focused runtime verification: 109 tests / 463 assertions PASS with Git unavailable,
 bounded callback child arguments and independently exercised DNA guards. A

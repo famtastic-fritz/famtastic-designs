@@ -24,6 +24,76 @@ class ManagedProofArtifactStore {
    */
   public function prepare(string $rawCallback, array $expected): array {
     $root = $this->root();
+    $content = $this->content($rawCallback);
+    if ($content['normalized'] !== $expected) throw new \InvalidArgumentException('Raw callback differs from normalized artifacts.');
+    $files = $content['files']; $manifest = $content['manifest']; $wire = $content['wire'];
+    $id = $this->newBundleId();
+    if (!preg_match('/\A[a-f0-9]{32}\z/', $id)) throw new \RuntimeException('Invalid server preparation identity.');
+    $directory = $root . '/' . $id;
+    if ($this->root() !== $root || !@mkdir($directory, 0700)) throw new \RuntimeException('Preparation directory already exists or cannot be created.');
+    foreach ($files as $path => $file) $this->createFile($directory, $path, $file['bytes']);
+    // Recheck all bytes after all writes, before publishing the completion marker.
+    foreach ($manifest['files'] as $file) $this->verifyFile($directory . '/' . $file['path'], $file['size_bytes'], $file['sha256']);
+    $this->createFile($directory, 'manifest.json', $wire);
+    return ['directory' => $directory, 'manifest' => $manifest, 'manifest_sha256' => hash('sha256', $wire), 'manifest_size_bytes' => strlen($wire)];
+  }
+
+  /**
+   * Read-only facts for a future fenced importer. Neither a bundle ID nor a hash
+   * grants account/claim/import authority. Never accept a worker filesystem path.
+   * Rebuild the expected inventory from canonical callback bytes, not its manifest.
+   * No adoption, cleanup, provider, database or publication occurs here.
+   */
+  public function verifyPrepared(string $bundleId, string $manifestSha256): array {
+    $root = $this->root();
+    if (!preg_match('/\A[a-f0-9]{32}\z/', $bundleId) || !preg_match('/\A[a-f0-9]{64}\z/', $manifestSha256)) throw new \InvalidArgumentException('Invalid prepared bundle identity or manifest hash.');
+    $directory = $root . '/' . $bundleId;
+    $this->sealedDirectory($directory);
+    $manifestWire = $this->readSealed($directory . '/manifest.json', 65536);
+    if (!hash_equals($manifestSha256, hash('sha256', $manifestWire))) throw new \RuntimeException('Prepared manifest hash mismatch.');
+    $raw = $this->readSealed($directory . '/callback.json', ProofAssetContract::MAX_CALLBACK_BYTES);
+    $content = $this->content($raw);
+    if ($content['wire'] !== $manifestWire) throw new \RuntimeException('Prepared manifest differs from canonical callback inventory.');
+    $files = $content['files'] + ['manifest.json' => ['role' => 'manifest', 'bytes' => $manifestWire]];
+    // Enumerate only the finite directories derived from validated content. No
+    // recursive traversal through an unknown extra tree or symlink is permitted.
+    $directories = ['.' => []];
+    foreach (array_keys($files) as $relative) {
+      $parts = explode('/', $relative); $parent = '.';
+      foreach ($parts as $index => $part) {
+        $directories[$parent][$part] = TRUE;
+        if ($index < count($parts) - 1) {
+          $parent = $parent === '.' ? $part : $parent . '/' . $part;
+          $directories[$parent] ??= [];
+        }
+      }
+    }
+    foreach ($directories as $relative => $entries) {
+      $path = $relative === '.' ? $directory : $directory . '/' . $relative;
+      $this->sealedDirectory($path);
+      $handle = opendir($path);
+      if ($handle === FALSE) throw new \RuntimeException('Cannot inspect prepared directory.');
+      $actual = [];
+      try {
+        while (($entry = readdir($handle)) !== FALSE) {
+          if ($entry === '.' || $entry === '..') continue;
+          if (!isset($entries[$entry])) throw new \RuntimeException('Prepared inventory contains an undeclared entry.');
+          $actual[$entry] = TRUE;
+        }
+      }
+      finally { closedir($handle); }
+      if (count($actual) !== count($entries)) throw new \RuntimeException('Prepared inventory is incomplete.');
+    }
+    foreach ($files as $relative => $file) {
+      if ($this->readSealed($directory . '/' . $relative, strlen($file['bytes'])) !== $file['bytes']) throw new \RuntimeException('Prepared artifact differs from canonical callback bytes.');
+    }
+    if ($this->root() !== $root) throw new \RuntimeException('Prepared root changed.');
+    return ['bundle_id' => $bundleId, 'manifest' => $content['manifest'], 'manifest_sha256' => $manifestSha256,
+      'raw_callback' => $raw, 'normalized' => $content['normalized']];
+  }
+
+  /** Pure bounded normalization shared by preparation and verification. */
+  private function content(string $rawCallback): array {
     if ($rawCallback === '' || strlen($rawCallback) > ProofAssetContract::MAX_CALLBACK_BYTES) throw new \InvalidArgumentException('Managed artifact wire exceeds the callback bound.');
     $object = json_decode($rawCallback, FALSE, 16, JSON_THROW_ON_ERROR);
     if (!$object instanceof \stdClass || self::wire($object) !== $rawCallback) throw new \InvalidArgumentException('Managed artifact wire must be canonical JSON without duplicate keys.');
@@ -55,7 +125,6 @@ class ManagedProofArtifactStore {
       }
     }
     $normalized = ProofCallbackArtifacts::normalize($input['variants'], self::DIRECTIONS);
-    if ($normalized !== $expected) throw new \InvalidArgumentException('Raw callback differs from normalized artifacts.');
 
     // Construct the complete bounded inventory before the first filesystem write.
     $files = ['callback.json' => ['role' => 'raw_callback', 'bytes' => $rawCallback]];
@@ -87,15 +156,33 @@ class ManagedProofArtifactStore {
     }
     $wire = self::wire($manifest);
     if ($total + strlen($wire) > self::MAX_PREPARED_BYTES) throw new \InvalidArgumentException('Managed preparation exceeds its storage bound.');
-    $id = $this->newBundleId();
-    if (!preg_match('/\A[a-f0-9]{32}\z/', $id)) throw new \RuntimeException('Invalid server preparation identity.');
-    $directory = $root . '/' . $id;
-    if ($this->root() !== $root || !@mkdir($directory, 0700)) throw new \RuntimeException('Preparation directory already exists or cannot be created.');
-    foreach ($files as $path => $file) $this->createFile($directory, $path, $file['bytes']);
-    // Recheck all bytes after all writes, before publishing the completion marker.
-    foreach ($manifest['files'] as $file) $this->verifyFile($directory . '/' . $file['path'], $file['size_bytes'], $file['sha256']);
-    $this->createFile($directory, 'manifest.json', $wire);
-    return ['directory' => $directory, 'manifest' => $manifest, 'manifest_sha256' => hash('sha256', $wire), 'manifest_size_bytes' => strlen($wire)];
+    return ['normalized' => $normalized, 'files' => $files, 'manifest' => $manifest, 'wire' => $wire];
+  }
+
+  private function sealedDirectory(string $path): void {
+    self::noLinks($path); clearstatcache(TRUE, $path);
+    $stat = @lstat($path);
+    if ($stat === FALSE || ($stat['mode'] & 0170000) !== 0040000 || ($stat['mode'] & 0777) !== 0700
+      || (function_exists('posix_geteuid') && $stat['uid'] !== posix_geteuid())) throw new \RuntimeException('Prepared directories must be private owned directories.');
+  }
+
+  /** Bounded regular-file reads; special files and links never reach fopen. */
+  private function readSealed(string $path, int $maximum): string {
+    self::noLinks($path); clearstatcache(TRUE, $path);
+    $before = @lstat($path);
+    if ($before === FALSE || ($before['mode'] & 0170000) !== 0100000 || ($before['mode'] & 0777) !== 0400
+      || $before['size'] > $maximum || $before['nlink'] !== 1
+      || (function_exists('posix_geteuid') && $before['uid'] !== posix_geteuid())) throw new \RuntimeException('Prepared file is missing, unsealed, linked or oversized.');
+    $handle = fopen($path, 'rb');
+    if ($handle === FALSE) throw new \RuntimeException('Cannot read prepared file.');
+    try { $bytes = stream_get_contents($handle, $maximum + 1); $after = fstat($handle); }
+    finally { fclose($handle); }
+    clearstatcache(TRUE, $path); $current = @lstat($path);
+    if ($bytes === FALSE || strlen($bytes) !== $before['size'] || $after === FALSE || $current === FALSE) throw new \RuntimeException('Prepared file changed while reading.');
+    foreach (['dev', 'ino', 'mode', 'uid', 'size', 'nlink', 'mtime', 'ctime'] as $key) {
+      if ($before[$key] !== $after[$key] || $before[$key] !== $current[$key]) throw new \RuntimeException('Prepared file changed while reading.');
+    }
+    return $bytes;
   }
 
   private static function wire(mixed $data): string {
