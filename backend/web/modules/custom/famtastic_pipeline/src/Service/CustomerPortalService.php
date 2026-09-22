@@ -1283,6 +1283,7 @@ final class CustomerPortalService {
   public function sharedWebsiteRequest(string $publicId, string $signature): ?array {
     if (!preg_match('/^[0-9a-f]{64}$/', $signature)) return NULL;
     $row = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('public_id', $publicId)->execute()->fetchAssoc();
+    if ($row && FreshProofBinding::isManagedReadOnly($this->database, $row)) return NULL;
     if (!$row || empty($row['proof_share_enabled']) || !$this->requestProofsAreCustomerVisible($row) || $this->proofContainsPrivateReference($row)) return NULL;
     return hash_equals($this->proofShareSignature($row), $signature) ? $row : NULL;
   }
@@ -1308,11 +1309,18 @@ final class CustomerPortalService {
   }
 
   private function changeWebsiteProofShare(array $row, string $action, int $uid): void {
-    if ($action !== 'disable' && $this->proofContainsPrivateReference($row)) {
-      throw new \InvalidArgumentException('Uploaded project references are restricted to private review.');
+    if (FreshProofBinding::isManagedReadOnly($this->database, $row)) {
+      if ($action !== 'disable') throw new \RuntimeException('Website proofs are not available for sharing.');
+      // Revocation remains possible even with incomplete or malformed evidence.
+      // Use the original update/audit below, under the caller's existing auth.
     }
-    if (!$this->requestProofsAreCustomerVisible($row) || !$this->serializeRequestProof($row)) {
-      throw new \RuntimeException('Only a complete owner-approved proof set can be shared.');
+    else {
+      if ($action !== 'disable' && $this->proofContainsPrivateReference($row)) {
+        throw new \InvalidArgumentException('Uploaded project references are restricted to private review.');
+      }
+      if (!$this->requestProofsAreCustomerVisible($row) || !$this->serializeRequestProof($row)) {
+        throw new \RuntimeException('Only a complete owner-approved proof set can be shared.');
+      }
     }
     if (!in_array($action, ['enable', 'disable', 'rotate'], TRUE)) {
       throw new \InvalidArgumentException('Choose a valid proof-sharing action.');
@@ -1340,6 +1348,10 @@ final class CustomerPortalService {
   }
 
   private function proofSharePayload(array $row): array {
+    if (FreshProofBinding::isManagedReadOnly($this->database, $row)) return [
+      'enabled' => FALSE, 'url' => '',
+      'changed_at' => !empty($row['proof_share_changed_at']) ? (int) $row['proof_share_changed_at'] : NULL,
+    ];
     $enabled = !empty($row['proof_share_enabled']) && $this->requestProofsAreCustomerVisible($row) && !$this->proofContainsPrivateReference($row) && (bool) $this->serializeRequestProof($row);
     $base = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
     return [
@@ -1374,6 +1386,7 @@ final class CustomerPortalService {
 
   /** Returns customer-safe proof metadata only after explicit owner approval. */
   private function serializeRequestProof(array $row): ?array {
+    if (FreshProofBinding::isManagedReadOnly($this->database, $row)) return NULL;
     if (!in_array((string) ($row['proof_review_status'] ?? ''), ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) return NULL;
     $campaignId = (int) ($row['proof_campaign_id'] ?? 0);
     if (!$campaignId) return NULL;
@@ -2564,8 +2577,9 @@ final class CustomerPortalService {
   /** Serializes the latest complete proof campaign attached to a project. */
   private function projectProofs(object $project): ?array {
     $prospectId = (int) $project->get('prospect_ref')->target_id;
-    $request = $this->database->select('famtastic_project_request', 'r')->fields('r', ['public_id', 'proof_campaign_id', 'proof_review_status'])
+    $request = $this->database->select('famtastic_project_request', 'r')->fields('r', ['id', 'public_id', 'proof_campaign_id', 'proof_review_status'])
       ->condition('project_id', (int) $project->id())->orderBy('changed', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    if ($request && FreshProofBinding::isManagedReadOnly($this->database, $request)) return NULL;
     if ($request && !in_array($request['proof_review_status'], ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) {
       return NULL;
     }
@@ -2576,6 +2590,7 @@ final class CustomerPortalService {
     }
     $campaignIds = $campaignQuery->execute();
     if (!$campaignIds) return NULL;
+    if (FreshProofBinding::isManagedCampaignReadOnly($this->database, (int) reset($campaignIds))) return NULL;
     $campaign = $this->entities->getStorage('proof_campaign')->load(reset($campaignIds));
     $variantIds = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
       ->condition('campaign_id', (int) $campaign->id())->sort('direction_id')->execute();

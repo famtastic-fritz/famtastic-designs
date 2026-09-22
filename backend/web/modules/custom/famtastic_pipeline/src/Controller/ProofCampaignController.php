@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\famtastic_pipeline\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Database\Connection;
 use Drupal\famtastic_pipeline\Entity\ProofCampaign;
 use Drupal\famtastic_pipeline\Entity\Prospect;
 use Drupal\famtastic_pipeline\Service\PipelineRepository;
 use Drupal\famtastic_pipeline\Service\ProofCampaignService;
+use Drupal\famtastic_pipeline\Service\FreshProofBinding;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +27,7 @@ class ProofCampaignController extends ControllerBase {
   public function __construct(
     protected PipelineRepository $repository,
     protected ProofCampaignService $proofCampaigns,
+    protected Connection $database,
   ) {}
 
   /**
@@ -34,6 +37,7 @@ class ProofCampaignController extends ControllerBase {
     return new static(
       $container->get('famtastic_pipeline.repository'),
       $container->get('famtastic_pipeline.proof_campaign_service'),
+      $container->get('database'),
     );
   }
 
@@ -51,6 +55,7 @@ class ProofCampaignController extends ControllerBase {
 
     $existing = $this->proofCampaigns->getForProspect($prospect);
     if ($existing) {
+      if (FreshProofBinding::isManagedCampaignReadOnly($this->database, (int) $existing['campaign']->id())) return $this->managedReadDenied();
       $campaign = $this->refreshExpiry($existing['campaign']);
       if ($campaign->get('status')->value === 'active') {
         return new JsonResponse([
@@ -90,6 +95,7 @@ class ProofCampaignController extends ControllerBase {
     if (!$found) {
       return $this->error('no_campaign', 404, 'No proof campaign exists yet.');
     }
+    if (FreshProofBinding::isManagedCampaignReadOnly($this->database, (int) $found['campaign']->id())) return $this->managedReadDenied();
     $campaign = $this->refreshExpiry($found['campaign']);
     return $this->noStore(new JsonResponse([
       'ok' => TRUE,
@@ -110,6 +116,7 @@ class ProofCampaignController extends ControllerBase {
     if (!$found) {
       return $this->error('no_campaign', 404, 'No proof campaign exists yet.');
     }
+    if (FreshProofBinding::isManagedCampaignReadOnly($this->database, (int) $found['campaign']->id())) return $this->managedReadDenied();
     $campaign = $this->refreshExpiry($found['campaign']);
     if ($campaign->get('status')->value === 'expired') {
       return $this->error('campaign_expired', 410, 'This proof campaign has expired.');
@@ -140,6 +147,16 @@ class ProofCampaignController extends ControllerBase {
   // ------------------------------------------------------------------------
   // Helpers.
   // ------------------------------------------------------------------------
+
+  /** A prospect token is not account-bound managed import/read authority. */
+  private function managedReadDenied(): JsonResponse {
+    $response = new JsonResponse(['ok' => FALSE, 'error' => 'no_campaign'], 404);
+    $response->headers->set('Cache-Control', 'private, no-store, max-age=0');
+    $response->headers->set('X-Content-Type-Options', 'nosniff');
+    $response->headers->set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    $response->headers->set('Referrer-Policy', 'no-referrer');
+    return $response;
+  }
 
   /**
    * Resolves and validates the prospect from the request token.

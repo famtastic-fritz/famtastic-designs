@@ -17,6 +17,15 @@ final class FreshProofBinding {
 
   /** Stored identity survives flag changes, input edits and malformed evidence. */
   public static function isManaged(Connection $db, array $request): bool {
+    return self::requestMarker($db, $request, TRUE);
+  }
+
+  /** Read-boundary classification only; never parses evidence or takes locks. */
+  public static function isManagedReadOnly(Connection $db, array $request): bool {
+    return self::requestMarker($db, $request, FALSE);
+  }
+
+  private static function requestMarker(Connection $db, array $request, bool $lock): bool {
     $query = $db->select('famtastic_event', 'e');
     $scope = $query->orConditionGroup()->condition('event_key', self::key((int) $request['id']));
     if (!empty($request['proof_campaign_id'])) {
@@ -24,7 +33,21 @@ final class FreshProofBinding {
         ->condition('event_key', $db->escapeLike('proof-admission:request:') . '%', 'LIKE');
       $scope->condition($query->andConditionGroup()->condition('campaign_id', (int) $request['proof_campaign_id'])->condition($marker));
     }
-    return (bool) $query->fields('e', ['id'])->condition($scope)->range(0, 1)->forUpdate()->execute()->fetchField();
+    $query->fields('e', ['id'])->condition($scope)->range(0, 1);
+    if ($lock) $query->forUpdate();
+    return (bool) $query->execute()->fetchField();
+  }
+
+  /** Campaign tokens cannot bypass a request marker with a broken campaign column. */
+  public static function isManagedCampaignReadOnly(Connection $db, int $campaignId): bool {
+    $requests = $db->select('famtastic_project_request', 'r')->fields('r', ['id'])
+      ->condition('proof_campaign_id', $campaignId)->execute()->fetchCol();
+    $query = $db->select('famtastic_event', 'e');
+    $marker = $query->orConditionGroup()->condition('event_type', self::EVENT)
+      ->condition('event_key', $db->escapeLike('proof-admission:request:') . '%', 'LIKE');
+    $scope = $query->orConditionGroup()->condition($query->andConditionGroup()->condition('campaign_id', $campaignId)->condition($marker));
+    if ($requests) $scope->condition('event_key', array_map(static fn($id) => self::key((int) $id), $requests), 'IN');
+    return (bool) $query->fields('e', ['id'])->condition($scope)->range(0, 1)->execute()->fetchField();
   }
 
   public static function assertGenericImportAllowed(Connection $db, int $campaignId): void {
