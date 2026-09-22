@@ -13,6 +13,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
 use Drupal\famtastic_pipeline\Service\CharacterAssetService;
 use Drupal\famtastic_pipeline\Service\FreshProofBinding;
+use Drupal\famtastic_pipeline\Service\ManagedProofReader;
 use Drupal\famtastic_pipeline\Service\ProofAssetContract;
 use Drupal\file\FileUsage\FileUsageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -32,6 +33,7 @@ final class WebsiteRequestProofController extends ControllerBase {
     private readonly FileUsageInterface $fileUsage,
     private readonly UuidInterface $uuid,
     private readonly CharacterAssetService $characterAssets,
+    private readonly ?ManagedProofReader $managedReader = NULL,
   ) {}
 
   public static function create(ContainerInterface $container): self {
@@ -44,12 +46,14 @@ final class WebsiteRequestProofController extends ControllerBase {
       $container->get('file.usage'),
       $container->get('uuid'),
       $container->get('famtastic_pipeline.character_assets'),
+      $container->has('famtastic_pipeline.managed_proof_reader') ? $container->get('famtastic_pipeline.managed_proof_reader') : NULL,
     );
   }
 
   public function customerPreview(Request $request, string $website_request, string $direction): Response {
     $customer = $this->account->isAuthenticated() ? $this->portal->customerForUid((int) $this->account->id()) : NULL;
     $row = $customer ? $this->portal->ownedWebsiteRequest((int) $customer['id'], $website_request) : NULL;
+    if ($row && FreshProofBinding::isManagedReadOnly($this->database, $row)) return $this->managedCustomerResponse($request, $row, $direction);
     if (!$row || !in_array($row['proof_review_status'], ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) {
       return new Response('Proof not found.', 404);
     }
@@ -86,6 +90,7 @@ final class WebsiteRequestProofController extends ControllerBase {
   public function customerAsset(Request $request, string $website_request, string $direction, string $asset_path): Response {
     $customer = $this->account->isAuthenticated() ? $this->portal->customerForUid((int) $this->account->id()) : NULL;
     $row = $customer ? $this->portal->ownedWebsiteRequest((int) $customer['id'], $website_request) : NULL;
+    if ($row && FreshProofBinding::isManagedReadOnly($this->database, $row)) return $this->managedCustomerResponse($request, $row, $direction, $asset_path);
     if (!$row || !in_array($row['proof_review_status'], ['customer_ready', 'notified', 'selected', 'revision_requested'], TRUE)) {
       return new Response('Proof asset not found.', 404);
     }
@@ -189,6 +194,31 @@ final class WebsiteRequestProofController extends ControllerBase {
     // asset-use authority. No destructive filesystem cleanup in this mutation.
     $this->portal->refreshSelectedWebsiteRequest((int) $customer['id'], $website_request);
     return new JsonResponse(['ok' => TRUE, 'duplicate' => FALSE, 'asset' => $this->assetPayload($asset)], 201);
+  }
+
+  /** Exact credited bytes, never legacy rewriting, public shares or read grants. */
+  private function managedCustomerResponse(Request $request, array $row, string $direction, ?string $assetPath = NULL): Response {
+    if ($this->managedReader === NULL) return $this->managedReadDenied();
+    try {
+      // Account comes from Drupal authentication, not route/body/customer IDs.
+      // The reader separately requires an exact committed managed QA release.
+      $context = $this->managedReader->context((int) $row['id'], $this->account, 'customer');
+      $content = $assetPath === NULL
+        ? $this->managedReader->readRole($context, $direction, 'html')
+        : $this->managedReader->readRelativeAsset($context, $direction, 'assets/' . $assetPath);
+      if ($assetPath === NULL && !str_ends_with($request->getPathInfo(), '/' . $direction . '/index.html')) {
+        // A file-shaped URL resolves the retained relative assets correctly.
+        // Existing links can enter here, but customer email still links /portal.
+        $location = '/web/api/customer/website-requests/' . rawurlencode((string) $row['public_id'])
+          . '/proofs/' . rawurlencode($direction) . '/index.html';
+        $response = new Response('', 302, ['Location' => $location]);
+      }
+      else $response = new Response($content['bytes'], 200, ['Content-Type' => $content['media_type']]);
+      $response->headers->set('X-Content-Type-Options', 'nosniff');
+      $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-ancestors 'self'; base-uri 'none'; form-action 'none'");
+      return $this->securePublicResponse($response);
+    }
+    catch (\Throwable) { return $this->managedReadDenied(); }
   }
 
   private function artifactResponse(array $row, string $direction, ?string $shareSignature = NULL): Response {

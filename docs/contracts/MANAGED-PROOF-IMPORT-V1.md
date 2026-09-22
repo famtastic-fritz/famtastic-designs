@@ -1,5 +1,10 @@
 # Managed proof import v1
 
+September 22 follow-up: receipt/current-authority reads and initial QA/HTTP consumers
+now exist in `MANAGED-PROOF-READS-V1.md`. They remain unregistered, and customer
+release verification is an unimplemented production dependency. Historical absence
+statements below describe the import checkpoint, not permission to use legacy reads.
+
 September 22, 2026. **Locally verified, default-closed source**, integrated as
 75e0cb94, then combined with the legacy-reader fence in 0c698fb7. Independent
 review caught and main repaired the real Drupal text_long SQL mapping defect

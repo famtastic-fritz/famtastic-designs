@@ -1,5 +1,15 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-22 - Managed private reads: local verified, not installed
+
+Receipt/current-authority reader plus initial QA/HTTP consumers pass full PHP
+1,079/11,002, portal DNA 34/34 and canonical **legacy** journey regression.
+Customer-release and producer/reviewer authority use explicit test doubles; no
+real managed QA/release/metadata or installed auth/browser claim. The reader is
+unregistered and managed release stays closed. No live capability promotion.
+See `evidence/MANAGED-PROOF-READS-2026-09-22.md`; it supersedes earlier reader
+absence statements while retaining their activation gates.
+
 ## 2026-09-22 - Recovered local regression and mail-isolation evidence
 
 PHP 983/6,731 and paired Studio 1,588 tests/135 files pass; the canonical fresh

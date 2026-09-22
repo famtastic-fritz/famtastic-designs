@@ -1,5 +1,16 @@
 # Product changelog
 
+## 2026-09-22 - Verify receipt-authorized proof readers and initial consumers
+
+- Add current-authority, exact-byte managed reads with opaque contexts and full
+  receipt/package verification; exclude all recorded producers from review.
+- Connect existing QA context and customer HTML/assets to optional trusted reads;
+  preserve relative links and creator credit, with no legacy fallback. Managed
+  release, service registration and portal metadata remain closed.
+- Full PHP 1,079/11,002, portal DNA 34/34 and the canonical legacy customer journey
+  pass; protected data unchanged. No live enablement or customer message.
+  See `evidence/MANAGED-PROOF-READS-2026-09-22.md` for receipts and exact limits.
+
 ## 2026-09-22 - Isolate core mail and rerun recovered customer-delivery source
 
 - Capture Drupal core account mail in the verified disposable journey, in addition

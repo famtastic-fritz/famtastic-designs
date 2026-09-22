@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - Exact managed reads need separate current release authority
+
+Observation: receipt-aware QA/HTTP readers now verify exact package bytes and
+active account/rights, but read context cannot approve a proof. Guidance: preserve
+opaque handles, all-producer exclusion, relative links and original creator credit;
+never fall back to legacy paths or enable customer reads from flags alone. Full
+PHP 1,079/11,002 and legacy canonical journey pass; real managed release, installed
+auth/browser and unattended delivery remain separate tests, not implied results.
+
 ## 2026-09-22 - Whole-journey mail capture and durable evidence
 
 Observation: the agency memory mailer did not capture core account mail, and

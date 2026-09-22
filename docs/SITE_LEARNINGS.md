@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 - Preserve exact bytes without turning receipts into permission
+
+Observation: packaged HTML uses relative assets and already contains canonical
+credit; a legacy path renderer would rewrite its reviewed bytes. Guidance: use a
+file-shaped authenticated URL and exact role-based reads, with fresh current
+account/rights and receipt-bound independent release authority. Exclude every
+stored producer, not merely the producer named by a reviewer. Read-only snapshots
+are not a later transaction grant. Full 1,079/11,002 passes locally; synthetic
+release attestation and a legacy full journey do not prove managed delivery.
+
 ## 2026-09-22 - Capture every actual mail boundary in disposable tests
 
 FAMtastic memory mail did not intercept Drupal core account messages. Network/MTA

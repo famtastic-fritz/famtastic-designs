@@ -2,6 +2,22 @@
 
 Status: local repairs and verification; no live activation.
 
+September22 reader checkpoint: receipt/current-authority reader and first QA/HTTP
+consumers now pass full PHP1,079/11,002, portal DNA34/34 and canonical legacy journey.
+They are unregistered; customer release remains an unimplemented authority dependency.
+Next is receipt-bound independent QA/release plus repeatable pending-import review,
+then released portal metadata/selected continuation and real Mac producer provenance.
+Hosted run35720982600 still executed no steps because of the account billing lock;
+account resolution/cloud CLI authorization requested, no settings changed.
+See `../evidence/MANAGED-PROOF-READS-2026-09-22.md`.
+
+September22 Linux packaging follow-up: Studio's actual control/worker images now
+pass filtered Linux/AMD64 build, non-root SDK import, copied-source hash and closed
+startup checks. Receipt lives in Studio `docs/evidence/PHASE2-LINUX-IMAGES-2026-09-22.md`.
+The isolated verification VM is stopped; no images pushed or cloud resources made.
+This removes the earlier image-build/headroom gate, not cloud authentication,
+create-only apply, real canary or unattended-customer-journey requirements.
+
 Latest September 22 recovery: former temporary work/evidence roots are absent;
 their historical reports below are not currently inspectable raw receipts.
 Recovered source and new evidence now live under
@@ -12,8 +28,7 @@ the earlier withheld journey result, but it is still the legacy owner-review
 fixture, NOT a managed unattended journey. Exact source, timing and boundaries:
 `../evidence/AUTOPIPELINE-RECOVERED-VERIFICATION-2026-09-22.md`.
 
-Next implementation sequence: receipt/current-authority reader connected to
-protected routes and QA context; receipt-bound independent release and resumable
+Next implementation sequence: receipt-bound independent release and resumable
 review; selected-source continuation; then the real Mac creative runner and
 authenticated provenance. Reuse existing portal, mail and shared job ownership.
 Cloud CLI still has no active account/project; no activation is authorized by

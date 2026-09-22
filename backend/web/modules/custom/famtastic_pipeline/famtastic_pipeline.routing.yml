@@ -760,6 +760,20 @@ famtastic_pipeline.customer_website_request_proof_preview:
   options:
     no_cache: 'TRUE'
 
+# Managed packages retain exact relative links and require a file-shaped URL.
+# Authentication/current release remain in the same customer controller/reader.
+famtastic_pipeline.customer_website_request_proof_index:
+  path: '/api/customer/website-requests/{website_request}/proofs/{direction}/index.html'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\WebsiteRequestProofController::customerPreview'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    website_request: '[0-9a-f-]{36}'
+    direction: 'a|b|c'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.customer_website_request_proof_asset:
   path: '/api/customer/website-requests/{website_request}/proofs/{direction}/assets/{asset_path}'
   defaults:

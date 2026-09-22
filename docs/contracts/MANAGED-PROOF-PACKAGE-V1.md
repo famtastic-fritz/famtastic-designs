@@ -1,5 +1,10 @@
 # Managed proof package v1
 
+September 22 follow-up: `MANAGED-PROOF-READS-V1.md` adds a current-authority receipt
+resolver and initial consumers, still unregistered and default closed. Customer
+release, installed routing and real producer evidence remain separate gates. The
+absence statements below are preserved as the earlier package-only checkpoint.
+
 September 21, 2026. Locally verified, unregistered groundwork based on
 `ee8f6d3871d122dada20a844a86f48113332221f`, implemented as 9e2bb083 and integrated
 as f370b2ef. Independent source review found no confirmed defect within this scope.

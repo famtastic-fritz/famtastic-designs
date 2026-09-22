@@ -1713,10 +1713,10 @@ final class CustomerPortalService {
   }
 
   /** Trusted staff/worker QA context. This is deliberately not a customer route. */
-  public function websiteRequestAutomatedProofQaContext(int $requestId, array $research): array {
+  public function websiteRequestAutomatedProofQaContext(int $requestId, array $research, ?object $authenticatedPrincipal = NULL): array {
     $normalized = $this->normalizeProofResearchSnapshot($research);
     if (!$normalized) throw new \InvalidArgumentException('Complete sourced research and three direction rationales are required.');
-    return \Drupal::service('famtastic_pipeline.automated_proof_release')->context($requestId, $normalized);
+    return \Drupal::service('famtastic_pipeline.automated_proof_release')->context($requestId, $normalized, $authenticatedPrincipal);
   }
 
   /** Trusted staff/worker caller supplies independent QA and owner-authorized copy. */

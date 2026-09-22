@@ -105,7 +105,7 @@ final class ManagedProofLegacyReaderFenceTest extends UnitTestCase {
     }
     $account = $this->createMock(AccountProxyInterface::class); $account->method('isAuthenticated')->willReturn(TRUE); $account->method('id')->willReturn(1);
     $this->controller = (new \ReflectionClass(WebsiteRequestProofController::class))->newInstanceWithoutConstructor();
-    foreach (['database' => $this->db, 'portal' => $this->portal, 'account' => $account, 'entities' => $entities] as $p => $v) (new \ReflectionProperty($this->controller, $p))->setValue($this->controller, $v);
+    foreach (['database' => $this->db, 'portal' => $this->portal, 'account' => $account, 'entities' => $entities, 'managedReader' => NULL] as $p => $v) (new \ReflectionProperty($this->controller, $p))->setValue($this->controller, $v);
   }
 
   protected function tearDown(): void {

@@ -1,5 +1,10 @@
 # Managed proof legacy-reader fence v1
 
+September 22 follow-up: the optional receipt-authorized customer/QA branch is in
+`MANAGED-PROOF-READS-V1.md`. Its default is still closed; failures never fall back
+here. Public/admin/token fences and withheld metadata remain. Historical blanket
+reader denials below describe the fence checkpoint before that optional branch.
+
 September 22, 2026. Candidate ab1f254d integrated as 0c698fb7 after main's source
 review and runtime verification. No installed DB, route rebuild or activation.
 Focused 76/735 and combined full PHP 983/6,731 pass. This closes existing callers; it does not
