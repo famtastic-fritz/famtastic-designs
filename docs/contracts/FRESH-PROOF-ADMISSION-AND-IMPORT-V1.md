@@ -6,10 +6,12 @@ It extends the established Mac creative process; it does not substitute static
 packaging or the fictional six-direction benchmark for customer proof creation.
 Read SHARED-PROOF-CLAIMS-V1.md and MAC-CREATIVE-WORKER-V1.md together.
 
-Unverified source follow-up: PROOF-OPERATION-JOURNAL-V1.md adds only an
-unregistered paid-operation journal and bounded receipt metadata. Admission
-reuse retains its checks through a same-connection locked-record helper. Tests
-are unrun; provider, current-byte verification, importer and activation stay closed.
+Verified source follow-up: PROOF-OPERATION-JOURNAL-V1.md adds an unregistered
+paid-operation journal and bounded receipt metadata, with 260 focused tests /
+1,769 assertions. Admission reuse retains its checks through a same-connection
+locked-record helper. Current-byte and credited-package verification are now
+locally tested (MANAGED-PROOF-PACKAGE-V1.md), but do not grant authority. Real
+provider verification, the fenced importer and activation remain unfinished.
 
 The later narrow `MANAGED-PROOF-ARTIFACT-PREPARATION-V1.md` checkpoint extracts
 legacy artifact validation and adds unregistered private create-only preparation.
@@ -400,8 +402,14 @@ reject. Lease credentials stay outside stored raw callbacks and captured source.
 
 ## Release boundary
 
-Reuse attachWebsiteRequestProof without downgrading advanced review states.
-Managed import cannot fall through to generic outreach.prepare. Independent
+The future managed importer must NOT call attachWebsiteRequestProof: its legacy
+first-attachment behavior queues an owner-review notice and owner-waiting activity.
+Reuse only the existing internal `owner_review` state with a narrow locked
+transition; routine independent green QA does not need another Fritz gate.
+There is currently no queued QA handler: report independent QA pending, not
+review queued. Preserve advanced state on historical acknowledgments rather than
+relaxing the fresh-input snapshot. Managed import cannot fall through to generic
+outreach.prepare. Independent
 AutomatedProofRelease QA and its existing branded notification outbox remain
 separate. Reviewer independence uses stored producer identity, not self-reported
 strings. Notification acceptance is not readership; import is not customer release.

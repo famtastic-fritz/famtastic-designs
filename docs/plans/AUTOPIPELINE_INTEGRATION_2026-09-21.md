@@ -2,6 +2,26 @@
 
 Status: local repairs and verification; no live activation.
 
+September 21 late-evening verification refresh (September 22 UTC): agency
+`origin/main` remains f750a163 after an explicit main-ref fetch. At source66434a3f,
+hosted run35680098183 again executed no backend steps because of the account
+billing lock. Cloud CLI still has no active account or selected project. These
+are not source-test failures and no billing/authentication setting was changed.
+
+Canonical Mac Studio is clean at bf1ef9ca, LaunchAgent running from the canonical
+checkout with PID32011, listening only on 127.0.0.1:3400; the health response
+reports `ok: true`. This read-only observation supersedes the historical PID78266,
+not its earlier evidence. This task did not restart or deploy the service.
+
+The full disposable Drupal journey was withheld at the 1 GiB local preflight:
+only roughly 330 MiB was free, while the vendor/core copy alone accounts for
+258 MiB before module/frontend/build output. Receipt
+`canonical-journey-headroom.gjucSx` records exit75, 0.112s, protected data unchanged;
+no sandbox/database/journey was started and this is NOT a test pass. The existing
+200 MiB runtime watch remains; bounded in-memory tests can continue. The canonical
+customer-journey skill requires the real runner and its evidence markers, so no
+smaller fixture substitutes for that currently unrun full acceptance check.
+
 Latest managed-package milestone: reviewed 9e2bb083 integrated as f370b2ef,
 exact server-logo role/credited derivatives, immutable originals, pre-import
 verification and default-closed receipt-gated reads. Full PHP now passes 848

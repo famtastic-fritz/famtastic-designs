@@ -1,5 +1,14 @@
 # Product changelog
 
+## 2026-09-21 - Refresh activation evidence without claiming deployment
+
+- Recheck canonical clean Mac source, loopback-only service/health, cloud CLI
+  configuration and latest hosted CI. Preserve historical receipts; CI still
+  did not start and cloud CLI remains unconfigured.
+- Retain the full-journey storage-preflight stop separately from unit-test
+  passes. Clarify that the managed importer must not enqueue a legacy owner
+  approval notice; independent QA remains an unfinished integration step.
+
 ## 2026-09-21 - Verify exact credited packages without granting delivery authority
 
 - Add unregistered packages retaining originals, exact credit and separate pinned

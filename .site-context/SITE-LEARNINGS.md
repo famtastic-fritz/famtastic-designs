@@ -3174,3 +3174,13 @@ The f5d8c769 apply passed PHP 8.3 syntax, cache rebuild and service resolution, 
 ## Frontend build recovery — 2026-09-21
 
 The first frontend build stopped before promotion because the private sparse source omitted the existing Why FAMtastic narration import. Materializing that exact committed input repaired module resolution. The next build was killed by the hosting account before completion; production frontend remained at 40ca506b. This does not by itself establish an OOM diagnosis. The release script now bounds native Rayon/Tokio workers to two and V8 old-space to 512 MiB, and the scoped source preparation includes the narration directory. The identical bounded local compile passes 618 modules; the full hosting build remains the release gate. See the [Rayon thread-pool environment contract](https://docs.rs/rayon/latest/rayon/struct.ThreadPoolBuilder.html).
+# 2026-09-21 - Keep current operational evidence separate from local source tests
+
+Observation: the running Mac PID changed to32011 without this task restarting it;
+its clean source is still bf1ef9ca and health is OK on loopback3400. Latest hosted
+CI for66434a3f started no steps because of billing. The full disposable journey
+cannot fit safely in approximately330MiB (vendor/core alone258MiB).
+Guidance: refresh runtime identity rather than reusing a historical PID; retain
+not-started CI and storage preflight as blockers, never test passes. Continue
+bounded source verification without deleting unrelated owner files. A future
+managed import uses internal pending-QA state, not the legacy owner-notice writer.

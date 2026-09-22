@@ -3074,3 +3074,12 @@ Each site must own its Git root, common directory, manifest and verified remote.
 Studio/library checkouts retain their separately configured locations. Explicit sandbox roots remain supported. New customer identities should use `site-<business-slug>`; preserve existing IDs and registry bindings on continuation. Check existing source and registry before creating a duplicate. This rule does not automatically move existing repositories or authorize deployment, credentials, DNS or customer communication. Fritz assigned the StockandShip98 move to its own task.
 
 Historical migration receipts retain their original paths as evidence; this current rule supersedes their use as defaults. When an authorized move is performed, preserve history, dirty work and remotes, then update the local project/launcher mappings and current handoff documents. Confirm the actual new checkout before claiming migration complete.
+# 2026-09-21 - An import retry and a fresh build have different authority
+
+The current fresh snapshot includes review/selection fields by design. A committed
+import followed by real QA or selection cannot pass that same fresh snapshot.
+Keep strict fresh checks; implement historical receipt acknowledgment separately
+with no lifecycle writes. Do not reuse the legacy attachment writer, which queues
+owner approval mail. Internal `owner_review` is the existing independent QA input
+state, not permission to reinstate Fritz as the routine bottleneck. Full-journey
+storage preflight is a blocked execution, not evidence that this behavior works.
