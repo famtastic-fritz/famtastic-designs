@@ -1,0 +1,65 @@
+{
+  "recorded_at": "2026-09-23T04:00:43+00:00",
+  "request_id": 17,
+  "customer_id": 15,
+  "campaign_id": 56,
+  "owner_reported_choice": "b \u2014 Curated Finds",
+  "authorization": "Fritz explicitly requested emailing this completed selection/hosting step and the upcoming store, checkout, payment and delivery phase to the client, with an exact copy to Fritz.",
+  "staging_boundary": "Hosted selected design preview is available; full store remains in planning.",
+  "request_unchanged": true,
+  "body_sha256": "1a010823c779dc49af3a2f2594a9ed61f4e7d6855702503b543a821398a52bbc",
+  "customer_html_sha256": "a461b5e246f6a728ab7a5a91558ef2d700dc325c0e824756e295f23fc7ca4319",
+  "dispatch": {
+    "processed": 2,
+    "claimed": 2,
+    "sent": 2,
+    "failed": 0,
+    "retried": 0,
+    "recovered_claims": 0
+  },
+  "receipts": [
+    {
+      "id": "895",
+      "notification_key": "website-request:17:selected-b:store-next-notice-20260923-v1",
+      "subject": "StockandShip98: design confirmed \u2014 store build next",
+      "status": "sent",
+      "attempts": "1",
+      "max_attempts": "1",
+      "provider_message_id": "<TJh6v4LasKk64QDrPjhhiYVEQXM76QkBySnnDle6yg@famtasticdesigns.com>",
+      "template_id": "standard",
+      "template_version": "2",
+      "recipient_role": "verified_customer",
+      "recipient_matches_expected": true,
+      "sent_at_utc": "2026-09-23T04:00:28+00:00",
+      "body_sha256": "1a010823c779dc49af3a2f2594a9ed61f4e7d6855702503b543a821398a52bbc"
+    },
+    {
+      "id": "896",
+      "notification_key": "website-request:17:selected-b:store-next-owner-copy-20260923-v1",
+      "subject": "Copy: StockandShip98: design confirmed \u2014 store build next",
+      "status": "sent",
+      "attempts": "1",
+      "max_attempts": "1",
+      "provider_message_id": "<0gYLhDYa6hncE9SdbjaHOeFDxhoe8JqkHlDUrRN5E@famtasticdesigns.com>",
+      "template_id": "standard",
+      "template_version": "2",
+      "recipient_role": "owner_copy",
+      "recipient_matches_expected": true,
+      "sent_at_utc": "2026-09-23T04:00:28+00:00",
+      "body_sha256": "1a010823c779dc49af3a2f2594a9ed61f4e7d6855702503b543a821398a52bbc"
+    }
+  ],
+  "mobile_preview": {
+    "width": 390,
+    "height": 844,
+    "horizontal_overflow": false,
+    "images_loaded": 4,
+    "staging_button_height_px": 46,
+    "approved_brand_shell": true,
+    "real_email_client_compatibility_tested": false
+  },
+  "customer_inbox_or_readership_verified": false,
+  "owner_inbox_verified": true,
+  "owner_gmail_id": "1a0cc6d3d2132962",
+  "owner_inbox_message_id_matches_smtp": true
+}

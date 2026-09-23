@@ -2908,3 +2908,8 @@ Historical migration receipts retain their original paths as evidence; this curr
 ## 2026-09-22 — StockandShip98 telephone choice and hosting repair
 
 Observation: the client called Fritz with direction B; missing portal state did not prove a portal defect. Guidance: record explicit owner-relayed authority and automation identity through the normal selection lifecycle, preserve final acceptance, and prevent unrequested transactional notices before commit. Observation: cPanel addon servername did not ensure public DNS or certificate coverage. Guidance: verify DNS, TLS, redirects and exact artifact bytes independently, and distinguish shared virtual-host routing from independent staging/live runtimes. See `docs/plans/STOCKANDSHIP98-SELECTION-HOSTING-REPAIR-2026-09-23.md`.
+
+
+## 2026-09-23 — selected-preview progress notice
+
+Observation: a working client staging hostname may still contain a static design preview. Guidance: state the completed hosting/selection step separately from forthcoming commerce, use the existing operational email shell, preserve the Shay signature, and copy the exact message to the owner when authorized. Standard progress mail does not establish readiness for final acceptance. See `docs/plans/STOCKANDSHIP98-STORE-NEXT-NOTICE-2026-09-23.md`.

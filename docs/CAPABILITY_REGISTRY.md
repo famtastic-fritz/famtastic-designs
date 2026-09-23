@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-23 — StockandShip98 progress notice accepted
+
+**Exact provider-send and owner-inbox evidence:** outboxes895/896 were SMTP-accepted once through the existing standard/v2 renderer; the owner Gmail INBOX Message-ID matches896. No new notification producer, commerce capability or completed-store state. See `docs/plans/STOCKANDSHIP98-STORE-NEXT-NOTICE-2026-09-23.md`.
+
 ## 2026-09-22 — StockandShip98 choice and review routing verified
 
 **Production-proven for request17 only:** existing service records B from an explicitly authorized owner relay; serializer returns B, planning job319 exists, no final acceptance/checkout/staging receipt is inferred. Staging DNS/TLS/root review and temporary purchased-domain redirects pass public checks. This is selected design-preview hosting, not a completed ecommerce worker or store. No agency application deployment. See `docs/plans/STOCKANDSHIP98-SELECTION-HOSTING-REPAIR-2026-09-23.md`.
