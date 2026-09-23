@@ -2839,3 +2839,8 @@ Each site must own its Git root, common directory, manifest and verified remote.
 Studio/library checkouts retain their separately configured locations. Explicit sandbox roots remain supported. New customer identities should use `site-<business-slug>`; preserve existing IDs and registry bindings on continuation. Check existing source and registry before creating a duplicate. This rule does not automatically move existing repositories or authorize deployment, credentials, DNS or customer communication. Fritz assigned the StockandShip98 move to its own task.
 
 Historical migration receipts retain their original paths as evidence; this current rule supersedes their use as defaults. When an authorized move is performed, preserve history, dirty work and remotes, then update the local project/launcher mappings and current handoff documents. Confirm the actual new checkout before claiming migration complete.
+
+
+## 2026-09-22 — StockandShip98 telephone choice and hosting repair
+
+Observation: the client called Fritz with direction B; missing portal state did not prove a portal defect. Guidance: record explicit owner-relayed authority and automation identity through the normal selection lifecycle, preserve final acceptance, and prevent unrequested transactional notices before commit. Observation: cPanel addon servername did not ensure public DNS or certificate coverage. Guidance: verify DNS, TLS, redirects and exact artifact bytes independently, and distinguish shared virtual-host routing from independent staging/live runtimes. See `docs/plans/STOCKANDSHIP98-SELECTION-HOSTING-REPAIR-2026-09-23.md`.

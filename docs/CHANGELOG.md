@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-09-22 — StockandShip98 selection and staging repair
+
+- Saved owner-relayed B choice through the current service and verified portal serialization; retained full-store planning and acceptance gates.
+- Repaired customer staging DNS/TLS/root routing and temporary purchased-domain redirect with exact artifact preservation.
+- Recorded authority, zero-send notice suppression, browser checks and rollback. See `docs/plans/STOCKANDSHIP98-SELECTION-HOSTING-REPAIR-2026-09-23.md`.
+
 ## 2026-09-22 — StockandShip98 hosting audit
 
 - Verified addon-domain staging alias with missing public DNS, shared root and

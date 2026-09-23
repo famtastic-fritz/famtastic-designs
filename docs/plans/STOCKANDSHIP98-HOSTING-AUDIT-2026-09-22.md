@@ -1,5 +1,7 @@
 # Hosting and selection audit — September 22, 2026
 
+**Current correction:** Fritz clarified a telephone choice; no portal save failure was established. Choice and DNS/TLS/routing have been repaired. See `STOCKANDSHIP98-SELECTION-HOSTING-REPAIR-2026-09-23.md`. Retain this audit as the historical pre-repair evidence.
+
 Read-only production checks at approximately 11:16–11:22 PM EDT (September 23,
 03:16–03:22 UTC). Fritz clarified that the intended staging address is
 `stockandship98.famtasticinc.com`, hosted on the FAMtastic Inc shared cPanel
