@@ -1,5 +1,14 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-22 — StockandShip98 staging gap confirmed
+
+**Read-only production evidence:** purchased domain serves a static B proof;
+its cPanel staging hostname alias has authoritative NXDOMAIN and no separate
+staging root. Request/campaign selected fields and selection activity remain
+empty; only original proof job 313 exists. This does not establish why the
+reported customer selection failed to save. See
+`docs/plans/STOCKANDSHIP98-HOSTING-AUDIT-2026-09-22.md`.
+
 ## 2026-09-22 — StockandShip98 scoped followup accepted
 
 **SMTP acceptance verified:** exact outboxes 877/878, one attempt each, existing

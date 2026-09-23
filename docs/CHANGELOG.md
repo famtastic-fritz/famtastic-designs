@@ -1,5 +1,12 @@
 # Product changelog
 
+## 2026-09-22 — StockandShip98 hosting audit
+
+- Verified addon-domain staging alias with missing public DNS, shared root and
+  explicit apex-to-B redirect. Rechecked empty request/campaign choice and absent
+  staging job. Recorded requested staging/live topology; no production changes.
+  See `docs/plans/STOCKANDSHIP98-HOSTING-AUDIT-2026-09-22.md`.
+
 ## 2026-09-22 — StockandShip98 choice followup
 
 - Recorded owner-relayed direction B and authorized included growth/media scope.

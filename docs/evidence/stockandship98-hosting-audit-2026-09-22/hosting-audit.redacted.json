@@ -1,0 +1,78 @@
+{
+  "recorded_at_utc": "2026-09-23T03:21:00.479819+00:00",
+  "scope": "Read-only hosting, DNS, redirect and source inspection",
+  "hosting": {
+    "cpanel_main_domain": "famtasticinc.com",
+    "account": "nineoo",
+    "domain": "stockandship98.com",
+    "type": "addon_domain",
+    "servername": "stockandship98.famtasticinc.com",
+    "documentroot": "/home/nineoo/public_html/stockandship98.com",
+    "ip": "107.180.51.234",
+    "serveralias": [
+      "mail.stockandship98.com",
+      "stockandship98.com",
+      "www.stockandship98.com",
+      "www.stockandship98.famtasticinc.com"
+    ],
+    "matching_standalone_subdomain_list": []
+  },
+  "dns": {
+    "stockandship98.com": {
+      "A": [
+        "107.180.51.234"
+      ]
+    },
+    "famtasticinc.com": {
+      "A": [
+        "107.180.51.234"
+      ]
+    },
+    "stockandship98.famtasticinc.com": {
+      "recursive_status": "NXDOMAIN",
+      "authoritative_status": {
+        "ns65.domaincontrol.com": "NXDOMAIN",
+        "ns66.domaincontrol.com": "NXDOMAIN"
+      }
+    }
+  },
+  "http": [
+    {
+      "url": "http://stockandship98.com/",
+      "status": 301,
+      "location": "https://stockandship98.com/"
+    },
+    {
+      "url": "https://stockandship98.com/",
+      "status": 302,
+      "location": "https://stockandship98.com/b/"
+    },
+    {
+      "url": "https://www.stockandship98.com/",
+      "status": 301,
+      "location": "https://stockandship98.com/"
+    },
+    {
+      "url": "https://stockandship98.com/b/",
+      "status": 200,
+      "title": "StockandShip98 \u2014 Curated Finds \u00b7 Design preview",
+      "bytes": 43415,
+      "sha256": "facaf9fcaec864db54966f7cfc1da154570592525fc61ecd443d82d664f1bd14"
+    }
+  ],
+  "htaccess": {
+    "path": "/home/nineoo/public_html/stockandship98.com/.htaccess",
+    "content": "Options -Indexes\nRewriteEngine On\nRewriteRule ^\\.well-known/acme-challenge/ - [L]\nRewriteCond %{HTTP_HOST} !^stockandship98\\.com$ [NC]\nRewriteRule ^ https://stockandship98.com%{REQUEST_URI} [R=301,L]\nRewriteCond %{HTTPS} !=on\nRewriteRule ^ https://stockandship98.com%{REQUEST_URI} [R=301,L]\nRewriteRule ^$ /b/ [R=302,L]\n"
+  },
+  "browser": {
+    "live_url": "https://stockandship98.com/b/",
+    "confirmed": "Curated Finds design-preview banner, sample merchandise and no orders or payments."
+  },
+  "existing_source_receipt": {
+    "commit": "757410d29cc020278c3824982e830d99e9e37f70",
+    "path": "docs/HOSTED-REVIEW-2026-09-23.md",
+    "authored_at": "2026-09-22T22:28:21-04:00"
+  },
+  "remote_application_or_hosting_changes": false,
+  "emails_sent": false
+}

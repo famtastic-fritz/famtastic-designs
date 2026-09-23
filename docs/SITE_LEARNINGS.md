@@ -1,5 +1,14 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-22 — cPanel hostname is not a functioning staging site
+
+**Observation:** The addon domain's servername used the desired staging label,
+but DNS was absent and the shared root forced the purchased hostname and `/b/`.
+**Guidance:** Check provider domain binding, authoritative DNS, document roots,
+redirects and actual content separately. Adding DNS alone cannot repair a rule
+that redirects staging to live. Recheck request and campaign selection plus the
+build job; a hosted concept does not establish a selected staging implementation.
+
 ## 2026-09-22 — Separate design choice, staging and promised service
 
 **Observation:** The owner relayed a B choice and asked for staging-ready wording,
