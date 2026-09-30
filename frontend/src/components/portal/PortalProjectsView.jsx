@@ -3,6 +3,16 @@ import { Panel, title, date } from './PortalShared.jsx';
 import { collectUtmParams } from '../../api/pipeline.js';
 import PortalPageContentFields from './PortalPageContentFields.jsx';
 
+// Administrator-recorded proof links are separate from completed-site acceptance.
+export function projectPreviewUrl(project) {
+  try {
+    const url = new URL(String(project?.proof_url || '').trim());
+    return url.protocol === 'https:' ? url.href : '';
+  } catch {
+    return '';
+  }
+}
+
 export function customerNextStep(request) {
   if (!request) return null;
   if (request.full_site_review?.status === 'ready_for_review') {
@@ -1433,7 +1443,7 @@ export default function PortalProjectsView({
       )}
 
       {/* If no requests exist */}
-      {!editingRequest && !activeRequest && activeRequests.length === 0 && (
+      {!editingRequest && !activeRequest && activeRequests.length === 0 && !workspace.projects?.length && (
         <Panel eyebrow="Projects" title={archivedRequests.length > 0 ? 'No active projects' : 'No website requests yet'}>
           <p>
             {archivedRequests.length > 0
@@ -1467,25 +1477,41 @@ export default function PortalProjectsView({
         </section>
       )}
 
-      {/* Active purchased projects if any */}
+      {/* Account-owned projects may include unpaid review proofs. */}
       {!editingRequest && workspace.projects?.length > 0 && (
         <section className="portal-grid" style={{ marginTop: '1.5rem' }}>
           {workspace.projects.map((p) => (
             <Panel
               key={p.uuid}
-              eyebrow="Project Command Center"
-              title={title(p.delivery_status)}
+              eyebrow="Project workspace"
+              title={p.label || title(p.delivery_status)}
             >
               <div className="portal-stage-line">
-                <span className="complete">Paid</span>
-                <span className={p.proofs ? 'complete' : 'active'}>
-                  {p.proofs?.variants?.length || 3} concepts
+                <span className="complete">Project saved</span>
+                <span className={p.proofs?.variants?.length || projectPreviewUrl(p) ? 'complete' : 'active'}>
+                  {p.proofs?.variants?.length
+                    ? `${p.proofs.variants.length} concepts`
+                    : projectPreviewUrl(p) ? 'Proof available' : 'Proof pending'}
                 </span>
                 <span className={p.approval_status === 'approved' ? 'complete' : ''}>
                   Approval
                 </span>
                 <span className={p.live_url ? 'complete' : ''}>Launch</span>
               </div>
+              <p>{title(p.delivery_status)}</p>
+              {projectPreviewUrl(p) && !p.proofs?.variants?.length && (
+                <div className="portal-proof-next">
+                  <p>Open your saved proof and review it with FAMtastic.</p>
+                  <a
+                    href={projectPreviewUrl(p)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', minHeight: 44 }}
+                  >
+                    Open proof ↗
+                  </a>
+                </div>
+              )}
               <dl>
                 <div>
                   <dt>Approval</dt>
@@ -1494,7 +1520,7 @@ export default function PortalProjectsView({
                 <div>
                   <dt>Revisions</dt>
                   <dd>
-                    {p.revision_count || 0} of {p.revision_limit || 1}
+                    {p.revision_count ?? 0} of {p.revision_limit ?? 1}
                   </dd>
                 </div>
               </dl>

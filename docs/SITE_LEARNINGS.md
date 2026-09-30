@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-09-30 — Standalone account proof link (local verification)
+
+Account-owned projects can now open an administrator-recorded HTTPS proof URL when no complete concept set exists. Cards show the stored project label, Project saved and Proof available/pending; they no longer infer payment or three concepts from a project record. Zero revision limits remain zero. Existing variant counts and live-site links are preserved. Node 22 production build, 34 portal Design DNA checks and six mocked Chromium cases (desktop/mobile) pass. This is local UI proof, not production/account registration or customer acceptance. See `docs/plans/STANDALONE_ACCOUNT_PROOF_LINK_2026-09-30.md`.
+
 ## 2026-09-21 — Full-site handoff and portable source
 
 **Release:** The corrected protected account delivery is verified at backend 7227ceb6 / frontend cc8eada4. The same exact customer package survives route correction; 58 route matches, all file hashes, plan navigation and an unsent planner draft pass. A GitHub billing lock prevented hosted checks from starting. EDQUOT was recovered by deleting only five verified old, untracked/reproducible dist directories (1,099,176 KiB), retaining source/current build/backups.

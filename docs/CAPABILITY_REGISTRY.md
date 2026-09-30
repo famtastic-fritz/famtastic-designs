@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-09-30 — Standalone account proof link (local verification)
+
+Account-owned projects can now open an administrator-recorded HTTPS proof URL when no complete concept set exists. Cards show the stored project label, Project saved and Proof available/pending; they no longer infer payment or three concepts from a project record. Zero revision limits remain zero. Existing variant counts and live-site links are preserved. Node 22 production build, 34 portal Design DNA checks and six mocked Chromium cases (desktop/mobile) pass. This is local UI proof, not production/account registration or customer acceptance. See `docs/plans/STANDALONE_ACCOUNT_PROOF_LINK_2026-09-30.md`.
+
 ## 2026-09-21 — Finished-site account review
 
 Production-proven manual account delivery: the owner-authorized Travel Addicts full website is attached once to its verified existing account, with exact replay a no-op. All 29 file hashes, 14 renderings and 58 real customer/staff route matches pass; native staff Chrome verifies home, pricing, plan preselection, validation, an unsent draft and private design document. Anonymous and wrong-customer access is denied. Corrected backend 7227ceb6 and frontend cc8eada4 are live; independent business source is privately verified at 82a47502. No automatic delivery, customer view/acceptance, message, payment or public business launch is claimed. See `docs/plans/TRAVEL-ADDICTS-DELIVERY-2026-09-21.md`.
