@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-09-30 — Standalone account proof link (local verification)
+
+Account-owned projects can now open an administrator-recorded HTTPS proof URL when no complete concept set exists. Cards show the stored project label, Project saved and Proof available/pending; they no longer infer payment or three concepts from a project record. Zero revision limits remain zero. Existing variant counts and live-site links are preserved. Node 22 production build, 34 portal Design DNA checks and six mocked Chromium cases (desktop/mobile) pass. This is local UI proof, not production/account registration or customer acceptance. See `docs/plans/STANDALONE_ACCOUNT_PROOF_LINK_2026-09-30.md`.
+
 ## 2026-09-21 — Complete customer website review
 
 - Corrected private review routing for nested pages, documents and fonts with explicit bounded path segments and a regression through Drupal’s actual route-candidate database. Backend 7227ceb6 and frontend cc8eada4 are live; all 58 protected file routes and native browser planner/document checks pass.
