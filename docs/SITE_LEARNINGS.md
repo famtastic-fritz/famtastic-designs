@@ -2824,3 +2824,10 @@ Each site must own its Git root, common directory, manifest and verified remote.
 Studio/library checkouts retain their separately configured locations. Explicit sandbox roots remain supported. New customer identities should use `site-<business-slug>`; preserve existing IDs and registry bindings on continuation. Check existing source and registry before creating a duplicate. This rule does not automatically move existing repositories or authorize deployment, credentials, DNS or customer communication. Fritz assigned the StockandShip98 move to its own task.
 
 Historical migration receipts retain their original paths as evidence; this current rule supersedes their use as defaults. When an authorized move is performed, preserve history, dirty work and remotes, then update the local project/launcher mappings and current handoff documents. Confirm the actual new checkout before claiming migration complete.
+
+
+## 2026-09-30 — Backend command center local integration
+
+- Observation: matching source lock is insufficient unless installed package versions also match; admin fixture role must include administration-theme access for valid mobile QA. Guidance: compare installed versions to lock, copy dependency allowlist, block outbound transports and use synthetic SQLite before browser proof.
+
+- Final local evidence: patched-lock unit333/1960 and28 integrated checks pass; real mobile campaign and message preview/send fixture completed. Module-coupled immutable campaign snapshots preserve CLI files. Cached Form API services use protected injectable properties. Production/provider connection remains separate.

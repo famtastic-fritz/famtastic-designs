@@ -90,7 +90,7 @@ final class ClientMessagesController extends ControllerBase {
       '#attached' => ['library' => ['famtastic_pipeline/client_messages']], '#cache' => ['max-age' => 0],
       '#prefix' => '<div class="famtastic-inbox">', '#suffix' => '</div>',
       'heading' => ['#markup' => '<div class="famtastic-inbox__heading"><span>FAMtastic Concierge</span><h2>Messages</h2><p><strong>' . $inbox['needs_reply_count'] . ' need your reply</strong> · ' . $inbox['unread_count'] . ' unread messages</p><p>Contact forms and customer conversations stay together here and in your portal.</p></div>'],
-      'filters' => ['#type' => 'inline_template', '#template' => '<form class="famtastic-inbox__filters" method="get"><label>Find a conversation<input type="search" name="q" value="{{ query }}" placeholder="Customer, email, or message"></label><label>Show<select name="status">{{ options|raw }}</select></label><button type="submit">Filter messages</button></form>', '#context' => ['query' => $filters['q'], 'options' => $options]],
+      'filters' => ['#type' => 'inline_template', '#template' => '<form class="famtastic-inbox__filters" method="get"><label>Find a conversation<input type="search" name="q" value="{{ query }}" placeholder="Customer, email, or message"></label><label>Show<select name="status">{{ options|raw }}</select></label><label>Record group<select name="label"><option value="active" {% if label == "active" %}selected{% endif %}>Customer work</option><option value="test" {% if label == "test" %}selected{% endif %}>Explicit tests</option><option value="archived" {% if label == "archived" %}selected{% endif %}>Archived</option><option value="all" {% if label == "all" %}selected{% endif %}>All records</option></select></label><button type="submit">Filter messages</button></form>', '#context' => ['label' => $filters['label'], 'query' => $filters['q'], 'options' => $options]],
       'rows' => $rows ?: ['#markup' => '<p>No conversations match these filters.</p>'],
     ];
   }
@@ -100,7 +100,7 @@ final class ClientMessagesController extends ControllerBase {
     $query = $request->query->all();
     $search = is_scalar($query['q'] ?? '') ? mb_substr(trim((string) ($query['q'] ?? '')), 0, 200) : '';
     $status = is_string($query['status'] ?? NULL) ? $query['status'] : '';
-    return ['q' => $search, 'status' => in_array($status, ['unread', 'needs_reply', 'waiting'], TRUE) ? $status : ''];
+    return ['label' => in_array($query['label'] ?? '', ['active', 'test', 'archived', 'all'], TRUE) ? $query['label'] : 'active', 'q' => $search, 'status' => in_array($status, ['unread', 'needs_reply', 'waiting'], TRUE) ? $status : ''];
   }
 
 }

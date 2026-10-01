@@ -1,0 +1,6 @@
+enabled:
+  reply: false
+  summarize: false
+  campaign: false
+  needs_me: false
+hourly_limit: 5

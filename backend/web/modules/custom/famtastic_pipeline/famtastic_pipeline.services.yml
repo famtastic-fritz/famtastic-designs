@@ -291,3 +291,14 @@ services:
   famtastic_pipeline.webform_bridge:
     class: Drupal\famtastic_pipeline\Service\WebformIntakeBridgeService
     arguments: ['@entity_type.manager', '@logger.factory']
+
+  famtastic_pipeline.campaign_workspace:
+    class: Drupal\famtastic_pipeline\Service\CampaignWorkspace
+    arguments: ['@database', '@datetime.time']
+
+  famtastic_pipeline.communication_drafts:
+    class: Drupal\famtastic_pipeline\Service\CommunicationDraftService
+    arguments: ['@database', '@famtastic_pipeline.client_messages']
+  famtastic_pipeline.staff_ai_tasks:
+    class: Drupal\famtastic_pipeline\Service\StaffAiTaskService
+    arguments: ['@config.factory', '@database', '@flood', '@lock', '@?ai.provider']

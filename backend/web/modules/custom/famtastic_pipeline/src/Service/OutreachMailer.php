@@ -147,6 +147,12 @@ class OutreachMailer {
     return $providerMessageId;
   }
 
+  /** Pure presentation preview: never touches a transport, capture or outbox. */
+  public function preview(string $subject, string $body, string $template = self::TEMPLATE_CUSTOMER_MESSAGE_REPLY, int $version = self::TEMPLATE_CUSTOMER_MESSAGE_REPLY_VERSION): array {
+    if (!self::supportsTemplate($template, $version)) throw new \InvalidArgumentException('Unsupported template version.');
+    return ['html' => $this->renderHtmlMessage($subject, $body, $template), 'text' => $body, 'template_id' => $template, 'template_version' => $version];
+  }
+
   /** Returns whether a versioned transactional template is available. */
   public static function supportsTemplate(string $template, int $version): bool {
     return ($template === self::TEMPLATE_STANDARD && in_array($version, [1, self::TEMPLATE_STANDARD_VERSION], TRUE))

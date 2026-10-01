@@ -2877,3 +2877,10 @@ The f5d8c769 apply passed PHP 8.3 syntax, cache rebuild and service resolution, 
 ## Frontend build recovery — 2026-09-21
 
 The first frontend build stopped before promotion because the private sparse source omitted the existing Why FAMtastic narration import. Materializing that exact committed input repaired module resolution. The next build was killed by the hosting account before completion; production frontend remained at 40ca506b. This does not by itself establish an OOM diagnosis. The release script now bounds native Rayon/Tokio workers to two and V8 old-space to 512 MiB, and the scoped source preparation includes the narration directory. The identical bounded local compile passes 618 modules; the full hosting build remains the release gate. See the [Rayon thread-pool environment contract](https://docs.rs/rayon/latest/rayon/struct.ThreadPoolBuilder.html).
+
+
+## 2026-09-30 — Backend command center local integration
+
+- Observation: database integer columns can return strings, breaking JSON review digests across requests. Guidance: canonicalize reviewed types, compare saved body, bind queue recipient to review, and roll back working/history draft writes together. Local integration proof only.
+
+- Final local evidence: patched-lock unit333/1960 and28 integrated checks pass; real mobile campaign and message preview/send fixture completed. Module-coupled immutable campaign snapshots preserve CLI files. Cached Form API services use protected injectable properties. Production/provider connection remains separate.

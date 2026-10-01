@@ -633,3 +633,10 @@ and working pause. Six Company links remained44px; no horizontal overflow or
 captured console errors. Compiled JS/CSS returned200 with correct MIME types.
 320px local fixture also passed. Reduced-motion CSS contract tested; no OS-level
 reduced-motion browser emulation claimed. This is footer-only release evidence.
+
+
+## 2026-09-30 — Backend command center local integration
+
+- Backend mobile command center: locally implemented and disposable-Drupal persistence-proven; AI adapter test-double proven only. No live provider/production capability upgrade. See implementation/INTEGRATION_EVIDENCE_2026-09-30.md.
+
+- Final local evidence: patched-lock unit333/1960 and28 integrated checks pass; real mobile campaign and message preview/send fixture completed. Module-coupled immutable campaign snapshots preserve CLI files. Cached Form API services use protected injectable properties. Production/provider connection remains separate.

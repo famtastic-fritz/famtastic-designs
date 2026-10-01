@@ -35,7 +35,13 @@ final class PostizChannelsService {
    * Returns the configured Postiz base URL.
    */
   public function baseUrl(): string {
-    return rtrim((string) (Settings::get('famtastic_postiz_base_url', 'http://127.0.0.1:4007')), '/');
+    return rtrim((string) Settings::get('famtastic_postiz_base_url', getenv('FAMTASTIC_POSTIZ_BASE_URL') ?: 'http://127.0.0.1:4007'), '/');
+  }
+
+  /** Accept either the host or the documented full public API base. */
+  public static function apiBaseUrl(string $base): string {
+    $base = rtrim($base, '/');
+    return str_ends_with($base, '/api/public/v1') ? $base : $base . '/api/public/v1';
   }
 
   /**
@@ -62,16 +68,23 @@ final class PostizChannelsService {
     }
     $snapshot['configured'] = TRUE;
 
-    $base = rtrim((string) (Settings::get('famtastic_postiz_base_url', 'http://127.0.0.1:4007')), '/');
+    $base = self::apiBaseUrl($this->baseUrl());
     try {
-      $response = $this->httpClient->request('GET', $base . '/api/public/v1/integrations', [
+      $response = $this->httpClient->request('GET', $base . '/integrations', [
         'headers' => ['Authorization' => $key],
         'timeout' => self::TIMEOUT_SECONDS,
+        'allow_redirects' => FALSE,
+        'http_errors' => FALSE,
       ]);
-      $data = json_decode((string) $response->getBody(), TRUE);
+      $status = $response->getStatusCode();
+      if ($status !== 200) {
+        $snapshot['error'] = $status === 404 ? 'Postiz API path was not found (HTTP 404). Verify the configured host or full /api/public/v1 URL and its reverse proxy.' : 'Postiz channel check failed (HTTP ' . $status . '). Verify the connection settings.';
+        return $snapshot;
+      }
+      $data = json_decode((string) $response->getBody(), TRUE, 512, JSON_THROW_ON_ERROR);
     }
     catch (GuzzleException |\JsonException $e) {
-      $snapshot['error'] = 'Postiz unreachable: ' . substr((string) $e->getMessage(), 0, 160);
+      $snapshot['error'] = 'Postiz could not be reached or returned invalid JSON. Check the host and connection settings.';
       return $snapshot;
     }
     if (!is_array($data)) {
@@ -92,7 +105,7 @@ final class PostizChannelsService {
         'identifier' => (string) $integration['identifier'],
         'name' => (string) ($integration['name'] ?? $integration['identifier']),
         'state' => $state,
-        'detail' => $state === 'connected' ? 'OAuth token active' : 'Channel disabled in Postiz',
+        'detail' => $state === 'connected' ? 'Provider lists this integration as enabled; successful publishing is not yet proven' : 'Channel disabled in Postiz',
       ];
     }
     return $snapshot;

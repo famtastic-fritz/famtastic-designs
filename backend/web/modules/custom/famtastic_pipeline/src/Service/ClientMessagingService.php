@@ -134,6 +134,7 @@ final class ClientMessagingService {
     if (!$actor['is_staff']) $query->condition('organization_id', $actor['organizations'] ?: [-1], 'IN');
     $records = $query->orderBy('changed', 'DESC')->orderBy('id', 'DESC')->execute()->fetchAll(\PDO::FETCH_ASSOC);
     $threads = array_map(fn(array $thread): array => $this->summary($actor, $thread), $records);
+    if ($actor['is_staff']) $threads = array_values(array_filter($threads, static fn(array $t): bool => ($filters['label'] ?? 'active') === 'all' || $t['staff_label'] === ($filters['label'] ?? 'active')));
     $unread = array_sum(array_column($threads, 'unread_count'));
     $needsReply = count(array_filter($threads, static fn(array $thread): bool => $thread['needs_reply']));
     $threads = array_values(array_filter($threads, static function (array $thread) use ($filters): bool {
@@ -149,6 +150,21 @@ final class ClientMessagingService {
       'admin_orders_url' => $actor['is_staff'] ? '/web/admin/commerce/orders' : NULL,
       'admin_inbox_url' => $actor['is_staff'] ? '/web/admin/famtastic/messages' : NULL,
     ];
+  }
+
+  /** Same pure body construction for review and queued customer replies. */
+  public function staffEmailBody(string $subject, string $body, string $publicId): string {
+    $base = rtrim((string) ($this->config->get('famtastic_pipeline.settings')->get('frontend_base_url') ?: 'https://famtasticdesigns.com'), '/');
+    $destination = $base . '/portal?section=messages&thread=' . $publicId;
+    return "FAMtastic Concierge replied about {$subject}.\n\n{$body}\n\nOpen your workspace:\n{$destination}\n\nSign in with the email address that received this message to continue the conversation.";
+  }
+
+  /** Explicit reversible staff label; never infer a test from customer names. */
+  public function label(AccountInterface $account, string $publicId, string $label): void {
+    $actor = $this->actor($account);
+    if (!$actor['is_staff'] || !in_array($label, ['active', 'test', 'archived'], TRUE)) throw new \InvalidArgumentException('Choose an allowed staff label.');
+    $thread = $this->authorizedThread($actor, $publicId);
+    $this->database->update('famtastic_portal_thread')->fields(['staff_label' => $label])->condition('id', $thread['id'])->execute();
   }
 
   /** Lightweight navigation count, using the same account/tenant boundary. */
@@ -183,14 +199,14 @@ final class ClientMessagingService {
   }
 
   /** Persists a reply and its notification atomically; retries cannot resend it. */
-  public function reply(AccountInterface $account, string $publicId, string $body, string $clientMessageId): array {
+  public function reply(AccountInterface $account, string $publicId, string $body, string $clientMessageId, ?array $reviewedSource = NULL): array {
     $actor = $this->actor($account);
     $thread = $this->authorizedThread($actor, $publicId);
     $body = trim(strip_tags($body));
     if ($body === '' || mb_strlen($body) > 20000) throw new \InvalidArgumentException('Enter a message of 1–20,000 characters.');
     if (!preg_match('/^[a-zA-Z0-9_-]{16,80}$/', $clientMessageId)) throw new \InvalidArgumentException('A valid message request ID is required.');
     $key = hash('sha256', $thread['id'] . ':' . $actor['uid'] . ':' . $clientMessageId);
-    $lockKey = 'famtastic:reply:' . $key;
+    $lockKey = 'famtastic:thread-reply:' . $publicId;
     if (!$this->lock->acquire($lockKey, 30)) throw new \RuntimeException('This message is being saved. Please retry.');
     try {
       $existing = $this->database->select('famtastic_portal_message', 'm')->fields('m')->condition('client_key', $key)->execute()->fetchAssoc();
@@ -198,7 +214,16 @@ final class ClientMessagingService {
         if (!hash_equals((string) $existing['body'], $body)) throw new \InvalidArgumentException('This message request ID was already used for different text.');
         return ['ok' => TRUE, 'message_id' => (int) $existing['id'], 'delivery_status' => $this->delivery($existing)['delivery_status'], 'duplicate' => TRUE];
       }
+      // Serialize conversation writers and bind the queue to the reviewed recipient.
+      $thread = $this->authorizedThread($actor, $publicId);
       $contact = $this->contact($thread);
+      if ($reviewedSource !== NULL) {
+        if (!$actor['is_staff']) throw new \RuntimeException('Reviewed staff source required.');
+        $current = ['thread' => $publicId, 'recipient' => $contact['email'], 'subject' => $thread['subject'], 'messages' => array_map(static fn(array $m): array => ['id' => $m['id'], 'body' => $m['body'], 'author_type' => $m['author_type']], $this->messages((int) $thread['id'], TRUE))];
+        if (!hash_equals(hash('sha256', json_encode($reviewedSource, JSON_THROW_ON_ERROR)), hash('sha256', json_encode($current, JSON_THROW_ON_ERROR)))) throw new \RuntimeException('The conversation or recipient changed. Preview and review again.');
+        // Never resolve a different recipient after this review comparison.
+        $contact['email'] = $reviewedSource['recipient'];
+      }
       if ($actor['is_staff'] && !filter_var($contact['email'], FILTER_VALIDATE_EMAIL)) throw new \InvalidArgumentException('This conversation has no valid recipient address on its source record.');
       $now = $this->time->getRequestTime();
       $transaction = $this->database->startTransaction();
@@ -213,10 +238,11 @@ final class ClientMessagingService {
       $emailBody = $actor['is_staff']
         ? "FAMtastic Concierge replied about {$thread['subject']}.\n\n{$body}\n\nOpen your workspace:\n{$destination}\n\nSign in with the email address that received this message to continue the conversation."
         : "{$contact['name']} added a message about {$thread['subject']}.\n\n{$body}\n\nOpen the conversation:\n{$destination}";
+      if ($actor['is_staff']) $emailBody = $this->staffEmailBody($thread['subject'], $body, $publicId);
       $this->database->insert('famtastic_notification_outbox')->fields([
         'notification_key' => $notificationKey, 'category' => $actor['is_staff'] ? 'transactional' : 'operational',
         'recipient' => $recipient, 'subject' => mb_substr(($actor['is_staff'] ? 'FAMtastic Concierge — ' : 'New customer message — ') . $thread['subject'], 0, 512),
-        'body' => $emailBody, 'template_id' => $actor['is_staff'] ? 'customer_message_reply' : 'standard', 'template_version' => 1,
+        'body' => $emailBody, 'template_id' => $actor['is_staff'] ? 'customer_message_reply' : 'standard', 'template_version' => 2,
         'status' => 'queued', 'available_at' => $now, 'created' => $now, 'changed' => $now,
       ])->execute();
       // A customer message is visible to staff immediately; its owner alert is
@@ -262,7 +288,7 @@ final class ClientMessagingService {
       ->condition('thread_id', (int) $thread['id'])->execute()->fetchField();
     return [
       'public_id' => (string) $thread['public_id'], 'subject' => (string) $thread['subject'],
-      'kind' => (string) $thread['kind'], 'status' => (string) $thread['status'],
+      'staff_label' => (string) ($thread['staff_label'] ?? 'active'), 'kind' => (string) $thread['kind'], 'status' => (string) $thread['status'],
       'source' => !empty($thread['source_intake_id']) ? 'contact_form' : 'portal',
       'customer_name' => $contact['name'], 'customer_email' => $contact['email'], 'case_number' => $case ?: NULL,
       'unread_count' => $unread, 'needs_reply' => $thread['status'] !== 'closed' && ($last['author_type'] ?? '') === $opposite,
