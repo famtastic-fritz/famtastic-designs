@@ -1535,3 +1535,41 @@ famtastic_pipeline.worker_coordinator:
     operation: 'claim|renew|finish|fail|review'
   options:
     no_cache: 'TRUE'
+
+famtastic_pipeline.campaign_manage:
+  path: '/admin/famtastic/campaign/{campaign_key}/{action}'
+  defaults:
+    _form: 'Drupal\famtastic_pipeline\Form\CampaignAddForm'
+    _title: 'Campaign draft plan'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    campaign_key: '[a-z0-9]+(?:-[a-z0-9]+)*'
+    action: 'edit|duplicate|archive|restore'
+
+famtastic_pipeline.campaign_media:
+  path: '/admin/famtastic/campaign-media/{campaign_key}/{content_id}/{variant}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\MarketingCommandController::campaignMedia'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    campaign_key: '[a-z0-9]+(?:-[a-z0-9]+)*'
+    content_id: '[a-zA-Z0-9._-]+'
+    variant: '[a-zA-Z0-9_-]+'
+
+famtastic_pipeline.owner_work_summary:
+  path: '/admin/famtastic/my-work-summary'
+  defaults:
+    _form: '\Drupal\famtastic_pipeline\Form\OwnerWorkSummaryForm'
+    _title: 'Summarize my work'
+  requirements:
+    _permission: 'administer famtastic pipeline'
+  options:
+    _admin_route: TRUE
+
+famtastic_pipeline.staff_ai_settings:
+  path: '/admin/famtastic/ai-assistance'
+  defaults:
+    _form: '\Drupal\famtastic_pipeline\Form\StaffAiSettingsForm'
+    _title: 'Staff AI assistance'
+  requirements:
+    _permission: 'administer famtastic pipeline'

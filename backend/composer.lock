@@ -2224,16 +2224,16 @@
         },
         {
             "name": "drupal/core",
-            "version": "11.4.5",
+            "version": "11.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "a07143587a57d892a892b8b5a2d0cdc5a98f31c2"
+                "reference": "9e14360e49d9c20957fbe6a1893868596c2a8433"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/a07143587a57d892a892b8b5a2d0cdc5a98f31c2",
-                "reference": "a07143587a57d892a892b8b5a2d0cdc5a98f31c2",
+                "url": "https://api.github.com/repos/drupal/core/zipball/9e14360e49d9c20957fbe6a1893868596c2a8433",
+                "reference": "9e14360e49d9c20957fbe6a1893868596c2a8433",
                 "shasum": ""
             },
             "require": {
@@ -2368,7 +2368,8 @@
             },
             "autoload": {
                 "files": [
-                    "includes/bootstrap.inc"
+                    "includes/bootstrap.inc",
+                    "includes/guzzle_file_cookie_jar_shim.php"
                 ],
                 "psr-4": {
                     "Drupal\\Core\\": "lib/Drupal/Core",
@@ -2405,7 +2406,7 @@
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
             "support": {
-                "source": "https://github.com/drupal/core/tree/11.4.5"
+                "source": "https://github.com/drupal/core/tree/11.4.8"
             },
             "funding": [
                 {
@@ -2413,11 +2414,11 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-08-06T09:28:11+00:00"
+            "time": "2026-09-26T20:35:18+00:00"
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "11.4.5",
+            "version": "11.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-composer-scaffold.git",
@@ -2461,13 +2462,13 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-composer-scaffold/tree/11.4.5"
+                "source": "https://github.com/drupal/core-composer-scaffold/tree/11.4.8"
             },
             "time": "2026-07-09T23:23:24+00:00"
         },
         {
             "name": "drupal/core-project-message",
-            "version": "11.4.5",
+            "version": "11.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-project-message.git",
@@ -2505,29 +2506,29 @@
                 "drupal"
             ],
             "support": {
-                "source": "https://github.com/drupal/core-project-message/tree/11.4.5"
+                "source": "https://github.com/drupal/core-project-message/tree/11.4.8"
             },
             "time": "2026-01-07T19:00:53+00:00"
         },
         {
             "name": "drupal/core-recommended",
-            "version": "11.4.5",
+            "version": "11.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-recommended.git",
-                "reference": "b08738b914bffb9adafc40b7b70d965c3810e750"
+                "reference": "3613b444b79a131add84ad608a07e9da390d836a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/b08738b914bffb9adafc40b7b70d965c3810e750",
-                "reference": "b08738b914bffb9adafc40b7b70d965c3810e750",
+                "url": "https://api.github.com/repos/drupal/core-recommended/zipball/3613b444b79a131add84ad608a07e9da390d836a",
+                "reference": "3613b444b79a131add84ad608a07e9da390d836a",
                 "shasum": ""
             },
             "require": {
                 "asm89/stack-cors": "~v2.4.0",
                 "composer/semver": "~3.4.4",
                 "doctrine/lexer": "~3.0.1",
-                "drupal/core": "11.4.5",
+                "drupal/core": "11.4.8",
                 "egulias/email-validator": "~4.0.4",
                 "justinrainbow/json-schema": "~6.8.2",
                 "marc-mabe/php-enum": "~v4.7.2",
@@ -2575,7 +2576,9 @@
             },
             "type": "metapackage",
             "extra": {
-                "branch-alias": []
+                "branch-alias": {
+                    "dev-main": "11.x-dev"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -2583,9 +2586,9 @@
             ],
             "description": "Core and its dependencies with known-compatible minor versions. Require this project INSTEAD OF drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-recommended/tree/11.4.5"
+                "source": "https://github.com/drupal/core-recommended/tree/11.4.8"
             },
-            "time": "2026-08-06T09:28:11+00:00"
+            "time": "2026-09-26T20:35:18+00:00"
         },
         {
             "name": "drupal/ctools",
@@ -3681,17 +3684,17 @@
         },
         {
             "name": "drupal/project_browser",
-            "version": "2.1.4",
+            "version": "2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/project_browser.git",
-                "reference": "2.1.4"
+                "reference": "2.1.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/project_browser-2.1.4.zip",
-                "reference": "2.1.4",
-                "shasum": "7b54ca0900a23f04fa66a7758a28a387d5895ade"
+                "url": "https://ftp.drupal.org/files/projects/project_browser-2.1.5.zip",
+                "reference": "2.1.5",
+                "shasum": "81dfe43c1ed7d2b6ab5e6ed12fbf7500b4c01bff"
             },
             "require": {
                 "composer-runtime-api": "^2",
@@ -3708,8 +3711,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "2.1.4",
-                    "datestamp": "1780595870",
+                    "version": "2.1.5",
+                    "datestamp": "1790181935",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -4245,17 +4248,17 @@
         },
         {
             "name": "drupal/webform",
-            "version": "6.3.0",
+            "version": "6.3.1",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/webform.git",
-                "reference": "6.3.0"
+                "reference": "6.3.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/webform-6.3.0.zip",
-                "reference": "6.3.0",
-                "shasum": "67b09271edfd2fb38dc699ff733911ad500ae5d7"
+                "url": "https://ftp.drupal.org/files/projects/webform-6.3.1.zip",
+                "reference": "6.3.1",
+                "shasum": "f737cb4e614df7f54b9bb77fe40109e7abab789b"
             },
             "require": {
                 "drupal/core": "^10.3 || ^11.0"
@@ -4270,6 +4273,7 @@
                 "drupal/entity": "^1.0",
                 "drupal/entity_print": "^2.0",
                 "drupal/hal": "^2.0",
+                "drupal/honeypot": "^2.0",
                 "drupal/jquery_ui": "^1.0",
                 "drupal/jquery_ui_button": "^2.0",
                 "drupal/jquery_ui_checkboxradio": "^2.0",
@@ -4300,8 +4304,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "6.3.0",
-                    "datestamp": "1783989705",
+                    "version": "6.3.1",
+                    "datestamp": "1790179518",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -11938,16 +11942,16 @@
         },
         {
             "name": "drupal/core-dev",
-            "version": "11.4.4",
+            "version": "11.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core-dev.git",
-                "reference": "3b8bea2ec1dd9353a4d5280e69911992b2b079b7"
+                "reference": "00497b38938a9ca8920982af95e0eb11da189afd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core-dev/zipball/3b8bea2ec1dd9353a4d5280e69911992b2b079b7",
-                "reference": "3b8bea2ec1dd9353a4d5280e69911992b2b079b7",
+                "url": "https://api.github.com/repos/drupal/core-dev/zipball/00497b38938a9ca8920982af95e0eb11da189afd",
+                "reference": "00497b38938a9ca8920982af95e0eb11da189afd",
                 "shasum": ""
             },
             "require": {
@@ -11982,7 +11986,9 @@
             },
             "type": "metapackage",
             "extra": {
-                "branch-alias": []
+                "branch-alias": {
+                    "dev-main": "11.x-dev"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -11990,9 +11996,9 @@
             ],
             "description": "require-dev dependencies from drupal/drupal; use in addition to drupal/core-recommended to run tests from drupal/core.",
             "support": {
-                "source": "https://github.com/drupal/core-dev/tree/11.4.4"
+                "source": "https://github.com/drupal/core-dev/tree/11.4.8"
             },
-            "time": "2026-07-15T18:02:21+00:00"
+            "time": "2026-09-24T14:55:26+00:00"
         },
         {
             "name": "google/protobuf",

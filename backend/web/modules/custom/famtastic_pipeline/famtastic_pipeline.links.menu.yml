@@ -83,3 +83,10 @@ famtastic_pipeline.marketing:
   route_name: famtastic_pipeline.marketing
   parent: famtastic_pipeline.admin
   weight: -18
+
+famtastic_pipeline.staff_ai_settings:
+  title: 'AI assistance'
+  description: 'Choose which staff drafting tasks may use the configured AI model.'
+  route_name: famtastic_pipeline.staff_ai_settings
+  parent: famtastic_pipeline.admin
+  weight: -18
