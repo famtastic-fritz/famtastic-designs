@@ -1178,7 +1178,8 @@ else
 fi
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
-module_backup="$HOME/backups/famtastic-pipeline-$timestamp-$commit_sha.tgz"
+backup_dir="$HOME/backups"
+module_backup="$backup_dir/famtastic-pipeline-$timestamp-$commit_sha.tgz"
 admin_theme_backup="$HOME/backups/famtastic-admin-$timestamp-$commit_sha.tgz"
 customer_theme_backup="$HOME/backups/famtastic-customer-$timestamp-$commit_sha.tgz"
 services_backup="$HOME/backups/famtastic-services-$timestamp-$commit_sha.yml"
@@ -1253,6 +1254,35 @@ install -m 0644 "$source_deal_config" "$production_config_dir/famtastic-deal-ter
 chmod "$settings_mode" "$settings_dir"
 trap - ERR
 
+# Each backup filename family must match what this deployer actually writes.
+# Keep two recent attempts plus the archive named by the live release receipt;
+# repeated failed attempts must not evict the last known-good rollback copy.
+prune_backup_family() {
+  local pattern="$1" receipt_key="$2" receipt='' file i
+  local -a files=()
+  if [[ -f "$production_dir/.backend-release" ]]; then
+    receipt="$(sed -n "s/^${receipt_key}=//p" "$production_dir/.backend-release" | tail -1)"
+  fi
+  for file in "$backup_dir"/$pattern; do
+    [[ -f "$file" && ! -L "$file" ]] && files+=( "$file" )
+  done
+  for (( i=0; i<${#files[@]}-2; i++ )); do
+    [[ "${files[i]}" == "$receipt" ]] || rm -f -- "${files[i]}"
+  done
+}
+
+prune_deploy_backups() (
+  trap - ERR
+  set +e
+  prune_backup_family 'famtastic-dependencies-*.tgz' dependency_backup
+  prune_backup_family 'famtastic-pipeline-*.tgz' module_backup
+  prune_backup_family 'famtastic-admin-*.tgz' admin_theme_backup
+  prune_backup_family 'famtastic-customer-*.tgz' customer_theme_backup
+  prune_backup_family 'famtastic-services-*.yml' services_backup
+  prune_backup_family 'famtastic-commercial-config-*.tgz' commercial_config_backup
+  prune_backup_family 'famtastic-database-*.sql.gz' database_backup
+)
+
 rollback_code() {
   # Failed deploys still leave releases + backups behind; prune to the same
   # retention as success paths or repeated failures re-exhaust quota.
@@ -1266,11 +1296,6 @@ rollback_code() {
     for d in */; do
       sha="${d%/}"
       [[ " ${keep[*]} " == *" $sha "* ]] || rm -rf "$sha"
-    done
-    cd "$HOME/backups"
-    ls -t famtastic-database-*.sql.gz 2>/dev/null | tail -n +3 | xargs -r rm -f 2>/dev/null
-    for btype in dependencies module admin_theme services commercial_config; do
-      ls -t famtastic-${btype}-*.tgz 2>/dev/null | tail -n +2 | xargs -r rm -f 2>/dev/null
     done
   ) 2>/dev/null || true
   if [[ -d "$previous_module" ]]; then
@@ -1300,6 +1325,7 @@ rollback_code() {
     chmod "$settings_mode" "$settings_dir" 2>/dev/null || true
     "$drush" cr >/dev/null 2>&1 || true
   fi
+  prune_deploy_backups || true
   echo "Code was restored after a failed deployment." >&2
   echo "Database backup (manual restore if an update partially ran): $database_backup" >&2
 }
@@ -1311,10 +1337,10 @@ TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-
   --no-dev --no-interaction --prefer-dist --optimize-autoloader
 echo "Backend dependencies promoted."
 
-# Retention: releases and per-deploy backups accumulate (~230MB per release,
-# ~50MB+ per backup set). Keep the current release plus one rollback, and the
-# newest backup of each type (two newest database dumps). Failure-tolerant:
-# retention must never abort a deployment.
+# Retention: releases and per-deploy backups accumulate. Keep the current
+# release plus one rollback, and two recent backups per filename family plus
+# the archive recorded by the live receipt. Failure-tolerant: retention must
+# never abort a deployment.
 (
   trap - ERR
   set +e
@@ -1326,11 +1352,7 @@ echo "Backend dependencies promoted."
     sha="${d%/}"
     [[ " ${keep[*]} " == *" $sha "* ]] || rm -rf "$sha"
   done
-  cd "$HOME/backups"
-  ls -t famtastic-database-*.sql.gz 2>/dev/null | tail -n +3 | xargs -r rm -f 2>/dev/null
-  for btype in dependencies module admin_theme services commercial_config; do
-    ls -t famtastic-${btype}-*.tgz 2>/dev/null | tail -n +2 | xargs -r rm -f 2>/dev/null
-  done
+  prune_deploy_backups
   echo "Retention applied: releases kept=$(ls "$deploy_dir/releases" | wc -l)."
 )
 # Drush exits 255 on this cPanel host even when the update run succeeds. Disable

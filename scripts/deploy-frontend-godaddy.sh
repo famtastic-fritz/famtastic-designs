@@ -139,11 +139,30 @@ backup_dir="$HOME/backups"
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 backup_path="$backup_dir/famtastic-frontend-$timestamp-$commit_sha.tgz"
 
+# Frontend archives are code-only copies. Keep two recent attempts and the
+# rollback archive named by the live receipt, even after repeated failures.
+prune_frontend_backups() (
+  trap - ERR
+  set +e
+  local receipt='' file i
+  local -a files=()
+  if [[ -f "$production_dir/.frontend-release" ]]; then
+    receipt="$(sed -n 's/^backup=//p' "$production_dir/.frontend-release" | tail -1)"
+  fi
+  for file in "$backup_dir"/famtastic-frontend-*.tgz; do
+    [[ -f "$file" && ! -L "$file" ]] && files+=( "$file" )
+  done
+  for (( i=0; i<${#files[@]}-2; i++ )); do
+    [[ "${files[i]}" == "$receipt" ]] || rm -f -- "${files[i]}"
+  done
+)
+
 # Dependencies are reproducible build inputs, not release artifacts. Always
 # remove them when this remote apply exits, including after an interrupted or
 # failed npm install, so per-account hosting quotas do not grow by roughly one
 # node_modules tree for every commit deployed.
 cleanup_build_dependencies() {
+  prune_frontend_backups || true
   dependencies_dir="$frontend_dir/node_modules"
   expected_dependencies_dir="$HOME/$deploy_base/releases/$commit_sha/source/frontend/node_modules"
   [[ "$dependencies_dir" == "$expected_dependencies_dir" ]] || {
