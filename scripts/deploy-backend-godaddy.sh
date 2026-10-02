@@ -1139,13 +1139,12 @@ if [[ ! -e "$source_dir/.git" ]]; then
   mkdir -p "$release_dir"
   # Shared-host account quotas count files, not just bytes. A full checkout of
   # the agency repository can exhaust that quota before validation begins even
-  # though this deployer reads only backend, frontend, and release scripts.
-  # Keep one exact-commit sparse worktree that the frontend deployer can reuse.
+  # though this deployer reads only the backend tree. The frontend deployer can
+  # reuse the exact worktree and switch its sparse definition for its own lane.
   git --git-dir="$mirror_dir" worktree prune
   git --git-dir="$mirror_dir" worktree add --detach --no-checkout "$source_dir" "$commit_sha"
-  git -C "$source_dir" sparse-checkout set backend frontend scripts
-  git -C "$source_dir" read-tree -mu HEAD
 fi
+git -C "$source_dir" sparse-checkout set backend
 test -f "$backend_dir/composer.lock"
 test -f "$source_module/famtastic_pipeline.info.yml"
 test -f "$source_admin_theme/famtastic_admin.info.yml"

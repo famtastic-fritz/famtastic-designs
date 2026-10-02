@@ -2,7 +2,7 @@
 
 ## 2026-10-02 — Quota-bounded production release checkout
 
-- Changed the ordinary backend and frontend deployers to create one exact-commit sparse worktree containing only `backend`, `frontend`, and `scripts` instead of checking out the entire agency repository on the shared host.
+- Changed the ordinary backend and frontend deployers to reuse one exact-commit sparse worktree and switch it to only the source root needed by the active release lane instead of checking out the entire agency repository on the shared host. The creator-credit-only lane retains its additional bounded shared-source paths.
 - Preserved the existing clean-main, remote-SHA, build, backup, migration, rollback, and release-receipt gates. The adjustment changes private release staging only; it does not alter public application behavior or delete historical releases.
 - Shell parsing, frontend route-shell acceptance, pilot pre-promotion guards, scheduler-deploy tests, and diff checks pass. Production deployment remains a separate evidence state.
 
