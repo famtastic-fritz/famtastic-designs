@@ -5,6 +5,7 @@
 - Added customer-facing review of an exact external staging release, one consolidated revision-feedback form, and receipt-bound acceptance before checkout.
 - Added itemized account-owned invoices with exact cent totals, sponsorship credit, owner-hosted terms, and a single secure card action. Invoice mode removes add-ons, grant codes, managed-hosting renewal, and domain-registration choices.
 - Added a payment-gated owner-hosting checklist that collects non-secret provider metadata and explicitly rejects passwords, tokens, private keys, card data, and Stripe secrets.
+- Added an owner-review gate to the exact Shay-signed message, removed customer addresses from the tracked proof, and made invoice issuance plus checkout verification explicit prerequisites for the reviewed “invoice is ready” copy. Added a separate evidence-led Shay voice research follow-up; it creates no sending authority.
 - Local frontend verification passes the production build, public customer-flow contract, 34-rule Client Portal Design DNA validator, full-site review regression, staging-review API contract, and 320/390/768/1280px browser containment/touch-target check.
 - Recorded this as The Reckoning controlled pilot. General production capability remains unproved until an unrelated customer completes the same review-to-payment-to-owner-hosted lifecycle. No production deployment, payment, DNS change, customer email, host access, or live-payment activation is established by this source change.
 

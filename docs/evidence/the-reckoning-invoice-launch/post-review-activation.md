@@ -2,7 +2,7 @@
 
 This is the exact order after Fritz approves the finished package. None of these customer-specific actions are part of the code deployment.
 
-1. Confirm request `fb3c723f-072b-4458-a91f-e3dea54f840c` still belongs to customer `13`, organization `13`, and verified account `info@kofioliverphotography.com`.
+1. Confirm the recorded request, customer, organization, and verified account identities still match the approved private activation packet. Do not place the private identifiers or addresses in tracked evidence.
 2. Correct the account display name to `Kofi A. Oliver` and workspace label to `The Reckoning` while preserving both authorized email identities. Record the prior and final values before continuing.
 3. Register Build DNA `the-reckoning-owner-switch-aef343a-20261002`.
 4. Attach the private full-site review package using its raw manifest checksum and exact package directory.

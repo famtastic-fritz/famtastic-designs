@@ -126,7 +126,7 @@
     {
       "role": "email-preview",
       "path": "docs/evidence/the-reckoning-invoice-launch/review-package/review-documents/client-email-preview.md",
-      "sha256": "e0d7a9eefa6038e18c7749d9d0695448ce5b975c7b4a558fcecfcb8dbc3b2ee4",
+      "sha256": "d77316738323427ea49eb4db5a2351dbe8093dfb4b70b79d3895586cd4077d99",
       "rights": "owner_workspace",
       "retention": "source_control"
     }

@@ -2,11 +2,11 @@
 
 ## Fritz review gate — 2026-10-02
 
-The implementation and exact customer materials are prepared for Fritz's review. The package under `review-package/` includes the exact staging release, page checklist, invoice preview, release evidence, and branded Shay email copy. Its normalized manifest digest is `b6816a4ba1b76726e6bb33098a51e8b708526f6db100caa20ddcffdb1e6af14d`.
+The implementation and exact customer materials are prepared for Fritz's review. The package under `review-package/` includes the exact staging release, page checklist, invoice preview, release evidence, and branded Shay email copy. Its normalized manifest digest is `2dc052dd8d600fda3975fc468b282a43db320bc6d9c27cb8fa5f543f87d8afa4`.
 
-- Raw review manifest SHA-256: `df11cf067ee1c984738a1c2ace5dc40066bfb7e77ce4f6054af26087968bdd73`
-- External-stage import packet SHA-256: `cb12cd61de2725fff7a6e5f223db65c7c421e5bf8ccb3c5feb86dd37b6cc2012`
-- Build DNA SHA-256: `14c0ed23a3c4df16a34de36f33cc405c5e564a86ac83b897056b25378adea9c9`
+- Raw review manifest SHA-256: `55a8cebc4c8af8ff84436b2e0906ed723c03c49d9b58731626033e641cccea42`
+- External-stage import packet SHA-256: `bc531287bb40df2f69649557ee4ac058e6eb998e250d726000676cab4ac4c0b9`
+- Build DNA SHA-256: `3f8f3555728b8dfe34c968cdbc1492d9b3c63ea712882819823bbf58c99cc262`
 
 The Build DNA and external-stage import packet are complete, but they have not been registered or attached to Kofi's account. Invoice `TR-KAO-001` has not been issued. No Kofi-specific account label, customer record, outbox row, email, payment, hosting-access record, DNS setting, or owner-host deployment was changed. `post-review-activation.md` records the exact activation order after Fritz approves the finished package.
 
