@@ -12,6 +12,8 @@
 
 **Observation:** A frontend-only sparse checkout reached Vite but could not resolve the tracked narration source imported by `WhyFamtasticPage.jsx`. **Guidance:** Treat repository-external imports as explicit release inputs. Include the exact authored marketing path in both normal and creator-credit-only frontend checkouts, then let the real production build prove the dependency graph.
 
+**Observation:** With complete inputs, the host ended the session after Vite transformation at the shared resource window. NVM initialization plus a clean 13-second install consumed most of that window, while the exact Node 22 runtime was already installed. **Guidance:** For a numeric `.nvmrc` major, select and verify the newest installed matching runtime directly; retain NVM install/use as the fallback when no match exists.
+
 ## 2026-10-02 — External staging must enter the lifecycle without invented proof history
 
 **Observation:** A finished bespoke site may already have a real repository, release, browser evidence, and customer request while the standard portal expects three generated directions. Recasting the finished site as three proofs would create false history, and taking payment before exact-release acceptance would weaken the existing proof-first contract.

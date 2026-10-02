@@ -170,14 +170,23 @@ cd "$source_dir"
 }
 # nvm is a shell function and must be loaded explicitly in noninteractive SSH.
 export NVM_DIR="$HOME/.nvm"
-# shellcheck disable=SC1090
-set +u
-. "$NVM_DIR/nvm.sh"
-if ! nvm use; then
+requested_node="$(tr -d '[:space:]' < .nvmrc)"
+installed_node_dir=''
+if [[ "$requested_node" =~ ^[0-9]+$ ]]; then
+  installed_node_dir="$(find "$NVM_DIR/versions/node" -mindepth 1 -maxdepth 1 -type d -name "v${requested_node}.*" -print 2>/dev/null | sort -V | tail -1)"
+fi
+if [[ -n "$installed_node_dir" && -x "$installed_node_dir/bin/node" && -x "$installed_node_dir/bin/npm" ]]; then
+  export PATH="$installed_node_dir/bin:$PATH"
+  [[ "$(node --version)" == "v${requested_node}."* ]]
+  echo "Using installed Node $(node --version) from the .nvmrc major pin."
+else
+  # shellcheck disable=SC1090
+  set +u
+  . "$NVM_DIR/nvm.sh"
   nvm install
   nvm use
+  set -u
 fi
-set -u
 
 # The shared host can expose far more CPUs than this account's resource budget.
 # Bound both native worker pools and V8; resource limits affect build scheduling,
