@@ -36,6 +36,8 @@ namespace {
   check(substr_count($html, 'href=') === 2, 'One operational action plus creator credit');
   check(substr_count($html, 'data-famtastic-creator-credit="v1"') === 1, 'One final creator credit');
   check(str_contains($html, 'href="https://famtasticdesigns.com/?utm_source=famtastic-designs&amp;utm_medium=creator_credit&amp;utm_campaign=created_by_famtastic"'), 'Exact public attribution');
+  check(str_contains($html, 'background:transparent') && str_contains($html, 'border-radius:0') && str_contains($html, 'box-shadow:none'), 'Transparent continuous-surface creator credit');
+  check(!str_contains($html, 'background:#070907;max-width') && !str_contains($html, 'border-radius:6px'), 'Legacy creator-credit plate absent');
   check(str_contains($html, 'href="https://prosintraining.famtasticinc.com/"'), 'Exact destination');
   check(!preg_match('/\{\{\s*[a-z_]+\s*\}\}|555-0123|View in browser/i', $html), 'No placeholders');
   check(str_contains($fixture['body'], "Always FAMtastic,\nShay"), 'Exact signature');

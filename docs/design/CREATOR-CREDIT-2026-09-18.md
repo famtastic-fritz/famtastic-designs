@@ -1,5 +1,13 @@
 # Creator credit contract
 
+> **Presentation superseded September 23, 2026.** This file remains historical
+> evidence for the September 18 v1 release. Its `obsidian backing` instruction
+> must not be used for new work. Current creator credit uses the exact
+> alpha-transparent PNG directly on the continuous parent/footer surface, with
+> no opaque or contrasting plate, border, rounded box, shadow, filter, or
+> recolor. See
+> [the current agency standard](../operations/FAMTASTIC-CLIENT-DELIVERY-BRAND-AND-FULFILLMENT-STANDARD.md).
+
 Owner mandate September 18, 2026. Preserve existing footer/credit text and append
 one centered final creator-credit row. No price/tier exemption; cheaper sites are
 especially included. Only an explicit owner override naming the artifact can

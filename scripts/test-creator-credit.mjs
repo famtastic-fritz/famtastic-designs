@@ -12,7 +12,10 @@ test('exact owner bytes and passive, accessible credit', () => {
   assert.match(html, /min-height:44px/);
   assert.match(html, /width:180px/);
   assert.match(html, /utm_source=famtastic-designs&amp;utm_medium=creator_credit&amp;utm_campaign=created_by_famtastic/);
-  assert.doesNotMatch(html, /<script|cookie|filter:(?!none)/i);
+  assert.match(html, /background:transparent/);
+  assert.match(html, /border-radius:0/);
+  assert.match(html, /box-shadow:none/);
+  assert.doesNotMatch(html, /background:#070907|border-radius:6px|<script|cookie|filter:(?!none)/i);
 });
 test('preserves footer and authored HTML, appends once', () => {
   const source = '<html><body><footer>Existing credit & legal</footer></body></html>';

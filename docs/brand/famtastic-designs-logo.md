@@ -61,3 +61,17 @@ name. Metadata uses the same asset URL; email uses the existing PHP mailer.
 See [email brand system](../design/email-brand-system.md) and its versioned
 registry before changing any notification. Do not migrate old notifications
 merely because the primary website logo changed.
+
+## Creator-credit placement is a separate contract
+
+The dark-backing guidance above applies to primary FAMtastic identity in a
+deliberately designed FAMtastic-owned composition. It does **not** authorize a
+separate backing plate around creator credit on a customer site, proof, Connect
+page, card, or delivered artifact.
+
+For creator credit, place the exact alpha-transparent PNG directly on the
+continuous parent/footer surface. Do not add an opaque, black, dark, colored,
+or contrasting link plate, border, rounded box, shadow, filter, or recolor.
+Render the image at 160–220px with a 44px accessible link target and the public
+site-slug UTM contract. See
+[the agency delivery, brand, and fulfillment standard](../operations/FAMTASTIC-CLIENT-DELIVERY-BRAND-AND-FULFILLMENT-STANDARD.md).

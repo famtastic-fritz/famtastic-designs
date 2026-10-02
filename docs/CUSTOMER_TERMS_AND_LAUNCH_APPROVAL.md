@@ -2,6 +2,14 @@
 
 Status: **provisional business policy — not attorney-approved**
 
+Operational delivery, ownership, creator-credit, Connect Card, and fulfillment
+requirements are consolidated in the
+[FAMtastic client delivery, brand, and fulfillment standard](operations/FAMTASTIC-CLIENT-DELIVERY-BRAND-AND-FULFILLMENT-STANDARD.md).
+That internal standard does not amend an accepted customer agreement. Bespoke
+work ownership/license, source export, portfolio use, creator-credit removal,
+support, termination, backup retention, and migration assistance still require
+explicit customer terms and qualified review.
+
 The canonical machine-readable promises are in
 `backend/config/famtastic-deal-terms.json`. Every SKU has its own promise,
 deliverables, exclusions, cancellation rule, refund rule, required consents, and

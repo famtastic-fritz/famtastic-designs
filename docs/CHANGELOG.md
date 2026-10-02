@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-10-02 — Client delivery, brand, and fulfillment governance
+
+- Consolidated service deliverables, acceptance, ownership/permissions, creator credit, Connect Cards, commerce fulfillment, testimonials, legal review, and evidence levels into one agency-wide operational standard.
+- Separated primary FAMtastic identity placement from customer-site creator credit and marked the historical v1 `obsidian backing` instruction superseded by the transparent continuous-surface rule.
+- Corrected the shared React/static creator-credit source and branded-email footer so new outputs use a transparent link and image with no plate, radius, border, shadow, filter, or recolor. Added a regression against the former `#070907`/6px plate and repaired the documented npm test entry point.
+- Kept the standard non-contractual and the existing legal text provisional. No customer terms were silently amended; the bespoke-work assignment/license model and related exit/support terms remain owner and attorney decisions.
+- Recorded the Agency Agents legal, brand, project-delivery, and Drupal Commerce profiles used for this review. No customer record, invoice, payment, email, provider, deployment, or production setting changed.
+
 ## 2026-10-02 — External staging invoice and owner-hosted handoff pilot (local)
 
 - Added customer-facing review of an exact external staging release, one consolidated revision-feedback form, and receipt-bound acceptance before checkout.

@@ -1,5 +1,12 @@
 # FAMtastic creator-credit rollout audit — September 18, 2026
 
+> **Historical v1 evidence.** The September 18 `neutral backing` presentation
+> language below is superseded for new creator-credit work. The current rule uses
+> the exact alpha-transparent PNG directly on the continuous parent/footer
+> surface with no separate opaque, dark, colored, bordered, rounded, shadowed,
+> filtered, or recolored plate. Historical release receipts remain unchanged.
+> See [the current agency standard](FAMTASTIC-CLIENT-DELIVERY-BRAND-AND-FULFILLMENT-STANDARD.md).
+
 ## Mandate and acceptance
 
 Default, unless Fritz explicitly approves a scoped exception: preserve the existing

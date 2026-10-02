@@ -7,6 +7,8 @@ $rendered = CreatorCredit::present($html);
 if ($hash !== hash('sha256', $html)) throw new RuntimeException('Source changed');
 if (substr_count($rendered, 'data-famtastic-creator-credit="v1"') !== 1) throw new RuntimeException('Missing credit');
 if (!str_contains($rendered, 'src="/brand/famtastic-designs-logo-v1.png"')) throw new RuntimeException('CSP same-origin image missing');
+if (!str_contains($rendered, 'background:transparent') || !str_contains($rendered, 'border-radius:0') || !str_contains($rendered, 'box-shadow:none')) throw new RuntimeException('Transparent continuous-surface contract missing');
+if (str_contains($rendered, 'background:#070907') || str_contains($rendered, 'border-radius:6px')) throw new RuntimeException('Legacy creator-credit plate returned');
 if (!str_contains($rendered, '<footer>Original immutable credit</footer>')) throw new RuntimeException('Footer lost');
 if (!str_ends_with($rendered, "</body></html>")) throw new RuntimeException('Credit must remain inside body');
 if (CreatorCredit::present($rendered) !== $rendered) throw new RuntimeException('Duplicate credit');

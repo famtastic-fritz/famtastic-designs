@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-10-02 — Delivery, ownership, fulfillment, and attribution are four contracts
+
+- A complete agency handoff needs separate records for service delivery, ownership/permissions, customer commerce fulfillment, and brand/creator-credit use. Scattered policies are too easy to apply inconsistently.
+- Payment, acceptance, delivery, launch, and fulfillment need distinct evidence states. A paid invoice must never silently mark provider setup, owner training, deployment, or an end-customer order complete.
+- Primary FAMtastic brand placement and customer-site creator credit have different rules. The current creator credit has no separate plate even when a primary-brand composition uses a dark surface.
+- Customer ownership language must name bespoke work, reusable agency components, source/data export, third-party licenses, portfolio permission, support, termination, backups, migration, and creator-credit removal. “Customer owns supplied content and domain” is necessary but incomplete.
+- Connect Cards need the same canonical URL, public-data, asset-rights, and evidence discipline as full sites while staying compact and free of implied CRM, payment, or tracking capability.
+
 ## 2026-09-21 — Full-site handoff and portable source
 
 **Release:** The corrected protected account delivery is verified at backend 7227ceb6 / frontend cc8eada4. The same exact customer package survives route correction; 58 route matches, all file hashes, plan navigation and an unsent planner draft pass. A GitHub billing lock prevented hosted checks from starting. EDQUOT was recovered by deleting only five verified old, untracked/reproducible dist directories (1,099,176 KiB), retaining source/current build/backups.

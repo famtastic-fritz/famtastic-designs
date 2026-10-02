@@ -147,6 +147,22 @@ guards and exclusions. Parent CUA additionally verifies live Kakes/Reckoning and
 authenticated native admin credit. This is not a claim that every historical
 media export or unlaunched site is published, nor a customer-delivery test.
 
+## 2026-10-02 — Transparent creator credit v2 and delivery governance, local only
+
+The shared React/static creator-credit source, generated Drupal presentation
+helper, and branded-email footer now use the exact alpha-transparent logo on the
+continuous parent surface without the prior `#070907` rounded link plate. Focused
+Node, PHP, email, asset-sync, and Node 22 frontend-build checks pass. The internal
+client-delivery standard also joins service acceptance, ownership/permissions,
+Connect Cards, commerce fulfillment, testimonials, legal review, and evidence
+levels. This is local source and policy evidence in the controlled invoice-launch
+worktree; no fleet deployment, historical-artifact rewrite, customer message,
+invoice, payment, or production-conformance claim is established.
+Read-only discovery also found canonical September 18 backing-language copies in
+the J.J.B.&A Transport and Travel Addicts Courier Express repositories plus stale
+shared helpers in parallel FAMtastic worktrees. Those are recorded follow-ups,
+not silently edited or treated as deployed defects without artifact-level proof.
+
 ## 2026-09-18 — Creator credit source implementation
 
 Agency credit pattern/build gates are tested and scoped existing-live deployment is
