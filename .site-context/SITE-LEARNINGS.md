@@ -6,6 +6,8 @@
 
 **Guidance:** Shared-host releases should check out only the source root the active deployer actually validates and promotes. Reuse one exact-commit sparse worktree across backend and frontend release lanes, switching its sparse definition per lane, then keep every existing SHA, backup, build, migration, and rollback gate. Try this non-destructive reduction before requesting deletion of historical release checkouts; free disk space is not evidence of account file-quota headroom.
 
+**Observation:** After quota recovery, the host still ended the release immediately after Composer platform validation. A bounded ten-file PHP lint completed, while the deployer's 238-process complete-module lint did not return an exit record. **Guidance:** When the production receipt names a valid Git baseline, lint all added and modified PHP files in the exact baseline-to-candidate diff. Keep full-module lint as the fail-safe for a missing or untrusted baseline, and retain the complete local suite before push.
+
 ## 2026-10-02 — External staging must enter the lifecycle without invented proof history
 
 **Observation:** A finished bespoke site may already have a real repository, release, browser evidence, and customer request while the standard portal expects three generated directions. Recasting the finished site as three proofs would create false history, and taking payment before exact-release acceptance would weaken the existing proof-first contract.

@@ -1158,8 +1158,24 @@ TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-
   --no-check-publish --no-interaction
 TMPDIR="$deploy_dir/tmp" COMPOSER_TEMP_DIR="$deploy_dir/tmp" composer --working-dir="$backend_dir" check-platform-reqs \
   --lock --no-dev
-find "$source_module" -type f -name '*.php' -print0 |
-  xargs -0 -n1 php -l >/dev/null
+current_backend_commit="$(sed -n 's/^commit=//p' "$production_dir/.backend-release" 2>/dev/null || true)"
+if [[ "$current_backend_commit" =~ ^[a-f0-9]{40}$ ]] && git --git-dir="$mirror_dir" cat-file -e "$current_backend_commit^{commit}" 2>/dev/null; then
+  # The shared host terminates hundreds of short PHP CLI processes in one SSH
+  # session. Unchanged files are the already-running baseline, so lint every
+  # added or modified PHP file between that recorded release and this exact SHA.
+  git --git-dir="$mirror_dir" diff --name-only --diff-filter=ACMR -z \
+    "$current_backend_commit" "$commit_sha" -- backend/web/modules/custom/famtastic_pipeline |
+    while IFS= read -r -d '' changed_php; do
+      [[ "$changed_php" == *.php ]] || continue
+      test -f "$source_dir/$changed_php"
+      php -l "$source_dir/$changed_php" >/dev/null
+    done
+  echo "Validated changed PHP against deployed backend $current_backend_commit."
+else
+  find "$source_module" -type f -name '*.php' -print0 |
+    xargs -0 -n1 php -l >/dev/null
+  echo "Validated complete PHP module because no trusted deployed baseline was available."
+fi
 
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 module_backup="$HOME/backups/famtastic-pipeline-$timestamp-$commit_sha.tgz"
