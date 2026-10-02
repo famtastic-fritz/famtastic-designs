@@ -1,5 +1,13 @@
 # FAMtastic Designs site learnings
 
+## 2026-10-02 — External staging must enter the lifecycle without invented proof history
+
+**Observation:** A finished bespoke site may already have a real repository, release, browser evidence, and customer request while the standard portal expects three generated directions. Recasting the finished site as three proofs would create false history, and taking payment before exact-release acceptance would weaken the existing proof-first contract.
+
+**Guidance:** Use a tenant-bound external-release adapter that preserves the real source and receipt, collects consolidated feedback, and requires acceptance of the displayed hash. Derive the invoice from a server-owned immutable snapshot with integer cents. For an owner-hosted scope, remove managed-hosting renewal, add-ons, grant codes, and domain-registration choices from checkout. Verified payment may unlock a checklist; it must not change DNS, deploy to the owner host, activate Stripe, or prove credentials.
+
+**Security boundary:** Portal hosting intake records provider metadata and invitation state only. Never collect passwords, API keys, private keys, recovery codes, card data, or Stripe secrets. Keep The Reckoning labeled as a controlled pilot until another unrelated customer proves the full lifecycle.
+
 ## 2026-09-21 — Full-site handoff and portable source
 
 **Release:** The corrected protected account delivery is verified at backend 7227ceb6 / frontend cc8eada4. The same exact customer package survives route correction; 58 route matches, all file hashes, plan navigation and an unsent planner draft pass. A GitHub billing lock prevented hosted checks from starting. EDQUOT was recovered by deleting only five verified old, untracked/reproducible dist directories (1,099,176 KiB), retaining source/current build/backups.
@@ -2877,3 +2885,21 @@ The f5d8c769 apply passed PHP 8.3 syntax, cache rebuild and service resolution, 
 ## Frontend build recovery — 2026-09-21
 
 The first frontend build stopped before promotion because the private sparse source omitted the existing Why FAMtastic narration import. Materializing that exact committed input repaired module resolution. The next build was killed by the hosting account before completion; production frontend remained at 40ca506b. This does not by itself establish an OOM diagnosis. The release script now bounds native Rayon/Tokio workers to two and V8 old-space to 512 MiB, and the scoped source preparation includes the narration directory. The identical bounded local compile passes 618 modules; the full hosting build remains the release gate. See the [Rayon thread-pool environment contract](https://docs.rs/rayon/latest/rayon/struct.ThreadPoolBuilder.html).
+
+## External staged site to owner-hosted launch — 2026-10-02
+
+An existing customer site can enter the verified portal lifecycle without
+inventing concept variants. Bind one checksummed full-site review, one exact
+external staging receipt, and one immutable invoice to the same verified
+customer, organization, and website request. Preserve completed historical
+proof records, but remove the request's live campaign pointer before presenting
+the external release as the selected direction.
+
+For owner-hosted work, invoice cents and terms stay server-owned. Only an exact
+completed `famtastic_stripe_live` Commerce payment with a provider remote ID can
+unlock the non-secret hosting checklist. Payment never implies DNS cutover,
+deployment to the owner's host, Stripe-account activation, or credential
+storage. Customer communication remains a separate owner-reviewed action:
+`standard/v2`, `hello@famtasticdesigns.com`, Shay signature, one invoice CTA,
+secondary staging/portal links, exact recipient keys, and provider acceptance
+recorded separately from inbox receipt.

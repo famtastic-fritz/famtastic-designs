@@ -76,11 +76,12 @@ final class FullSiteReviewService {
     try {
       $row = $this->ownedRequest($customerId, $requestPublicId, TRUE);
       if (!$row || (int) $row['organization_id'] !== $organizationId) throw new \RuntimeException('Exact customer, organization and request binding is required.');
-      if (!in_array($row['status'], ['draft', 'submitted'], TRUE) || !empty($row['commerce_order_id']) || !empty($row['project_id']) || !empty($row['proof_campaign_id']) || !in_array((string) $row['proof_review_status'], ['', 'not_started'], TRUE)) throw new \RuntimeException('Full-site review cannot replace an active proof, purchase or selected build.');
+      if (!in_array($row['status'], ['draft', 'submitted'], TRUE) || !empty($row['commerce_order_id']) || !empty($row['project_id']) || !in_array((string) $row['proof_review_status'], ['', 'not_started'], TRUE) || trim((string) ($row['selected_proof_direction'] ?? '')) !== '') throw new \RuntimeException('Full-site review cannot replace an active proof, purchase or selected build.');
       $jobKey = 'website_proof.generate.v1:request:' . $row['id'];
       $jobs = $this->database->select('famtastic_job', 'j');
       $scope = $jobs->orConditionGroup()->condition('job_key', $jobKey)->condition('job_key', $this->database->escapeLike($jobKey . ':brief:') . '%', 'LIKE');
-      if ($jobs->condition($scope)->countQuery()->execute()->fetchField()) throw new \RuntimeException('Full-site review cannot replace an existing proof routine.');
+      $jobs->condition($scope)->condition('status', ['queued', 'retry', 'running', 'worker_queued', 'worker_running'], 'IN');
+      if ($jobs->countQuery()->execute()->fetchField()) throw new \RuntimeException('Full-site review cannot replace an active proof routine.');
       $build = $this->database->select('famtastic_build_run', 'b')->fields('b', ['source_sha', 'artifact_checksum'])->condition('build_key', 'build-dna:' . $manifest['build_id'])->execute()->fetchAssoc();
       if (!$build || !hash_equals((string) $build['source_sha'], $manifest['source_commit']) || !preg_match('/^[a-f0-9]{64}$/', (string) $build['artifact_checksum'])) throw new \RuntimeException('Register the matching source Build DNA before attachment.');
       $intake = json_decode((string) $row['intake_data'], TRUE, 512, JSON_THROW_ON_ERROR);
@@ -121,7 +122,7 @@ final class FullSiteReviewService {
       }
       $now = $this->time->getRequestTime();
       $record = ['schema' => FullSiteReviewPackage::SCHEMA, 'request_public_id' => $requestPublicId, 'customer_id' => $customerId, 'organization_id' => $organizationId, 'manifest' => $manifest, 'manifest_sha256' => $digest, 'created_at' => gmdate(DATE_ATOM, $now)];
-      $payload = ['website_request_id' => (int) $row['id'], 'request_public_id' => $requestPublicId, 'customer_id' => $customerId, 'organization_id' => $organizationId, 'actor' => $actor, 'authority_ref' => $authority, 'execution_uid' => (int) $this->account->id(), 'customer_supplied' => FALSE, 'manifest_sha256' => $digest, 'review' => $record, 'prior_intake_json' => (string) $row['intake_data'], 'prior_intake_sha256' => hash('sha256', (string) $row['intake_data']), 'customer_acceptance' => FALSE, 'notification_queued' => FALSE, 'payment_changed' => FALSE, 'final_launch' => FALSE];
+      $payload = ['website_request_id' => (int) $row['id'], 'request_public_id' => $requestPublicId, 'customer_id' => $customerId, 'organization_id' => $organizationId, 'actor' => $actor, 'authority_ref' => $authority, 'execution_uid' => (int) $this->account->id(), 'customer_supplied' => FALSE, 'manifest_sha256' => $digest, 'review' => $record, 'prior_intake_json' => (string) $row['intake_data'], 'prior_intake_sha256' => hash('sha256', (string) $row['intake_data']), 'prior_proof_campaign_id' => !empty($row['proof_campaign_id']) ? (int) $row['proof_campaign_id'] : NULL, 'customer_acceptance' => FALSE, 'notification_queued' => FALSE, 'payment_changed' => FALSE, 'final_launch' => FALSE];
       if (!$this->ledger->recordEvent($eventKey, 'website_request.full_site_review_attached', $payload, prospectId: !empty($row['prospect_id']) ? (int) $row['prospect_id'] : NULL, provider: 'staff_full_site_review')) throw new \RuntimeException('Review changed concurrently; retry the exact manifest.');
       $staff = is_array($intake['staff_assisted_brief'] ?? NULL) ? $intake['staff_assisted_brief'] : [];
       $staff += ['schema' => 'famtastic.staff-assisted-brief.v1', 'actor' => $actor, 'authority' => $authority, 'customer_supplied' => FALSE];

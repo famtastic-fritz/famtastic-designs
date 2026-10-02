@@ -3,6 +3,8 @@ import { Panel, title, money, date } from './PortalShared.jsx';
 export default function PortalBillingView({ workspace, inbox, go }) {
   const orders = workspace?.orders || [];
   const requests = (workspace?.website_requests || []).filter((request) => !request.customer_archived);
+  const invoices = [...(workspace?.invoices || []), ...requests.map((request) => request.invoice).filter(Boolean)]
+    .filter((invoice, index, all) => all.findIndex((candidate) => candidate.public_id === invoice.public_id) === index);
   const isStaff = inbox?.is_staff === true;
 
   if (!workspace) {
@@ -25,6 +27,35 @@ export default function PortalBillingView({ workspace, inbox, go }) {
       <p>Your request and proof progress stay visible while a purchase is being prepared.</p>
       <ul>{requests.map((request) => <li key={request.public_id}><div><strong>{request.project_name || request.business_name || 'Website request'}</strong><p>{request.proof_handoff?.label || 'Open the project for its current status.'}</p></div><a href={`/portal?tab=projects&request=${encodeURIComponent(request.public_id)}`}>Open project</a></li>)}</ul>
     </Panel>}
+    {invoices.length > 0 && <section className="portal-invoice-list" aria-label="Invoices">
+      {invoices.map((invoice) => {
+        const request = requests.find((item) => item.public_id === invoice.website_request_public_id || item.invoice?.public_id === invoice.public_id);
+        const requestPublicId = request?.public_id || invoice.website_request_public_id || '';
+        const open = !['paid', 'void', 'refunded'].includes(invoice.status);
+        const checkoutReady = Boolean(request?.direct_checkout_available || invoice.checkout_available);
+        return (
+          <Panel key={invoice.public_id} eyebrow={`Invoice ${invoice.invoice_number}`} title={open ? `${money(invoice.total_amount_minor, invoice.currency)} due` : title(invoice.status)} className="portal-invoice-card">
+            <div className="portal-invoice-status"><strong>{title(invoice.status)}</strong><span>{invoice.terms?.one_time ? 'One-time project contribution' : 'Recorded invoice'}</span></div>
+            <ul className="portal-invoice-lines">
+              {(invoice.line_items || []).map((item) => <li key={item.code || item.label}><span>{item.label}</span><strong>{item.amount_minor === 0 ? 'Included' : money(item.amount_minor, invoice.currency)}</strong></li>)}
+            </ul>
+            <dl className="portal-invoice-totals">
+              <div><dt>Package value</dt><dd>{money(invoice.list_amount_minor, invoice.currency)}</dd></div>
+              <div><dt>FAMtastic Community Sponsorship Credit</dt><dd>−{money(invoice.credit_amount_minor, invoice.currency)}</dd></div>
+              <div><dt>One-time contribution due</dt><dd><strong>{money(invoice.total_amount_minor, invoice.currency)}</strong></dd></div>
+            </dl>
+            <p>Kofi will host the finished platform on his own hosting. There is no recurring FAMtastic charge. Hosting, domain, mailbox, processor, shipping, and fulfillment costs remain owner-paid.</p>
+            {invoice.status === 'paid' ? (
+              <button type="button" onClick={() => go('projects')}>Continue owner-hosted handoff →</button>
+            ) : checkoutReady ? (
+              <a className="portal-invoice-cta" href={`/buy?request=${encodeURIComponent(requestPublicId)}&invoice=${encodeURIComponent(invoice.public_id)}`}>Review &amp; Pay {money(invoice.total_amount_minor, invoice.currency)}</a>
+            ) : (
+              <p className="portal-invoice-blocker" role="status">Review and accept the exact staging release in Projects before payment opens.</p>
+            )}
+          </Panel>
+        );
+      })}
+    </section>}
     <section className="portal-grid two">
       {orders.length ? (
         orders.map((purchase) => (
@@ -72,11 +103,11 @@ export default function PortalBillingView({ workspace, inbox, go }) {
           }}
         >
           <strong style={{ color: '#fff', display: 'block', marginBottom: '0.2rem' }}>
-            Hosting Inclusions &amp; Renewal Policy
+            {invoices.some((invoice) => invoice.scope_snapshot?.delivery_model === 'owner_hosted_private') ? 'Owner-hosted project terms' : 'Hosting Inclusions &amp; Renewal Policy'}
           </strong>
-          Web bundles include 365 days of managed cloud hosting. Month-13 renewals ($9.99/mo for Web
-          Basics or $19.99/mo for Business Website) are billed only upon verified customer recurring
-          authorization.
+          {invoices.some((invoice) => invoice.scope_snapshot?.delivery_model === 'owner_hosted_private')
+            ? 'This owner-hosted invoice has no recurring FAMtastic charge. Payment opens the access checklist and hosting audit; it does not change DNS, deploy the site, or activate live payments.'
+            : 'Web bundles include 365 days of managed cloud hosting. Month-13 renewals ($9.99/mo for Web Basics or $19.99/mo for Business Website) are billed only upon verified customer recurring authorization.'}
         </div>
       </Panel>
     </section>

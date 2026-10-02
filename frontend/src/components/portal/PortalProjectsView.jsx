@@ -5,7 +5,24 @@ import PortalPageContentFields from './PortalPageContentFields.jsx';
 
 export function customerNextStep(request) {
   if (!request) return null;
-  if (request.full_site_review?.status === 'ready_for_review') {
+  const invoice = request.invoice;
+  const handoff = request.owner_hosting || invoice?.owner_hosting;
+  if (invoice?.status === 'paid' && ['payment_required', 'awaiting_host_access', 'blocked'].includes(handoff?.status || 'awaiting_host_access')) {
+    return { owner: 'you', tone: handoff?.status === 'blocked' ? 'attention' : 'action', label: 'Provide the hosting details', detail: handoff?.current_blocker || 'Use the secure checklist below. Send an invitation through your hosting provider; never paste a password or secret into the portal.', action: 'owner-hosting' };
+  }
+  if (invoice?.status === 'paid' && ['hosting_audit', 'private_installation'].includes(handoff?.status)) {
+    return { owner: 'famtastic', tone: 'waiting', label: handoff.status === 'hosting_audit' ? 'Shay is auditing your hosting' : 'Your private installation is being prepared', detail: handoff.current_blocker || 'Your payment and access details are recorded. The next update will appear here when its evidence is ready.', action: '' };
+  }
+  if (invoice?.status === 'paid' && ['customer_testing', 'production_approval', 'ready_for_dns'].includes(handoff?.status)) {
+    return { owner: 'you', tone: 'action', label: handoff.owner_next_action || 'Review the owner-hosted website', detail: handoff.current_blocker || 'Follow the testing or approval step shown in the owner-hosted checklist.', action: 'owner-hosting' };
+  }
+  if (invoice?.status === 'paid' && handoff?.status === 'launched') {
+    return { owner: 'famtastic', tone: 'waiting', label: 'Owner-hosted launch recorded', detail: 'The launch record and handoff documents remain in your workspace.', action: '' };
+  }
+  if (invoice && !['paid', 'void', 'refunded'].includes(invoice.status) && request.direct_checkout_available) {
+    return { owner: 'you', tone: 'action', label: 'Review and pay your $100 invoice', detail: 'Your exact website revision is accepted. Payment opens the owner-hosted migration checklist.', action: 'payment' };
+  }
+  if (request.full_site_review?.status === 'ready_for_review' && request.staging_preview?.status !== 'deployed') {
     return { owner: 'you', tone: 'action', label: 'Your full website is ready for review', detail: 'Open the website, explore the pages, and read the research behind the design.', action: 'full-site' };
   }
   if (request.status === 'draft') {
@@ -17,7 +34,7 @@ export function customerNextStep(request) {
   if (request.proof_review_status === 'revision_requested') {
     return { owner: 'famtastic', tone: 'waiting', label: 'FAMtastic is working on your changes', detail: 'Your notes are saved. You do not need to do anything right now.', action: '' };
   }
-  if (request.proof_review_status === 'selected' && request.direct_checkout_available) {
+  if (!invoice && request.proof_review_status === 'selected' && request.direct_checkout_available) {
     return { owner: 'you', tone: 'action', label: 'Your completed review is accepted', detail: 'Secure checkout is the next separate step.', action: 'payment' };
   }
   if (request.status === 'checkout_started') {
@@ -43,24 +60,114 @@ export function customerNextStep(request) {
   return { owner: 'famtastic', tone: 'waiting', label: request.proof_handoff?.label || 'FAMtastic is preparing your concepts', detail: request.proof_handoff?.detail || 'You do not need to do anything right now.', action: '' };
 }
 
-export function StagingReview({ request, busy, onAccept }) {
+export function StagingReview({ request, busy, onAccept, onRevision }) {
   const preview = request.staging_preview;
   const [confirmedHash, setConfirmedHash] = useState('');
+  const [revisionOpen, setRevisionOpen] = useState(false);
   useEffect(() => setConfirmedHash(''), [preview?.receipt_hash]);
   if (!preview || preview.status !== 'deployed' || !preview.receipt_hash) return null;
   const accepted = request.staging_review_status === 'accepted';
+  const revisionPending = request.proof_review_status === 'revision_requested' || request.staging_review_status === 'revision_requested';
   return (
     <section id={`staging-review-${request.public_id}`} className="portal-proof-next" aria-label="Completed website review">
       <h3>{accepted ? 'This website revision is accepted' : 'Review your completed website'}</h3>
       <p>Open the protected review and check the pages and features you requested. Acceptance applies to this revision only. Payment and final launch are separate steps.</p>
       <div className="portal-proof-next__actions"><a href={preview.url} target="_blank" rel="noreferrer">Open completed website review ↗</a></div>
-      {!accepted && (
-        <form onSubmit={(event) => { event.preventDefault(); if (confirmedHash === preview.receipt_hash) onAccept(request.public_id, preview.receipt_hash); }}>
-          <label className="portal-check" style={{ minHeight: 44 }}>
-            <input type="checkbox" checked={confirmedHash === preview.receipt_hash} onChange={(event) => setConfirmedHash(event.target.checked ? preview.receipt_hash : '')} />
-            I reviewed this completed website and accept this revision.
-          </label>
-          <button type="submit" disabled={busy || confirmedHash !== preview.receipt_hash}>Accept this website revision</button>
+      {revisionPending && <p className="portal-invoice-blocker" role="status">Your consolidated feedback is saved. Shay will return the next exact revision here.</p>}
+      {!accepted && !revisionPending && (
+        <>
+          <form onSubmit={(event) => { event.preventDefault(); if (confirmedHash === preview.receipt_hash) onAccept(request.public_id, preview.receipt_hash); }}>
+            <label className="portal-check" style={{ minHeight: 44 }}>
+              <input type="checkbox" checked={confirmedHash === preview.receipt_hash} onChange={(event) => setConfirmedHash(event.target.checked ? preview.receipt_hash : '')} />
+              I reviewed this completed website and accept this revision.
+            </label>
+            <div className="portal-form-actions">
+              <button type="submit" disabled={busy || confirmedHash !== preview.receipt_hash}>Accept this website revision</button>
+              <button type="button" className="quiet" disabled={busy} aria-expanded={revisionOpen} onClick={() => setRevisionOpen((open) => !open)}>Request changes</button>
+            </div>
+          </form>
+          {revisionOpen && (
+            <form className="portal-proof-revision" onSubmit={async (event) => {
+              event.preventDefault();
+              const form = event.currentTarget;
+              const notes = String(new FormData(form).get('notes') || '').trim();
+              if (notes && await onRevision(request.public_id, { action: 'revision', notes })) {
+                form.reset();
+                setRevisionOpen(false);
+              }
+            }}>
+              <div>
+                <span>One clear feedback form</span>
+                <h3>Tell us what to keep and what to change</h3>
+                <p>Combine all page, mobile, copy, and visual notes here so the next revision stays together.</p>
+              </div>
+              <label>
+                Changes for this exact revision
+                <textarea name="notes" required minLength="10" maxLength="5000" placeholder="Page or section — what works — what should change — any replacement wording" />
+              </label>
+              <div className="portal-form-actions">
+                <button type="submit" disabled={busy}>Send consolidated feedback</button>
+                <button type="button" className="quiet" onClick={() => setRevisionOpen(false)}>Cancel</button>
+              </div>
+            </form>
+          )}
+        </>
+      )}
+    </section>
+  );
+}
+
+function OwnerHostingChecklist({ request, busy, onSave }) {
+  const invoice = request.invoice;
+  const handoff = request.owner_hosting || invoice?.owner_hosting;
+  const paid = invoice?.status === 'paid';
+  const [open, setOpen] = useState(false);
+  if (invoice?.scope_snapshot?.delivery_model !== 'owner_hosted_private' && !handoff) return null;
+
+  if (!paid) {
+    return (
+      <section className="portal-owner-hosting is-locked" aria-label="Owner-hosted launch checklist">
+        <span>Unlocks after verified payment</span>
+        <h3>Your hosting-access checklist</h3>
+        <p>After Commerce verifies the invoice payment, this checklist will open. Payment does not change DNS, deploy the website, or activate Stripe.</p>
+      </section>
+    );
+  }
+
+  const status = handoff?.status || 'awaiting_host_access';
+  return (
+    <section id={`owner-hosting-${request.public_id}`} className="portal-owner-hosting" aria-label="Owner-hosted launch checklist">
+      <span>Owner-hosted handoff · {title(status)}</span>
+      <h3>{handoff?.owner_next_action || 'Provide access without sharing secrets'}</h3>
+      <p>{handoff?.current_blocker || 'Send a temporary least-privilege invitation from your hosting provider, then record the non-secret details below.'}</p>
+      <ol>
+        <li>Hosting provider and control panel</li>
+        <li>Temporary invitation or approved access method</li>
+        <li>Database creation access</li>
+        <li>Production domain and DNS path</li>
+        <li>Exact staging release approval</li>
+      </ol>
+      <div className="portal-secret-warning" role="note"><strong>Keep secrets out of this form.</strong> Never paste a password, API key, private key, recovery code, card number, or Stripe secret. Send access through the provider’s invitation system.</div>
+      <button type="button" className="secondary" aria-expanded={open} onClick={() => setOpen((current) => !current)}>{open ? 'Close hosting form' : handoff?.invitation_sent || handoff?.access_confirmed ? 'Update hosting details' : 'Provide hosting details'}</button>
+      {open && (
+        <form onSubmit={async (event) => {
+          event.preventDefault();
+          const form = event.currentTarget;
+          const data = Object.fromEntries(new FormData(form));
+          data.invitation_sent = Boolean(new FormData(form).get('invitation_sent'));
+          if (await onSave(request.public_id, data)) setOpen(false);
+        }}>
+          <div className="portal-form-grid">
+            <label>Hosting provider<input name="provider" defaultValue={handoff?.provider || ''} required maxLength="120" autoComplete="organization" /></label>
+            <label>Control-panel URL<input name="control_panel_url" defaultValue={handoff?.control_panel_url || ''} type="url" inputMode="url" placeholder="https://…" required /></label>
+            <label>Access method<select name="access_method" defaultValue={handoff?.access_method || 'provider_invitation'}><option value="provider_invitation">Provider invitation</option><option value="cpanel">Temporary cPanel user</option><option value="sftp_ssh">Temporary SFTP/SSH user</option><option value="other">Other approved method</option></select></label>
+            <label>Production domain<input name="production_domain" defaultValue={handoff?.production_domain || request.existing_domain || ''} placeholder="example.com" required /></label>
+            <label>DNS path<select name="dns_path" defaultValue={handoff?.dns_path || 'undecided'}><option value="undecided">Decide after audit</option><option value="delegation">Secure DNS delegation</option><option value="registrar_access">Temporary registrar access</option><option value="transfer">Domain transfer</option></select></label>
+            <label>Reader-payment setup{handoff?.client_stripe_status === 'verified' ? <><input type="hidden" name="client_stripe_status" value="verified" /><span className="portal-verified-state">Verified from provider evidence</span></> : <select name="client_stripe_status" defaultValue={handoff?.client_stripe_status || handoff?.stripe_readiness || 'not_started'}><option value="not_started">Not started</option><option value="owner_account_ready">Kofi-owned Stripe account ready</option><option value="ready_for_controlled_test">Ready for a controlled test</option></select>}</label>
+          </div>
+          <label className="portal-check"><input name="invitation_sent" type="checkbox" defaultChecked={Boolean(handoff?.invitation_sent || handoff?.access_confirmed)} /> I sent access through the hosting provider. I did not paste credentials into this form.</label>
+          <label>Non-secret note<textarea name="note" defaultValue={handoff?.note || ''} maxLength="2000" placeholder="Invitation recipient, hosting plan name, or support ticket number. No passwords or keys." /></label>
+          <button type="submit" disabled={busy}>{busy ? 'Saving…' : 'Save hosting details'}</button>
         </form>
       )}
     </section>
@@ -68,6 +175,9 @@ export function StagingReview({ request, busy, onAccept }) {
 }
 
 function customerStage(request) {
+  if (request.invoice?.status === 'paid') return request.owner_hosting?.status === 'launched' || request.invoice?.owner_hosting?.status === 'launched' ? 'Owner-hosted launch recorded' : `Owner-hosted handoff — ${title(request.owner_hosting?.status || request.invoice?.owner_hosting?.status || 'awaiting_host_access')}`;
+  if (request.invoice && request.direct_checkout_available) return 'Your itemized invoice is ready for secure payment';
+  if (request.proof_review_status === 'revision_requested' || request.staging_review_status === 'revision_requested') return 'Your consolidated changes are with Shay';
   if (request.full_site_review?.status === 'ready_for_review') return 'Ready for your review';
   if (request.proof_review_status === 'revision_requested') return 'We are making a new set from your feedback';
   if (['customer_ready', 'notified'].includes(request.proof_review_status)) return 'Your 3 directions are ready to review';
@@ -88,7 +198,7 @@ export function FullSiteReview({ request }) {
       <p>Explore your website and the research behind it. This is a private review; your website has not been launched.</p>
       <div className="portal-proof-next__actions">
         <a href={review.url} target="_blank" rel="noopener noreferrer" style={{ minHeight: 44 }}>Open your full website ↗</a>
-        <a href="/portal/?section=messages" style={{ minHeight: 44 }}>Request changes in Messages →</a>
+        {!request.staging_preview && <a href="/portal/?section=messages" style={{ minHeight: 44 }}>Request changes in Messages →</a>}
       </div>
       {review.documents?.length > 0 && (
         <details style={{ marginTop: '1rem' }}>
@@ -1082,13 +1192,17 @@ export default function PortalProjectsView({
   onWithdrawAsset,
   onDecideProof,
   onAcceptStaging,
+  onSaveOwnerHosting,
   onShareProof,
   onArchiveRequest,
   navigate,
 }) {
   const [showArchive, setShowArchive] = useState(false);
   const [archiveConfirmId, setArchiveConfirmId] = useState('');
-  const requests = workspace.website_requests || [];
+  const requests = (workspace.website_requests || []).map((request) => {
+    const invoice = request.invoice || (workspace.invoices || []).find((item) => item.website_request_public_id === request.public_id);
+    return invoice ? { ...request, invoice, owner_hosting: request.owner_hosting || invoice.owner_hosting } : request;
+  });
   const activeRequests = requests.filter((request) => !request.customer_archived);
   const archivedRequests = requests.filter((request) => request.customer_archived);
   const proofReady = (req) => [3, 6].includes(req?.proofs?.variants?.length);
@@ -1214,8 +1328,9 @@ export default function PortalProjectsView({
               <a href={`#full-site-review-${activeRequest.public_id}`}>Review full website ↓</a>
             )}
             {nextStep.action === 'payment' && (
-              <button type="button" onClick={() => navigate(`/buy?request=${encodeURIComponent(activeRequest.public_id)}`)}>Continue to payment →</button>
+              <button type="button" onClick={() => navigate(`/buy?request=${encodeURIComponent(activeRequest.public_id)}${activeRequest.invoice?.public_id ? `&invoice=${encodeURIComponent(activeRequest.invoice.public_id)}` : ''}`)}>Review &amp; Pay $100 →</button>
             )}
+            {nextStep.action === 'owner-hosting' && <a href={`#owner-hosting-${activeRequest.public_id}`}>Open hosting checklist ↓</a>}
             {nextStep.action === 'billing' && (
               <button type="button" onClick={() => navigate('/portal?section=billing')}>Open billing →</button>
             )}
@@ -1254,7 +1369,7 @@ export default function PortalProjectsView({
               </div>
             </dl>
 
-            <StagingReview request={activeRequest} busy={busy} onAccept={onAcceptStaging} />
+            <StagingReview request={activeRequest} busy={busy} onAccept={onAcceptStaging} onRevision={onDecideProof} />
 
             <FullSiteReview request={activeRequest} />
 
@@ -1357,6 +1472,7 @@ export default function PortalProjectsView({
                 <span>{activeRequest.existing_domain || activeRequest.intake?.desired_domains || `${String(activeRequest.project_name || '').toLowerCase().replace(/[^a-z0-9]+/g, '')}.com (confirm)`}</span>
               </summary>
               <div className="portal-project-simple-section">
+                <OwnerHostingChecklist request={activeRequest} busy={busy} onSave={onSaveOwnerHosting} />
                 {activeRequest.full_site_review ? <p>Your website address will be confirmed before launch. Use Messages to request a change.</p> : <>
                   <p>We saved this from your intake as the proposed website address. You can correct it here before any domain is registered or connected.</p>
                   <ProjectDomainHostingManager request={activeRequest} busy={busy} onSave={onSaveWebsiteRequest} />

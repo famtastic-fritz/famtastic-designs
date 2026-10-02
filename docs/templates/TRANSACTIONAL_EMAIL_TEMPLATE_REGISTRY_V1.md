@@ -66,6 +66,12 @@ customer-state transition, offer, charge, or launch.
 - A template revision requires a new version, source/test update, registry
   entry, and owner-approved deployment. It never retroactively changes a sent
   message.
+- An invoice-bound `standard/v2` message may promote exactly one verified
+  `/buy?...&invoice=<uuid>` URL as the primary **Review & Pay $100** action.
+  Staging and authenticated portal URLs remain visually secondary links. The
+  exact recipient pair, issued invoice UUID, account-owned request, configured
+  `hello@famtasticdesigns.com` From address, and owner approval must be verified
+  before the two idempotent notification keys are queued or dispatched.
 
 ## Active templates
 

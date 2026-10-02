@@ -42,6 +42,8 @@ final class CustomerPortalService {
     private readonly AttributionService $attribution,
     private readonly PublicPreviewDeliveryService $previews,
     private readonly ?WebformIntakeBridgeService $webformBridge = NULL,
+    private readonly ?ExternalStagingReviewService $externalStagingReviews = NULL,
+    private readonly ?CustomerInvoiceService $customerInvoices = NULL,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -306,11 +308,19 @@ final class CustomerPortalService {
     $memberQuery->condition('m.organization_id', $organizationId);
     $members = $memberQuery->execute()->fetchAll(\PDO::FETCH_ASSOC);
     $analytics = array_values(array_filter($entitlements, fn(array $e): bool => $e['entitlement_type'] === 'customer_analytics' && $e['status'] === 'active'));
+    $websiteRequests = $this->websiteRequests($customerId, $organizationId);
+    $invoices = [];
+    foreach ($websiteRequests as $websiteRequest) {
+      if (!empty($websiteRequest['invoice']['public_id'])) {
+        $invoices[(string) $websiteRequest['invoice']['public_id']] = $websiteRequest['invoice'];
+      }
+    }
     return [
       'organization' => array_diff_key($organization, ['id' => TRUE]),
       'organizations' => array_map(fn(array $o): array => array_diff_key($o, ['id' => TRUE]), $organizations),
       'orders' => $orders, 'projects' => $projects, 'entitlements' => $entitlements,
-      'website_requests' => $this->websiteRequests($customerId, $organizationId),
+      'website_requests' => $websiteRequests,
+      'invoices' => array_values($invoices),
       'booking_sites' => $this->bookingSites($customerId, $organizationId),
       'threads' => $threads, 'activity' => $activity, 'members' => $members,
       'analytics' => ['entitled' => (bool) $analytics],
@@ -1012,6 +1022,11 @@ final class CustomerPortalService {
     $offer = $offerQuery->condition($offerQuery->orConditionGroup()->isNull('expires_at')->condition('expires_at', $this->time->getRequestTime(), '>'))
       ->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     $row['private_offer'] = $offer ?: NULL;
+    $invoice = isset($this->customerInvoices) && $this->customerInvoices
+      ? $this->customerInvoices->invoiceForRequest((int) $row['customer_id'], (int) $row['organization_id'], (string) $row['public_id'])
+      : NULL;
+    $row['invoice'] = $invoice ? $this->customerInvoiceProjection($invoice) : NULL;
+    $row['owner_hosting'] = $row['invoice']['owner_hosting'] ?? NULL;
     $stagingReceipt = json_decode((string) ($row['staging_receipt_json'] ?? ''), TRUE);
     $row['staging_preview'] = ($row['staging_status'] ?? '') === 'deployed' && is_array($stagingReceipt)
       ? [
@@ -1044,8 +1059,75 @@ final class CustomerPortalService {
         !empty($offer)
         || (empty($recommendation['review_required']) && in_array($row['recommended_sku'], $supportedDirectSkus, TRUE))
       );
+    if ($row['invoice']) {
+      $row['direct_checkout_available'] = in_array((string) $row['status'], ['submitted', 'checkout_started'], TRUE)
+        && (string) $row['proof_review_status'] === 'selected'
+        && (string) ($row['staging_status'] ?? '') === 'deployed'
+        && (string) ($row['staging_review_status'] ?? '') === 'accepted'
+        && trim((string) ($row['staging_receipt_hash'] ?? '')) !== ''
+        && in_array((string) $row['invoice']['status'], ['issued', 'viewed', 'accepted', 'payment_pending'], TRUE);
+      $row['invoice']['checkout_available'] = $row['direct_checkout_available'];
+    }
     foreach (['id', 'organization_id', 'customer_id', 'prospect_id', 'commerce_order_id', 'intake_id', 'project_id', 'intake_data', 'proof_campaign_id', 'proof_approved_by_uid', 'proof_share_enabled', 'proof_share_version', 'proof_share_changed_at', 'proof_share_changed_by_uid'] as $key) unset($row[$key]);
     return $row;
+  }
+
+  /** Records one paid owner's non-secret owner-hosting declaration. */
+  public function saveOwnerHostingHandoff(int $customerId, string $requestPublicId, array $input): array {
+    if (!isset($this->customerInvoices) || !$this->customerInvoices) {
+      throw new \RuntimeException('Owner-hosted handoff is unavailable.');
+    }
+    $request = $this->ownedWebsiteRequest($customerId, $requestPublicId);
+    if (!$request) {
+      throw new \RuntimeException('Website request not found.');
+    }
+    $invoice = $this->customerInvoices->invoiceForRequest($customerId, (int) $request['organization_id'], $requestPublicId);
+    if (!$invoice) {
+      throw new \RuntimeException('Invoice not found.');
+    }
+    $result = $this->customerInvoices->saveOwnerHostingDetails(
+      (string) $invoice['public_id'],
+      $customerId,
+      (int) $request['organization_id'],
+      (int) $request['id'],
+      $input,
+    );
+    $this->activity((int) $request['organization_id'], 'owner_hosting.owner_declared', 'Your non-secret hosting details were saved for FAMtastic verification.');
+    return $this->customerInvoiceProjection((array) $result['invoice']);
+  }
+
+  /** Returns the customer-safe invoice and hosting state used by the portal. */
+  private function customerInvoiceProjection(array $invoice): array {
+    $allowed = [
+      'public_id', 'invoice_number', 'website_request_public_id', 'sku', 'status', 'currency',
+      'list_amount_minor', 'credit_amount_minor', 'total_amount_minor', 'line_items',
+      'scope_snapshot', 'terms', 'snapshot_sha256', 'staging_receipt_hash',
+      'issued_at', 'due_at', 'accepted_at', 'paid_at', 'refunded_at',
+    ];
+    $projection = array_intersect_key($invoice, array_flip($allowed));
+    $handoff = is_array($invoice['owner_hosting'] ?? NULL) ? $invoice['owner_hosting'] : NULL;
+    if ($handoff) {
+      $projection['owner_hosting'] = [
+        'public_id' => (string) ($handoff['public_id'] ?? ''),
+        'status' => (string) ($handoff['status'] ?? ''),
+        'access_unlocked' => !empty($handoff['access_unlocked']),
+        'provider' => (string) ($handoff['provider_name'] ?? ''),
+        'control_panel_url' => (string) ($handoff['control_panel_url'] ?? ''),
+        'access_method' => (string) ($handoff['access_method'] ?? ''),
+        'access_status' => (string) ($handoff['access_status'] ?? ''),
+        'production_domain' => (string) ($handoff['production_domain'] ?? ''),
+        'dns_path' => (string) ($handoff['dns_path'] ?? ''),
+        'dns_status' => (string) ($handoff['dns_status'] ?? ''),
+        'client_stripe_status' => (string) ($handoff['client_stripe_status'] ?? ''),
+        'current_blocker' => (string) ($handoff['current_blocker'] ?? ''),
+        'owner_next_action' => (string) ($handoff['owner_next_action'] ?? ''),
+        'invitation_sent' => (string) ($handoff['access_status'] ?? '') === 'owner_declared',
+      ];
+    }
+    else {
+      $projection['owner_hosting'] = NULL;
+    }
+    return $projection;
   }
 
   /** Read-only handoff evidence for the staff-authorized request review form. */
@@ -1768,6 +1850,10 @@ final class CustomerPortalService {
       $notes = mb_substr(trim(strip_tags((string) ($input['notes'] ?? ''))), 0, 5000);
       if ($notes === '') throw new \InvalidArgumentException('Tell us what you want adjusted.');
       $intake = json_decode((string) $row['intake_data'], TRUE) ?: [];
+      $receipt = json_decode((string) ($row['staging_receipt_json'] ?? ''), TRUE);
+      if (is_array($receipt) && ($receipt['schema'] ?? '') === ExternalStagingReviewService::SCHEMA) {
+        return $this->recordExternalStagingRevision($row, $intake, $notes);
+      }
       $isEditRound = !empty($row['selected_proof_direction']);
       if ($isEditRound) {
         return $this->queueSelectedSiteRevision($row, $notes);
@@ -1858,6 +1944,90 @@ final class CustomerPortalService {
     }
     $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $row['id'])->execute()->fetchAssoc();
     return $this->serializeWebsiteRequest($updated);
+  }
+
+  /**
+   * Saves one consolidated response to an imported full-site release.
+   *
+   * The selected external release remains the immutable source of review truth.
+   * Feedback closes checkout until staff attach a successor receipt and the
+   * account owner accepts that exact successor. No build or provider work is
+   * implied by this record.
+   */
+  private function recordExternalStagingRevision(array $row, array $intake, string $notes): array {
+    $transaction = $this->database->startTransaction();
+    try {
+      $locked = $this->database->select('famtastic_project_request', 'r')->fields('r')
+        ->condition('id', (int) $row['id'])->forUpdate()->execute()->fetchAssoc();
+      if (!$locked || (string) ($locked['selected_proof_direction'] ?? '') !== 'external'
+        || (string) ($locked['staging_status'] ?? '') !== 'deployed') {
+        throw new \InvalidArgumentException('This external release is no longer available for feedback.');
+      }
+      $receipt = json_decode((string) ($locked['staging_receipt_json'] ?? ''), TRUE);
+      if (!is_array($receipt) || ($receipt['schema'] ?? '') !== ExternalStagingReviewService::SCHEMA) {
+        throw new \InvalidArgumentException('This external release is no longer available for feedback.');
+      }
+      if (!isset($this->externalStagingReviews) || !$this->externalStagingReviews) {
+        throw new \RuntimeException('External release validation is unavailable.');
+      }
+      $this->externalStagingReviews->assertCurrentReceipt($receipt, $locked);
+      $now = $this->time->getRequestTime();
+      $receiptHash = (string) ($locked['staging_receipt_hash'] ?? '');
+      $notesHash = hash('sha256', $notes);
+      $history = is_array($intake['external_staging_revision_requests'] ?? NULL)
+        ? $intake['external_staging_revision_requests'] : [];
+      $last = $history ? end($history) : NULL;
+      if (is_array($last) && hash_equals((string) ($last['notes_sha256'] ?? ''), $notesHash)
+        && hash_equals((string) ($last['receipt_hash'] ?? ''), $receiptHash)) {
+        unset($transaction);
+        return $this->serializeWebsiteRequest($locked);
+      }
+      $entry = [
+        'notes' => $notes,
+        'notes_sha256' => $notesHash,
+        'receipt_hash' => $receiptHash,
+        'release_id' => (string) ($receipt['release_id'] ?? ''),
+        'requested_at' => gmdate(DATE_ATOM, $now),
+      ];
+      $history[] = $entry;
+      $intake['external_staging_revision_requests'] = $history;
+      $intake['external_staging_revision_request'] = $entry;
+      $this->database->update('famtastic_project_request')->fields([
+        'staging_review_status' => 'revision_requested',
+        'staging_reviewed_at' => NULL,
+        'intake_data' => json_encode($intake, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR),
+        'changed' => $now,
+      ])->condition('id', (int) $locked['id'])
+        ->condition('staging_receipt_hash', $receiptHash)
+        ->execute();
+      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
+      $this->queueNotification(
+        'website-request:' . $locked['id'] . ':external-review-feedback:' . $receiptHash . ':' . $notesHash,
+        'operational',
+        $admin,
+        'Full-site revision requested — ' . $locked['project_name'],
+        "Customer feedback for release " . (string) ($receipt['release_id'] ?? '') . ":\n{$notes}\n\nRequest: {$locked['public_id']}",
+      );
+      $customer = $this->customerContact((int) $locked['customer_id']);
+      if ($customer['email'] !== '') {
+        $this->queueNotification(
+          'website-request:' . $locked['id'] . ':external-review-feedback-ack:' . $receiptHash . ':' . $notesHash,
+          'transactional',
+          $customer['email'],
+          'We saved your feedback for ' . $locked['project_name'],
+          "Hi {$customer['display_name']},\n\nYour consolidated feedback is saved against the exact release you reviewed. Shay will update this project when the next review is ready. Checkout stays closed until you accept that exact revision.\n\nOpen your project:\n" . $this->portalLink((string) $locked['public_id']) . "\n\nShay\nFAMtastic Designs",
+        );
+      }
+      $this->activity((int) $locked['organization_id'], 'website_request.external_revision_requested', 'Your consolidated feedback is saved against the exact staging release.');
+      unset($transaction);
+      $updated = $this->database->select('famtastic_project_request', 'r')->fields('r')
+        ->condition('id', (int) $locked['id'])->execute()->fetchAssoc();
+      return $this->serializeWebsiteRequest($updated);
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
   }
 
   /** Worker preflight uses the same immutable registry as the callback. */
@@ -2092,9 +2262,19 @@ final class CustomerPortalService {
       throw new \InvalidArgumentException('Your staging preview is not ready for review yet.');
     }
     StagingReceiptService::assertCurrentReviewReceipt($row, $expectedReceiptHash);
-    $project = $this->entities->getStorage('famtastic_project')->load((int) $row['project_id']);
-    $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
-    SelectedAssetRights::assertPacket($this->database, $studio['selected_dispatch_packet'] ?? []);
+    $receipt = json_decode((string) ($row['staging_receipt_json'] ?? ''), TRUE);
+    if (is_array($receipt) && ($receipt['schema'] ?? '') === ExternalStagingReviewService::SCHEMA) {
+      if (!$this->externalStagingReviews) {
+        throw new \RuntimeException('External staging review validation is unavailable.');
+      }
+      $this->externalStagingReviews->assertCurrentReceipt($receipt, $row);
+    }
+    else {
+      $project = $this->entities->getStorage('famtastic_project')->load((int) $row['project_id']);
+      if (!$project) throw new \RuntimeException('Website staging project is unavailable.');
+      $studio = json_decode((string) $project->get('studio_json')->value ?: '{}', TRUE) ?: [];
+      SelectedAssetRights::assertPacket($this->database, $studio['selected_dispatch_packet'] ?? []);
+    }
     if ((string) ($row['staging_review_status'] ?? '') !== 'accepted') {
       $now = $this->time->getRequestTime();
       $updated = $this->database->update('famtastic_project_request')->fields([

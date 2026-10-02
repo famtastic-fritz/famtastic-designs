@@ -1,0 +1,23 @@
+{
+  "schema": "famtastic.external-staging-verification.v1",
+  "verified_at": "2026-10-02T17:42:46Z",
+  "origin": "https://the-reckoning.famtasticinc.com",
+  "source_commit": "aef343a72a95d3e2d41f43a80be1f9284042484e",
+  "release_id": "aef343a",
+  "active_app": "/home/nineoo/customer-sites/the-reckoning/private/releases/aef343a72a95d3e2d41f43a80be1f9284042484e/app",
+  "artifact_sha256": "95f6988e996ca5d570234c48111ef2d7d85a87d1f8e89bdccc1f2452081000af",
+  "sqlite_integrity": "ok",
+  "routes": {
+    "/": 200,
+    "/book/": 200,
+    "/author/": 200,
+    "/readers/": 200,
+    "/press/": 200,
+    "/connect/": 200,
+    "/feedback/": 200,
+    "/order/": 200,
+    "/desk/": 200
+  },
+  "staging_noindex": true,
+  "boundary": "Read-only staging proof. No customer acceptance, invoice, payment, email, hosting access, DNS, deployment, or live reader-payment action was performed."
+}

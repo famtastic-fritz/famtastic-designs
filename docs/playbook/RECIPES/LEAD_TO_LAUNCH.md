@@ -29,6 +29,22 @@ accepted staging build for this product class. A test receipt, fixture webhook,
 or historical status row cannot authorize customer email, charging, domain
 work, or production.
 
+## Backlog pilot — External Staging Review Adapter
+
+**Pilot:** The Reckoning. **Current state:** locally implemented for controlled verification; not generally production-proven.
+
+The adapter brings an existing bespoke staging release into the authenticated customer lifecycle without inventing concept history. It must:
+
+1. bind the exact staging URL, release identifier, source revision, artifact hash, customer, organization, and website request;
+2. present page and viewport review, supporting documents, and one consolidated feedback form;
+3. retain revision requests, displayed receipt hashes, acceptance, screenshots, and decisions as immutable evidence;
+4. keep review acceptance separate from invoice acceptance, verified payment, host access, DNS cutover, and live-payment activation;
+5. move only an accepted release into an account-owned itemized invoice and secure Commerce checkout;
+6. unlock a non-secret owner-hosted access checklist only after verified payment; and
+7. stop on missing access, stale evidence, provider verification, testing, or owner approval rather than claiming progress.
+
+The Reckoning may be named as the first pilot only after its deployment and private lifecycle are verified. The adapter becomes a reusable production capability only after a second unrelated project completes the same lifecycle with exact release, payment, notification, installation, and rollback evidence.
+
 ## Historical implementation status by capability
 
 September 17 amendment: selection starts the full build and protected review

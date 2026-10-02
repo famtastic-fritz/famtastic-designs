@@ -1,0 +1,151 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "the-reckoning-owner-switch-aef343a-20261002",
+  "classification": "verified-external-staging-review-pilot",
+  "created_at": "2026-10-02T17:42:46Z",
+  "repository": {
+    "name": "site-the-reckoning",
+    "revision": "aef343a72a95d3e2d41f43a80be1f9284042484e",
+    "worktree_state": "deployed staging release verified read-only; FAMtastic portal activation held for owner review"
+  },
+  "recipe": {
+    "routine": "external-staging-review-adapter",
+    "version": "1",
+    "build_class": "customer-external-release",
+    "source_lane": "existing-verified-release",
+    "release_id": "aef343a",
+    "scope": "review, invoice, payment gate, and owner-hosted handoff"
+  },
+  "stages": [
+    {
+      "stage_id": "release-verification",
+      "attempt": 1,
+      "capability": "exact-external-staging-verification",
+      "execution": {
+        "provider": {
+          "id": "famtastic-release-evidence"
+        },
+        "model": {
+          "id": null,
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "completed",
+          "completed_at": "2026-10-02T17:42:46Z"
+        },
+        "cost": {
+          "status": "not_applicable"
+        },
+        "input": {
+          "staging_origin": "https://the-reckoning.famtasticinc.com",
+          "expected_release": "aef343a",
+          "expected_source_commit": "aef343a72a95d3e2d41f43a80be1f9284042484e"
+        },
+        "output": {
+          "routes_verified": 9,
+          "sqlite_integrity": "ok",
+          "staging_noindex": true,
+          "artifact_sha256": "95f6988e996ca5d570234c48111ef2d7d85a87d1f8e89bdccc1f2452081000af"
+        }
+      },
+      "result": {
+        "status": "passed",
+        "proof": "docs/evidence/the-reckoning-invoice-launch/staging-release-verification.json",
+        "customer_acceptance": false,
+        "customer_notification": false
+      }
+    },
+    {
+      "stage_id": "payment-sandbox-rehearsal",
+      "attempt": 1,
+      "capability": "exact-amount-stripe-test-rehearsal",
+      "execution": {
+        "provider": {
+          "id": "stripe-test"
+        },
+        "model": {
+          "id": null,
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "completed",
+          "completed_at": "2026-10-02T17:32:34Z"
+        },
+        "cost": {
+          "status": "test_mode_no_live_charge"
+        },
+        "input": {
+          "amount_minor": 10000,
+          "currency": "USD",
+          "mode": "test"
+        },
+        "output": {
+          "success": "passed",
+          "decline": "passed",
+          "abandonment": "passed",
+          "cancellation": "passed",
+          "refund": "passed"
+        }
+      },
+      "result": {
+        "status": "passed_test_mode",
+        "proof": "docs/evidence/the-reckoning-invoice-launch/stripe-test-evidence.json",
+        "live_payment": false
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "staging-verification",
+      "path": "docs/evidence/the-reckoning-invoice-launch/staging-release-verification.json",
+      "sha256": "45859a004421c32a56686e6e6e27c4f2adaa0f834fddc52515cd2b1c7bfba2d0",
+      "rights": "owner_workspace",
+      "retention": "source_control"
+    },
+    {
+      "role": "stripe-test-evidence",
+      "path": "docs/evidence/the-reckoning-invoice-launch/stripe-test-evidence.json",
+      "sha256": "5616ee54ff153b221d732abf3c066f5eb5d2546cd7ce2a0d20453b195889b6a1",
+      "rights": "owner_workspace_test_data",
+      "retention": "source_control"
+    },
+    {
+      "role": "private-review-page",
+      "path": "docs/evidence/the-reckoning-invoice-launch/review-package/index.html",
+      "sha256": "fd33f74f53f9c01490376b94dd4f09c04233b7c4a3437b830fba6a5df11dcbcc",
+      "rights": "owner_workspace",
+      "retention": "source_control"
+    },
+    {
+      "role": "invoice-preview",
+      "path": "docs/evidence/the-reckoning-invoice-launch/review-package/review-documents/invoice-preview.md",
+      "sha256": "704f0a2d07c94836ef2ed01ca53b5208ca7d48a283c5e99e605ddd95f2ff7184",
+      "rights": "owner_workspace",
+      "retention": "source_control"
+    },
+    {
+      "role": "email-preview",
+      "path": "docs/evidence/the-reckoning-invoice-launch/review-package/review-documents/client-email-preview.md",
+      "sha256": "e0d7a9eefa6038e18c7749d9d0695448ce5b975c7b4a558fcecfcb8dbc3b2ee4",
+      "rights": "owner_workspace",
+      "retention": "source_control"
+    }
+  ],
+  "retrieval": {
+    "filesystem": {
+      "status": "available",
+      "root": "docs/evidence/the-reckoning-invoice-launch/"
+    },
+    "database": {
+      "status": "held_for_owner_review",
+      "reason": "No Kofi-specific review, invoice, or notification record is written until Fritz approves the package."
+    },
+    "site_studio": {
+      "status": "not_applicable",
+      "reason": "The exact site release already exists on staging; this pilot imports verified release evidence without fabricating a concept run."
+    }
+  },
+  "integrity": {
+    "artifact_hash_algorithm": "sha256"
+  }
+}

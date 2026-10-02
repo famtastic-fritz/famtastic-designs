@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-10-02 — External staging invoice and owner-hosted handoff pilot (local)
+
+- Added customer-facing review of an exact external staging release, one consolidated revision-feedback form, and receipt-bound acceptance before checkout.
+- Added itemized account-owned invoices with exact cent totals, sponsorship credit, owner-hosted terms, and a single secure card action. Invoice mode removes add-ons, grant codes, managed-hosting renewal, and domain-registration choices.
+- Added a payment-gated owner-hosting checklist that collects non-secret provider metadata and explicitly rejects passwords, tokens, private keys, card data, and Stripe secrets.
+- Local frontend verification passes the production build, public customer-flow contract, 34-rule Client Portal Design DNA validator, full-site review regression, staging-review API contract, and 320/390/768/1280px browser containment/touch-target check.
+- Recorded this as The Reckoning controlled pilot. General production capability remains unproved until an unrelated customer completes the same review-to-payment-to-owner-hosted lifecycle. No production deployment, payment, DNS change, customer email, host access, or live-payment activation is established by this source change.
+
 ## 2026-09-21 — Complete customer website review
 
 - Corrected private review routing for nested pages, documents and fonts with explicit bounded path segments and a regression through Drupal’s actual route-candidate database. Backend 7227ceb6 and frontend cc8eada4 are live; all 58 protected file routes and native browser planner/document checks pass.

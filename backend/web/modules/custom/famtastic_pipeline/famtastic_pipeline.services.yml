@@ -108,7 +108,7 @@ services:
 
   famtastic_pipeline.staging_receipts:
     class: Drupal\famtastic_pipeline\Service\StagingReceiptService
-    arguments: ['@database', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@datetime.time', '@config.factory']
+    arguments: ['@database', '@entity_type.manager', '@famtastic_pipeline.operational_ledger', '@datetime.time', '@config.factory', '@famtastic_pipeline.external_staging_review']
 
   famtastic_pipeline.customer_deployment:
     class: Drupal\famtastic_pipeline\Service\CustomerDeploymentService
@@ -212,11 +212,19 @@ services:
 
   famtastic_pipeline.customer_portal:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.site_studio_build_packets', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.site_studio_build_packets', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge', '@famtastic_pipeline.external_staging_review', '@famtastic_pipeline.customer_invoices']
 
   famtastic_pipeline.full_site_review:
     class: Drupal\famtastic_pipeline\Service\FullSiteReviewService
     arguments: ['@database', '@file_system', '@datetime.time', '@current_user', '@famtastic_pipeline.operational_ledger', '@uuid']
+
+  famtastic_pipeline.external_staging_review:
+    class: Drupal\famtastic_pipeline\Service\ExternalStagingReviewService
+    arguments: ['@database', '@datetime.time', '@current_user', '@famtastic_pipeline.operational_ledger']
+
+  famtastic_pipeline.customer_invoices:
+    class: Drupal\famtastic_pipeline\Service\CustomerInvoiceService
+    arguments: ['@database', '@datetime.time', '@uuid']
 
   famtastic_pipeline.character_assets:
     class: Drupal\famtastic_pipeline\Service\CharacterAssetService
@@ -239,7 +247,7 @@ services:
 
   famtastic_pipeline.commerce_lifecycle:
     class: Drupal\famtastic_pipeline\Service\CommerceLifecycleService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@famtastic_pipeline.customer_portal', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.booking_site_owners']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@famtastic_pipeline.customer_portal', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.booking_site_owners', '@famtastic_pipeline.customer_invoices', '@famtastic_pipeline.external_staging_review']
 
   famtastic_pipeline.lifecycle_operations:
     class: Drupal\famtastic_pipeline\Service\LifecycleOperationsService

@@ -30,7 +30,7 @@ function famtastic_pipeline_update_8001(&$sandbox) {
  * Implements hook_schema().
  */
 function famtastic_pipeline_schema(): array {
-  return \Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema::tables() + _famtastic_pipeline_automation_schema() + [
+  return \Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema::tables() + _famtastic_pipeline_automation_schema() + _famtastic_pipeline_customer_invoice_schema() + [
     'famtastic_proof_version' => _famtastic_pipeline_proof_version_schema(),
     'famtastic_website_proof_research_snapshot' => _famtastic_pipeline_website_proof_research_snapshot_schema(),
     'famtastic_booking_site_owner' => _famtastic_pipeline_booking_site_owner_schema(),
@@ -3259,6 +3259,136 @@ function famtastic_pipeline_update_8065(&$sandbox) {
     if (!$schema->tableExists($table)) $schema->createTable($table, $definition);
   }
   return 'Created bounded worker coordination tables; no jobs enrolled and no scheduler activated.';
+}
+
+/**
+ * Adds immutable customer invoices and owner-hosted handoff state.
+ */
+function famtastic_pipeline_update_8066(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  $created = [];
+  foreach (_famtastic_pipeline_customer_invoice_schema() as $table => $definition) {
+    if (!$schema->tableExists($table)) {
+      $schema->createTable($table, $definition);
+      $created[] = $table;
+    }
+  }
+  return t('Created customer invoice and owner-hosted handoff tables: @tables. No invoice was issued and no payment or hosting action was performed.', [
+    '@tables' => $created ? implode(', ', $created) : 'none (already present)',
+  ]);
+}
+
+/**
+ * Durable, account-scoped invoice snapshots and owner-hosted launch state.
+ */
+function _famtastic_pipeline_customer_invoice_schema(): array {
+  $time = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0];
+  $nullableTime = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  $entity = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+
+  return [
+    'famtastic_customer_invoice' => [
+      'description' => 'Immutable itemized customer invoice snapshots with verified payment lifecycle state.',
+      'fields' => [
+        'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+        'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+        'invoice_number' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'active_request_key' => ['type' => 'varchar', 'length' => 64, 'not null' => FALSE],
+        'website_request_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'private_offer_id' => $entity,
+        'commerce_order_id' => $entity,
+        'sku' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+        'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'issued'],
+        'currency' => ['type' => 'varchar', 'length' => 3, 'not null' => TRUE, 'default' => 'usd'],
+        'list_amount_minor' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'credit_amount_minor' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'total_amount_minor' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'line_items_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+        'scope_snapshot_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+        'terms_snapshot_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+        'snapshot_sha256' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'staging_receipt_hash' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE],
+        'created_by_uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'issued_at' => $time,
+        'due_at' => $nullableTime,
+        'viewed_at' => $nullableTime,
+        'accepted_at' => $nullableTime,
+        'paid_at' => $nullableTime,
+        'refunded_at' => $nullableTime,
+        'created' => $time,
+        'changed' => $time,
+      ],
+      'primary key' => ['id'],
+      'unique keys' => [
+        'public_id' => ['public_id'],
+        'invoice_number' => ['invoice_number'],
+        'active_request' => ['active_request_key'],
+      ],
+      'indexes' => [
+        'request_status' => ['website_request_id', 'status'],
+        'customer_status' => ['customer_id', 'status'],
+        'organization_status' => ['organization_id', 'status'],
+        'order' => ['commerce_order_id'],
+      ],
+    ],
+    'famtastic_customer_invoice_event' => [
+      'description' => 'Append-only, idempotent invoice lifecycle evidence.',
+      'fields' => [
+        'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+        'invoice_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'event_type' => ['type' => 'varchar', 'length' => 48, 'not null' => TRUE],
+        'idempotency_key' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+        'actor_uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'provider' => ['type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+        'provider_event_id' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'payload_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE],
+        'created' => $time,
+      ],
+      'primary key' => ['id'],
+      'unique keys' => ['idempotency_key' => ['idempotency_key']],
+      'indexes' => ['invoice_time' => ['invoice_id', 'created'], 'provider_event' => ['provider', 'provider_event_id']],
+    ],
+    'famtastic_owner_hosting_handoff' => [
+      'description' => 'Truthful owner-hosted installation state. Credentials are never stored here.',
+      'fields' => [
+        'id' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+        'public_id' => ['type' => 'varchar', 'length' => 36, 'not null' => TRUE],
+        'invoice_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'website_request_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'organization_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'customer_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'commerce_order_id' => $entity,
+        'status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'payment_required'],
+        'access_unlocked' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0],
+        'provider_name' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'control_panel_url' => ['type' => 'varchar', 'length' => 2048, 'not null' => TRUE, 'default' => ''],
+        'access_method' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'undecided'],
+        'access_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'locked'],
+        'production_domain' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'dns_path' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'undecided'],
+        'dns_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'not_started'],
+        'client_stripe_status' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => 'not_started'],
+        'current_blocker' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'Verified payment required'],
+        'owner_next_action' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'Review and pay the invoice'],
+        'evidence_json' => ['type' => 'text', 'size' => 'big', 'not null' => TRUE, 'default' => '{}'],
+        'created' => $time,
+        'changed' => $time,
+      ],
+      'primary key' => ['id'],
+      'unique keys' => [
+        'public_id' => ['public_id'],
+        'invoice' => ['invoice_id'],
+        'request' => ['website_request_id'],
+      ],
+      'indexes' => [
+        'customer_status' => ['customer_id', 'status'],
+        'organization_status' => ['organization_id', 'status'],
+        'order' => ['commerce_order_id'],
+      ],
+    ],
+  ];
 }
 
 /**

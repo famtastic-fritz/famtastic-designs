@@ -261,6 +261,7 @@ class OutreachMailer {
             return '[Invalid link omitted]' . $trailing;
           }
           $label = 'Open link';
+          $primaryAction = FALSE;
           if (in_array(strtolower($parts['host'] ?? ''), ['famtasticdesigns.com', 'www.famtasticdesigns.com'], TRUE)) {
             $path = $parts['path'] ?? '';
             // Compatibility for old queued personal notices. The private proof
@@ -269,12 +270,21 @@ class OutreachMailer {
               $decoded = 'https://famtasticdesigns.com/portal/?section=projects&request=' . $proof[1];
               $label = 'Open your proof set';
             }
+            elseif ($path === '/buy' && preg_match('/(?:^|&)invoice=[0-9a-f-]{36}(?:&|$)/', (string) ($parts['query'] ?? ''))) {
+              $label = 'Review & Pay $100';
+              $primaryAction = TRUE;
+            }
             elseif (preg_match('~^/portal(?:/|$)~', $path)) $label = 'Open your portal';
             elseif (str_starts_with($path, '/web/admin/')) $label = 'Open staff workspace';
             elseif ($path === '/login') $label = 'Sign in';
           }
           $href = htmlspecialchars($decoded, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-          return '<a class="email-link-button" href="' . $href . '" style="display:inline-block;margin:6px 0;padding:12px 18px;min-height:20px;line-height:20px;background:#101310;color:#7cfc00;border:1px solid #52613d;border-radius:8px;text-decoration:none;font-weight:700">' . $label . '</a>' . $trailing;
+          $safeLabel = htmlspecialchars($label, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+          $class = $primaryAction ? 'email-link-button email-link-button-primary' : 'email-link-button email-link-button-secondary';
+          $style = $primaryAction
+            ? 'display:inline-block;margin:6px 0;padding:12px 18px;min-height:20px;line-height:20px;background:#101310;color:#7cfc00;border:1px solid #52613d;border-radius:8px;text-decoration:none;font-weight:700'
+            : 'display:inline-block;margin:4px 0;padding:8px 0;min-height:20px;line-height:20px;background:transparent;color:#315b3a;border:0;text-decoration:underline;font-weight:700';
+          return '<a class="' . $class . '" href="' . $href . '" style="' . $style . '">' . $safeLabel . '</a>' . $trailing;
         },
         $escaped,
       ) ?? $escaped;

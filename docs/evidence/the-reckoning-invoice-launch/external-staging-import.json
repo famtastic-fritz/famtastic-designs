@@ -1,0 +1,38 @@
+{
+  "schema": "famtastic.external-staging-import.v1",
+  "staging_url": "https://the-reckoning.famtasticinc.com/?release=aef343a",
+  "release_id": "aef343a",
+  "source_commit": "aef343a72a95d3e2d41f43a80be1f9284042484e",
+  "artifact_sha256": "95f6988e996ca5d570234c48111ef2d7d85a87d1f8e89bdccc1f2452081000af",
+  "review_manifest_sha256": "b6816a4ba1b76726e6bb33098a51e8b708526f6db100caa20ddcffdb1e6af14d",
+  "qa": [
+    {
+      "name": "Active application pointer matches the full source commit",
+      "status": "passed"
+    },
+    {
+      "name": "Combined deployed-file manifest matches the recorded artifact digest",
+      "status": "passed"
+    },
+    {
+      "name": "All nine reviewed public and private routes return HTTP 200",
+      "status": "passed"
+    },
+    {
+      "name": "Responsive release evidence covers 55 checks at 390, 768, and 1280 pixels",
+      "status": "passed"
+    },
+    {
+      "name": "Staging responses retain noindex and nofollow",
+      "status": "passed"
+    },
+    {
+      "name": "SQLite integrity check returns ok",
+      "status": "passed"
+    },
+    {
+      "name": "Private runtime stays outside the public application directory",
+      "status": "passed"
+    }
+  ]
+}

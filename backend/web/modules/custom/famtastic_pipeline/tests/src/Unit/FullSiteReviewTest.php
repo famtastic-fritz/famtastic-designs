@@ -173,10 +173,25 @@ final class FullSiteReviewTest extends UnitTestCase {
     self::assertSame(0, (int) $this->db->select('famtastic_event', 'e')->countQuery()->execute()->fetchField());
   }
 
-  public function testExistingProofJobPreventsAttachment(): void {
+  public function testActiveProofJobPreventsAttachment(): void {
     $clock = $this->createMock(TimeInterface::class); $clock->method('getRequestTime')->willReturn(1790000000);
     (new OperationalLedger($this->db, $clock))->enqueue('website_proof.generate.v1:request:93:brief:fixture', 'proof.generate', []);
-    $this->expectExceptionMessage('existing proof routine'); $this->attach();
+    $this->expectExceptionMessage('active proof routine'); $this->attach();
+  }
+
+  public function testCompletedUnselectedProofHistoryDoesNotBlockExternalReviewPreparation(): void {
+    $this->db->update('famtastic_project_request')->fields(['status' => 'submitted', 'proof_campaign_id' => 54])->condition('id', 93)->execute();
+    $clock = $this->createMock(TimeInterface::class); $clock->method('getRequestTime')->willReturn(1790000000);
+    $jobId = (new OperationalLedger($this->db, $clock))->enqueue('website_proof.generate.v1:request:93:brief:historical', 'proof.generate', []);
+    $this->db->update('famtastic_job')->fields(['status' => 'completed', 'completed_at' => 1790000000, 'changed' => 1790000000])->condition('id', $jobId)->execute();
+
+    $attached = $this->attach();
+    self::assertTrue($attached['newly_attached']);
+    $row = $this->db->select('famtastic_project_request', 'r')->fields('r')->condition('id', 93)->execute()->fetchAssoc();
+    self::assertSame('54', (string) $row['proof_campaign_id']);
+    self::assertSame('completed', $this->db->select('famtastic_job', 'j')->fields('j', ['status'])->condition('id', $jobId)->execute()->fetchField());
+    $payload = json_decode((string) $this->db->select('famtastic_event', 'e')->fields('e', ['payload'])->condition('event_type', 'website_request.full_site_review_attached')->execute()->fetchField(), TRUE, 512, JSON_THROW_ON_ERROR);
+    self::assertSame(54, $payload['prior_proof_campaign_id']);
   }
 
   public function testOwnershipAndMembershipAreRecheckedForEveryFile(): void {

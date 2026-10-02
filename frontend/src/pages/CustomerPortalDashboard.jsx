@@ -10,6 +10,7 @@ import {
   decideWebsiteRequestProof,
   getCustomerCatalog,
   getCustomerWorkspace,
+  saveOwnerHostingHandoff,
   updateCustomerPreferences,
   updateCustomerProfile,
   updateWebsiteRequest,
@@ -407,6 +408,15 @@ export default function CustomerPortalDashboard() {
     return result.ok;
   };
 
+  const saveOwnerHosting = async (requestId, payload) => {
+    const result = await act(async () => {
+      const handoff = await saveOwnerHostingHandoff(requestId, payload);
+      await refresh();
+      return handoff;
+    }, 'Hosting details saved. Shay can now review the destination without storing your password or payment credentials.');
+    return result.ok;
+  };
+
   const shareProof = async (requestId, action) => {
     const message =
       action === 'disable'
@@ -516,6 +526,7 @@ export default function CustomerPortalDashboard() {
             onWithdrawAsset={withdrawReference}
             onDecideProof={decideProof}
             onAcceptStaging={acceptStagingReview}
+            onSaveOwnerHosting={saveOwnerHosting}
             onShareProof={shareProof}
             onArchiveRequest={archiveWebsiteRequest}
             navigate={navigate}

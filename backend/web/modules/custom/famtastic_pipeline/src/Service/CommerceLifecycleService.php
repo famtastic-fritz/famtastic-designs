@@ -25,6 +25,8 @@ final class CommerceLifecycleService {
     private readonly ConfigFactoryInterface $configFactory,
     private readonly OperationalLedger $ledger,
     private readonly BookingSiteOwnerService $bookingSiteOwners,
+    private readonly CustomerInvoiceService $customerInvoices,
+    private readonly ExternalStagingReviewService $externalStagingReviews,
   ) {}
 
   /**
@@ -60,10 +62,14 @@ final class CommerceLifecycleService {
       }
     }
     $organizationId = (int) $organization['id'];
+    $invoiceActivation = $this->activateInvoicePayment($order, $customer, $organizationId, $checkout);
     if ($existing && $existing['status'] === 'fulfilled') {
         $operations = $this->ensureOperationalRecords($order, $customer, $organizationId, $existing);
         $this->enqueueProjectProofs($order, $operations, (array) ($order->getData('famtastic_checkout') ?? []));
         $this->recordPaymentFulfillmentStarted($order, $operations, (array) ($order->getData('famtastic_checkout') ?? []));
+        if ($invoiceActivation) {
+          $this->queueInvoiceNotifications($order, $customer, (array) $invoiceActivation['invoice']);
+        }
         return ['fulfilled' => TRUE, 'existing' => TRUE, 'record' => $existing, 'operations' => $operations];
     }
     $profile = $order->getBillingProfile();
@@ -76,6 +82,7 @@ final class CommerceLifecycleService {
     $skus = [];
     $grants = [];
     $intakeSchemas = [];
+    $ownerHosted = !empty($checkout['owner_hosted_private']) && !empty($checkout['invoice_public_id']);
     foreach ($order->getItems() as $item) {
       $variation = $item->getPurchasedEntity();
       if (!$variation || !method_exists($variation, 'getSku')) continue;
@@ -85,6 +92,9 @@ final class CommerceLifecycleService {
       $definition = $definitions[$sku];
       $intakeSchemas[] = $definition['intake_schema'];
       foreach ($definition['entitlements'] as $type) {
+        if ($ownerHosted && ($type === 'domain_choice' || str_starts_with($type, 'hosting_') || str_starts_with($type, 'domain_'))) {
+          continue;
+        }
         if ($type === 'domain_choice') {
           $domainChoice = (string) ($checkout['domain_choice'] ?? 'undecided');
           if ($domainChoice === 'undecided' || $domainChoice === '') {
@@ -100,6 +110,12 @@ final class CommerceLifecycleService {
       }
     }
     if (!$skus) throw new \RuntimeException('commerce_order_has_no_supported_skus');
+    if ($ownerHosted) {
+      $grants['owner_hosted_migration'] = [
+        'billing' => ['kind' => 'one_time', 'interval' => 'none'],
+        'renewal_sku' => '',
+      ];
+    }
 
     $now = $this->time->getRequestTime();
     $total = $order->getTotalPrice();
@@ -134,8 +150,15 @@ final class CommerceLifecycleService {
     $this->enqueueProjectProofs($order, $operations, $checkout);
     $this->recordPaymentFulfillmentStarted($order, $operations, $checkout);
 
-    $this->portal->activity($organizationId, 'commerce.fulfilled', 'Your purchase is confirmed and your services are ready for intake.');
-    $this->queueNotifications($order, $customer, $skus, array_values(array_unique($intakeSchemas)));
+    $this->portal->activity($organizationId, 'commerce.fulfilled', $ownerHosted
+      ? 'Your payment is verified and the owner-hosted migration checklist is open.'
+      : 'Your purchase is confirmed and your services are ready for intake.');
+    if ($ownerHosted && $invoiceActivation) {
+      $this->queueInvoiceNotifications($order, $customer, (array) $invoiceActivation['invoice']);
+    }
+    elseif (!$ownerHosted) {
+      $this->queueNotifications($order, $customer, $skus, array_values(array_unique($intakeSchemas)));
+    }
     $this->database->update('famtastic_commerce_fulfillment')->fields(['status' => 'fulfilled', 'fulfilled_at' => $now, 'changed' => $now])
       ->condition('commerce_order_id', (int) $order->id())->execute();
     return ['fulfilled' => TRUE, 'existing' => FALSE, 'skus' => $skus, 'entitlements' => array_keys($grants), 'operations' => $operations];
@@ -244,6 +267,41 @@ final class CommerceLifecycleService {
         ->condition('public_id', (string) $checkout['website_request_public_id'])->execute()->fetchAssoc();
       if ($row) {
         $request = json_decode((string) $row['intake_data'], TRUE) ?: [];
+        $receipt = json_decode((string) ($row['staging_receipt_json'] ?? ''), TRUE);
+        if (is_array($receipt) && ($receipt['schema'] ?? '') === ExternalStagingReviewService::SCHEMA) {
+          if ((string) ($row['staging_review_status'] ?? '') !== 'accepted') {
+            throw new \RuntimeException('commerce_external_release_not_accepted');
+          }
+          $this->externalStagingReviews->assertCurrentReceipt($receipt, $row);
+          $project = $this->entities->getStorage('famtastic_project')->load((int) $operations['project_id']);
+          if (!$project) {
+            throw new \RuntimeException('commerce_external_release_project_missing');
+          }
+          $project->set('proof_url', (string) $receipt['staging_url'])
+            ->set('delivery_status', 'approved')
+            ->set('approval_status', 'approved')
+            ->save();
+          $this->ledger->recordEvent(
+            'commerce:' . (int) $order->id() . ':external-release-carried',
+            'external_staging.release_carried_to_paid_project',
+            [
+              'commerce_order_id' => (int) $order->id(),
+              'project_id' => (int) $operations['project_id'],
+              'website_request_public_id' => (string) $row['public_id'],
+              'release_id' => (string) ($receipt['release_id'] ?? ''),
+              'source_commit' => (string) ($receipt['source_commit'] ?? ''),
+              'staging_receipt_hash' => (string) ($row['staging_receipt_hash'] ?? ''),
+              'customer_acceptance' => 'exact_release_accepted',
+            ],
+            (int) ($operations['prospect_id'] ?? 0) ?: NULL,
+            NULL,
+            (int) $order->id(),
+            (int) $operations['project_id'],
+            'commerce',
+            (string) $order->id(),
+          );
+          return;
+        }
         if ($row['proof_review_status'] === 'selected' && !empty($row['proof_campaign_id'])) {
           $campaign = $this->entities->getStorage('proof_campaign')->load((int) $row['proof_campaign_id']);
           $variantIds = $this->entities->getStorage('proof_variant')->getQuery()->accessCheck(FALSE)
@@ -277,6 +335,97 @@ final class CommerceLifecycleService {
     );
   }
 
+  /** Activates an invoice only from an exact completed Commerce payment. */
+  private function activateInvoicePayment(OrderInterface $order, array $customer, int $organizationId, array $checkout): ?array {
+    $invoicePublicId = trim((string) ($checkout['invoice_public_id'] ?? ''));
+    if ($invoicePublicId === '') {
+      return NULL;
+    }
+    if (empty($checkout['owner_hosted_private']) || empty($checkout['website_request_public_id']) || !$order->isPaid()) {
+      throw new \RuntimeException('invoice_verified_commerce_payment_required');
+    }
+    $request = $this->database->select('famtastic_project_request', 'r')->fields('r')
+      ->condition('public_id', (string) $checkout['website_request_public_id'])
+      ->condition('customer_id', (int) $customer['id'])
+      ->condition('organization_id', $organizationId)
+      ->condition('commerce_order_id', (int) $order->id())
+      ->range(0, 1)->execute()->fetchAssoc();
+    if (!$request) {
+      throw new \RuntimeException('invoice_payment_request_scope_mismatch');
+    }
+    $invoice = $this->customerInvoices->invoiceByPublicId(
+      $invoicePublicId,
+      (int) $customer['id'],
+      $organizationId,
+      (int) $request['id'],
+    );
+    if (!$invoice) {
+      throw new \RuntimeException('invoice_payment_invoice_missing');
+    }
+    if ((string) $invoice['status'] === 'paid') {
+      return ['invoice' => $invoice, 'transitioned' => FALSE];
+    }
+
+    $paymentIds = $this->entities->getStorage('commerce_payment')->getQuery()->accessCheck(FALSE)
+      ->condition('order_id', (int) $order->id())
+      ->condition('state', 'completed')
+      ->sort('changed', 'DESC')->range(0, 1)->execute();
+    $payment = $paymentIds ? $this->entities->getStorage('commerce_payment')->load(reset($paymentIds)) : NULL;
+    if (!$payment || !method_exists($payment, 'getAmount') || !$payment->getAmount()) {
+      throw new \RuntimeException('invoice_completed_payment_evidence_missing');
+    }
+    $amount = $payment->getAmount();
+    $amountMinor = (int) round((float) $amount->getNumber() * 100);
+    $currency = strtolower((string) $amount->getCurrencyCode());
+    if ($amountMinor !== (int) $invoice['total_amount_minor'] || $currency !== strtolower((string) $invoice['currency'])) {
+      throw new \RuntimeException('invoice_completed_payment_amount_mismatch');
+    }
+    $provider = method_exists($payment, 'getPaymentGatewayId')
+      ? (string) $payment->getPaymentGatewayId()
+      : '';
+    $remoteId = method_exists($payment, 'getRemoteId') ? trim((string) $payment->getRemoteId()) : '';
+    if (!hash_equals(CustomerInvoiceService::PAYMENT_GATEWAY, $provider) || $remoteId === '') {
+      throw new \RuntimeException('invoice_stripe_payment_evidence_missing');
+    }
+    $providerEventId = $remoteId;
+    return $this->customerInvoices->activatePaid(
+      $invoicePublicId,
+      (int) $customer['id'],
+      $organizationId,
+      (int) $request['id'],
+      (int) $order->id(),
+      $amountMinor,
+      $currency,
+      $provider,
+      $providerEventId,
+    );
+  }
+
+  /** Queues one branded receipt and one staff alert for the invoice payment. */
+  private function queueInvoiceNotifications(OrderInterface $order, array $customer, array $invoice): void {
+    $number = (string) ($invoice['invoice_number'] ?? ($order->getOrderNumber() ?: $order->id()));
+    $portalBase = rtrim((string) $this->configFactory->get('famtastic_pipeline.settings')->get('frontend_base_url'), '/');
+    $this->portal->queueNotification(
+      'invoice:' . (string) $invoice['public_id'] . ':paid:customer-receipt',
+      'transactional',
+      (string) $customer['email'],
+      'Payment received — The Reckoning owner-hosted launch',
+      "Hi {$customer['display_name']},\n\nYour $100 payment for invoice {$number} is verified. Your receipt is saved in your FAMtastic portal, and the owner-hosted migration checklist is now open.\n\nNext step: send a temporary least-privilege hosting invitation and record the non-secret hosting details in your portal. Payment did not change DNS, deploy the site, or activate your Stripe account.\n\nOpen your portal:\n{$portalBase}/portal/?section=projects\n\nShay\nFAMtastic Designs",
+      OutreachMailer::TEMPLATE_STANDARD,
+      OutreachMailer::TEMPLATE_STANDARD_VERSION,
+    );
+    $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
+    $this->portal->queueNotification(
+      'invoice:' . (string) $invoice['public_id'] . ':paid:staff-alert',
+      'operational',
+      $admin,
+      'The Reckoning payment verified — hosting audit can begin',
+      "Invoice: {$number}\nCommerce order: {$order->id()}\nCustomer: {$customer['display_name']}\nNext state: awaiting_host_access\n\nNo DNS, deployment, Stripe activation, or credential transfer was performed.",
+      OutreachMailer::TEMPLATE_STANDARD,
+      OutreachMailer::TEMPLATE_STANDARD_VERSION,
+    );
+  }
+
   /** Reconciles refund, void, and failed-payment states into service access. */
   public function reconcilePayment(object $payment): void {
     if (!method_exists($payment, 'getOrder') || !$payment->getOrder()) return;
@@ -297,6 +446,34 @@ final class CommerceLifecycleService {
         ->condition('organization_id', $row['organization_id'])->condition('order_id', (int) $order->id())->execute();
     }
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $row['customer_id'])->execute()->fetchAssoc();
+    $checkout = (array) ($order->getData('famtastic_checkout') ?? []);
+    if (!empty($checkout['invoice_public_id']) && in_array($state, ['refunded', 'voided'], TRUE)) {
+      $request = $this->database->select('famtastic_project_request', 'r')->fields('r', ['id'])
+        ->condition('public_id', (string) ($checkout['website_request_public_id'] ?? ''))
+        ->condition('customer_id', (int) $row['customer_id'])
+        ->condition('organization_id', (int) $row['organization_id'])
+        ->condition('commerce_order_id', (int) $order->id())
+        ->range(0, 1)->execute()->fetchAssoc();
+      if (!$request) {
+        throw new \RuntimeException('invoice_reconciliation_request_scope_mismatch');
+      }
+      $provider = method_exists($payment, 'getPaymentGatewayId') ? (string) $payment->getPaymentGatewayId() : '';
+      $remoteId = method_exists($payment, 'getRemoteId') ? trim((string) $payment->getRemoteId()) : '';
+      if (!hash_equals(CustomerInvoiceService::PAYMENT_GATEWAY, $provider) || $remoteId === '') {
+        throw new \RuntimeException('invoice_stripe_reconciliation_evidence_missing');
+      }
+      $providerEventId = $remoteId . ':' . $state;
+      $this->customerInvoices->reconcile(
+        (string) $checkout['invoice_public_id'],
+        (int) $row['customer_id'],
+        (int) $row['organization_id'],
+        (int) $request['id'],
+        (int) $order->id(),
+        $state === 'refunded' ? 'refunded' : 'void',
+        $provider,
+        $providerEventId,
+      );
+    }
     $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
     $this->queue("commerce:{$order->id()}:payment:{$state}", 'transactional', $customer['email'], 'Payment update for your FAMtastic order', "Order {$order->getOrderNumber()} payment status: {$state}. Sign in to review next steps.");
     $this->queue("commerce:{$order->id()}:staff-payment:{$state}", 'operational', $admin, "Commerce payment requires review — {$state}", "Order: {$order->getOrderNumber()}\nCustomer: {$customer['email']}\nState: {$state}");
@@ -334,7 +511,9 @@ final class CommerceLifecycleService {
         'domain_choice' => $domainChoice,
         'domain_status' => in_array($domainChoice, ['new_domain', 'existing_domain'], TRUE) ? 'recorded_for_operator' : 'operator_pending',
         'customer_gate' => 'payment_succeeded',
-        'external_deploy' => FALSE,
+        'external_deploy' => !empty($checkout['owner_hosted_private']),
+        'owner_hosted_private' => !empty($checkout['owner_hosted_private']),
+        'production_actions' => 'not_performed',
       ],
       (int) ($operations['prospect_id'] ?? 0) ?: NULL,
       NULL,
@@ -370,7 +549,7 @@ final class CommerceLifecycleService {
       }
       $snapshot = ['policy' => (string) ($checkout['terms_version'] ?? ''), 'items' => $items, 'customer_selection' => array_intersect_key($checkout, array_flip([
         'organization_public_id', 'domain_choice', 'terms_version', 'recurring_authorized', 'marketing_opt_in', 'selected_skus', 'captured_at',
-        'website_request_public_id',
+        'website_request_public_id', 'invoice_public_id', 'invoice_number', 'invoice_snapshot_sha256', 'owner_hosted_private',
       ]))];
       $snapshot['checksum'] = hash('sha256', json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
       return $snapshot;
@@ -384,7 +563,7 @@ final class CommerceLifecycleService {
     }
     $snapshot = ['policy' => $registry['policy'], 'items' => $items, 'customer_selection' => array_intersect_key($checkout, array_flip([
       'organization_public_id', 'domain_choice', 'terms_version', 'recurring_authorized', 'marketing_opt_in', 'selected_skus', 'captured_at',
-      'website_request_public_id',
+      'website_request_public_id', 'invoice_public_id', 'invoice_number', 'invoice_snapshot_sha256', 'owner_hosted_private',
     ]))];
     $snapshot['checksum'] = hash('sha256', json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
     return $snapshot;

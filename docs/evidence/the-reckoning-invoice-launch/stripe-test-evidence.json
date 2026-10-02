@@ -1,0 +1,21 @@
+{
+  "schema": "famtastic.owner-invoice-stripe-sandbox-proof.v1",
+  "environment": "stripe_test",
+  "run_id": "1790962348-11961",
+  "generated_at": "2026-10-02T17:32:34Z",
+  "boundary": "Provider objects only. Drupal Commerce linkage, signed webhook replay, invoice activation, receipt, and portal state require separate application evidence.",
+  "checks": {
+    "success": true,
+    "decline": true,
+    "abandonment": true,
+    "cancellation": true,
+    "refund": true
+  },
+  "provider_objects": {
+    "success_payment_intent": "pi_3UMAJtDDGtWR2WVN13iHkiKV",
+    "declined_payment_intent": "pi_3UMAJwDDGtWR2WVN04OpkXHH",
+    "abandoned_payment_intent": "pi_3UMAJxDDGtWR2WVN1hTFTkIm",
+    "canceled_payment_intent": "pi_3UMAJxDDGtWR2WVN1hTFTkIm",
+    "refund": "re_3UMAJtDDGtWR2WVN1zny3Pq9"
+  }
+}

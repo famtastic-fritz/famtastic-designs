@@ -1,5 +1,11 @@
 # FAMtastic Designs capability registry
 
+## 2026-10-02 — External staging review to owner-hosted launch (controlled pilot)
+
+**Locally implemented; production proof pending.** The authenticated portal can present an already-built external staging release without fabricating three concept proofs, collect one consolidated change request, bind acceptance to the displayed release receipt, show an immutable itemized invoice, and open a non-secret owner-hosting checklist only after verified Commerce payment. Invoice checkout uses server-owned cents and suppresses managed-hosting renewal, add-ons, grants, and domain-registration choices for the owner-hosted scope.
+
+The Reckoning is the first controlled pilot. This entry does not prove a live invoice, Stripe payment, receipt delivery, hosting invitation, owner-host installation, DNS cutover, client-owned Stripe verification, or customer email. The adapter must remain pilot-scoped until a second unrelated project completes the same account → external review → acceptance → invoice → verified payment → hosting audit → private installation lifecycle with recorded evidence.
+
 ## 2026-09-21 — Finished-site account review
 
 Production-proven manual account delivery: the owner-authorized Travel Addicts full website is attached once to its verified existing account, with exact replay a no-op. All 29 file hashes, 14 renderings and 58 real customer/staff route matches pass; native staff Chrome verifies home, pricing, plan preselection, validation, an unsent draft and private design document. Anonymous and wrong-customer access is denied. Corrected backend 7227ceb6 and frontend cc8eada4 are live; independent business source is privately verified at 82a47502. No automatic delivery, customer view/acceptance, message, payment or public business launch is claimed. See `docs/plans/TRAVEL-ADDICTS-DELIVERY-2026-09-21.md`.

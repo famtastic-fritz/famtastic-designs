@@ -128,6 +128,33 @@ final class OutreachMailerOneClickUnsubscribeTest extends UnitTestCase {
     $this->assertSame(OutreachMailer::TEMPLATE_CUSTOMER_INTAKE_SUBMITTED_VERSION, $record['template_version']);
   }
 
+  public function testStandardInvoiceNoticeUsesOneNamedPaymentButton(): void {
+    $mailer = new OutreachMailer(
+      $this->createMock(ConfigFactoryInterface::class),
+      $this->createMock(LoggerInterface::class),
+    );
+    $invoiceUrl = 'https://famtasticdesigns.com/buy?request=11111111-1111-1111-1111-111111111111&invoice=22222222-2222-2222-2222-222222222222';
+
+    $mailer->send(
+      'customer@example.test',
+      'Kofi, The Reckoning is ready for its next step',
+      "Hi Kofi,\n\nYour itemized invoice is ready.\n\n{$invoiceUrl}\n\nReview staging:\nhttps://the-reckoning.famtasticinc.com/?release=aef343a\n\nOpen your portal:\nhttps://famtasticdesigns.com/portal/?section=projects\n\nShay\nFAMtastic Designs",
+      NULL,
+      OutreachMailer::TEMPLATE_STANDARD,
+      OutreachMailer::TEMPLATE_STANDARD_VERSION,
+    );
+
+    $line = trim((string) file_get_contents($this->capturePath));
+    $record = json_decode($line, TRUE, 512, JSON_THROW_ON_ERROR);
+    $html = (string) ($record['html_body'] ?? '');
+    $this->assertSame(1, substr_count($html, 'Review &amp; Pay $100'));
+    $this->assertSame(1, substr_count($html, 'email-link-button-primary'));
+    $this->assertSame(2, substr_count($html, 'email-link-button-secondary'));
+    $this->assertSame(1, substr_count($html, 'href="' . str_replace('&', '&amp;', $invoiceUrl) . '"'));
+    $this->assertStringNotContainsString('>https://famtasticdesigns.com/buy', $html);
+    $this->assertMatchesRegularExpression('/Shay<br>\s*FAMtastic Designs/', $html);
+  }
+
   public function testUnknownTemplateVersionIsRejected(): void {
     $mailer = new OutreachMailer(
       $this->createMock(ConfigFactoryInterface::class),

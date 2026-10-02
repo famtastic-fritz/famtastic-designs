@@ -18,6 +18,7 @@ use Drupal\famtastic_pipeline\Portal\StaffCommandCenterBridge;
 use Drupal\famtastic_pipeline\Service\CustomerPortalService;
 use Drupal\famtastic_pipeline\Service\CatalogPaymentEligibilityService;
 use Drupal\famtastic_pipeline\Service\CommerceLifecycleService;
+use Drupal\famtastic_pipeline\Service\CustomerInvoiceService;
 use Drupal\famtastic_pipeline\Service\DeepDiveInvitationService;
 use Drupal\famtastic_pipeline\Service\GrantCodeService;
 use Drupal\famtastic_pipeline\Service\OutreachMailer;
@@ -48,6 +49,7 @@ final class CustomerPortalController extends ControllerBase {
     private readonly CommerceLifecycleService $commerceLifecycle,
     private readonly DeepDiveInvitationService $deepDives,
     private readonly StagingReceiptService $stagingReceipts,
+    private readonly CustomerInvoiceService $customerInvoices,
   ) {}
 
   public static function create(ContainerInterface $container): self {
@@ -65,6 +67,7 @@ final class CustomerPortalController extends ControllerBase {
       $container->get('famtastic_pipeline.commerce_lifecycle'),
       $container->get('famtastic_pipeline.deep_dive_invitations'),
       $container->get('famtastic_pipeline.staging_receipts'),
+      $container->get('famtastic_pipeline.customer_invoices'),
     );
   }
 
@@ -302,6 +305,11 @@ final class CustomerPortalController extends ControllerBase {
 
     $websiteRequest = NULL;
     $privateOffer = NULL;
+    $customerInvoice = NULL;
+    $invoicePublicId = strtolower(trim((string) ($data['invoice_id'] ?? '')));
+    if ($invoicePublicId !== '' && empty($data['website_request'])) {
+      return $this->error('invoice_request_required', 422, 'This private invoice must be opened with its website request.');
+    }
     if (!empty($data['website_request'])) {
       $websiteRequest = $this->portal->ownedWebsiteRequest((int) $customer['id'], (string) $data['website_request']);
       if (!$websiteRequest || (int) $websiteRequest['organization_id'] !== (int) $organization['id']) {
@@ -311,6 +319,40 @@ final class CustomerPortalController extends ControllerBase {
         return $this->error('website_request_not_ready', 422, 'Submit the website request before purchasing.');
       }
       $requestIntake = json_decode((string) $websiteRequest['intake_data'], TRUE) ?: [];
+      if ($invoicePublicId !== '') {
+        try {
+          $customerInvoice = $this->customerInvoices->invoiceByPublicId(
+            $invoicePublicId,
+            (int) $customer['id'],
+            (int) $organization['id'],
+            (int) $websiteRequest['id'],
+          );
+        }
+        catch (\RuntimeException) {
+          return $this->error('invoice_not_found', 404, 'This invoice is not available in the selected workspace.');
+        }
+        if (!$customerInvoice) {
+          return $this->error('invoice_not_found', 404, 'This invoice is not available in the selected workspace.');
+        }
+        if ((string) $customerInvoice['status'] === 'paid') {
+          return $this->error('invoice_already_paid', 409, 'This invoice is already paid. Your hosting checklist is available in the portal.');
+        }
+        if ((string) $customerInvoice['status'] === 'payment_pending' && !empty($customerInvoice['commerce_order_id'])) {
+          $existingOrder = Order::load((int) $customerInvoice['commerce_order_id']);
+          if (!$existingOrder || (int) $existingOrder->getCustomerId() !== (int) $this->account->id()) {
+            return $this->error('invoice_checkout_unavailable', 409, 'The existing secure checkout could not be reopened.');
+          }
+          return $this->noStore(new JsonResponse([
+            'ok' => TRUE,
+            'order_id' => (int) $existingOrder->id(),
+            'checkout_url' => $request->getSchemeAndHttpHost() . '/web/checkout/' . $existingOrder->id(),
+            'existing' => TRUE,
+          ]));
+        }
+        if (!in_array((string) $customerInvoice['status'], ['issued', 'viewed', 'accepted'], TRUE)) {
+          return $this->error('invoice_not_payable', 409, 'This invoice is not available for payment.');
+        }
+      }
       $prepaidOrder = $this->database->select('famtastic_private_offer', 'p')->fields('p', ['commerce_order_id'])
         ->condition('website_request_id', (int) $websiteRequest['id'])->condition('customer_id', (int) $customer['id'])
         ->condition('status', 'prepaid_held')->execute()->fetchField();
@@ -324,6 +366,7 @@ final class CustomerPortalController extends ControllerBase {
       $privateOffer = $privateOfferQuery->condition($privateOfferQuery->orConditionGroup()->isNull('expires_at')->condition('expires_at', time(), '>'))
         ->orderBy('created', 'DESC')->range(0, 1)->execute()->fetchAssoc();
       if ($privateOffer) $recommendedSku = (string) $privateOffer['sku'];
+      if ($customerInvoice) $recommendedSku = (string) $customerInvoice['sku'];
       if (!empty($requestIntake['recommendation']['review_required']) || !in_array($recommendedSku, ['FAM-FOOT-199', 'FAM-BUSINESS-499'], TRUE)) {
         return $this->error('website_request_review_required', 422, 'This request needs a FAMtastic recommendation or private offer before checkout.');
       }
@@ -340,6 +383,11 @@ final class CustomerPortalController extends ControllerBase {
 
     $skus = array_values(array_unique(array_filter(array_map('strval', (array) ($data['skus'] ?? [])))));
     if (!$skus || count($skus) > 12) return $this->error('invalid_cart', 422, 'Choose at least one available service.');
+    if ($customerInvoice && ($skus !== [(string) $customerInvoice['sku']]
+      || trim((string) ($data['grant_code'] ?? '')) !== ''
+      || !empty($data['recurring_authorized']))) {
+      return $this->error('invoice_cart_mismatch', 422, 'This invoice must be paid from its exact one-time $100 snapshot.');
+    }
     $definitions = $this->productDefinitions();
     $hasActiveWebsiteEntitlement = $this->hasActiveWebsiteEntitlement((int) $organization['id']);
     $hasActiveWebsiteProject = $this->hasActiveWebsiteProject((int) $organization['id']);
@@ -369,12 +417,16 @@ final class CustomerPortalController extends ControllerBase {
       // Domain purchase/connection is an operator step for the shared-hosting
       // offer. Customers may choose now, or leave it for FAMtastic to confirm
       // after payment; it must not block the paid fulfillment path.
-      if (!in_array((string) ($data['domain_choice'] ?? 'undecided'), ['new_domain', 'existing_domain', 'undecided'], TRUE)) {
+      $allowedDomainChoices = $customerInvoice ? ['not_applicable'] : ['new_domain', 'existing_domain', 'undecided'];
+      if (!in_array((string) ($data['domain_choice'] ?? 'undecided'), $allowedDomainChoices, TRUE)) {
         return $this->error('domain_choice_invalid', 422, 'Choose a new domain, connect an existing domain, or let FAMtastic confirm it after payment.');
       }
     }
     $terms = $this->dealRegistry();
-    if (empty($data['accept_terms']) || (string) ($data['terms_version'] ?? '') !== (string) $terms['policy']['version']) {
+    $requiredTermsVersion = $customerInvoice
+      ? (string) ($customerInvoice['terms']['version'] ?? '')
+      : (string) $terms['policy']['version'];
+    if (empty($data['accept_terms']) || (string) ($data['terms_version'] ?? '') !== $requiredTermsVersion) {
       return $this->error('terms_required', 422, 'Accept the current purchase and renewal terms.');
     }
 
@@ -382,6 +434,12 @@ final class CustomerPortalController extends ControllerBase {
     if (!$storeIds) return $this->error('store_unavailable', 503, 'Checkout is temporarily unavailable.');
     $variations = [];
     $skuAmounts = [];
+    if ($customerInvoice && (!$privateOffer
+      || (int) $privateOffer['offered_amount_minor'] !== (int) $customerInvoice['total_amount_minor']
+      || strtolower((string) $privateOffer['currency']) !== strtolower((string) $customerInvoice['currency'])
+      || (string) $privateOffer['sku'] !== (string) $customerInvoice['sku'])) {
+      return $this->error('invoice_offer_mismatch', 409, 'The private invoice no longer matches its Commerce offer.');
+    }
     foreach ($skus as $sku) {
       $variationIds = $this->entityTypeManager()->getStorage('commerce_product_variation')->getQuery()->accessCheck(FALSE)
         ->condition('sku', $sku)->condition('status', 1)->range(0, 1)->execute();
@@ -435,7 +493,7 @@ final class CustomerPortalController extends ControllerBase {
     $order->setData('famtastic_checkout', [
       'organization_public_id' => $organizationPublicId,
       'domain_choice' => (string) ($data['domain_choice'] ?? ($websiteRequest ? 'undecided' : 'not_applicable')),
-      'terms_version' => (string) $terms['policy']['version'],
+      'terms_version' => $requiredTermsVersion,
       'recurring_authorized' => !empty($data['recurring_authorized']),
       'marketing_opt_in' => !empty($data['marketing_opt_in']),
       'selected_skus' => $skus,
@@ -443,6 +501,10 @@ final class CustomerPortalController extends ControllerBase {
       // keyed snapshot and must never fall back to today's catalog.
       'offer_contracts' => array_combine($skus, array_map(fn(string $sku): array => $this->offerContractSnapshot($sku), $skus)),
       'website_request_public_id' => $websiteRequest['public_id'] ?? '',
+      'invoice_public_id' => $customerInvoice['public_id'] ?? '',
+      'invoice_number' => $customerInvoice['invoice_number'] ?? '',
+      'invoice_snapshot_sha256' => $customerInvoice['snapshot_sha256'] ?? '',
+      'owner_hosted_private' => (bool) $customerInvoice,
       'private_offer' => $privateOffer ? ['public_id' => $privateOffer['public_id'], 'sku' => $privateOffer['sku'], 'list_amount_minor' => (int) $privateOffer['list_amount_minor'], 'offered_amount_minor' => (int) $privateOffer['offered_amount_minor'], 'reason' => $privateOffer['reason']] : NULL,
       'grant' => $grantQuote ? array_diff_key($grantQuote, ['id' => TRUE]) : NULL,
       'captured_at' => gmdate(DATE_ATOM),
@@ -451,7 +513,26 @@ final class CustomerPortalController extends ControllerBase {
     if ($websiteRequest) {
       $this->portal->bindWebsiteRequestToOrder((int) $customer['id'], (string) $websiteRequest['public_id'], (int) $order->id());
     }
-    if ($privateOffer) $this->database->update('famtastic_private_offer')->fields(['status' => 'accepted', 'commerce_order_id' => (int) $order->id(), 'accepted_at' => time(), 'changed' => time()])->condition('id', $privateOffer['id'])->condition('status', 'active')->execute();
+    if ($customerInvoice) {
+      try {
+        $this->customerInvoices->linkCommerceOrder(
+          (string) $customerInvoice['public_id'],
+          (int) $customer['id'],
+          (int) $organization['id'],
+          (int) $websiteRequest['id'],
+          (int) $order->id(),
+          $requiredTermsVersion,
+          'invoice:checkout:' . (string) $customerInvoice['public_id'],
+        );
+      }
+      catch (\Throwable $error) {
+        $transaction->rollBack();
+        return $this->error('invoice_checkout_conflict', 409, $error->getMessage());
+      }
+    }
+    elseif ($privateOffer) {
+      $this->database->update('famtastic_private_offer')->fields(['status' => 'accepted', 'commerce_order_id' => (int) $order->id(), 'accepted_at' => time(), 'changed' => time()])->condition('id', $privateOffer['id'])->condition('status', 'active')->execute();
+    }
     if ($grantQuote) {
       try {
         $this->grantCodes->redeem($grantQuote, (int) $order->id(), (int) $customer['id'], (int) $organization['id'], $websiteRequest ? (int) $websiteRequest['id'] : NULL);
@@ -541,6 +622,24 @@ final class CustomerPortalController extends ControllerBase {
     }
     catch (\InvalidArgumentException $error) { return $this->error('staging_review_not_ready', 422, $error->getMessage()); }
     catch (\RuntimeException $error) { return $this->error('staging_review_not_found', 404, $error->getMessage()); }
+  }
+
+  /** Saves non-secret owner-hosting facts after verified invoice payment. */
+  public function ownerHostingHandoff(Request $request, string $website_request): JsonResponse {
+    $customer = $this->currentCustomer();
+    if (!$customer) return $this->error('authentication_required', 401, 'Sign in to continue.');
+    try {
+      return $this->noStore(new JsonResponse([
+        'ok' => TRUE,
+        'invoice' => $this->portal->saveOwnerHostingHandoff((int) $customer['id'], $website_request, $this->body($request)),
+      ]));
+    }
+    catch (\InvalidArgumentException $error) {
+      return $this->error('invalid_owner_hosting_details', 422, $error->getMessage());
+    }
+    catch (\RuntimeException $error) {
+      return $this->error('owner_hosting_unavailable', 409, $error->getMessage());
+    }
   }
 
   public function websiteProofShare(Request $request, string $website_request): JsonResponse {

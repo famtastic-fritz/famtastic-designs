@@ -1,0 +1,86 @@
+{
+  "schema": "famtastic.full-site-review.v1",
+  "review_id": "the-reckoning-owner-launch-20261002",
+  "title": "The Reckoning — owner-hosted launch review",
+  "entry_path": "index.html",
+  "source_commit": "aef343a72a95d3e2d41f43a80be1f9284042484e",
+  "build_id": "the-reckoning-owner-switch-aef343a-20261002",
+  "pages": [
+    {
+      "label": "The Reckoning release review",
+      "path": "index.html"
+    }
+  ],
+  "documents": [
+    {
+      "label": "Page-by-page review checklist",
+      "path": "review-documents/page-checklist.md"
+    },
+    {
+      "label": "Exact staging release evidence",
+      "path": "review-documents/release-evidence.md"
+    },
+    {
+      "label": "Invoice TR-KAO-001 preview",
+      "path": "review-documents/invoice-preview.md"
+    },
+    {
+      "label": "Branded Shay email preview — not sent",
+      "path": "review-documents/client-email-preview.md"
+    }
+  ],
+  "files": [
+    {
+      "path": "assets/review.css",
+      "role": "asset",
+      "media_type": "text/css",
+      "sha256": "fb916eb640365ffbe05373018ee5280cb9d988166afcf5bcd8393f4bf6ee598f",
+      "bytes": 2333
+    },
+    {
+      "path": "index.html",
+      "role": "page",
+      "media_type": "text/html",
+      "sha256": "fd33f74f53f9c01490376b94dd4f09c04233b7c4a3437b830fba6a5df11dcbcc",
+      "bytes": 3923
+    },
+    {
+      "path": "review-documents/client-email-preview.md",
+      "role": "document",
+      "media_type": "text/plain",
+      "sha256": "e0d7a9eefa6038e18c7749d9d0695448ce5b975c7b4a558fcecfcb8dbc3b2ee4",
+      "bytes": 2247
+    },
+    {
+      "path": "review-documents/invoice-preview.md",
+      "role": "document",
+      "media_type": "text/plain",
+      "sha256": "704f0a2d07c94836ef2ed01ca53b5208ca7d48a283c5e99e605ddd95f2ff7184",
+      "bytes": 1293
+    },
+    {
+      "path": "review-documents/page-checklist.md",
+      "role": "document",
+      "media_type": "text/plain",
+      "sha256": "3a6b57994ca77e63ed1e1e13c4617c80ba8b06d44e6df1086ef643fbd11f80ea",
+      "bytes": 1164
+    },
+    {
+      "path": "review-documents/release-evidence.md",
+      "role": "document",
+      "media_type": "text/plain",
+      "sha256": "8257bd48571a742827e0aadecc0f1dd35f0c5d1b330835a2400f27da775e4893",
+      "bytes": 882
+    }
+  ],
+  "research": {
+    "overview": "Exact release, page checklist, invoice terms, handoff boundary, and customer email copy assembled for owner review before any customer-facing action.",
+    "researched_at": "2026-10-02",
+    "sources": [
+      {
+        "title": "The Reckoning exact staging release",
+        "url": "https://the-reckoning.famtasticinc.com/?release=aef343a"
+      }
+    ]
+  }
+}

@@ -27,6 +27,7 @@ final class StagingReceiptService {
     private readonly OperationalLedger $ledger,
     private readonly TimeInterface $time,
     private readonly ConfigFactoryInterface $configFactory,
+    private readonly ?ExternalStagingReviewService $externalReviews = NULL,
   ) {}
 
   /**
@@ -166,6 +167,17 @@ final class StagingReceiptService {
       ->execute()
       ->fetchAssoc();
     if (!$row || !self::checkoutGateSatisfied($row)) return FALSE;
+    $receipt = json_decode((string) ($row['staging_receipt_json'] ?? ''), TRUE);
+    if (is_array($receipt) && ($receipt['schema'] ?? '') === ExternalStagingReviewService::SCHEMA) {
+      if (!$this->externalReviews) return FALSE;
+      try {
+        $this->externalReviews->validateStoredReceipt($requestId, (string) $row['staging_receipt_hash']);
+      }
+      catch (\Throwable) {
+        return FALSE;
+      }
+      return TRUE;
+    }
     try { SelectedAssetRights::assertPacket($this->database, $this->registeredPacket((int) $row['project_id'])); }
     catch (\InvalidArgumentException) { return FALSE; }
     return TRUE;
@@ -181,9 +193,16 @@ final class StagingReceiptService {
       return FALSE;
     }
     $receipt = json_decode((string) ($row['staging_receipt_json'] ?? ''), TRUE);
-    return is_array($receipt)
-      && ($receipt['schema'] ?? '') === self::SCHEMA
-      && ($receipt['status'] ?? '') === 'deployed';
+    if (!is_array($receipt) || ($receipt['status'] ?? '') !== 'deployed') return FALSE;
+    if (($receipt['schema'] ?? '') === self::SCHEMA) return TRUE;
+    if (($receipt['schema'] ?? '') !== ExternalStagingReviewService::SCHEMA) return FALSE;
+    try {
+      ExternalStagingReviewService::normalizeReceipt($receipt);
+      return TRUE;
+    }
+    catch (\Throwable) {
+      return FALSE;
+    }
   }
 
   private function validate(array $receipt): void {
