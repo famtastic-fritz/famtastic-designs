@@ -173,8 +173,10 @@ export NVM_DIR="$HOME/.nvm"
 # shellcheck disable=SC1090
 set +u
 . "$NVM_DIR/nvm.sh"
-nvm install
-nvm use
+if ! nvm use; then
+  nvm install
+  nvm use
+fi
 set -u
 
 # The shared host can expose far more CPUs than this account's resource budget.

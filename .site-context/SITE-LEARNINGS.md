@@ -8,6 +8,8 @@
 
 **Observation:** After quota recovery, the host still ended the release immediately after Composer platform validation. A bounded ten-file PHP lint completed, while the deployer's 238-process complete-module lint did not return an exit record. **Guidance:** When the production receipt names a valid Git baseline, lint all added and modified PHP files in the exact baseline-to-candidate diff. Keep full-module lint as the fail-safe for a missing or untrusted baseline, and retain the complete local suite before push.
 
+**Observation:** The frontend release stopped before dependency installation even though the pinned Node 22 runtime and a direct `npm ci` both passed. The deployer always called `nvm install`, forcing a remote version lookup for an already-installed runtime. **Guidance:** Try `nvm use` against `.nvmrc` first and install only on a true local miss; still record the exact Node version in the release receipt.
+
 ## 2026-10-02 — External staging must enter the lifecycle without invented proof history
 
 **Observation:** A finished bespoke site may already have a real repository, release, browser evidence, and customer request while the standard portal expects three generated directions. Recasting the finished site as three proofs would create false history, and taking payment before exact-release acceptance would weaken the existing proof-first contract.

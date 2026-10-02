@@ -4,6 +4,7 @@
 
 - Changed the ordinary backend and frontend deployers to reuse one exact-commit sparse worktree and switch it to only the source root needed by the active release lane instead of checking out the entire agency repository on the shared host. The creator-credit-only lane retains its additional bounded shared-source paths.
 - Changed backend host linting to validate every added or modified PHP file against the exact commit in the production backend receipt. A missing or untrusted receipt still triggers the complete-module fallback; this avoids a shared-host termination caused by 238 separate CLI starts while preserving exact-delta syntax validation.
+- Changed the frontend deployer to use the already-installed `.nvmrc` runtime first and invoke `nvm install` only when that runtime is absent. This keeps the runtime pin while avoiding an unnecessary network/version lookup during every shared-host release.
 - Preserved the existing clean-main, remote-SHA, build, backup, migration, rollback, and release-receipt gates. The adjustment changes private release staging only; it does not alter public application behavior or delete historical releases.
 - Shell parsing, frontend route-shell acceptance, pilot pre-promotion guards, scheduler-deploy tests, and diff checks pass. Production deployment remains a separate evidence state.
 
