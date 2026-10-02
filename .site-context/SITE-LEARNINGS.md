@@ -10,6 +10,8 @@
 
 **Observation:** The frontend release stopped before dependency installation even though the pinned Node 22 runtime and a direct `npm ci` both passed. The deployer always called `nvm install`, forcing a remote version lookup for an already-installed runtime. **Guidance:** Try `nvm use` against `.nvmrc` first and install only on a true local miss; still record the exact Node version in the release receipt.
 
+**Observation:** A frontend-only sparse checkout reached Vite but could not resolve the tracked narration source imported by `WhyFamtasticPage.jsx`. **Guidance:** Treat repository-external imports as explicit release inputs. Include the exact authored marketing path in both normal and creator-credit-only frontend checkouts, then let the real production build prove the dependency graph.
+
 ## 2026-10-02 — External staging must enter the lifecycle without invented proof history
 
 **Observation:** A finished bespoke site may already have a real repository, release, browser evidence, and customer request while the standard portal expects three generated directions. Recasting the finished site as three proofs would create false history, and taking payment before exact-release acceptance would weaken the existing proof-first contract.
