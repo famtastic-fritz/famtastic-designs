@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-10-02 — Use bounded release checkouts before quota cleanup
+
+**Observation:** The invoice-workflow backend preflight passed with ample filesystem space, but the apply failed with `Disk quota exceeded` before backup or promotion while creating a full private repository worktree. The failed candidate contained no files and production was unchanged.
+
+**Guidance:** Shared-host releases should check out only the source roots the deployers actually validate and promote. Reuse one exact-commit sparse worktree across backend and frontend release lanes, then keep every existing SHA, backup, build, migration, and rollback gate. Try this non-destructive reduction before requesting deletion of historical release checkouts; free disk space is not evidence of account file-quota headroom.
+
 ## 2026-10-02 — External staging must enter the lifecycle without invented proof history
 
 **Observation:** A finished bespoke site may already have a real repository, release, browser evidence, and customer request while the standard portal expects three generated directions. Recasting the finished site as three proofs would create false history, and taking payment before exact-release acceptance would weaken the existing proof-first contract.

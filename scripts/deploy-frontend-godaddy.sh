@@ -152,13 +152,13 @@ resolved_main="$(git --git-dir="$mirror_dir" rev-parse refs/heads/main)"
 if [[ ! -d "$source_dir/.git" && ! -f "$source_dir/.git" ]]; then
   rm -rf "$release_dir"
   mkdir -p "$release_dir"
-  if [[ "$creator_credit_only" == 1 ]]; then
-    git --git-dir="$mirror_dir" worktree add --detach --no-checkout "$source_dir" "$commit_sha"
-    git -C "$source_dir" sparse-checkout set frontend scripts backend/web/modules/custom/famtastic_pipeline
-    git -C "$source_dir" read-tree -mu HEAD
-  else
-    git --git-dir="$mirror_dir" worktree add --detach "$source_dir" "$commit_sha"
-  fi
+  # The build needs the frontend plus the shared creator-credit sources and
+  # deploy helper. Use the same bounded checkout as the backend deployer so a
+  # normal release does not multiply thousands of unrelated files on cPanel.
+  git --git-dir="$mirror_dir" worktree prune
+  git --git-dir="$mirror_dir" worktree add --detach --no-checkout "$source_dir" "$commit_sha"
+  git -C "$source_dir" sparse-checkout set frontend scripts backend
+  git -C "$source_dir" read-tree -mu HEAD
 fi
 
 cd "$source_dir"

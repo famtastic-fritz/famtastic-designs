@@ -1137,7 +1137,14 @@ resolved_main="$(git --git-dir="$mirror_dir" rev-parse refs/heads/main)"
 if [[ ! -e "$source_dir/.git" ]]; then
   rm -rf "$release_dir"
   mkdir -p "$release_dir"
-  git --git-dir="$mirror_dir" worktree add --detach "$source_dir" "$commit_sha"
+  # Shared-host account quotas count files, not just bytes. A full checkout of
+  # the agency repository can exhaust that quota before validation begins even
+  # though this deployer reads only backend, frontend, and release scripts.
+  # Keep one exact-commit sparse worktree that the frontend deployer can reuse.
+  git --git-dir="$mirror_dir" worktree prune
+  git --git-dir="$mirror_dir" worktree add --detach --no-checkout "$source_dir" "$commit_sha"
+  git -C "$source_dir" sparse-checkout set backend frontend scripts
+  git -C "$source_dir" read-tree -mu HEAD
 fi
 test -f "$backend_dir/composer.lock"
 test -f "$source_module/famtastic_pipeline.info.yml"
