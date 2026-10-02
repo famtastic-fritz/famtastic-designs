@@ -16,6 +16,8 @@
 
 **Guidance:** When a verified install and verified build each fit the provider window but their combination does not, prepare dependencies in a separate private step and pass the exact lockfile SHA-256 to apply. Apply must verify the current lock hash and the complete npm tree, build from the exact current Git worktree, and remove dependencies on every exit. Never promote a caller-supplied `dist` directory.
 
+**Observation:** Vite completed from the sparse candidate, then the creator-credit post-build inventory could not resolve the shared repository script it imports. **Guidance:** A release input audit must cover the entire package script chain, including post-build generators, rather than only Vite's application imports. Ordinary frontend releases require `frontend`, the exact narration source, and shared `scripts`.
+
 ## 2026-10-02 — External staging must enter the lifecycle without invented proof history
 
 **Observation:** A finished bespoke site may already have a real repository, release, browser evidence, and customer request while the standard portal expects three generated directions. Recasting the finished site as three proofs would create false history, and taking payment before exact-release acceptance would weaken the existing proof-first contract.

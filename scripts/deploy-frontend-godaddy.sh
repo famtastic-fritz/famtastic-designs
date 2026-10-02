@@ -169,7 +169,7 @@ fi
 if [[ "$creator_credit_only" == 1 ]]; then
   git -C "$source_dir" sparse-checkout set frontend scripts backend/web/modules/custom/famtastic_pipeline marketing/brands/famtastic/video-studio/whats-the-catch
 else
-  git -C "$source_dir" sparse-checkout set frontend marketing/brands/famtastic/video-studio/whats-the-catch
+  git -C "$source_dir" sparse-checkout set frontend scripts marketing/brands/famtastic/video-studio/whats-the-catch
 fi
 
 cd "$source_dir"
