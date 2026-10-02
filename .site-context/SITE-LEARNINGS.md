@@ -18,6 +18,8 @@
 
 **Observation:** Vite completed from the sparse candidate, then the creator-credit post-build inventory could not resolve the shared repository script it imports. **Guidance:** A release input audit must cover the entire package script chain, including post-build generators, rather than only Vite's application imports. Ordinary frontend releases require `frontend`, the exact narration source, and shared `scripts`.
 
+**Guidance:** If the complete server build finishes but the provider ends the SSH job before promotion, preserve that exact candidate and resume only with a deterministic manifest hash covering every `dist` relative path and file hash. Recompute the manifest during apply, reject creator-credit-only use, and retain every normal artifact, backup, promotion, live-response, receipt, and cleanup check.
+
 ## 2026-10-02 — External staging must enter the lifecycle without invented proof history
 
 **Observation:** A finished bespoke site may already have a real repository, release, browser evidence, and customer request while the standard portal expects three generated directions. Recasting the finished site as three proofs would create false history, and taking payment before exact-release acceptance would weaken the existing proof-first contract.
