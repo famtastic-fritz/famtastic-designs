@@ -7,6 +7,7 @@
 - Changed the frontend deployer to use the already-installed `.nvmrc` runtime first and invoke `nvm install` only when that runtime is absent. This keeps the runtime pin while avoiding an unnecessary network/version lookup during every shared-host release.
 - Included the exact authored narration-source directory imported by `WhyFamtasticPage.jsx` in both frontend sparse-release modes. The server build now receives the same tracked input as local builds without expanding to a full repository checkout.
 - Added a verified fast path to the newest already-installed Node runtime matching the numeric `.nvmrc` major. The deployer still falls back to NVM installation when the pinned major is absent, but no longer spends the shared host's release window initializing NVM for an available runtime.
+- Added an explicit prepared-dependency recovery input for hosts whose SSH window cannot contain both `npm ci` and the production build. Apply accepts it only when it equals the current lockfile SHA-256 and `npm ls --all` validates the installed development tree; the deployer still performs the build, promotion, receipt, and dependency cleanup itself.
 - Preserved the existing clean-main, remote-SHA, build, backup, migration, rollback, and release-receipt gates. The adjustment changes private release staging only; it does not alter public application behavior or delete historical releases.
 - Shell parsing, frontend route-shell acceptance, pilot pre-promotion guards, scheduler-deploy tests, and diff checks pass. Production deployment remains a separate evidence state.
 

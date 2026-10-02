@@ -9,7 +9,10 @@ REMOTE_DEPLOY_BASE="${FAMTASTIC_REMOTE_DEPLOY_BASE:-deploy/famtastic-designs}"
 REPOSITORY_URL="${FAMTASTIC_REPOSITORY_URL:-https://github.com/famtastic-fritz/famtastic-designs.git}"
 APPLY=false
 CREATOR_CREDIT_ONLY="${FAMTASTIC_CREATOR_CREDIT_ONLY:-0}"
+PREPARED_DEPENDENCIES_LOCK_SHA256="${FAMTASTIC_PREPARED_DEPENDENCIES_LOCK_SHA256:-}"
 [[ "$CREATOR_CREDIT_ONLY" == 0 || "$CREATOR_CREDIT_ONLY" == 1 ]] || exit 2
+[[ -z "$PREPARED_DEPENDENCIES_LOCK_SHA256" || "$PREPARED_DEPENDENCIES_LOCK_SHA256" =~ ^[a-f0-9]{64}$ ]] || exit 2
+PREPARED_DEPENDENCIES_ARG="${PREPARED_DEPENDENCIES_LOCK_SHA256:-_}"
 
 usage() {
   cat <<USAGE
@@ -18,6 +21,10 @@ Usage: $0 [--apply]
 Without --apply, performs read-only local and remote preflight checks.
 With --apply, builds the exact Git commit on the server, backs up the current
 frontend, promotes the validated artifact, and verifies live asset MIME types.
+
+On a constrained host, FAMTASTIC_PREPARED_DEPENDENCIES_LOCK_SHA256 may name the
+exact frontend/package-lock.json hash after a separate private `npm ci`. Apply
+then verifies the complete installed tree before building and still removes it.
 USAGE
 }
 
@@ -100,7 +107,7 @@ REMOTE_PREFLIGHT
 fi
 
 ssh -T "$SSH_TARGET" bash -s -- \
-  "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" "$CREATOR_CREDIT_ONLY" <<'REMOTE_APPLY'
+  "$REMOTE_ROOT" "$REMOTE_DEPLOY_BASE" "$REPOSITORY_URL" "$COMMIT_SHA" "$CREATOR_CREDIT_ONLY" "$PREPARED_DEPENDENCIES_ARG" <<'REMOTE_APPLY'
 set -euo pipefail
 remote_apply() {
 remote_root="$1"
@@ -108,6 +115,8 @@ deploy_base="$2"
 repository_url="$3"
 commit_sha="$4"
 creator_credit_only="$5"
+prepared_dependencies_lock_sha256="$6"
+[[ "$prepared_dependencies_lock_sha256" != _ ]] || prepared_dependencies_lock_sha256=''
 deploy_dir="$HOME/$deploy_base"
 mirror_dir="$deploy_dir/repository.git"
 release_dir="$deploy_dir/releases/$commit_sha"
@@ -198,7 +207,18 @@ export NODE_OPTIONS="${NODE_OPTIONS:+$NODE_OPTIONS }--max-old-space-size=512"
 # The host can export production-mode npm configuration. The frontend build is
 # a release-time operation and Vite lives in devDependencies, so explicitly
 # retain build tooling instead of relying on the server environment.
-npm --prefix "$frontend_dir" ci --include=dev
+actual_lock_sha256="$(sha256sum "$frontend_dir/package-lock.json" | awk '{print $1}')"
+if [[ -n "$prepared_dependencies_lock_sha256" ]]; then
+  [[ "$actual_lock_sha256" == "$prepared_dependencies_lock_sha256" ]] || {
+    echo "Prepared dependency lock hash does not match this release." >&2
+    exit 1
+  }
+  test -f "$frontend_dir/node_modules/.package-lock.json"
+  npm --prefix "$frontend_dir" ls --include=dev --all >/dev/null
+  echo "Verified prepared dependencies for lock $actual_lock_sha256."
+else
+  npm --prefix "$frontend_dir" ci --include=dev
+fi
 npm --prefix "$frontend_dir" run build
 
 [[ -f "$dist_dir/index.html" ]] || {
