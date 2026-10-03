@@ -1,5 +1,15 @@
 # FAMtastic Designs site learnings
 
+## 2026-10-03 — Offline payment must preserve the evidence boundary
+
+**Observation:** A customer used an owner-accepted offline payment method after an invoice had been designed around Stripe checkout. The old reusable offline path was customer- and amount-specific, so reusing it would have corrupted scope and provenance.
+
+**Guidance:** Keep the invoice snapshot immutable. Record a native manual Commerce payment only through an exact tenant/invoice/amount operation, name owner attestation as the evidence source, and leave bank/provider verification false when no provider receipt is available. Prove rollback, replay, event count, zero balance and the absence of notifications/fulfillment/DNS/launch. Payment may unlock the next contracted work gate; it must not infer terms, acceptance, delivery or launch.
+
+**Deployment lesson:** GoDaddy cleared the backend sparse worktree between commands during the first apply. An exact-commit `git archive` of only the backend tree survived and retained every later validation and backup gate. Use a normal private extracted tree for backend releases on this host; keep frontend release staging independent.
+
+**Scope:** Candidate shared pattern after a second unrelated lifecycle and a governed offline reversal/refund operation. Customer-specific financial facts and private receipts stay outside Git.
+
 ## 2026-10-02 — Use bounded release checkouts before quota cleanup
 
 **Observation:** The invoice-workflow backend preflight passed with ample filesystem space, but the apply failed with `Disk quota exceeded` before backup or promotion while creating a full private repository worktree. The failed candidate contained no files and production was unchanged.

@@ -1,10 +1,16 @@
 # FAMtastic Designs capability registry
 
+## 2026-10-03 — Owner-attested offline invoice payment (controlled pilot)
+
+**Production-proven for one controlled invoice.** Authorized staff can record a payment received outside checkout without inventing Stripe or bank-provider evidence. The operation uses a disabled manual Commerce gateway, requires exact tenant/amount/snapshot binding, records owner attestation, distinguishes record time from settlement time, and is replay safe. Production `bb91a07b` passed a rollback-only run, one apply, exact replay and read-only reconciliation. It unlocked only the owner-hosting handoff; customer notification, fulfillment, DNS and launch stayed absent.
+
+This is not a general Zelle integration or provider-verified settlement capability. Supporting bank evidence remains a finance record outside Git. Offline reversal/refund remains a governed manual reconciliation gap, and a second unrelated lifecycle is required before the pattern becomes generally production-proven. Evidence: `docs/evidence/owner-attested-offline-payment-2026-10-03/`.
+
 ## 2026-10-02 — External staging review to owner-hosted launch (controlled pilot)
 
-**Locally implemented; production proof pending.** The authenticated portal can present an already-built external staging release without fabricating three concept proofs, collect one consolidated change request, bind acceptance to the displayed release receipt, show an immutable itemized invoice, and open a non-secret owner-hosting checklist only after verified Commerce payment. Invoice checkout uses server-owned cents and suppresses managed-hosting renewal, add-ons, grants, and domain-registration choices for the owner-hosted scope.
+**Production-deployed controlled pilot; lifecycle completion pending.** The authenticated portal can present an already-built external staging release without fabricating three concept proofs, collect one consolidated change request, bind acceptance to the displayed release receipt, show an immutable itemized invoice, and open a non-secret owner-hosting checklist only after a recorded Commerce payment. Invoice checkout uses server-owned cents and suppresses managed-hosting renewal, add-ons, grants, and domain-registration choices for the owner-hosted scope.
 
-The Reckoning is the first controlled pilot. This entry does not prove a live invoice, Stripe payment, receipt delivery, hosting invitation, owner-host installation, DNS cutover, client-owned Stripe verification, or customer email. The adapter must remain pilot-scoped until a second unrelated project completes the same account → external review → acceptance → invoice → verified payment → hosting audit → private installation lifecycle with recorded evidence.
+The first controlled pilot now has a live invoice, release-bound review state and owner-attested offline payment record. It does not prove Stripe settlement, receipt delivery, hosting invitation, owner-host installation, DNS cutover, client-owned Stripe verification or lifecycle completion. The adapter remains pilot-scoped until this owner-hosted lifecycle finishes and a second unrelated project completes the same account → external review → acceptance → invoice → payment → hosting audit → private installation path with recorded evidence.
 
 ## 2026-09-21 — Finished-site account review
 

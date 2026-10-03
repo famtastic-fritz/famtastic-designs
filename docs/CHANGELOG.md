@@ -1,5 +1,13 @@
 # Product changelog
 
+## 2026-10-03 — Owner-attested offline invoice payment and backend release recovery
+
+- Added a private exact-invoice operation for payments received outside checkout. It creates one native manual Commerce payment, preserves the immutable invoice snapshot, records owner attestation rather than provider verification, and advances only the paid hosting-handoff gate.
+- Kept customer terms, release acceptance, fulfillment, notifications, DNS and launch independent. The production pilot produced no customer email, fulfillment record, DNS change or launch authorization.
+- Added replay and atomic rollback tests. The full pipeline unit suite passes 342 tests and 2,055 assertions.
+- Replaced backend sparse-worktree validation staging with an exact-commit `git archive` of only `backend/` after GoDaddy cleared the sparse checkout between commands. Existing remote-main, Composer, changed-PHP, backup, database, cache, rollback and release-receipt gates remain.
+- Deployed backend `bb91a07b6c5e2c332b70881df2937f0400bdeb5c`, then proved rollback-only execution, one production apply, exact replay and read-only reconciliation. Customer-specific financial identifiers and the receipt remain in private systems outside Git.
+
 ## 2026-10-02 — Quota-bounded production release checkout
 
 - Changed the ordinary backend and frontend deployers to reuse one exact-commit sparse worktree and switch it to only the source root needed by the active release lane instead of checking out the entire agency repository on the shared host. The creator-credit-only lane retains its additional bounded shared-source paths.
