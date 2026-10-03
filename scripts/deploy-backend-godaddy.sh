@@ -262,7 +262,7 @@ if [[ "$COMMIT_SHA" != "$REMOTE_MAIN_SHA" ]]; then
 fi
 
 echo "Backend deployment candidate: $COMMIT_SHA"
-echo "Private validation source:    ~/$REMOTE_DEPLOY_BASE/releases/$COMMIT_SHA/source/backend"
+echo "Private validation source:    ~/$REMOTE_DEPLOY_BASE/releases/$COMMIT_SHA/backend-source/backend"
 echo "Drupal runtime:               ~/$REMOTE_ROOT"
 if [[ "$PILOT_EXACT_DISPATCH_ONLY" == "1" ]]; then
   echo "Dispatch mode:                exact owner-approved preview only (all broad schedulers forbidden)"
@@ -321,7 +321,7 @@ production_dir="$HOME/$remote_root"
 deploy_dir="$HOME/$deploy_base"
 mirror_dir="$deploy_dir/repository.git"
 release_dir="$deploy_dir/releases/$commit_sha"
-source_dir="$release_dir/source"
+source_dir="$release_dir/backend-source"
 backend_dir="$source_dir/backend"
 source_module="$backend_dir/web/modules/custom/famtastic_pipeline"
 production_module="$production_dir/web/modules/custom/famtastic_pipeline"
@@ -1134,17 +1134,17 @@ resolved_main="$(git --git-dir="$mirror_dir" rev-parse refs/heads/main)"
   echo "Refusing deployment: requested commit is no longer current main." >&2
   exit 1
 }
-if [[ ! -e "$source_dir/.git" ]]; then
-  rm -rf "$release_dir"
-  mkdir -p "$release_dir"
-  # Shared-host account quotas count files, not just bytes. A full checkout of
-  # the agency repository can exhaust that quota before validation begins even
-  # though this deployer reads only the backend tree. The frontend deployer can
-  # reuse the exact worktree and switch its sparse definition for its own lane.
-  git --git-dir="$mirror_dir" worktree prune
-  git --git-dir="$mirror_dir" worktree add --detach --no-checkout "$source_dir" "$commit_sha"
+if [[ ! -f "$source_dir/commit.txt" ]] || ! grep -qx "$commit_sha" "$source_dir/commit.txt"; then
+  rm -rf "$source_dir"
+  mkdir -p "$source_dir"
+  # GoDaddy may clear a sparse worktree between commands. Extract only the
+  # exact committed backend tree into a normal private directory instead. The
+  # mirror commit check above remains the authority; no working-tree content is
+  # accepted and the frontend release tree is left untouched.
+  git --git-dir="$mirror_dir" archive "$commit_sha" backend | tar -x -C "$source_dir"
+  printf '%s\n' "$commit_sha" > "$source_dir/commit.txt"
 fi
-git -C "$source_dir" sparse-checkout set backend
+grep -qx "$commit_sha" "$source_dir/commit.txt"
 test -f "$backend_dir/composer.lock"
 test -f "$source_module/famtastic_pipeline.info.yml"
 test -f "$source_admin_theme/famtastic_admin.info.yml"
