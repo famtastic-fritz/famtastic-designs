@@ -206,6 +206,113 @@ final class CustomerInvoiceServiceTest extends UnitTestCase {
   }
 
   /**
+   * Proves an owner-attested Zelle receipt remains distinct from Stripe and acceptance.
+   */
+  public function testOwnerConfirmedOfflinePaymentIsAuditedAndReplaySafe(): void {
+    $invoice = $this->issue();
+    $evidenceId = hash('sha256', 'TR-KAO-001|zelle|owner-confirmed|2026-10-03');
+
+    foreach ([
+      [9999, 'usd', CustomerInvoiceService::OFFLINE_PAYMENT_PROVIDER, 'invoice_offline_payment_amount_mismatch'],
+      [10000, 'usd', 'manual', 'invoice_offline_payment_evidence_invalid'],
+    ] as [$amount, $currency, $provider, $message]) {
+      try {
+        $this->invoices->recordOwnerConfirmedOfflinePayment(
+          $invoice['public_id'], 13, 13, 15, 701, $amount, $currency,
+          $provider, $evidenceId, 1, 'Fritz Medine', 'Owner confirmed receipt and requested record update.',
+        );
+        self::fail('Invalid offline payment evidence was accepted.');
+      }
+      catch (\Throwable $error) {
+        self::assertSame($message, $error->getMessage());
+      }
+    }
+
+    $paid = $this->invoices->recordOwnerConfirmedOfflinePayment(
+      $invoice['public_id'],
+      13,
+      13,
+      15,
+      701,
+      10000,
+      'USD',
+      CustomerInvoiceService::OFFLINE_PAYMENT_PROVIDER,
+      $evidenceId,
+      1,
+      'Fritz Medine',
+      'Owner confirmed receipt through Zelle and requested the invoice record be updated.',
+    );
+    self::assertTrue($paid['transitioned']);
+    self::assertSame('paid', $paid['invoice']['status']);
+    self::assertSame(701, $paid['invoice']['commerce_order_id']);
+    self::assertNull($paid['invoice']['accepted_at']);
+    self::assertNotNull($paid['invoice']['paid_at']);
+    self::assertSame('awaiting_host_access', $paid['invoice']['owner_hosting']['status']);
+    self::assertSame(1, $paid['invoice']['owner_hosting']['access_unlocked']);
+
+    $offer = $this->database->select('famtastic_private_offer', 'o')->fields('o')
+      ->condition('id', $invoice['private_offer_id'])->execute()->fetchAssoc();
+    self::assertSame('prepaid_held', $offer['status']);
+    self::assertNull($offer['accepted_at']);
+    $event = $this->database->select('famtastic_customer_invoice_event', 'e')->fields('e')
+      ->condition('invoice_id', $invoice['id'])
+      ->condition('event_type', 'invoice.offline_payment_owner_confirmed')->execute()->fetchAssoc();
+    self::assertSame(CustomerInvoiceService::OFFLINE_PAYMENT_PROVIDER, $event['provider']);
+    self::assertSame($evidenceId, $event['provider_event_id']);
+    $payload = json_decode($event['payload_json'], TRUE, 512, JSON_THROW_ON_ERROR);
+    self::assertSame('owner_attested_received', $payload['evidence_state']);
+    self::assertFalse($payload['terms_accepted']);
+    self::assertFalse($payload['staging_acceptance_inferred']);
+    self::assertFalse($payload['customer_receipt_sent']);
+
+    $replay = $this->invoices->recordOwnerConfirmedOfflinePayment(
+      $invoice['public_id'], 13, 13, 15, 701, 10000, 'usd',
+      CustomerInvoiceService::OFFLINE_PAYMENT_PROVIDER, $evidenceId, 1,
+      'Fritz Medine', 'Owner confirmed receipt through Zelle and requested the invoice record be updated.',
+    );
+    self::assertFalse($replay['transitioned']);
+    self::assertSame(2, $this->countRows('famtastic_customer_invoice_event'));
+  }
+
+  /**
+   * Proves an unexpected handoff state rolls back every manual-payment write.
+   */
+  public function testOwnerConfirmedOfflinePaymentFailsAtomicallyWhenHandoffCannotAdvance(): void {
+    $invoice = $this->issue();
+    $this->database->update('famtastic_owner_hosting_handoff')->fields([
+      'status' => 'hosting_audit',
+    ])->condition('invoice_id', $invoice['id'])->execute();
+
+    try {
+      $this->invoices->recordOwnerConfirmedOfflinePayment(
+        $invoice['public_id'],
+        13,
+        13,
+        15,
+        702,
+        10000,
+        'usd',
+        CustomerInvoiceService::OFFLINE_PAYMENT_PROVIDER,
+        hash('sha256', 'TR-KAO-001|zelle|conflict'),
+        1,
+        'Fritz Medine',
+        'Owner confirmed receipt through Zelle and requested the invoice record be updated.',
+      );
+      self::fail('Offline payment advanced across an unexpected handoff state.');
+    }
+    catch (\Throwable $error) {
+      self::assertSame('invoice_offline_payment_transition_conflict', $error->getMessage());
+    }
+
+    $current = $this->invoices->invoiceForRequest(13, 13, self::REQUEST_PUBLIC_ID);
+    self::assertSame('issued', $current['status']);
+    self::assertNull($current['commerce_order_id']);
+    self::assertNull($current['paid_at']);
+    self::assertSame('hosting_audit', $current['owner_hosting']['status']);
+    self::assertSame(1, $this->countRows('famtastic_customer_invoice_event'));
+  }
+
+  /**
    * Proves hosting declarations stay locked until payment and reject secrets.
    */
   public function testOwnerHostingDeclarationIsPaymentGatedAndSecretFree(): void {

@@ -24,6 +24,7 @@ final class CustomerInvoiceService {
   public const CURRENCY = 'usd';
   public const TERMS_VERSION = 'owner-hosted-launch-v1';
   public const PAYMENT_GATEWAY = 'famtastic_stripe_live';
+  public const OFFLINE_PAYMENT_PROVIDER = 'zelle_owner_attested';
 
   public function __construct(
     private readonly Connection $database,
@@ -493,6 +494,117 @@ final class CustomerInvoiceService {
         'owner_next_action' => 'Provide a temporary least-privilege hosting invitation and domain path',
         'changed' => $now,
       ])->condition('invoice_id', (int) $row['id'])->condition('status', 'payment_required')->execute();
+      return ['invoice' => $this->hydrate($this->loadById((int) $row['id'])), 'transitioned' => TRUE];
+    }
+    catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    }
+  }
+
+  /**
+   * Records a staff-verified offline invoice receipt without inventing Stripe evidence.
+   *
+   * The caller must first create and reconcile one completed manual Commerce
+   * payment for the exact order. This transition records the owner attestation,
+   * unlocks the contracted hosting work, and deliberately does not infer terms
+   * acceptance, staging acceptance, inbox delivery, DNS authority, or launch.
+   */
+  public function recordOwnerConfirmedOfflinePayment(
+    string $publicId,
+    int $customerId,
+    int $organizationId,
+    int $requestId,
+    int $orderId,
+    int $amountMinor,
+    string $currency,
+    string $provider,
+    string $evidenceId,
+    int $staffUid,
+    string $actor,
+    string $authority,
+  ): array {
+    $provider = strtolower(trim($provider));
+    $evidenceId = strtolower(trim($evidenceId));
+    $currency = strtolower(trim($currency));
+    $actor = trim($actor);
+    $authority = trim($authority);
+    if ($orderId <= 0
+      || !hash_equals(self::OFFLINE_PAYMENT_PROVIDER, $provider)
+      || preg_match('/^[a-f0-9]{64}$/', $evidenceId) !== 1
+      || $staffUid <= 0 || $actor === '' || $authority === ''
+      || mb_strlen($actor) > 255 || mb_strlen($authority) > 1000) {
+      throw new \InvalidArgumentException('invoice_offline_payment_evidence_invalid');
+    }
+
+    $now = $this->time->getRequestTime();
+    $transaction = $this->database->startTransaction();
+    try {
+      $row = $this->lockedInvoice($publicId);
+      self::assertTenantBinding($row, $customerId, $organizationId, $requestId);
+      $this->assertSnapshotIntegrity($row);
+      $this->assertVerifiedOwner($customerId, $organizationId);
+      if ((int) $row['total_amount_minor'] !== $amountMinor
+        || !hash_equals(strtolower((string) $row['currency']), $currency)) {
+        throw new \RuntimeException('invoice_offline_payment_amount_mismatch');
+      }
+
+      $existingOrderId = (int) ($row['commerce_order_id'] ?? 0);
+      if ((string) $row['status'] === 'paid') {
+        $eventExists = (bool) $this->database->select('famtastic_customer_invoice_event', 'e')
+          ->condition('invoice_id', (int) $row['id'])
+          ->condition('event_type', 'invoice.offline_payment_owner_confirmed')
+          ->condition('provider', self::OFFLINE_PAYMENT_PROVIDER)
+          ->condition('provider_event_id', $evidenceId)
+          ->countQuery()->execute()->fetchField();
+        if ($existingOrderId !== $orderId || !$eventExists) {
+          throw new \RuntimeException('invoice_offline_payment_replay_conflict');
+        }
+        return ['invoice' => $this->hydrate($row), 'transitioned' => FALSE];
+      }
+      if (!in_array((string) $row['status'], ['issued', 'viewed', 'accepted'], TRUE)
+        || $existingOrderId > 0) {
+        throw new \RuntimeException('invoice_offline_payment_state_invalid');
+      }
+
+      $eventKey = 'invoice:offline-paid:' . hash('sha256', $provider . '|' . $evidenceId . '|' . $row['public_id']);
+      $this->appendEvent((int) $row['id'], 'invoice.offline_payment_owner_confirmed', $eventKey, [
+        'order_id' => $orderId,
+        'amount_minor' => $amountMinor,
+        'currency' => $currency,
+        'snapshot_sha256' => (string) $row['snapshot_sha256'],
+        'evidence_state' => 'owner_attested_received',
+        'actor' => $actor,
+        'authority' => $authority,
+        'terms_accepted' => FALSE,
+        'staging_acceptance_inferred' => FALSE,
+        'bank_transaction_reference_recorded' => FALSE,
+        'payment_time_meaning' => 'owner_recorded_at_not_bank_settlement_timestamp',
+        'customer_receipt_sent' => FALSE,
+      ], $staffUid, $provider, $evidenceId);
+      $invoiceUpdated = $this->database->update('famtastic_customer_invoice')->fields([
+        'commerce_order_id' => $orderId,
+        'status' => 'paid',
+        'paid_at' => $now,
+        'changed' => $now,
+      ])->condition('id', (int) $row['id'])->condition('status', (string) $row['status'])->execute();
+      $offerUpdated = $this->database->update('famtastic_private_offer')->fields([
+        'status' => 'prepaid_held',
+        'commerce_order_id' => $orderId,
+        'changed' => $now,
+      ])->condition('id', (int) $row['private_offer_id'])->condition('status', 'active')->execute();
+      $handoffUpdated = $this->database->update('famtastic_owner_hosting_handoff')->fields([
+        'commerce_order_id' => $orderId,
+        'status' => 'awaiting_host_access',
+        'access_unlocked' => 1,
+        'access_status' => 'awaiting_owner',
+        'current_blocker' => 'Owner hosting access required',
+        'owner_next_action' => 'Provide a temporary least-privilege hosting invitation and domain path',
+        'changed' => $now,
+      ])->condition('invoice_id', (int) $row['id'])->condition('status', 'payment_required')->execute();
+      if ($invoiceUpdated !== 1 || $offerUpdated !== 1 || $handoffUpdated !== 1) {
+        throw new \RuntimeException('invoice_offline_payment_transition_conflict');
+      }
       return ['invoice' => $this->hydrate($this->loadById((int) $row['id'])), 'transitioned' => TRUE];
     }
     catch (\Throwable $error) {
