@@ -1,5 +1,7 @@
 # Agent Instructions
 
+For Textbee or customer SMS work, first read `docs/products/customer-messaging-pilot.md` and the FAMtastic umbrella `docs/agent-startup/CUSTOMER-MESSAGING-CONTRACT.v1.md`. `scripts/textbee-lab.mjs` is a Fritz-only fictional transport probe; it is not a customer messaging service or production Drupal route.
+
 ## September 18 — Embedded build instructions must cover the current request
 
 Never reuse `selected_build_continuation` merely because it exists. Its producer

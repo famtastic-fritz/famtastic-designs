@@ -1,5 +1,7 @@
 # FAMtastic Designs
 
+Customer SMS research and the controlled Textbee technical probe are indexed in [customer messaging pilot](docs/products/customer-messaging-pilot.md). No customer texts or agency-site SMS runtime are enabled by that source.
+
 This repository is the canonical source for the live FAMtastic Designs platform.
 
 It is not the source container for customer websites. Each customer business owns an

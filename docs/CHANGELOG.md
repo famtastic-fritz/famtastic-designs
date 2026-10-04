@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-10-04 — Customer SMS technical lab source
+
+- Vendored the pinned Component Studio candidate and added a gated fictional Textbee CLI probe plus agency-side handoff. No customer messaging, provider connection or live site deployment is claimed.
+
 ## 2026-10-03 — Owner-attested offline invoice payment and backend release recovery
 
 - Added a private exact-invoice operation for payments received outside checkout. It creates one native manual Commerce payment, preserves the immutable invoice snapshot, records owner attestation rather than provider verification, and advances only the paid hosting-handoff gate.
