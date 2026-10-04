@@ -667,4 +667,6 @@ reduced-motion browser emulation claimed. This is footer-only release evidence.
 
 | Capability | Evidence level | Boundary |
 | --- | --- | --- |
-| Dedicated inbound mailbox clock / hello reply correlation / health | Locally proven; production verification pending | Exact sent outbox Message-ID + existing conversation binding + sender authorization. Existing hello files excluded on activation. No SMTP, broad worker, approval or backlog drain. See docs/plans/inbound-mail-repair/OPERATIONS.md for matrix. |
+| Dedicated inbound mailbox clock / hello reply correlation / health | Local and production synthetic path verified at 63d7dfb0; owner acceptance pending | Exact sent outbox Message-ID + existing conversation binding + sender authorization. Existing hello files excluded on activation. No SMTP, broad worker, approval or backlog drain. See docs/plans/inbound-mail-repair/OPERATIONS.md for matrix. |
+
+Production 2026-10-04: actual cPanel import + signed HTTP replay passed eight assertions; 55 historical new files excluded and all 320 pre-existing mail files retained. Final recent heartbeat, zero pending/retry files. Four older imported records have no drafts; health truthfully reports that completeness gap. External SMTP reply and human acceptance remain unverified. Synthetic fixture cleaned; no email sent.

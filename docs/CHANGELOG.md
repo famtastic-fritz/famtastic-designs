@@ -3889,4 +3889,4 @@ Historical migration receipts retain their original paths as evidence; this curr
 
 ## 2026-10-04 — Inbound mailbox repair
 
-Added Drupal-owned inbound mail discovery and exact sent-receipt correlation for hello replies; historical Maildir baseline, atomic message/draft idempotency, retry/health readback and marker-owned deployment gate. Local proof passed; production proof pending. See docs/plans/inbound-mail-repair/OPERATIONS.md.
+Added Drupal-owned inbound mail discovery and exact sent-receipt correlation for hello replies; historical Maildir baseline, atomic message/draft idempotency, retry/health readback and marker-owned deployment gate. Deployed source 63d7dfb0; actual cron and all eight hosted fixture checks passed; 320 existing mail files preserved; fixture cleaned; no SMTP. See docs/plans/inbound-mail-repair/OPERATIONS.md.

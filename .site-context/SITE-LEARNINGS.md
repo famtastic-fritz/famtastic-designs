@@ -2937,4 +2937,4 @@ recorded separately from inbox receipt.
 
 ## 2026-10-04 — Inbound mailbox repair
 
-Observation: hello mail receipt was healthy but support-only ingestion had no clock. Guidance: use Drupal for correlation/retries/health and cPanel only as the dedicated clock; preserve pre-existing files, require exact sent receipt and authorized tenant, never guess by sender or auto-send. Production proof pending; see docs/plans/inbound-mail-repair/OPERATIONS.md.
+Observation: hello mail receipt was healthy but support-only ingestion had no clock. Guidance: use Drupal for correlation/retries/health and cPanel only as the dedicated clock; preserve pre-existing files, require exact sent receipt and authorized tenant, never guess by sender or auto-send. Production runtime 63d7dfb0 and eight fixture assertions verified; historical four missing drafts remain a human review item. See docs/plans/inbound-mail-repair/OPERATIONS.md.
