@@ -3885,3 +3885,8 @@ Each site must own its Git root, common directory, manifest and verified remote.
 Studio/library checkouts retain their separately configured locations. Explicit sandbox roots remain supported. New customer identities should use `site-<business-slug>`; preserve existing IDs and registry bindings on continuation. Check existing source and registry before creating a duplicate. This rule does not automatically move existing repositories or authorize deployment, credentials, DNS or customer communication. Fritz assigned the StockandShip98 move to its own task.
 
 Historical migration receipts retain their original paths as evidence; this current rule supersedes their use as defaults. When an authorized move is performed, preserve history, dirty work and remotes, then update the local project/launcher mappings and current handoff documents. Confirm the actual new checkout before claiming migration complete.
+
+
+## 2026-10-04 — Inbound mailbox repair
+
+Added Drupal-owned inbound mail discovery and exact sent-receipt correlation for hello replies; historical Maildir baseline, atomic message/draft idempotency, retry/health readback and marker-owned deployment gate. Local proof passed; production proof pending. See docs/plans/inbound-mail-repair/OPERATIONS.md.

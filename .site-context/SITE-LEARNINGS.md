@@ -2933,3 +2933,8 @@ storage. Customer communication remains a separate owner-reviewed action:
 `standard/v2`, `hello@famtasticdesigns.com`, Shay signature, one invoice CTA,
 secondary staging/portal links, exact recipient keys, and provider acceptance
 recorded separately from inbox receipt.
+
+
+## 2026-10-04 — Inbound mailbox repair
+
+Observation: hello mail receipt was healthy but support-only ingestion had no clock. Guidance: use Drupal for correlation/retries/health and cPanel only as the dedicated clock; preserve pre-existing files, require exact sent receipt and authorized tenant, never guess by sender or auto-send. Production proof pending; see docs/plans/inbound-mail-repair/OPERATIONS.md.

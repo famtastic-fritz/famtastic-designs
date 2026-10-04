@@ -84,6 +84,13 @@ case "${1:-}" in
   *) usage >&2; exit 2 ;;
 esac
 
+# Dedicated ingress repair uses baseline-hashed source promotion and never
+# clears the exact-dispatch lock or invokes shared lifecycle/cron workers.
+if [[ "${FAMTASTIC_INBOUND_MAIL_ONLY:-0}" == 1 ]]; then
+  exec bash "$SCRIPT_DIR/deploy-inbound-mail-backend.sh" "$@"
+fi
+bash "$SCRIPT_DIR/assert-inbound-mail-scheduler.sh"
+
 # Bounded full-site review feature: code and router/container caches only.
 # No schema, catalog, scheduler, lifecycle, payment or notification mutation.
 if [[ "${FAMTASTIC_FULL_SITE_REVIEW_ONLY:-0}" == 1 ]]; then

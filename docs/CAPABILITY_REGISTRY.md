@@ -661,3 +661,10 @@ and working pause. Six Company links remained44px; no horizontal overflow or
 captured console errors. Compiled JS/CSS returned200 with correct MIME types.
 320px local fixture also passed. Reduced-motion CSS contract tested; no OS-level
 reduced-motion browser emulation claimed. This is footer-only release evidence.
+
+
+## 2026-10-04 — Inbound ingestion repair
+
+| Capability | Evidence level | Boundary |
+| --- | --- | --- |
+| Dedicated inbound mailbox clock / hello reply correlation / health | Locally proven; production verification pending | Exact sent outbox Message-ID + existing conversation binding + sender authorization. Existing hello files excluded on activation. No SMTP, broad worker, approval or backlog drain. See docs/plans/inbound-mail-repair/OPERATIONS.md for matrix. |

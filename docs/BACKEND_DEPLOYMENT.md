@@ -245,3 +245,8 @@ gunzip -c ~/backups/famtastic-database-TIMESTAMP-SHA.sql.gz |
   vendor/bin/drush sql:cli
 vendor/bin/drush cr
 ```
+
+
+## Dedicated inbound mailbox repair and recurrence gate
+
+Use `FAMTASTIC_INBOUND_MAIL_ONLY=1 ./scripts/deploy-backend-godaddy.sh` and then `--apply` for the authorized first ingress repair. This scoped release verifies baseline hashes, backs up code/database/cron, preserves exact-dispatch and all existing clocks, snapshots historical mail, and installs only `FAMTASTIC_INBOUND_MAIL_CRON_V1`. No general Drupal cron/outbound dispatcher or schema update is invoked. The standard primitive subsequently refuses an activated missing/altered ingress clock. Details, incident and rollback: [Inbound mail operations](plans/inbound-mail-repair/OPERATIONS.md).

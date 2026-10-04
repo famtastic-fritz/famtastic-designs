@@ -211,6 +211,21 @@ final class LifecycleOperationsService {
    * Imports one validated mailbox envelope into the correct portal thread.
    */
   public function ingestInbound(array $message): array {
+    $key = 'famtastic:inbound:' . hash('sha256', (string) ($message['message_id'] ?? ''));
+    $lock = \Drupal::lock();
+    if (!$lock->acquire($key, 120)) throw new \RuntimeException('inbound_message_locked');
+    $transaction = $this->database->startTransaction();
+    try {
+      $result = $this->ingestInboundLocked($message);
+      unset($transaction);
+      return $result;
+    } catch (\Throwable $error) {
+      $transaction->rollBack();
+      throw $error;
+    } finally { $lock->release($key); }
+  }
+
+  private function ingestInboundLocked(array $message): array {
     $messageId = trim((string) ($message['message_id'] ?? ''));
     $sender = mb_strtolower(trim((string) ($message['from'] ?? '')));
     $recipient = mb_strtolower(trim((string) ($message['to'] ?? '')));
@@ -221,9 +236,20 @@ final class LifecycleOperationsService {
     }
     $hash = hash('sha256', $messageId);
     $existing = $this->database->select('famtastic_inbound_message', 'i')->fields('i')->condition('message_id_hash', $hash)->execute()->fetchAssoc();
-    if ($existing) return ['accepted' => $existing['status'] === 'matched', 'duplicate' => TRUE, 'status' => $existing['status']];
-    preg_match('/support\+([0-9a-f-]{36})@/i', $recipient, $match);
-    $publicId = strtolower((string) ($message['thread_public_id'] ?? ($match[1] ?? '')));
+    if ($existing) {
+      $this->supportDrafts->createForMessage((int) $existing['id']);
+      return ['accepted' => $existing['status'] === 'matched', 'duplicate' => TRUE, 'status' => $existing['status']];
+    }
+    $recipients = array_unique(array_merge([$recipient], (array) ($message['recipients'] ?? [])));
+    $explicit = [];
+    foreach ($recipients as $address) {
+      if (is_string($address) && preg_match('/^support\+([0-9a-f-]{36})@famtasticdesigns\.com$/iD', $address, $match)) $explicit[strtolower($match[1])] = TRUE;
+    }
+    if (!empty($message['thread_public_id'])) $explicit[strtolower((string) $message['thread_public_id'])] = TRUE;
+    $publicId = count($explicit) === 1 ? (string) array_key_first($explicit) : '';
+    if ($explicit === [] && in_array('hello@famtasticdesigns.com', $recipients, TRUE)) {
+      $publicId = (new InboundReplyCorrelation($this->database))->resolve($message);
+    }
     $attachments = $this->validateAttachments((array) ($message['attachments'] ?? []), $publicId ?: 'unmatched');
     $thread = $publicId === '' ? FALSE : $this->database->select('famtastic_portal_thread', 't')->fields('t')->condition('public_id', $publicId)->execute()->fetchAssoc();
     $authorized = FALSE;
@@ -232,6 +258,11 @@ final class LifecycleOperationsService {
       $query->join('famtastic_customer', 'c', 'c.id = m.customer_id');
       $authorized = (bool) $query->condition('m.organization_id', $thread['organization_id'])->condition('m.status', 'active')
         ->condition('c.email', $sender)->countQuery()->execute()->fetchField();
+    }
+    // Unregistered contacts may reply only to an exact traceable conversation,
+    // and only while the thread is still an unclaimed contact workspace.
+    if ($thread && (int) $thread['organization_id'] === 0 && !empty($thread['contact_email'])) {
+      $authorized = hash_equals(strtolower($thread['contact_email']), $sender);
     }
     $status = $thread && $authorized ? 'matched' : 'unmatched';
     $reason = !$thread ? 'thread_not_found' : ($authorized ? '' : 'sender_not_authorized');
@@ -249,22 +280,11 @@ final class LifecycleOperationsService {
       $this->database->update('famtastic_support_case')->fields(['status' => 'waiting_on_famtastic', 'changed' => $now])
         ->condition('thread_id', $thread['id'])->execute();
     }
-    else {
-      $admin = (string) ($this->configFactory->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'fitzgerald.medine@gmail.com');
-      $this->queue('inbound:' . $hash . ':unmatched', $admin, 'Unmatched customer email requires review', "Subject: {$subject}\nReason: {$reason}\nMessage-ID hash: {$hash}");
-    }
-    // L0 triage (B2): every accepted inbound gets exactly one draft reply.
-    // Best-effort — a drafting failure must never break mail ingestion.
-    try {
-      $draftedId = (int) $this->database->select('famtastic_inbound_message', 'i')
-        ->fields('i', ['id'])->condition('message_id_hash', $hash)->execute()->fetchField();
-      if ($draftedId > 0) {
-        $this->supportDrafts->createForMessage($draftedId);
-      }
-    }
-    catch (\Throwable) {
-      // Drafting is additive; ingestion evidence already recorded above.
-    }
+    // Unmatched evidence stays in Drupal's review queue; no notification is
+    // queued implicitly. Ingestion is never authority to contact anyone.
+    $draftedId = (int) $this->database->select('famtastic_inbound_message', 'i')
+      ->fields('i', ['id'])->condition('message_id_hash', $hash)->execute()->fetchField();
+    $this->supportDrafts->createForMessage($draftedId);
     return ['accepted' => $status === 'matched', 'duplicate' => FALSE, 'status' => $status, 'reason' => $reason];
   }
 
