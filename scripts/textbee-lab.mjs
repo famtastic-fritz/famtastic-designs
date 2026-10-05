@@ -75,8 +75,9 @@ async function main() {
       process.stdout.write('Cancelled; nothing removed.\n');
       return;
     }
-    removeSecret(KEY_SERVICE);
-    removeSecret(TO_SERVICE);
+    const keyRemoved = removeSecret(KEY_SERVICE);
+    const recipientRemoved = removeSecret(TO_SERVICE);
+    if (!keyRemoved || !recipientRemoved) throw new Error('keychain_removal_incomplete; inspect Keychain Access');
     process.stdout.write('Local lab Keychain items removed.\n');
     return;
   }
@@ -99,7 +100,7 @@ async function main() {
   if (keychainMode) {
     requireMacTerminal();
     if (!apiKey || !e164(to)) throw new Error('lab_not_configured; run --setup');
-    process.stdout.write(`One real SMS to your saved test phone ending ${to.slice(-4)}:\n${MESSAGE}\n`);
+    process.stdout.write(`One real SMS to your saved test phone ${to}:\n${MESSAGE}\n`);
     if (!await confirm('Type SEND to make one attempt: ', 'SEND')) {
       process.stdout.write('Cancelled; nothing sent.\n');
       return;
