@@ -9,3 +9,5 @@ Sender configuration: existing GoDaddy cPanel SMTP configured; fresh authenticat
 Release flow: docs/GIT_SYNC_AND_RELEASE_DISCIPLINE.md → clean/pushed/current-main SHA → checked-in frontend/backend GoDaddy scripts without --apply for read-only preflight → separately authorized --apply → release-marker and affected hosted/browser checks. GitHub Actions is source checking only; zero-step billing is neither failure/pass nor a push blocker. Current candidate is a feature branch, not current main. Public GitHub/Drive export rejections remain separate and unretired; no retries or bypass. No deployment, purchase or send.
 
 Small fix proof: BEAUTY-CONSISTENCY-FIX.json; explicit hair subtitle and Juniper Hair Studio fixture;24 creative checks,27 unit tests/211 assertions,16 installed native checks,static/native1440+390 rendered journeys. No full-suite rerun or new production proof.
+
+Actual no-apply preflight receipt: RELEASE-PREFLIGHT.json. Both current scripts refused candidate d24c5925 because remote main is eef442be. Backend first read the existing inbound clock; it did not invoke broad dispatch. No apply, source upload or contact upload occurred.

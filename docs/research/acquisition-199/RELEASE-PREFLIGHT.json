@@ -1,0 +1,23 @@
+{
+  "schema": "famtastic.acquisition-release-preflight.v1",
+  "candidate_sha": "d24c5925028584f0ee57e0352ffb07c6455a54eb",
+  "remote_main_sha": "eef442be41006188f4ed72ae5657bebcc4a9baac",
+  "fetch": "passed",
+  "candidate_clean_at_invocation": true,
+  "frontend": {
+    "command": "FAMTASTIC_CREATOR_CREDIT_ONLY=0 bash scripts/deploy-frontend-godaddy.sh",
+    "exit_code": 1,
+    "blocked_operation": "Deployment preflight refuses candidate HEAD different from current remote main"
+  },
+  "backend": {
+    "command": "FAMTASTIC_CREATOR_CREDIT_ONLY=0 FAMTASTIC_INBOUND_MAIL_ONLY=0 FAMTASTIC_FULL_SITE_REVIEW_ONLY=0 bash scripts/deploy-backend-godaddy.sh",
+    "exit_code": 1,
+    "read_only_prior_check": "Existing inbound scheduler readback clock_installed=true; broad_dispatch=not_invoked; no --apply",
+    "blocked_operation": "Deployment preflight refuses candidate HEAD different from current remote main"
+  },
+  "apply_invoked": false,
+  "source_uploaded": false,
+  "contact_payload_uploaded": false,
+  "billing_gate": false,
+  "dispatch": "HOLD"
+}
