@@ -1,8 +1,12 @@
 # FAMtastic Designs capability registry
 
+## 2026-10-04 — Fritz-only Textbee one-off delivery proof
+
+**Provider-reported delivered for one user-authorized test only.** An exact single SMS to Fritz's designated test number was accepted by Textbee and its message-history status later reported `delivered`; the private task receipt retains the provider batch reference. No reply or signed inbound webhook was proved, and this did not use the reusable workflow core or Shay's account. Customer sender, automated reminders, consent and business quota remain unproven. This supersedes the earlier setup-only status below without rewriting its historical test evidence.
+
 ## 2026-10-04 — Reusable SMS workflow core
 
-**Source candidate; local contract tests only.** `tools/customer-messaging/sms-workflow-core` provides a disabled-by-default provider-neutral orchestration API and customer-host install contract for confirmed appointment SMS. Eight fictional Node tests cover pre-send eligibility, quota math, template bounds, stable idempotency, reserve-before-one-send, duplicate suppression, uncertain outcomes and status reconciliation. It has no installed Drupal or Shay route, durable host adapter, scheduler, business sender, verified customer consent or live production reminders. Each customer installation needs its own transactional ledger and release proof. The existing hashed Component Studio `consent-sms-loop` Textbee lab copy is unchanged.
+**Source candidate; local contract tests only.** `tools/customer-messaging/sms-workflow-core` provides a disabled-by-default provider-neutral orchestration API and customer-host install contract for confirmed appointment SMS. Eight fictional Node tests cover pre-send eligibility, quota math, template bounds, stable idempotency, reserve-before-one-send, duplicate suppression, uncertain outcomes and status reconciliation. It has no installed Drupal or Shay route, durable host adapter, scheduler, business sender, verified customer consent or live production reminders. Each customer installation needs its own transactional ledger and release proof. The existing hashed Component Studio `consent-sms-loop` 0.1 Textbee lab copy is unchanged; Component Studio 0.2 carries the equivalent new workflow in review PR #3, but this agency copy has not yet been replaced by a pinned 0.2 install receipt.
 
 ## 2026-10-04 — Textbee fictional lab private setup
 

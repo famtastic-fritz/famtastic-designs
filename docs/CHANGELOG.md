@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-10-04 — Personal Textbee proof recorded
+
+- Recorded the later provider-reported `delivered` state for one owner-authorized personal-phone SMS while keeping customer reminders, inbound reply handling and business sender activation unclaimed.
+
 ## 2026-10-04 — Reusable SMS workflow source candidate
 
 - Added a disabled-by-default, provider-neutral SMS workflow core with explicit consent, suppression, template, quota, atomic reservation, idempotency, outcome audit and status contracts. Fictional local tests pass; no customer sender, scheduler or site integration was enabled.
