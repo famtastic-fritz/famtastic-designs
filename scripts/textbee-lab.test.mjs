@@ -34,6 +34,17 @@ test('readiness redacts the key and phone and never sends', () => {
   assert.equal((result.stdout + result.stderr).includes(phone), false);
 });
 
+test('common US phone input is normalized without exposing it', () => {
+  const result = run('--check', {
+    TEXTBEE_API_KEY: secret,
+    TEXTBEE_LAB_TO: '(555) 555-0123',
+    TEXTBEE_LAB_ENABLED: '1',
+  });
+  assert.equal(result.status, 0);
+  assert.equal(JSON.parse(result.stdout).test_recipient_valid, true);
+  assert.equal((result.stdout + result.stderr).includes('555'), false);
+});
+
 test('send requires a separate acknowledgement and cannot run from this test', () => {
   const result = run('--send', {
     TEXTBEE_API_KEY: secret,
@@ -48,7 +59,7 @@ test('send requires a separate acknowledgement and cannot run from this test', (
 });
 
 test('private setup and removal refuse non-interactive execution', () => {
-  for (const mode of ['--setup', '--forget']) {
+  for (const mode of ['--setup', '--set-phone', '--forget']) {
     const result = run(mode);
     assert.equal(result.status, 2);
     assert.match(result.stderr, /interactive_terminal_required/);

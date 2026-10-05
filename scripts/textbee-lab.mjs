@@ -39,8 +39,11 @@ function requireMacTerminal() {
   if (!process.stdin.isTTY || !process.stdout.isTTY) throw new Error('interactive_terminal_required');
 }
 
-function e164(value) {
-  return /^\+[1-9]\d{1,14}$/.test(value ?? '');
+function normalizedPhone(value) {
+  const compact = (value ?? '').trim().replace(/[\s().-]/g, '');
+  const candidate = /^\d{10}$/.test(compact) ? `+1${compact}`
+    : /^1\d{10}$/.test(compact) ? `+${compact}` : compact;
+  return /^\+[1-9]\d{1,14}$/.test(candidate) ? candidate : null;
 }
 
 async function confirm(prompt, expected) {
@@ -50,22 +53,30 @@ async function confirm(prompt, expected) {
 }
 
 async function main() {
-  if (!['--setup', '--check', '--send', '--forget'].includes(mode) || process.argv.length > 3) {
-    throw new Error('usage: node scripts/textbee-lab.mjs [--setup|--check|--send|--forget]');
+  if (!['--setup', '--set-phone', '--check', '--send', '--forget'].includes(mode) || process.argv.length > 3) {
+    throw new Error('usage: node scripts/textbee-lab.mjs [--setup|--set-phone|--check|--send|--forget]');
   }
 
-  if (mode === '--setup') {
+  if (mode === '--setup' || mode === '--set-phone') {
     requireMacTerminal();
     process.stdout.write('Fritz-only fictional Textbee lab. No customer numbers or live reminders.\n');
-    process.stdout.write('Paste the Textbee API key at the hidden macOS Keychain prompt, then press Return.\n');
-    storeSecret(KEY_SERVICE, 'FAMtastic Textbee fictional lab API key');
-    process.stdout.write('Enter your own test phone in E.164 form (+1...), at the next hidden prompt.\n');
-    storeSecret(TO_SERVICE, 'FAMtastic Textbee fictional lab test phone');
-    if (!readSecret(KEY_SERVICE)?.trim() || !e164(readSecret(TO_SERVICE))) {
-      removeSecret(TO_SERVICE);
-      throw new Error('keychain_value_invalid; no test recipient saved');
+    if (mode === '--setup') {
+      process.stdout.write('Paste the Textbee API key at the hidden macOS Keychain prompt, then press Return.\n');
+      storeSecret(KEY_SERVICE, 'FAMtastic Textbee fictional lab API key');
     }
-    process.stdout.write('Key and test phone saved in macOS Keychain. No message sent. Run --check.\n');
+    process.stdout.write('Enter your own US test phone as 10 digits or +1 followed by 10 digits at the hidden prompt.\n');
+    storeSecret(TO_SERVICE, 'FAMtastic Textbee fictional lab test phone');
+    const storedPhone = readSecret(TO_SERVICE);
+    if (storedPhone === null) {
+      process.stdout.write('Keychain accepted the phone, but this process cannot read it to validate. Nothing sent. Run --check from standard Mac Terminal.\n');
+      process.exitCode = 1;
+      return;
+    }
+    if (!normalizedPhone(storedPhone)) {
+      removeSecret(TO_SERVICE);
+      throw new Error('test_phone_invalid; use 10 US digits or +1 followed by 10 digits; test phone not saved');
+    }
+    process.stdout.write('Test phone saved in macOS Keychain. No message sent. Run --check.\n');
     return;
   }
 
@@ -82,24 +93,24 @@ async function main() {
     return;
   }
 
+  if (mode === '--send' && keychainMode) requireMacTerminal();
   const apiKey = keychainMode && process.platform === 'darwin' ? readSecret(KEY_SERVICE) : process.env.TEXTBEE_API_KEY;
-  const to = keychainMode && process.platform === 'darwin' ? readSecret(TO_SERVICE) : process.env.TEXTBEE_LAB_TO;
+  const to = normalizedPhone(keychainMode && process.platform === 'darwin' ? readSecret(TO_SERVICE) : process.env.TEXTBEE_LAB_TO);
   if (mode === '--check') {
     process.stdout.write(JSON.stringify({
       mode: 'fritz_only_fictional_lab',
       credential_source: keychainMode ? 'macos_keychain' : 'environment',
       key_present: Boolean(apiKey),
-      test_recipient_valid: e164(to),
+      test_recipient_valid: Boolean(to),
       device_selected: Boolean(process.env.TEXTBEE_DEVICE_ID),
-      ready: Boolean(apiKey) && e164(to) && (keychainMode || process.env.TEXTBEE_LAB_ENABLED === '1'),
+      ready: Boolean(apiKey) && Boolean(to) && (keychainMode || process.env.TEXTBEE_LAB_ENABLED === '1'),
       sent: false,
     }) + '\n');
     return;
   }
 
   if (keychainMode) {
-    requireMacTerminal();
-    if (!apiKey || !e164(to)) throw new Error('lab_not_configured; run --setup');
+    if (!apiKey || !to) throw new Error('lab_not_configured; run --setup or --set-phone');
     process.stdout.write(`One real SMS to your saved test phone ${to}:\n${MESSAGE}\n`);
     if (!await confirm('Type SEND to make one attempt: ', 'SEND')) {
       process.stdout.write('Cancelled; nothing sent.\n');
