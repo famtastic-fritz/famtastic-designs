@@ -1,0 +1,22 @@
+{
+  "checked_on": "2026-10-05",
+  "read_only": true,
+  "scope": "existing native hosted runtime aggregate only",
+  "smtp_enabled": true,
+  "exact_dispatch_lock": false,
+  "native_rows": {
+    "famtastic_email_message": 271,
+    "famtastic_consent": 3,
+    "famtastic_customer": 18,
+    "famtastic_event": 928
+  },
+  "proves": "Existing runtime access and stored configuration/counts",
+  "does_not_prove": [
+    "recipient qualification",
+    "current provider permission for unsolicited outreach",
+    "inbox delivery",
+    "live acquisition deployment",
+    "customer or owner acceptance"
+  ],
+  "dispatch": "HOLD pending research and concrete owner review"
+}

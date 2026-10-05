@@ -1,0 +1,26 @@
+{
+  "schema": "famtastic.acquisition-creative-qa.v1",
+  "tested_at": "2026-10-05T20:05:28.884Z",
+  "assertions": 281,
+  "status": "passed",
+  "qr": {
+    "encoded": "https://famtasticdesigns.com/connect",
+    "decoded": "https://famtasticdesigns.com/connect",
+    "width": 296,
+    "height": 296,
+    "display_px": 160,
+    "module_display_px": 4.324324324324325,
+    "quiet_zone_modules": 4,
+    "contrast_ratio": 21,
+    "sha256": "ed569de9c97e0b6c960c957552a43ed41fa7b1843e0e61a3216d462286516e84",
+    "decoder": "macOS Vision"
+  },
+  "limits": [
+    "Source contracts and local rendering only",
+    "Email-client inbox rendering unverified",
+    "Physical phone scan at email display size unobserved",
+    "Owner creative review pending",
+    "Component Studio import acceptance pending",
+    "Provider/sending/real cohort held"
+  ]
+}

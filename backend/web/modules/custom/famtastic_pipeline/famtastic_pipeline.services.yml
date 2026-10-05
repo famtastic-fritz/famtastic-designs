@@ -212,7 +212,7 @@ services:
 
   famtastic_pipeline.customer_portal:
     class: Drupal\famtastic_pipeline\Service\CustomerPortalService
-    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.site_studio_build_packets', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge', '@famtastic_pipeline.external_staging_review', '@famtastic_pipeline.customer_invoices']
+    arguments: ['@database', '@entity_type.manager', '@datetime.time', '@uuid', '@config.factory', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.site_studio_build_packets', '@famtastic_pipeline.attribution', '@famtastic_pipeline.public_preview_deliveries', '@?famtastic_pipeline.webform_bridge', '@famtastic_pipeline.external_staging_review', '@famtastic_pipeline.customer_invoices', '@?famtastic_pipeline.acquisition_samples']
 
   famtastic_pipeline.full_site_review:
     class: Drupal\famtastic_pipeline\Service\FullSiteReviewService
@@ -299,3 +299,23 @@ services:
   famtastic_pipeline.webform_bridge:
     class: Drupal\famtastic_pipeline\Service\WebformIntakeBridgeService
     arguments: ['@entity_type.manager', '@logger.factory']
+
+  famtastic_pipeline.acquisition_samples:
+    class: Drupal\famtastic_pipeline\Service\AcquisitionSampleService
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.operational_ledger']
+
+  famtastic_pipeline.acquisition_sample_sequences:
+    class: Drupal\famtastic_pipeline\Service\AcquisitionSampleSequenceService
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.operational_ledger', '@config.factory']
+
+  famtastic_pipeline.acquisition_report:
+    class: Drupal\famtastic_pipeline\Service\AcquisitionCampaignReportService
+    arguments: ['@database', '@entity_type.manager']
+
+  famtastic_pipeline.acquisition_sample_memory:
+    class: Drupal\famtastic_pipeline\Service\AcquisitionSampleMemoryAdapter
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.acquisition_sample_sequences']
+
+  famtastic_pipeline.acquisition_sample_exact_sender:
+    class: Drupal\famtastic_pipeline\Service\AcquisitionSampleExactAdapter
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.acquisition_sample_sequences', '@famtastic_pipeline.mailer']

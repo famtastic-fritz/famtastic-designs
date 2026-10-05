@@ -1,0 +1,212 @@
+{
+  "schema": "famtastic.acquisition-reuse-coverage.v1",
+  "checked_at": "2026-10-05T20:01:21.747840+00:00",
+  "source_workbook_sha256": "6e8b6d4c98f4d53ded458b2070ceab9ca7302598f507d2b4ae7fa5f5083133e9",
+  "candidate_rows": 1000,
+  "eligible_contacts_proven": 0,
+  "initial_candidates": 6,
+  "send_status": "HOLD for research, checks and concrete owner review",
+  "boundary": "Existing source is a reuse input, not approved acquisition proof or inclusion of a complete business suite. Drupal architecture retained; candidate Component Studio import pending. Existing customer identity/media are references only, never copied into campaign assets.",
+  "sources": {
+    "barber": {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/coastline-crown-barbers/a/index.html",
+      "exists": true,
+      "sha256": "452afc51488e45ec9681537b6ccbeefd0bd485a80a82019306ea0af1eac9fbbc",
+      "state": "existing source reference; current runtime/deployment/owner acceptance not reverified"
+    },
+    "beauty": {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/proofs/velvet-coil-atelier/c/index.html",
+      "exists": true,
+      "sha256": "1b11312f75457f81566c1ae3a1e80980154d01c2d8d943fb8dfbbf1307d86e83",
+      "state": "existing source reference; current runtime/deployment/owner acceptance not reverified"
+    },
+    "phone": {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/alex-touch-prototype-v2/owner/index.html",
+      "exists": true,
+      "sha256": "a7def876a288002faeca43d2dc794eaab27fc58173505379d8f7b81e8f9375b4",
+      "state": "existing source reference; current runtime/deployment/owner acceptance not reverified"
+    },
+    "component": {
+      "path": "/Users/famtastic-fritz/Development/FAMtastic-Repos/component-studio/components/owner-desk/manifest.json",
+      "exists": true,
+      "sha256": "9fd0f7a401246ea09de6586c64c8ff017eaa331710786c5e3d8a54a01268f262",
+      "state": "existing source reference; current runtime/deployment/owner acceptance not reverified"
+    },
+    "booking": {
+      "path": "/Users/famtastic-fritz/Development/FAMtastic-Repos/component-studio/recipes/booking-owner-desk.v1.json",
+      "exists": true,
+      "sha256": "67c1191a4d5cefef9d8b3337d4a79110a0a2c639b7d28fccad78dad0e5a09fb0",
+      "state": "existing source reference; current runtime/deployment/owner acceptance not reverified"
+    },
+    "pit": {
+      "path": "/Users/famtastic-fritz/Development/FAMtastic/sites/site-pros-in-training/REDESIGN-2026-09-23/index.html",
+      "exists": true,
+      "sha256": "582f62c6e7597f5287732d37b753b82909f8dc9c631912a9e031ccd060b644ce",
+      "state": "existing source reference; current runtime/deployment/owner acceptance not reverified"
+    },
+    "lawn": {
+      "path": "/Users/famtastic-fritz/Development/FAMtastic/sites/site-the-best-lawn-care/dist/index.html",
+      "exists": true,
+      "sha256": "de7d78f20ee99ae2d994cd7b5e88e8d667b7a2d4f4ee59d715451059f4a1678f",
+      "state": "existing source reference; current runtime/deployment/owner acceptance not reverified"
+    },
+    "dj": {
+      "path": "/Users/famtastic-fritz/Development/FAMtastic/sites/site-drop-the-beat/dist/index.html",
+      "exists": true,
+      "sha256": "84d8285f877a5700437d6c989c406eb5047a6bd708d16f692b038f9baa373343",
+      "state": "existing source reference; current runtime/deployment/owner acceptance not reverified"
+    },
+    "shoes": {
+      "path": "/Users/famtastic-fritz/Development/FAMtastic/sites/site-guys-classy-shoes/dist/index.html",
+      "exists": true,
+      "sha256": "a0eb914d33a12c336693ec2d368ee192eae1515704a4b3266b675c70533a1ba6",
+      "state": "existing source reference; current runtime/deployment/owner acceptance not reverified"
+    },
+    "foundation": {
+      "path": "frontend/public/showcase/booked-and-branded-pilot/component-system.json",
+      "exists": true,
+      "sha256": "c6b6f4da06aea50bdc3ca86cfba6935429574c9b8673f9f4d9acf8646c6f28de",
+      "state": "existing source reference; current runtime/deployment/owner acceptance not reverified"
+    }
+  },
+  "categories": [
+    {
+      "label": "Beauty, Hair Styling & Braiding",
+      "candidate_rows": 100,
+      "public_reference_ids": [
+        "barber",
+        "beauty",
+        "phone"
+      ],
+      "initial_candidate_ids": [
+        "beauty_editorial",
+        "beauty_service_first"
+      ],
+      "coverage": "Existing exact barber/beauty proof pages plus two acquisition adaptations",
+      "adaptation_needed": "Verify each service/booking/policy; no customer media or fixture prices copied.",
+      "owner_flow": "Illustrative native Sample Lab: review inquiry, draft reply, set request status, edit inquiry instructions. Source component adapter/auth/persistence and owner acceptance remain separate."
+    },
+    {
+      "label": "Mobile Detailing, Auto Care & Tinting",
+      "candidate_rows": 100,
+      "public_reference_ids": [
+        "foundation",
+        "phone"
+      ],
+      "initial_candidate_ids": [
+        "detailing_precision",
+        "detailing_route_ready"
+      ],
+      "coverage": "Two mobile-detailing candidates; shared service/request and phone owner patterns",
+      "adaptation_needed": "Auto repair and tinting remain distinct adaptations requiring actual job/intake research; mobile detailing is not mechanics.",
+      "owner_flow": "Illustrative native Sample Lab: review inquiry, draft reply, set request status, edit inquiry instructions. Source component adapter/auth/persistence and owner acceptance remain separate."
+    },
+    {
+      "label": "Fitness, Personal Training & Meal Prep",
+      "candidate_rows": 100,
+      "public_reference_ids": [
+        "foundation",
+        "component",
+        "booking"
+      ],
+      "initial_candidate_ids": [],
+      "coverage": "No category-specific public template found in this bounded catalog; existing service/request and booking UI patterns",
+      "adaptation_needed": "Training requests and consultation copy need adaptation. Meal prep needs menu/delivery/food-policy research; classes, recurring meal commerce and health outcomes are separate.",
+      "owner_flow": "Illustrative native Sample Lab: review inquiry, draft reply, set request status, edit inquiry instructions. Source component adapter/auth/persistence and owner acceptance remain separate."
+    },
+    {
+      "label": "Photography, Videography & Media",
+      "candidate_rows": 100,
+      "public_reference_ids": [
+        "pit",
+        "foundation",
+        "phone"
+      ],
+      "initial_candidate_ids": [],
+      "coverage": "Existing Story & Screen illustrated public layout as portfolio reference; generic inquiry flow",
+      "adaptation_needed": "P.I.T. is a workshop design reference, not a photographer template. Adapt rights-reviewed portfolio, brief/date/location and inquiry; no transfer of student/client media.",
+      "owner_flow": "Illustrative native Sample Lab: review inquiry, draft reply, set request status, edit inquiry instructions. Source component adapter/auth/persistence and owner acceptance remain separate."
+    },
+    {
+      "label": "Custom Baking, Catering & Private Chefs",
+      "candidate_rows": 100,
+      "public_reference_ids": [
+        "foundation",
+        "phone"
+      ],
+      "initial_candidate_ids": [
+        "baking_signature",
+        "catering_table_story"
+      ],
+      "coverage": "Two acquisition candidates; Kakes By Kesline appears in ecosystem directory but exact local source was absent",
+      "adaptation_needed": "Private-chef service/date/guest-count/kitchen requirements need verified adaptation; no ecommerce or allergen-free claim.",
+      "owner_flow": "Illustrative native Sample Lab: review inquiry, draft reply, set request status, edit inquiry instructions. Source component adapter/auth/persistence and owner acceptance remain separate."
+    },
+    {
+      "label": "Home Services, Cleaning & Maintenance",
+      "candidate_rows": 100,
+      "public_reference_ids": [
+        "lawn",
+        "foundation",
+        "phone"
+      ],
+      "initial_candidate_ids": [],
+      "coverage": "Existing exact lawn-care HTML public-page reference; generic requests/replies/status UI",
+      "adaptation_needed": "Cleaning/maintenance require service-area/job-detail adaptation. Presence of a form is not persistence, delivery, quote acceptance or approved reuse.",
+      "owner_flow": "Illustrative native Sample Lab: review inquiry, draft reply, set request status, edit inquiry instructions. Source component adapter/auth/persistence and owner acceptance remain separate."
+    },
+    {
+      "label": "Events, Party Rentals & Entertainment",
+      "candidate_rows": 100,
+      "public_reference_ids": [
+        "dj",
+        "foundation",
+        "phone"
+      ],
+      "initial_candidate_ids": [],
+      "coverage": "Existing exact mobile-DJ HTML public-page reference; generic event request UI",
+      "adaptation_needed": "Party rentals need inventory/delivery/deposit scope; entertainment needs verified services/date/event intake. No rental engine included.",
+      "owner_flow": "Illustrative native Sample Lab: review inquiry, draft reply, set request status, edit inquiry instructions. Source component adapter/auth/persistence and owner acceptance remain separate."
+    },
+    {
+      "label": "Pet Services, Grooming & Training",
+      "candidate_rows": 100,
+      "public_reference_ids": [
+        "foundation",
+        "component",
+        "booking"
+      ],
+      "initial_candidate_ids": [],
+      "coverage": "No category-specific public template found in this bounded catalog; service/request and booking UI patterns",
+      "adaptation_needed": "Adapt species/service/handling/owner-approved policies. No invented safety, vaccination or training-result claim.",
+      "owner_flow": "Illustrative native Sample Lab: review inquiry, draft reply, set request status, edit inquiry instructions. Source component adapter/auth/persistence and owner acceptance remain separate."
+    },
+    {
+      "label": "Consulting, Tutoring & Digital Creators",
+      "candidate_rows": 100,
+      "public_reference_ids": [
+        "pit",
+        "foundation",
+        "phone",
+        "booking"
+      ],
+      "initial_candidate_ids": [],
+      "coverage": "Existing workshop editorial/layout reference and shared inquiry/request workflows",
+      "adaptation_needed": "Tutoring/course/creator variants need offer-specific research. Enrollment, LMS, credentials and digital-product commerce remain separate.",
+      "owner_flow": "Illustrative native Sample Lab: review inquiry, draft reply, set request status, edit inquiry instructions. Source component adapter/auth/persistence and owner acceptance remain separate."
+    },
+    {
+      "label": "Handcrafted Products, Fashion & Boutiques",
+      "candidate_rows": 100,
+      "public_reference_ids": [
+        "shoes",
+        "foundation",
+        "phone"
+      ],
+      "initial_candidate_ids": [],
+      "coverage": "Existing exact shoe showcase HTML public-page reference; generic product/story/inquiry patterns",
+      "adaptation_needed": "Ready as a visual reference, not an approved boutique store. Verified catalog/media, inventory/payment/shipping need separate commerce scope.",
+      "owner_flow": "Illustrative native Sample Lab: review inquiry, draft reply, set request status, edit inquiry instructions. Source component adapter/auth/persistence and owner acceptance remain separate."
+    }
+  ]
+}

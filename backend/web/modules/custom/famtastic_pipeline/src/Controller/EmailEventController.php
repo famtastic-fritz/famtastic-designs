@@ -45,6 +45,14 @@ final class EmailEventController extends ControllerBase {
     if (!$prospect) {
       return new JsonResponse(['ok' => FALSE, 'error' => 'invalid_tracking_link'], 404);
     }
+    $sample = \Drupal::hasService('famtastic_pipeline.acquisition_sample_sequences')
+      ? \Drupal::service('famtastic_pipeline.acquisition_sample_sequences')->clickDestination($tracking_key)
+      : ['is_sample' => FALSE, 'destination' => NULL];
+    if ($sample['is_sample']) {
+      return $sample['destination'] === NULL
+        ? new JsonResponse(['ok' => FALSE, 'error' => 'invalid_sample_destination'], 404, ['Cache-Control' => 'no-store, private'])
+        : new TrustedRedirectResponse($sample['destination'], 302, ['Cache-Control' => 'no-store, private', 'Referrer-Policy' => 'no-referrer']);
+    }
     $cold = $this->messages->resolveVerifiedColdClick($tracking_key);
     if ($cold['is_verified_cold']) {
       if ($cold['destination'] === NULL) {
@@ -114,7 +122,8 @@ final class EmailEventController extends ControllerBase {
       ], 400, ['Cache-Control' => 'no-store, private']);
     }
 
-    $ok = $this->messages->unsubscribeVerifiedCold($unsubscribe_key);
+    $ok = $this->messages->unsubscribeVerifiedCold($unsubscribe_key)
+      || (\Drupal::hasService('famtastic_pipeline.acquisition_sample_sequences') && \Drupal::service('famtastic_pipeline.acquisition_sample_sequences')->unsubscribe($unsubscribe_key));
     if (!$ok) {
       return new JsonResponse([
         'ok' => FALSE,

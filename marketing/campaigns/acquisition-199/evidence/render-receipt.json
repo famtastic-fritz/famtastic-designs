@@ -1,0 +1,28 @@
+{
+  "schema": "famtastic.acquisition-creative-receipt.v1",
+  "started_at": "2026-10-05T20:02:16.474Z",
+  "completed_at": "2026-10-05T20:02:16.682Z",
+  "duration_ms": 208,
+  "tools": [
+    "Node.js",
+    "existing qrcode-generator 1.4.4",
+    "Pillow",
+    "existing BrandedEmail"
+  ],
+  "provider_calls": 0,
+  "new_provider_spend_usd": 0,
+  "existing_subscription_cost": "not measured",
+  "model_identity": "not_disclosed_by_runtime",
+  "review_state": "candidate",
+  "source_revision": "eef442be41006188f4ed72ae5657bebcc4a9baac",
+  "samples": 6,
+  "messages": 9,
+  "sample_image_count_per_email": {
+    "day0": 2,
+    "day3": 0,
+    "day7": 0
+  },
+  "qr_url": "https://famtasticdesigns.com/connect",
+  "qr_encoder_source": "frontend/public/showcase/thirst-trap-772/v2/vendor/qrcode-generator-1.4.4.js",
+  "asset_strategy": "Original native HTML/CSS/SVG illustrations, exact owner PNG, local card QR. No customer photos or generated plates."
+}

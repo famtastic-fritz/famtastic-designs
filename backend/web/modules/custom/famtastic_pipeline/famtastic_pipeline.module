@@ -147,6 +147,7 @@ function famtastic_pipeline_user_insert(UserInterface $account): void {
     // mistaking its inherited prospect discovery notes for a submitted
     // customer request before that customer proves control of the email.
     $isPublicPreviewRegistration = $portal->hasPendingPublicPreviewRegistration((string) $account->getEmail());
+    $isSampleRegistration = \Drupal::hasService('famtastic_pipeline.acquisition_samples') && \Drupal::service('famtastic_pipeline.acquisition_samples')->hasRegistration((string) $account->getEmail());
     $customer = $portal->customerForUid((int) $account->id());
     if (!$customer) {
       $customer = $portal->createCustomer($account, [
@@ -163,7 +164,7 @@ function famtastic_pipeline_user_insert(UserInterface $account): void {
     // Preserve the historical convenience for ordinary registrations only.
     // Public-preview claims happen after email verification and the customer
     // then explicitly creates their detailed portal request.
-    if (!$isPublicPreviewRegistration && !empty($customer['prospect_id']) && !empty($customer['id'])) {
+    if (!$isPublicPreviewRegistration && !$isSampleRegistration && !empty($customer['prospect_id']) && !empty($customer['id'])) {
       $organizations = $portal->organizations((int) $customer['id']);
       if ($organizations) {
         $portal->createWebsiteRequestFromProspectDiscovery(

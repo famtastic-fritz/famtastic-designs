@@ -1,0 +1,1010 @@
+{
+  "schema": "famtastic.acquisition-creative-browser-qa.v1",
+  "captured_at": "2026-10-05T19:36:37.500Z",
+  "browser": "Codex in-app browser via CUA",
+  "base_url": "http://127.0.0.1:5200",
+  "environment": "local_static_review",
+  "rows": [
+    {
+      "id": "beauty_editorial",
+      "kind": "shared_preview_desktop",
+      "bodyWidth": 1265,
+      "h1": "Your style.\nYour signature.",
+      "height": 900,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Request an appointment"
+        }
+      ],
+      "scriptCount": 0,
+      "scrollWidth": 1265,
+      "title": "Your hair business · The Signature Edit — illustrative sample",
+      "width": 1280
+    },
+    {
+      "id": "beauty_service_first",
+      "kind": "shared_preview_desktop",
+      "bodyWidth": 1265,
+      "h1": "Good hair starts\nwith a clear plan.",
+      "height": 900,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Find my service"
+        }
+      ],
+      "scriptCount": 0,
+      "scrollWidth": 1265,
+      "title": "Your hair business · The Service Studio — illustrative sample",
+      "width": 1280
+    },
+    {
+      "id": "detailing_precision",
+      "kind": "shared_preview_desktop",
+      "bodyWidth": 1265,
+      "h1": "DETAIL IN EVERY\nDIRECTION.",
+      "height": 900,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Request a detail"
+        }
+      ],
+      "scriptCount": 0,
+      "scrollWidth": 1265,
+      "title": "Your detailing business · Precision in Motion — illustrative sample",
+      "width": 1280
+    },
+    {
+      "id": "detailing_route_ready",
+      "kind": "shared_preview_desktop",
+      "bodyWidth": 1265,
+      "h1": "Clean car.\nClear next step.",
+      "height": 900,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Check my location"
+        }
+      ],
+      "scriptCount": 0,
+      "scrollWidth": 1265,
+      "title": "Your detailing business · Route Ready — illustrative sample",
+      "width": 1280
+    },
+    {
+      "id": "baking_signature",
+      "kind": "shared_preview_desktop",
+      "bodyWidth": 1265,
+      "h1": "Made for\nyour moment.",
+      "height": 900,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Ask about my date"
+        }
+      ],
+      "scriptCount": 0,
+      "scrollWidth": 1265,
+      "title": "Your baking & catering · The Signature Bake — illustrative sample",
+      "width": 1280
+    },
+    {
+      "id": "catering_table_story",
+      "kind": "shared_preview_desktop",
+      "bodyWidth": 1265,
+      "h1": "A gathering\nworth sharing.",
+      "height": 900,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Plan my gathering"
+        }
+      ],
+      "scriptCount": 0,
+      "scrollWidth": 1265,
+      "title": "Your baking & catering · The Table Story — illustrative sample",
+      "width": 1280
+    },
+    {
+      "id": "beauty_editorial",
+      "kind": "personalized_fixture_mobile",
+      "bodyWidth": 375,
+      "h1": "Your style.\nYour signature.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Request an appointment",
+          "width": 330
+        }
+      ],
+      "scripts": 0,
+      "scrollWidth": 375,
+      "title": "Juniper Hair Studio · The Signature Edit — illustrative sample",
+      "width": 390
+    },
+    {
+      "id": "beauty_service_first",
+      "kind": "personalized_fixture_mobile",
+      "bodyWidth": 375,
+      "h1": "Good hair starts\nwith a clear plan.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Find my service",
+          "width": 330
+        }
+      ],
+      "scripts": 0,
+      "scrollWidth": 375,
+      "title": "Juniper Hair Studio · The Service Studio — illustrative sample",
+      "width": 390
+    },
+    {
+      "id": "detailing_precision",
+      "kind": "personalized_fixture_mobile",
+      "bodyWidth": 375,
+      "h1": "DETAIL IN EVERY\nDIRECTION.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Request a detail",
+          "width": 330
+        }
+      ],
+      "scripts": 0,
+      "scrollWidth": 375,
+      "title": "Juniper Mobile Detail · Precision in Motion — illustrative sample",
+      "width": 390
+    },
+    {
+      "id": "detailing_route_ready",
+      "kind": "personalized_fixture_mobile",
+      "bodyWidth": 375,
+      "h1": "Clean car.\nClear next step.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Check my location",
+          "width": 330
+        }
+      ],
+      "scripts": 0,
+      "scrollWidth": 375,
+      "title": "Juniper Mobile Detail · Route Ready — illustrative sample",
+      "width": 390
+    },
+    {
+      "id": "baking_signature",
+      "kind": "personalized_fixture_mobile",
+      "bodyWidth": 375,
+      "h1": "Made for\nyour moment.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Ask about my date",
+          "width": 330
+        }
+      ],
+      "scripts": 0,
+      "scrollWidth": 375,
+      "title": "Juniper Bakes & Table · The Signature Bake — illustrative sample",
+      "width": 390
+    },
+    {
+      "id": "catering_table_story",
+      "kind": "personalized_fixture_mobile",
+      "bodyWidth": 375,
+      "h1": "A gathering\nworth sharing.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png"
+        }
+      ],
+      "primary": [
+        {
+          "height": 59.1875,
+          "text": "Plan my gathering",
+          "width": 330
+        }
+      ],
+      "scripts": 0,
+      "scrollWidth": 375,
+      "title": "Juniper Bakes & Table · The Table Story — illustrative sample",
+      "width": 390
+    },
+    {
+      "id": "beauty_hair_d0",
+      "kind": "email_mobile",
+      "bodyWidth": 375,
+      "card": [
+        {
+          "height": 64,
+          "href": "https://famtasticdesigns.com/connect"
+        }
+      ],
+      "h1": "Your work has a signature.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 260
+        },
+        {
+          "loaded": true,
+          "src": "../assets/beauty_editorial-preview.jpg",
+          "width": 309
+        },
+        {
+          "loaded": true,
+          "src": "../assets/beauty_service_first-preview.jpg",
+          "width": 309
+        },
+        {
+          "loaded": true,
+          "src": "../assets/connect-qr.png",
+          "width": 160
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 130
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 235
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 180
+        }
+      ],
+      "primary": [
+        {
+          "height": 58,
+          "text": "See your two directions",
+          "width": 188.65625
+        }
+      ],
+      "scrollWidth": 375,
+      "signature": true,
+      "title": "Two website directions for your hair business",
+      "width": 390
+    },
+    {
+      "id": "beauty_hair_d3",
+      "kind": "email_mobile",
+      "bodyWidth": 375,
+      "card": [
+        {
+          "height": 64,
+          "href": "https://famtasticdesigns.com/connect"
+        }
+      ],
+      "h1": "Make the next step easy to understand.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 260
+        },
+        {
+          "loaded": true,
+          "src": "../assets/connect-qr.png",
+          "width": 160
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 130
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 235
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 180
+        }
+      ],
+      "primary": [
+        {
+          "height": 58,
+          "text": "Try the two phone paths",
+          "width": 191.515625
+        }
+      ],
+      "scrollWidth": 375,
+      "signature": true,
+      "title": "From “I love this style” to a clear booking path",
+      "width": 390
+    },
+    {
+      "id": "beauty_hair_d7",
+      "kind": "email_mobile",
+      "bodyWidth": 375,
+      "card": [
+        {
+          "height": 64,
+          "href": "https://famtasticdesigns.com/connect"
+        }
+      ],
+      "h1": "Make a clear start.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 260
+        },
+        {
+          "loaded": true,
+          "src": "../assets/connect-qr.png",
+          "width": 160
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 130
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 235
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 180
+        }
+      ],
+      "primary": [
+        {
+          "height": 58,
+          "text": "Make this mine — $199",
+          "width": 184.34375
+        }
+      ],
+      "scrollWidth": 375,
+      "signature": true,
+      "title": "A focused start for your hair business — $199",
+      "width": 390
+    },
+    {
+      "id": "mobile_detailing_d0",
+      "kind": "email_mobile",
+      "bodyWidth": 375,
+      "card": [
+        {
+          "height": 64,
+          "href": "https://famtasticdesigns.com/connect"
+        }
+      ],
+      "h1": "Show the finish. Explain the next step.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 260
+        },
+        {
+          "loaded": true,
+          "src": "../assets/detailing_precision-preview.jpg",
+          "width": 309
+        },
+        {
+          "loaded": true,
+          "src": "../assets/detailing_route_ready-preview.jpg",
+          "width": 309
+        },
+        {
+          "loaded": true,
+          "src": "../assets/connect-qr.png",
+          "width": 160
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 130
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 235
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 180
+        }
+      ],
+      "primary": [
+        {
+          "height": 58,
+          "text": "See your two directions",
+          "width": 188.65625
+        }
+      ],
+      "scrollWidth": 375,
+      "signature": true,
+      "title": "Two directions for your mobile detailing website",
+      "width": 390
+    },
+    {
+      "id": "mobile_detailing_d3",
+      "kind": "email_mobile",
+      "bodyWidth": 375,
+      "card": [
+        {
+          "height": 64,
+          "href": "https://famtasticdesigns.com/connect"
+        }
+      ],
+      "h1": "Start with the right information.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 260
+        },
+        {
+          "loaded": true,
+          "src": "../assets/connect-qr.png",
+          "width": 160
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 130
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 235
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 180
+        }
+      ],
+      "primary": [
+        {
+          "height": 58,
+          "text": "Compare the request paths",
+          "width": 210.328125
+        }
+      ],
+      "scrollWidth": 375,
+      "signature": true,
+      "title": "A detailing request with the useful details",
+      "width": 390
+    },
+    {
+      "id": "mobile_detailing_d7",
+      "kind": "email_mobile",
+      "bodyWidth": 375,
+      "card": [
+        {
+          "height": 64,
+          "href": "https://famtasticdesigns.com/connect"
+        }
+      ],
+      "h1": "A website that fits the way you work.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 260
+        },
+        {
+          "loaded": true,
+          "src": "../assets/connect-qr.png",
+          "width": 160
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 130
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 235
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 180
+        }
+      ],
+      "primary": [
+        {
+          "height": 58,
+          "text": "Make this mine — $199",
+          "width": 184.34375
+        }
+      ],
+      "scrollWidth": 375,
+      "signature": true,
+      "title": "Your focused detailing website starts at $199",
+      "width": 390
+    },
+    {
+      "id": "baking_catering_d0",
+      "kind": "email_mobile",
+      "bodyWidth": 375,
+      "card": [
+        {
+          "height": 64,
+          "href": "https://famtasticdesigns.com/connect"
+        }
+      ],
+      "h1": "Make room for the occasion.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 260
+        },
+        {
+          "loaded": true,
+          "src": "../assets/baking_signature-preview.jpg",
+          "width": 309
+        },
+        {
+          "loaded": true,
+          "src": "../assets/catering_table_story-preview.jpg",
+          "width": 309
+        },
+        {
+          "loaded": true,
+          "src": "../assets/connect-qr.png",
+          "width": 160
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 130
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 235
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 180
+        }
+      ],
+      "primary": [
+        {
+          "height": 58,
+          "text": "See your two directions",
+          "width": 188.65625
+        }
+      ],
+      "scrollWidth": 375,
+      "signature": true,
+      "title": "Two website directions for your baking or catering",
+      "width": 390
+    },
+    {
+      "id": "baking_catering_d3",
+      "kind": "email_mobile",
+      "bodyWidth": 375,
+      "card": [
+        {
+          "height": 64,
+          "href": "https://famtasticdesigns.com/connect"
+        }
+      ],
+      "h1": "Let the occasion lead the conversation.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 260
+        },
+        {
+          "loaded": true,
+          "src": "../assets/connect-qr.png",
+          "width": 160
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 130
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 235
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 180
+        }
+      ],
+      "primary": [
+        {
+          "height": 58,
+          "text": "Explore the inquiry paths",
+          "width": 198.03125
+        }
+      ],
+      "scrollWidth": 375,
+      "signature": true,
+      "title": "Date, guest count, idea — a clearer first inquiry",
+      "width": 390
+    },
+    {
+      "id": "baking_catering_d7",
+      "kind": "email_mobile",
+      "bodyWidth": 375,
+      "card": [
+        {
+          "height": 64,
+          "href": "https://famtasticdesigns.com/connect"
+        }
+      ],
+      "h1": "A clear home for your next gathering.",
+      "height": 844,
+      "images": [
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 260
+        },
+        {
+          "loaded": true,
+          "src": "../assets/connect-qr.png",
+          "width": 160
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 130
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 235
+        },
+        {
+          "loaded": true,
+          "src": "../assets/famtastic-designs-logo-v1.png",
+          "width": 180
+        }
+      ],
+      "primary": [
+        {
+          "height": 58,
+          "text": "Make this mine — $199",
+          "width": 184.34375
+        }
+      ],
+      "scrollWidth": 375,
+      "signature": true,
+      "title": "A focused baking or catering website — $199",
+      "width": 390
+    },
+    {
+      "id": "beauty_hair_d0",
+      "kind": "email_images_blocked_mobile",
+      "cardFallback": true,
+      "commercialFallback": true,
+      "heading": "Your work has a signature.",
+      "height": 844,
+      "imageCount": 0,
+      "primary": "See your two directions",
+      "scrollWidth": 375,
+      "title": "Two website directions for your hair business",
+      "width": 390
+    },
+    {
+      "id": "beauty_hair_d3",
+      "kind": "email_images_blocked_mobile",
+      "cardFallback": true,
+      "commercialFallback": true,
+      "heading": "Make the next step easy to understand.",
+      "height": 844,
+      "imageCount": 0,
+      "primary": "Try the two phone paths",
+      "scrollWidth": 375,
+      "title": "From “I love this style” to a clear booking path",
+      "width": 390
+    },
+    {
+      "id": "beauty_hair_d7",
+      "kind": "email_images_blocked_mobile",
+      "cardFallback": true,
+      "commercialFallback": true,
+      "heading": "Make a clear start.",
+      "height": 844,
+      "imageCount": 0,
+      "primary": "Make this mine — $199",
+      "scrollWidth": 375,
+      "title": "A focused start for your hair business — $199",
+      "width": 390
+    },
+    {
+      "id": "mobile_detailing_d0",
+      "kind": "email_images_blocked_mobile",
+      "cardFallback": true,
+      "commercialFallback": true,
+      "heading": "Show the finish. Explain the next step.",
+      "height": 844,
+      "imageCount": 0,
+      "primary": "See your two directions",
+      "scrollWidth": 375,
+      "title": "Two directions for your mobile detailing website",
+      "width": 390
+    },
+    {
+      "id": "mobile_detailing_d3",
+      "kind": "email_images_blocked_mobile",
+      "cardFallback": true,
+      "commercialFallback": true,
+      "heading": "Start with the right information.",
+      "height": 844,
+      "imageCount": 0,
+      "primary": "Compare the request paths",
+      "scrollWidth": 375,
+      "title": "A detailing request with the useful details",
+      "width": 390
+    },
+    {
+      "id": "mobile_detailing_d7",
+      "kind": "email_images_blocked_mobile",
+      "cardFallback": true,
+      "commercialFallback": true,
+      "heading": "A website that fits the way you work.",
+      "height": 844,
+      "imageCount": 0,
+      "primary": "Make this mine — $199",
+      "scrollWidth": 375,
+      "title": "Your focused detailing website starts at $199",
+      "width": 390
+    },
+    {
+      "id": "baking_catering_d0",
+      "kind": "email_images_blocked_mobile",
+      "cardFallback": true,
+      "commercialFallback": true,
+      "heading": "Make room for the occasion.",
+      "height": 844,
+      "imageCount": 0,
+      "primary": "See your two directions",
+      "scrollWidth": 375,
+      "title": "Two website directions for your baking or catering",
+      "width": 390
+    },
+    {
+      "id": "baking_catering_d3",
+      "kind": "email_images_blocked_mobile",
+      "cardFallback": true,
+      "commercialFallback": true,
+      "heading": "Let the occasion lead the conversation.",
+      "height": 844,
+      "imageCount": 0,
+      "primary": "Explore the inquiry paths",
+      "scrollWidth": 375,
+      "title": "Date, guest count, idea — a clearer first inquiry",
+      "width": 390
+    },
+    {
+      "id": "baking_catering_d7",
+      "kind": "email_images_blocked_mobile",
+      "cardFallback": true,
+      "commercialFallback": true,
+      "heading": "A clear home for your next gathering.",
+      "height": 844,
+      "imageCount": 0,
+      "primary": "Make this mine — $199",
+      "scrollWidth": 375,
+      "title": "A focused baking or catering website — $199",
+      "width": 390
+    },
+    {
+      "id": "beauty_hair_d0",
+      "kind": "email_desktop",
+      "allImagesLoaded": true,
+      "height": 900,
+      "primaryHeight": 58,
+      "qrWidth": 160,
+      "scrollWidth": 1265,
+      "shellWidth": 620,
+      "title": "Two website directions for your hair business",
+      "width": 1280
+    },
+    {
+      "id": "beauty_hair_d3",
+      "kind": "email_desktop",
+      "allImagesLoaded": true,
+      "height": 900,
+      "primaryHeight": 58,
+      "qrWidth": 160,
+      "scrollWidth": 1265,
+      "shellWidth": 620,
+      "title": "From “I love this style” to a clear booking path",
+      "width": 1280
+    },
+    {
+      "id": "beauty_hair_d7",
+      "kind": "email_desktop",
+      "allImagesLoaded": true,
+      "height": 900,
+      "primaryHeight": 58,
+      "qrWidth": 160,
+      "scrollWidth": 1265,
+      "shellWidth": 620,
+      "title": "A focused start for your hair business — $199",
+      "width": 1280
+    },
+    {
+      "id": "mobile_detailing_d0",
+      "kind": "email_desktop",
+      "allImagesLoaded": true,
+      "height": 900,
+      "primaryHeight": 58,
+      "qrWidth": 160,
+      "scrollWidth": 1265,
+      "shellWidth": 620,
+      "title": "Two directions for your mobile detailing website",
+      "width": 1280
+    },
+    {
+      "id": "mobile_detailing_d3",
+      "kind": "email_desktop",
+      "allImagesLoaded": true,
+      "height": 900,
+      "primaryHeight": 58,
+      "qrWidth": 160,
+      "scrollWidth": 1265,
+      "shellWidth": 620,
+      "title": "A detailing request with the useful details",
+      "width": 1280
+    },
+    {
+      "id": "mobile_detailing_d7",
+      "kind": "email_desktop",
+      "allImagesLoaded": true,
+      "height": 900,
+      "primaryHeight": 58,
+      "qrWidth": 160,
+      "scrollWidth": 1265,
+      "shellWidth": 620,
+      "title": "Your focused detailing website starts at $199",
+      "width": 1280
+    },
+    {
+      "id": "baking_catering_d0",
+      "kind": "email_desktop",
+      "allImagesLoaded": true,
+      "height": 900,
+      "primaryHeight": 58,
+      "qrWidth": 160,
+      "scrollWidth": 1265,
+      "shellWidth": 620,
+      "title": "Two website directions for your baking or catering",
+      "width": 1280
+    },
+    {
+      "id": "baking_catering_d3",
+      "kind": "email_desktop",
+      "allImagesLoaded": true,
+      "height": 900,
+      "primaryHeight": 58,
+      "qrWidth": 160,
+      "scrollWidth": 1265,
+      "shellWidth": 620,
+      "title": "Date, guest count, idea — a clearer first inquiry",
+      "width": 1280
+    },
+    {
+      "id": "baking_catering_d7",
+      "kind": "email_desktop",
+      "allImagesLoaded": true,
+      "height": 900,
+      "primaryHeight": 58,
+      "qrWidth": 160,
+      "scrollWidth": 1265,
+      "shellWidth": 620,
+      "title": "A focused baking or catering website — $199",
+      "width": 1280
+    }
+  ],
+  "limits": [
+    "Gmail/Outlook/Apple Mail actual inbox rendering unverified",
+    "No customer dispatch or provider acceptance",
+    "Fictional Juniper review bindings only; shared stills generic non-PII"
+  ]
+}

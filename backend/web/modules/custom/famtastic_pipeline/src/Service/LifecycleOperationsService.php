@@ -272,6 +272,9 @@ final class LifecycleOperationsService {
       'subject' => $subject, 'body' => $body, 'attachment_manifest' => json_encode($attachments, JSON_THROW_ON_ERROR),
       'status' => $status, 'rejection_reason' => $reason, 'received_at' => (int) ($message['received_at'] ?? $now), 'created' => $now,
     ])->execute();
+    // Conservative stop even when an incoming reply needs manual correlation.
+    AcquisitionSampleSequenceService::recordReply($this->database, hash('sha256', $sender), 'inbound:' . $hash, FALSE, $now);
+    AcquisitionSampleSequenceService::stopContact($this->database, hash('sha256', $sender), 'incoming_reply_review', $now);
     if ($status === 'matched') {
       $this->database->insert('famtastic_portal_message')->fields([
         'thread_id' => $thread['id'], 'author_type' => 'customer', 'body' => $body, 'created' => $now,

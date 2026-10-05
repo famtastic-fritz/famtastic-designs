@@ -206,6 +206,8 @@ final class ClientMessagingService {
         'thread_id' => (int) $thread['id'], 'author_uid' => $actor['uid'], 'author_type' => $actor['is_staff'] ? 'staff' : 'customer',
         'body' => $body, 'client_key' => $key, 'created' => $now,
       ])->execute();
+      if (!$actor['is_staff']) AcquisitionSampleSequenceService::recordReply($this->database, hash('sha256', mb_strtolower(trim((string) $contact['email']))), 'portal:' . $messageId, TRUE, $now);
+      if (!$actor['is_staff']) AcquisitionSampleSequenceService::stopContact($this->database, hash('sha256', mb_strtolower(trim((string) $contact['email']))), 'human_reply', $now);
       $notificationKey = 'client-message:' . $messageId . ($actor['is_staff'] ? ':customer' : ':owner');
       $base = rtrim((string) ($this->config->get('famtastic_pipeline.settings')->get('frontend_base_url') ?: 'https://famtasticdesigns.com'), '/');
       $recipient = $actor['is_staff'] ? $contact['email'] : (string) ($this->config->get('famtastic_pipeline.settings')->get('notification_to_email') ?: 'hello@famtasticdesigns.com');

@@ -30,7 +30,7 @@ function famtastic_pipeline_update_8001(&$sandbox) {
  * Implements hook_schema().
  */
 function famtastic_pipeline_schema(): array {
-  return \Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema::tables() + _famtastic_pipeline_automation_schema() + _famtastic_pipeline_customer_invoice_schema() + [
+  return \Drupal\famtastic_pipeline\Service\AcquisitionSampleSchema::tables() + \Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema::tables() + _famtastic_pipeline_automation_schema() + _famtastic_pipeline_customer_invoice_schema() + [
     'famtastic_proof_version' => _famtastic_pipeline_proof_version_schema(),
     'famtastic_website_proof_research_snapshot' => _famtastic_pipeline_website_proof_research_snapshot_schema(),
     'famtastic_booking_site_owner' => _famtastic_pipeline_booking_site_owner_schema(),
@@ -3443,4 +3443,19 @@ function _famtastic_pipeline_social_record_campaign_map(): array {
   }
 
   return $map;
+}
+
+/** Adds reviewed Sample Lab storage; activates no sends or public invitations. */
+function famtastic_pipeline_update_8067(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  foreach (\Drupal\famtastic_pipeline\Service\AcquisitionSampleSchema::tables() as $table => $definition) {
+    if (!$schema->tableExists($table)) $schema->createTable($table, $definition);
+    foreach ($definition['fields'] as $field => $fieldDefinition) {
+      if (!$schema->fieldExists($table, $field)) throw new \RuntimeException('Acquisition schema is partial; review the missing field before completing update: ' . $table . '.' . $field);
+    }
+    foreach (array_keys(($definition['unique keys'] ?? []) + ($definition['indexes'] ?? [])) as $index) {
+      if (!$schema->indexExists($table, $index)) throw new \RuntimeException('Acquisition schema is partial; review the missing identity/index before completing update: ' . $table . '.' . $index);
+    }
+  }
+  return t('Installed acquisition sample invitations and held native sequences. No provider or dispatch was activated.');
 }

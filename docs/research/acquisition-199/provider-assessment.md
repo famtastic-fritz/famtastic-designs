@@ -1,0 +1,19 @@
+# Sender candidate assessment — October 5, 2026
+
+Status: candidate, source compatibility assessment. No account purchase, domain purchase, paid verifier, warmup subscription, DNS mutation or customer send occurred. Exact selected sender/cohort/content/provider approval remains open.
+
+Mailforge permits lawful B2B outreach where allowed by applicable law, requires verified recipient addresses, clear sender identity and unsubscribe handling, and leaves collection/use eligibility with the sender. The workbook is not that evidence. See [terms §3.4](https://www.mailforge.ai/terms). Recipient jurisdiction, contact ownership and historical suppression remain row-level gates.
+
+The [published pricing](https://www.mailforge.ai/pricing) shows $3/month per mailbox slot, at least ten billed slots, $14/year .com domains, and optional SSL/domain masking at $2/domain/month. Its calculator has yearly billing figures alongside FAQ discount wording; a binding annual quote was not obtained. Use monthly arithmetic for this assessment and request the exact checkout quote before any purchase. Taxes, warmup, verification and any separate sending subscription remain unknown.
+
+Our scenario: ten billed slots and at most three mailboxes/domain require four domains. Mailboxes cost $30/month; domains cost $56/year. First monthly mailbox charge plus domain year is $86; twelve monthly charges plus domains total $416. Optional masking would add $8/month, yielding $94 initially and $512 across twelve months. Neither optional masking nor a sequencer is assumed required. These figures are reproducible with `python3 scripts/acquisition-provider-assessment.py`; they are estimates, not a purchased quote.
+
+The provider's [API documentation](https://help.salesforge.ai/en/articles/10333644-how-to-use-the-mailforge-api) describes infrastructure management; it does not send campaigns, schedule sequences or manage replies. SMTP/IMAP credentials exist in the mailbox path. Reuse native PHPMailer and sequence services if controlled account-specific compatibility is proved; do not invent a Mailforge campaign webhook. No credentials were fetched. [Server migration guidance](https://help.salesforge.ai/en/articles/10333569-mailforge-new-server) makes hostname account-specific, so no guessed host is installed.
+
+Native source already has PHPMailer SMTP, deterministic local capture, exact message keys, signed FAMtastic event endpoints, suppression, and inbound Maildir ingestion. Local synthetic acceptance demonstrates source behavior only. Mailforge authentication, DNS, reply forwarding/IMAP, provider event receipt, recipient delivery/inbox placement and permitted use of current cPanel SMTP for this cohort remain unproved. Keep existing native routes intact and isolated from any new sender configuration.
+
+Mailforge's pricing guidance suggests 30 sends/mailbox/day, maximum 100; these are vendor guidance, not observed FAMtastic capacity. Its [stack guidance](https://help.salesforge.ai/en/articles/10333634-how-the-forge-stack-works-end-to-end) recommends at least two weeks of warming new mailboxes. A campaign implementation estimate is not a first-send date.
+
+The initial 150 businesses need at most 450 messages before exits. A future 200–300 total sends/day over five weekdays means 1,000–1,500 total messages, including followups and other mail. At three touches this accommodates at most 333–500 new businesses/week before other-mail deductions, not 1,000 new businesses/week. Native safety stops and warmup/capacity observations govern any later expansion.
+
+First-send held items: genuine row qualification and address validation; suppression/reply/purchase reconciliation; actual sender/provider account approval and exact quote; sender authentication and controlled forwarding/IMAP proof; exact content/cohort release approval; production deployment and controlled hosted verification. No source-level test closes those gates.

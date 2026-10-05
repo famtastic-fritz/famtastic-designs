@@ -1,0 +1,728 @@
+{
+  "schema": "famtastic.acquisition-email-drafts.v1",
+  "campaign_id": "acquisition-199",
+  "version": 1,
+  "sequence": {
+    "days": [
+      0,
+      3,
+      7
+    ],
+    "status": "proposed_not_scheduled",
+    "trigger": "approved eligible cohort; exact sending approval required",
+    "exit": "Stop immediately on human reply, purchase, opt-out, complaint or hard bounce"
+  },
+  "messages": [
+    {
+      "id": "beauty_hair_d0",
+      "campaign_id": "acquisition-199",
+      "content_id": "acquisition-199:beauty_hair_d0:v1",
+      "version": 1,
+      "niche": "beauty_hair",
+      "day": 0,
+      "message_kind": "acquisition_sample_invitation",
+      "review_status": "draft",
+      "subject": "Two website directions for your hair business",
+      "preview": "Compare two looks and try an owner workflow: read an inquiry, plan your reply and keep details current from a phone.",
+      "headline": "Your craft. Your phone. Your next move.",
+      "paragraphs": [
+        "Your business needs a clear front door and a practical owner workflow between appointments. Compare two shared directions: The Signature Edit and The Service Studio, then try the phone Owner view.",
+        "One leads with your signature; the other leads with services. In the illustrative Owner view, open an example inquiry, plan a reply, update its status and edit the instructions customers read before contacting you. Practice changes stay in the demo.",
+        "These are illustrative shared samples, not completed designs for your business. Your real offers, policies, photos and booking link would follow your interview and review."
+      ],
+      "greeting_binding": "verified_recipient_name_or_verified_business_name",
+      "greeting_fallback": "Hello,",
+      "forbidden_greeting_source": "email_localpart",
+      "business_binding": "business_name",
+      "cta_label": "See your two directions",
+      "cta_binding": "invitation_url",
+      "signature": "Shay-Shay",
+      "identity": "Shay-Shay · FAMtastic Designs assistant",
+      "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+      "journey": "See two illustrative designs and try the phone Owner view: open an example inquiry, draft a reply, update its status and edit inquiry instructions. Practice changes stay in the demo. Register and complete your interview to confirm the daily work your website needs. Three customer-specific reviewed directions and approved staging follow before purchase and launch; your private mobile Owner Desk is provisioned after verified purchase within the agreed scope.",
+      "secondary": {
+        "card_url": "https://famtasticdesigns.com/connect",
+        "commercial_url": "https://famtasticdesigns.com/connect/commercial.mp4",
+        "qr_path": "assets/connect-qr.png"
+      },
+      "sample_image_count": 2,
+      "send_policy": {
+        "approved": false,
+        "stop_on": [
+          "human_reply",
+          "purchase",
+          "opt_out",
+          "complaint",
+          "hard_bounce"
+        ],
+        "require": [
+          "verified_eligible_recipient",
+          "exact_content_approval",
+          "exact_cohort_approval",
+          "provider_auth_and_suppression_proof",
+          "bound_invitation_url",
+          "bound_unsubscribe_url",
+          "hosted_qr_asset"
+        ]
+      },
+      "research_observation_binding": {
+        "optional": true,
+        "default": null,
+        "required_fields": [
+          "text",
+          "source_url",
+          "checked_at",
+          "classification",
+          "owner_approved"
+        ],
+        "allowed_classification": "verified_public_fact",
+        "render_only_when_owner_approved": true,
+        "forbidden": [
+          "invented_owner_name",
+          "lost_revenue_inference",
+          "absence_of_branded_email_inference",
+          "unverified_competitor_claim"
+        ],
+        "transport_owner": "native AcquisitionSampleEmail compiler"
+      },
+      "sample_previews": [
+        {
+          "recipe_id": "beauty_editorial",
+          "path": "assets/beauty_editorial-preview.jpg",
+          "alt": "The Signature Edit: illustrative shared candidate direction for Beauty & hair",
+          "link_binding": "invitation_url",
+          "rights": "Locally captured original HTML/CSS/SVG; generic non-PII business labels"
+        },
+        {
+          "recipe_id": "beauty_service_first",
+          "path": "assets/beauty_service_first-preview.jpg",
+          "alt": "The Service Studio: illustrative shared candidate direction for Beauty & hair",
+          "link_binding": "invitation_url",
+          "rights": "Locally captured original HTML/CSS/SVG; generic non-PII business labels"
+        }
+      ]
+    },
+    {
+      "id": "beauty_hair_d3",
+      "campaign_id": "acquisition-199",
+      "content_id": "acquisition-199:beauty_hair_d3:v1",
+      "version": 1,
+      "niche": "beauty_hair",
+      "day": 3,
+      "message_kind": "acquisition_sample_invitation",
+      "review_status": "draft",
+      "subject": "From “I love this style” to a clear booking path",
+      "preview": "Between appointments: read the inquiry, draft your reply, update its status and practice keeping website details current.",
+      "headline": "Work the next inquiry from your phone.",
+      "paragraphs": [
+        "Between appointments, try the owner side on your phone: open the example inquiry, read what the client wants, write a sample reply and mark the request Reviewing or Responded. Nothing is sent.",
+        "Then open Website details and adjust the inquiry instructions in the demo. The two visual directions can use the same agreed owner workflow. Your existing booking link can stay part of the customer path; the demo does not create live availability or calendar synchronization.",
+        "Compare the two and look for the one that suits the way you actually work. If your project needs more than a focused starter page, we will review the scope before recommending a package."
+      ],
+      "greeting_binding": "verified_recipient_name_or_verified_business_name",
+      "greeting_fallback": "Hello,",
+      "forbidden_greeting_source": "email_localpart",
+      "business_binding": "business_name",
+      "cta_label": "Try the phone Owner view",
+      "cta_binding": "invitation_url",
+      "signature": "Shay-Shay",
+      "identity": "Shay-Shay · FAMtastic Designs assistant",
+      "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+      "journey": "See two illustrative designs and try the phone Owner view: open an example inquiry, draft a reply, update its status and edit inquiry instructions. Practice changes stay in the demo. Register and complete your interview to confirm the daily work your website needs. Three customer-specific reviewed directions and approved staging follow before purchase and launch; your private mobile Owner Desk is provisioned after verified purchase within the agreed scope.",
+      "secondary": {
+        "card_url": "https://famtasticdesigns.com/connect",
+        "commercial_url": "https://famtasticdesigns.com/connect/commercial.mp4",
+        "qr_path": "assets/connect-qr.png"
+      },
+      "sample_image_count": 0,
+      "send_policy": {
+        "approved": false,
+        "stop_on": [
+          "human_reply",
+          "purchase",
+          "opt_out",
+          "complaint",
+          "hard_bounce"
+        ],
+        "require": [
+          "verified_eligible_recipient",
+          "exact_content_approval",
+          "exact_cohort_approval",
+          "provider_auth_and_suppression_proof",
+          "bound_invitation_url",
+          "bound_unsubscribe_url",
+          "hosted_qr_asset"
+        ]
+      },
+      "research_observation_binding": {
+        "optional": true,
+        "default": null,
+        "required_fields": [
+          "text",
+          "source_url",
+          "checked_at",
+          "classification",
+          "owner_approved"
+        ],
+        "allowed_classification": "verified_public_fact",
+        "render_only_when_owner_approved": true,
+        "forbidden": [
+          "invented_owner_name",
+          "lost_revenue_inference",
+          "absence_of_branded_email_inference",
+          "unverified_competitor_claim"
+        ],
+        "transport_owner": "native AcquisitionSampleEmail compiler"
+      },
+      "sample_previews": []
+    },
+    {
+      "id": "beauty_hair_d7",
+      "campaign_id": "acquisition-199",
+      "content_id": "acquisition-199:beauty_hair_d7:v1",
+      "version": 1,
+      "niche": "beauty_hair",
+      "day": 7,
+      "message_kind": "acquisition_sample_invitation",
+      "review_status": "draft",
+      "subject": "A focused start for your hair business — $199",
+      "preview": "See the fit before paying: interview, three reviewed directions, approved staging and the agreed starter scope.",
+      "headline": "Start with a website you can work from.",
+      "paragraphs": [
+        "If a direction and the phone owner workflow fit the way you work, register and complete the interview. Tell us which inquiries, replies, content changes and status checks matter in your day; we confirm the connected scope before payment. A sample preference is not formal customer-proof selection.",
+        "For an eligible focused starter project, the price is $199 upfront — about 55 cents per day averaged across the first year, not daily billing. Your three customer-specific directions and staging review come before purchase under the existing review gates.",
+        "You can keep a booking service that already works for you. Custom scheduling, a store or a larger site needs its own scope recommendation. There is no rush deadline or promised booking result."
+      ],
+      "greeting_binding": "verified_recipient_name_or_verified_business_name",
+      "greeting_fallback": "Hello,",
+      "forbidden_greeting_source": "email_localpart",
+      "business_binding": "business_name",
+      "cta_label": "Make this mine — $199",
+      "cta_binding": "invitation_url",
+      "signature": "Shay-Shay",
+      "identity": "Shay-Shay · FAMtastic Designs assistant",
+      "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+      "journey": "See two illustrative designs and try the phone Owner view: open an example inquiry, draft a reply, update its status and edit inquiry instructions. Practice changes stay in the demo. Register and complete your interview to confirm the daily work your website needs. Three customer-specific reviewed directions and approved staging follow before purchase and launch; your private mobile Owner Desk is provisioned after verified purchase within the agreed scope.",
+      "secondary": {
+        "card_url": "https://famtasticdesigns.com/connect",
+        "commercial_url": "https://famtasticdesigns.com/connect/commercial.mp4",
+        "qr_path": "assets/connect-qr.png"
+      },
+      "sample_image_count": 0,
+      "send_policy": {
+        "approved": false,
+        "stop_on": [
+          "human_reply",
+          "purchase",
+          "opt_out",
+          "complaint",
+          "hard_bounce"
+        ],
+        "require": [
+          "verified_eligible_recipient",
+          "exact_content_approval",
+          "exact_cohort_approval",
+          "provider_auth_and_suppression_proof",
+          "bound_invitation_url",
+          "bound_unsubscribe_url",
+          "hosted_qr_asset"
+        ]
+      },
+      "research_observation_binding": {
+        "optional": true,
+        "default": null,
+        "required_fields": [
+          "text",
+          "source_url",
+          "checked_at",
+          "classification",
+          "owner_approved"
+        ],
+        "allowed_classification": "verified_public_fact",
+        "render_only_when_owner_approved": true,
+        "forbidden": [
+          "invented_owner_name",
+          "lost_revenue_inference",
+          "absence_of_branded_email_inference",
+          "unverified_competitor_claim"
+        ],
+        "transport_owner": "native AcquisitionSampleEmail compiler"
+      },
+      "sample_previews": []
+    },
+    {
+      "id": "mobile_detailing_d0",
+      "campaign_id": "acquisition-199",
+      "content_id": "acquisition-199:mobile_detailing_d0:v1",
+      "version": 1,
+      "niche": "mobile_detailing",
+      "day": 0,
+      "message_kind": "acquisition_sample_invitation",
+      "review_status": "draft",
+      "subject": "Two directions for your mobile detailing website",
+      "preview": "Two different looks, plus a phone owner walkthrough for reviewing vehicle/location inquiries and planning the next reply.",
+      "headline": "Between details, keep the next request clear.",
+      "paragraphs": [
+        "Between detail jobs, a clear request can help you plan the next conversation from your phone. Compare Precision in Motion and Route Ready, then try the illustrative Owner view for vehicle and service-location inquiries.",
+        "One puts the finish first; the other brings the service area forward. On the owner side, open an example request, draft a reply, update the request status and edit inquiry instructions. These practice changes stay in the demo; no message is sent.",
+        "These are illustrative designs, not a claim about your current website, service area or availability. They show a possible starting point alongside the channels you already use."
+      ],
+      "greeting_binding": "verified_recipient_name_or_verified_business_name",
+      "greeting_fallback": "Hello,",
+      "forbidden_greeting_source": "email_localpart",
+      "business_binding": "business_name",
+      "cta_label": "See your two directions",
+      "cta_binding": "invitation_url",
+      "signature": "Shay-Shay",
+      "identity": "Shay-Shay · FAMtastic Designs assistant",
+      "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+      "journey": "See two illustrative designs and try the phone Owner view: open an example inquiry, draft a reply, update its status and edit inquiry instructions. Practice changes stay in the demo. Register and complete your interview to confirm the daily work your website needs. Three customer-specific reviewed directions and approved staging follow before purchase and launch; your private mobile Owner Desk is provisioned after verified purchase within the agreed scope.",
+      "secondary": {
+        "card_url": "https://famtasticdesigns.com/connect",
+        "commercial_url": "https://famtasticdesigns.com/connect/commercial.mp4",
+        "qr_path": "assets/connect-qr.png"
+      },
+      "sample_image_count": 2,
+      "send_policy": {
+        "approved": false,
+        "stop_on": [
+          "human_reply",
+          "purchase",
+          "opt_out",
+          "complaint",
+          "hard_bounce"
+        ],
+        "require": [
+          "verified_eligible_recipient",
+          "exact_content_approval",
+          "exact_cohort_approval",
+          "provider_auth_and_suppression_proof",
+          "bound_invitation_url",
+          "bound_unsubscribe_url",
+          "hosted_qr_asset"
+        ]
+      },
+      "research_observation_binding": {
+        "optional": true,
+        "default": null,
+        "required_fields": [
+          "text",
+          "source_url",
+          "checked_at",
+          "classification",
+          "owner_approved"
+        ],
+        "allowed_classification": "verified_public_fact",
+        "render_only_when_owner_approved": true,
+        "forbidden": [
+          "invented_owner_name",
+          "lost_revenue_inference",
+          "absence_of_branded_email_inference",
+          "unverified_competitor_claim"
+        ],
+        "transport_owner": "native AcquisitionSampleEmail compiler"
+      },
+      "sample_previews": [
+        {
+          "recipe_id": "detailing_precision",
+          "path": "assets/detailing_precision-preview.jpg",
+          "alt": "Precision in Motion: illustrative shared candidate direction for Mobile detailing",
+          "link_binding": "invitation_url",
+          "rights": "Locally captured original HTML/CSS/SVG; generic non-PII business labels"
+        },
+        {
+          "recipe_id": "detailing_route_ready",
+          "path": "assets/detailing_route_ready-preview.jpg",
+          "alt": "Route Ready: illustrative shared candidate direction for Mobile detailing",
+          "link_binding": "invitation_url",
+          "rights": "Locally captured original HTML/CSS/SVG; generic non-PII business labels"
+        }
+      ]
+    },
+    {
+      "id": "mobile_detailing_d3",
+      "campaign_id": "acquisition-199",
+      "content_id": "acquisition-199:mobile_detailing_d3:v1",
+      "version": 1,
+      "niche": "mobile_detailing",
+      "day": 3,
+      "message_kind": "acquisition_sample_invitation",
+      "review_status": "draft",
+      "subject": "A detailing request with the useful details",
+      "preview": "Try the owner side: open a vehicle/location inquiry, plan a reply, update its status and keep request instructions useful.",
+      "headline": "Your next detail starts on your phone.",
+      "paragraphs": [
+        "Open the sample vehicle/location inquiry from your phone, draft the next reply and move its status from New to Reviewing. It demonstrates how the owner can keep the next step clear between jobs; it does not dispatch a vehicle or confirm a date.",
+        "Try Website details next: update the inquiry instructions a customer would read before contacting you. The two looks can use the same agreed owner workflow. Your actual coverage, water or power requirements, prices and availability must come from you.",
+        "Open the samples on your phone and follow the request explanation. Your interview would establish the real details, then the reviewed build would connect an approved contact path. More advanced scheduling or payment processing is separate scope."
+      ],
+      "greeting_binding": "verified_recipient_name_or_verified_business_name",
+      "greeting_fallback": "Hello,",
+      "forbidden_greeting_source": "email_localpart",
+      "business_binding": "business_name",
+      "cta_label": "Try the detailing Owner view",
+      "cta_binding": "invitation_url",
+      "signature": "Shay-Shay",
+      "identity": "Shay-Shay · FAMtastic Designs assistant",
+      "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+      "journey": "See two illustrative designs and try the phone Owner view: open an example inquiry, draft a reply, update its status and edit inquiry instructions. Practice changes stay in the demo. Register and complete your interview to confirm the daily work your website needs. Three customer-specific reviewed directions and approved staging follow before purchase and launch; your private mobile Owner Desk is provisioned after verified purchase within the agreed scope.",
+      "secondary": {
+        "card_url": "https://famtasticdesigns.com/connect",
+        "commercial_url": "https://famtasticdesigns.com/connect/commercial.mp4",
+        "qr_path": "assets/connect-qr.png"
+      },
+      "sample_image_count": 0,
+      "send_policy": {
+        "approved": false,
+        "stop_on": [
+          "human_reply",
+          "purchase",
+          "opt_out",
+          "complaint",
+          "hard_bounce"
+        ],
+        "require": [
+          "verified_eligible_recipient",
+          "exact_content_approval",
+          "exact_cohort_approval",
+          "provider_auth_and_suppression_proof",
+          "bound_invitation_url",
+          "bound_unsubscribe_url",
+          "hosted_qr_asset"
+        ]
+      },
+      "research_observation_binding": {
+        "optional": true,
+        "default": null,
+        "required_fields": [
+          "text",
+          "source_url",
+          "checked_at",
+          "classification",
+          "owner_approved"
+        ],
+        "allowed_classification": "verified_public_fact",
+        "render_only_when_owner_approved": true,
+        "forbidden": [
+          "invented_owner_name",
+          "lost_revenue_inference",
+          "absence_of_branded_email_inference",
+          "unverified_competitor_claim"
+        ],
+        "transport_owner": "native AcquisitionSampleEmail compiler"
+      },
+      "sample_previews": []
+    },
+    {
+      "id": "mobile_detailing_d7",
+      "campaign_id": "acquisition-199",
+      "content_id": "acquisition-199:mobile_detailing_d7:v1",
+      "version": 1,
+      "niche": "mobile_detailing",
+      "day": 7,
+      "message_kind": "acquisition_sample_invitation",
+      "review_status": "draft",
+      "subject": "Your focused detailing website starts at $199",
+      "preview": "Choose a starting feel, complete the interview, and review your actual directions and staging before purchase.",
+      "headline": "Your phone. Your business. A focused start.",
+      "paragraphs": [
+        "If the samples and phone owner walkthrough fit your workday, register and complete the interview. Specify the inquiries, replies, content updates and request/status work you need. We confirm connected scope, create three customer-specific directions and develop the approved direction through staging review.",
+        "The eligible starter project is $199 upfront — about 55 cents per day averaged over the first year, not daily billing. It is a focused website and practical contact path, with purchase held behind accepted scope and review.",
+        "A live dispatch system, complex quote engine, ecommerce or additional pages needs a separate recommendation. Your sample preference expresses interest; it does not book work, charge you or approve a customer proof."
+      ],
+      "greeting_binding": "verified_recipient_name_or_verified_business_name",
+      "greeting_fallback": "Hello,",
+      "forbidden_greeting_source": "email_localpart",
+      "business_binding": "business_name",
+      "cta_label": "Make this mine — $199",
+      "cta_binding": "invitation_url",
+      "signature": "Shay-Shay",
+      "identity": "Shay-Shay · FAMtastic Designs assistant",
+      "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+      "journey": "See two illustrative designs and try the phone Owner view: open an example inquiry, draft a reply, update its status and edit inquiry instructions. Practice changes stay in the demo. Register and complete your interview to confirm the daily work your website needs. Three customer-specific reviewed directions and approved staging follow before purchase and launch; your private mobile Owner Desk is provisioned after verified purchase within the agreed scope.",
+      "secondary": {
+        "card_url": "https://famtasticdesigns.com/connect",
+        "commercial_url": "https://famtasticdesigns.com/connect/commercial.mp4",
+        "qr_path": "assets/connect-qr.png"
+      },
+      "sample_image_count": 0,
+      "send_policy": {
+        "approved": false,
+        "stop_on": [
+          "human_reply",
+          "purchase",
+          "opt_out",
+          "complaint",
+          "hard_bounce"
+        ],
+        "require": [
+          "verified_eligible_recipient",
+          "exact_content_approval",
+          "exact_cohort_approval",
+          "provider_auth_and_suppression_proof",
+          "bound_invitation_url",
+          "bound_unsubscribe_url",
+          "hosted_qr_asset"
+        ]
+      },
+      "research_observation_binding": {
+        "optional": true,
+        "default": null,
+        "required_fields": [
+          "text",
+          "source_url",
+          "checked_at",
+          "classification",
+          "owner_approved"
+        ],
+        "allowed_classification": "verified_public_fact",
+        "render_only_when_owner_approved": true,
+        "forbidden": [
+          "invented_owner_name",
+          "lost_revenue_inference",
+          "absence_of_branded_email_inference",
+          "unverified_competitor_claim"
+        ],
+        "transport_owner": "native AcquisitionSampleEmail compiler"
+      },
+      "sample_previews": []
+    },
+    {
+      "id": "baking_catering_d0",
+      "campaign_id": "acquisition-199",
+      "content_id": "acquisition-199:baking_catering_d0:v1",
+      "version": 1,
+      "niche": "baking_catering",
+      "day": 0,
+      "message_kind": "acquisition_sample_invitation",
+      "review_status": "draft",
+      "subject": "Two website directions for your baking or catering",
+      "preview": "Compare two looks and try the owner side: review the occasion, draft a reply and keep inquiry instructions current.",
+      "headline": "The next occasion, from your phone.",
+      "paragraphs": [
+        "While you prepare a bake or a gathering, the next inquiry should be easy to understand from your phone. Compare The Signature Bake and The Table Story, then try the illustrative owner workflow.",
+        "One opens with the celebration; the other with the menu and table. In the Owner view, open an example inquiry, draft a reply, update its status and edit inquiry instructions. Practice stays in the demo; no date is reserved and nothing is sent.",
+        "The examples are illustrative; they do not use your photos, menus, reviews or allergy policies. Your verified information and rights-approved images would shape your actual directions after the interview."
+      ],
+      "greeting_binding": "verified_recipient_name_or_verified_business_name",
+      "greeting_fallback": "Hello,",
+      "forbidden_greeting_source": "email_localpart",
+      "business_binding": "business_name",
+      "cta_label": "See your two directions",
+      "cta_binding": "invitation_url",
+      "signature": "Shay-Shay",
+      "identity": "Shay-Shay · FAMtastic Designs assistant",
+      "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+      "journey": "See two illustrative designs and try the phone Owner view: open an example inquiry, draft a reply, update its status and edit inquiry instructions. Practice changes stay in the demo. Register and complete your interview to confirm the daily work your website needs. Three customer-specific reviewed directions and approved staging follow before purchase and launch; your private mobile Owner Desk is provisioned after verified purchase within the agreed scope.",
+      "secondary": {
+        "card_url": "https://famtasticdesigns.com/connect",
+        "commercial_url": "https://famtasticdesigns.com/connect/commercial.mp4",
+        "qr_path": "assets/connect-qr.png"
+      },
+      "sample_image_count": 2,
+      "send_policy": {
+        "approved": false,
+        "stop_on": [
+          "human_reply",
+          "purchase",
+          "opt_out",
+          "complaint",
+          "hard_bounce"
+        ],
+        "require": [
+          "verified_eligible_recipient",
+          "exact_content_approval",
+          "exact_cohort_approval",
+          "provider_auth_and_suppression_proof",
+          "bound_invitation_url",
+          "bound_unsubscribe_url",
+          "hosted_qr_asset"
+        ]
+      },
+      "research_observation_binding": {
+        "optional": true,
+        "default": null,
+        "required_fields": [
+          "text",
+          "source_url",
+          "checked_at",
+          "classification",
+          "owner_approved"
+        ],
+        "allowed_classification": "verified_public_fact",
+        "render_only_when_owner_approved": true,
+        "forbidden": [
+          "invented_owner_name",
+          "lost_revenue_inference",
+          "absence_of_branded_email_inference",
+          "unverified_competitor_claim"
+        ],
+        "transport_owner": "native AcquisitionSampleEmail compiler"
+      },
+      "sample_previews": [
+        {
+          "recipe_id": "baking_signature",
+          "path": "assets/baking_signature-preview.jpg",
+          "alt": "The Signature Bake: illustrative shared candidate direction for Custom baking & catering",
+          "link_binding": "invitation_url",
+          "rights": "Locally captured original HTML/CSS/SVG; generic non-PII business labels"
+        },
+        {
+          "recipe_id": "catering_table_story",
+          "path": "assets/catering_table_story-preview.jpg",
+          "alt": "The Table Story: illustrative shared candidate direction for Custom baking & catering",
+          "link_binding": "invitation_url",
+          "rights": "Locally captured original HTML/CSS/SVG; generic non-PII business labels"
+        }
+      ]
+    },
+    {
+      "id": "baking_catering_d3",
+      "campaign_id": "acquisition-199",
+      "content_id": "acquisition-199:baking_catering_d3:v1",
+      "version": 1,
+      "niche": "baking_catering",
+      "day": 3,
+      "message_kind": "acquisition_sample_invitation",
+      "review_status": "draft",
+      "subject": "Date, guest count, idea — a clearer first inquiry",
+      "preview": "From your phone, review the event details, plan a reply and track the next step in an illustrative owner workflow.",
+      "headline": "Plan the reply while you plan the gathering.",
+      "paragraphs": [
+        "On your phone, open the sample occasion inquiry, review the date/guest-count questions, draft a reply and mark the next status. It is a practice workflow: no order is taken or message sent. Dietary questions still need your verified policies.",
+        "Use Website details to practice improving the instructions people see before they inquire. Both visual directions can connect the same agreed owner workflow. Your business confirms dates, menus and scope; an illustrative page cannot do that for you.",
+        "Try the two directions on your phone. The focused starter can use an approved inquiry path; online ordering, deposits, delivery rules and complex catering operations need their own scope review."
+      ],
+      "greeting_binding": "verified_recipient_name_or_verified_business_name",
+      "greeting_fallback": "Hello,",
+      "forbidden_greeting_source": "email_localpart",
+      "business_binding": "business_name",
+      "cta_label": "Try the catering Owner view",
+      "cta_binding": "invitation_url",
+      "signature": "Shay-Shay",
+      "identity": "Shay-Shay · FAMtastic Designs assistant",
+      "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+      "journey": "See two illustrative designs and try the phone Owner view: open an example inquiry, draft a reply, update its status and edit inquiry instructions. Practice changes stay in the demo. Register and complete your interview to confirm the daily work your website needs. Three customer-specific reviewed directions and approved staging follow before purchase and launch; your private mobile Owner Desk is provisioned after verified purchase within the agreed scope.",
+      "secondary": {
+        "card_url": "https://famtasticdesigns.com/connect",
+        "commercial_url": "https://famtasticdesigns.com/connect/commercial.mp4",
+        "qr_path": "assets/connect-qr.png"
+      },
+      "sample_image_count": 0,
+      "send_policy": {
+        "approved": false,
+        "stop_on": [
+          "human_reply",
+          "purchase",
+          "opt_out",
+          "complaint",
+          "hard_bounce"
+        ],
+        "require": [
+          "verified_eligible_recipient",
+          "exact_content_approval",
+          "exact_cohort_approval",
+          "provider_auth_and_suppression_proof",
+          "bound_invitation_url",
+          "bound_unsubscribe_url",
+          "hosted_qr_asset"
+        ]
+      },
+      "research_observation_binding": {
+        "optional": true,
+        "default": null,
+        "required_fields": [
+          "text",
+          "source_url",
+          "checked_at",
+          "classification",
+          "owner_approved"
+        ],
+        "allowed_classification": "verified_public_fact",
+        "render_only_when_owner_approved": true,
+        "forbidden": [
+          "invented_owner_name",
+          "lost_revenue_inference",
+          "absence_of_branded_email_inference",
+          "unverified_competitor_claim"
+        ],
+        "transport_owner": "native AcquisitionSampleEmail compiler"
+      },
+      "sample_previews": []
+    },
+    {
+      "id": "baking_catering_d7",
+      "campaign_id": "acquisition-199",
+      "content_id": "acquisition-199:baking_catering_d7:v1",
+      "version": 1,
+      "niche": "baking_catering",
+      "day": 7,
+      "message_kind": "acquisition_sample_invitation",
+      "review_status": "draft",
+      "subject": "A focused baking or catering website — $199",
+      "preview": "Start with your interview and reviewed designs. The starter offer is upfront, with clear renewal terms.",
+      "headline": "A clear start for your business workday.",
+      "paragraphs": [
+        "If a visual direction and the phone owner walkthrough suit your day, register and complete the interview. Tell us which inquiries, replies, content updates and status work you need. We confirm connected scope before payment, with three customer-specific directions and approved staging before purchase.",
+        "For the eligible focused starter scope, $199 is paid upfront — about 55 cents per day averaged over the first year, not daily billing. It does not buy an unconfirmed event date or promise orders.",
+        "Your business stays in charge of its menu, allergy policies, quotes and confirmations. Ecommerce, custom ordering, payment processing and larger sites are separate scope. A sample preference helps the conversation; it is not formal proof approval."
+      ],
+      "greeting_binding": "verified_recipient_name_or_verified_business_name",
+      "greeting_fallback": "Hello,",
+      "forbidden_greeting_source": "email_localpart",
+      "business_binding": "business_name",
+      "cta_label": "Make this mine — $199",
+      "cta_binding": "invitation_url",
+      "signature": "Shay-Shay",
+      "identity": "Shay-Shay · FAMtastic Designs assistant",
+      "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+      "journey": "See two illustrative designs and try the phone Owner view: open an example inquiry, draft a reply, update its status and edit inquiry instructions. Practice changes stay in the demo. Register and complete your interview to confirm the daily work your website needs. Three customer-specific reviewed directions and approved staging follow before purchase and launch; your private mobile Owner Desk is provisioned after verified purchase within the agreed scope.",
+      "secondary": {
+        "card_url": "https://famtasticdesigns.com/connect",
+        "commercial_url": "https://famtasticdesigns.com/connect/commercial.mp4",
+        "qr_path": "assets/connect-qr.png"
+      },
+      "sample_image_count": 0,
+      "send_policy": {
+        "approved": false,
+        "stop_on": [
+          "human_reply",
+          "purchase",
+          "opt_out",
+          "complaint",
+          "hard_bounce"
+        ],
+        "require": [
+          "verified_eligible_recipient",
+          "exact_content_approval",
+          "exact_cohort_approval",
+          "provider_auth_and_suppression_proof",
+          "bound_invitation_url",
+          "bound_unsubscribe_url",
+          "hosted_qr_asset"
+        ]
+      },
+      "research_observation_binding": {
+        "optional": true,
+        "default": null,
+        "required_fields": [
+          "text",
+          "source_url",
+          "checked_at",
+          "classification",
+          "owner_approved"
+        ],
+        "allowed_classification": "verified_public_fact",
+        "render_only_when_owner_approved": true,
+        "forbidden": [
+          "invented_owner_name",
+          "lost_revenue_inference",
+          "absence_of_branded_email_inference",
+          "unverified_competitor_claim"
+        ],
+        "transport_owner": "native AcquisitionSampleEmail compiler"
+      },
+      "sample_previews": []
+    }
+  ]
+}

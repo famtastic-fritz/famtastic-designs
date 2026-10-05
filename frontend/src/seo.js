@@ -141,6 +141,10 @@ export function normalizePath(pathname = '/') {
 }
 
 export function seoForPath(pathname = '/') {
+  if (pathname.startsWith('/samples/') || pathname.startsWith('/acquisition/')) {
+    const description = 'Private FAMtastic Designs workspace.';
+    return {siteName:SITE_NAME,title:'Private Sample Lab | FAMtastic Designs',description,ogDescription:description,twitterDescription:description,keywords:'',canonical:`${SITE_URL}/samples/`,image:DEFAULT_IMAGE,path:'/samples',robots:'noindex, nofollow, noarchive',referrer:'no-referrer'};
+  }
   if (pathname.startsWith('/appointment/')) {
     return {
       siteName: SITE_NAME,

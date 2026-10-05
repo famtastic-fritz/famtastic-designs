@@ -44,6 +44,7 @@ final class CustomerPortalService {
     private readonly ?WebformIntakeBridgeService $webformBridge = NULL,
     private readonly ?ExternalStagingReviewService $externalStagingReviews = NULL,
     private readonly ?CustomerInvoiceService $customerInvoices = NULL,
+    private readonly ?AcquisitionSampleService $acquisitionSamples = NULL,
   ) {}
 
   public function customerForUid(int $uid): ?array {
@@ -345,12 +346,16 @@ final class CustomerPortalService {
   public function createWebsiteRequest(int $customerId, string $organizationPublicId, array $input, ?string $rawInput = NULL): array {
     $organization = $this->authorizedOrganization($customerId, $organizationPublicId);
     $customer = $this->database->select('famtastic_customer', 'c')->fields('c')->condition('id', $customerId)->execute()->fetchAssoc();
+    $sampleContext = $this->acquisitionSamples?->requestContext($customerId, (string) ($input['acquisition_context_id'] ?? ''));
+    if ($sampleContext && $this->acquisitionSamples->associatedRequest($customerId, $sampleContext['context_id'])) throw new \InvalidArgumentException('sample_context_already_attached');
+    $transaction = $sampleContext ? $this->database->startTransaction() : NULL;
     $clean = $this->validateWebsiteRequest($input);
+    if ($sampleContext) $clean['intake']['acquisition_context'] = $sampleContext;
     $clean['intake']['authored_content'] = SelectedRequestContent::record($input, $customerId, $rawInput);
     $clean['intake']['request_submission'] = ['raw_json' => $rawInput, 'sha256' => $rawInput === NULL ? NULL : hash('sha256', $rawInput)];
     $now = $this->time->getRequestTime();
     $attribution = $this->attribution->snapshotFromArray($input, 'customer_portal');
-    $claimedProspectId = $this->previews->claimedProspectId($customerId);
+    $claimedProspectId = $sampleContext ? NULL : $this->previews->claimedProspectId($customerId);
     $prospect = $claimedProspectId ? $this->entities->getStorage('famtastic_prospect')->load($claimedProspectId) : NULL;
     if (!$prospect) {
       $prospect = $this->entities->getStorage('famtastic_prospect')->create([
@@ -378,11 +383,13 @@ final class CustomerPortalService {
     ])->execute();
     $this->claimResource((int) $organization['id'], 'prospect', (int) $prospect->id());
     $this->previews->attachClaimedRequest($customerId, $id, $clean['status']);
+    if ($sampleContext) $this->acquisitionSamples->attachRequest($customerId, $sampleContext['context_id'], $id, (int) $prospect->id());
     $this->activity((int) $organization['id'], 'website_request.created', $clean['status'] === 'submitted' ? 'A new website request was submitted.' : 'A website request draft was saved.');
     if ($clean['status'] === 'submitted') {
       $this->queueWebsiteRequestNotifications($id, $publicId, $customer, $clean);
       $this->queueWebsiteRequestProofJob($id, (int) $prospect->id(), $publicId, $clean['intake']);
     }
+    unset($transaction);
     return $this->serializeWebsiteRequest($this->database->select('famtastic_project_request', 'r')->fields('r')->condition('id', $id)->execute()->fetchAssoc());
   }
 

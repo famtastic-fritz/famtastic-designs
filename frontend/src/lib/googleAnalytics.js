@@ -2,8 +2,9 @@ const measurementId = import.meta.env?.VITE_GA_MEASUREMENT_ID?.trim();
 
 let initialized = false;
 
-const sensitiveQueryKeys = new Set(['token', 'key', 'code', 'session', 'secret', 'continuation']);
+const sensitiveQueryKeys = new Set(['token', 'key', 'code', 'session', 'secret', 'continuation', 'sample_continuation', 'preview_continuation', 'email', 'business', 'name']);
 const locationEventKeys = new Set(['page_location', 'page_path', 'page_referrer', 'link_url', 'url', 'href', 'destination_url', 'redirect_url']);
+const sampleBearer = /(?:\/samples\/[a-f0-9]{64}|[?&]sample_continuation=[a-f0-9]{64})/i;
 const continuationValue = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.[0-9a-f]{64}/i;
 
 function redactSearch(url) {
@@ -17,23 +18,24 @@ function redactSearch(url) {
 function isContinuationValue(value) {
   if (typeof value !== 'string') return false;
   try {
-    return continuationValue.test(decodeURIComponent(value));
+    return continuationValue.test(decodeURIComponent(value)) || sampleBearer.test(decodeURIComponent(value));
   } catch {
-    return continuationValue.test(value);
+    return continuationValue.test(value) || sampleBearer.test(value);
   }
 }
 
 function hasSensitiveQuery(value) {
   if (typeof value !== 'string') return false;
   try {
-    return /(?:^|[?&])(token|key|code|session|secret|continuation)=/i.test(decodeURIComponent(value));
+    return /(?:^|[?&])(token|key|code|session|secret|continuation|sample_continuation|email|business|name)=/i.test(decodeURIComponent(value));
   } catch {
-    return /(?:^|[?&])(token|key|code|session|secret|continuation)=/i.test(value);
+    return /(?:^|[?&])(token|key|code|session|secret|continuation|sample_continuation|email|business|name)=/i.test(value);
   }
 }
 
 function cleanPathname(pathname) {
   return pathname
+    .replace(/^\/samples\/[^/]+/, '/samples/private')
     .replace(/^\/proofs\/share\/[^/]+\/[^/]+/, '/proofs/share/unlisted')
     .replace(/^\/proofs\/preview\/[^/]+\/[^/]+/, '/proofs/preview/unlisted')
     .replace(/^\/appointment\/[^/]+/, '/appointment/private')
@@ -58,6 +60,7 @@ function safeEventUrl(value) {
   if (typeof value !== 'string') return value;
   const current = new URL(window.location.href);
   const url = redactSearch(new URL(value, current.origin));
+  url.pathname = cleanPathname(url.pathname);
   return url.toString();
 }
 
@@ -79,6 +82,7 @@ export function safeEventParams(params = {}) {
 }
 
 export function initializeGoogleAnalytics() {
+  if (typeof window !== 'undefined' && (window.location.pathname.startsWith('/samples/') || window.location.pathname.startsWith('/acquisition/') || new URLSearchParams(window.location.search).has('sample_continuation'))) return false;
   if (!measurementId || initialized || typeof window === 'undefined') return false;
 
   window.dataLayer = window.dataLayer || [];

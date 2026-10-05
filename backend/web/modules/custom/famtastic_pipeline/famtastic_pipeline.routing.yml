@@ -1547,3 +1547,61 @@ famtastic_pipeline.worker_coordinator:
     operation: 'claim|renew|finish|fail|review'
   options:
     no_cache: 'TRUE'
+
+# Sample Lab capabilities are separate from signed owner-reviewed public proofs.
+famtastic_pipeline.acquisition_sample:
+  path: '/api/acquisition/samples/{token}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\AcquisitionSampleController::resolve'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    token: '[a-f0-9]{64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.acquisition_sample_preview:
+  path: '/api/acquisition/samples/{token}/preview/{recipe}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\AcquisitionSampleController::preview'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    token: '[a-f0-9]{64}'
+    recipe: '[a-z0-9_-]{3,96}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.acquisition_sample_preference:
+  path: '/api/acquisition/samples/{token}/preference'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\AcquisitionSampleController::preference'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    token: '[a-f0-9]{64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.acquisition_sample_claim:
+  path: '/api/acquisition/samples/{token}/claim'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\AcquisitionSampleController::claim'
+  methods: [POST]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
+    token: '[a-f0-9]{64}'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.acquisition_report:
+  path: '/api/acquisition/report/{campaign_key}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\AcquisitionCampaignReportController::report'
+  methods: [GET]
+  requirements:
+    _permission: 'administer famtastic pipeline'
+    campaign_key: '[a-zA-Z0-9_-]+'
+  options:
+    no_cache: 'TRUE'

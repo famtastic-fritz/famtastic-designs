@@ -50,6 +50,7 @@ final class CustomerPortalController extends ControllerBase {
     private readonly DeepDiveInvitationService $deepDives,
     private readonly StagingReceiptService $stagingReceipts,
     private readonly CustomerInvoiceService $customerInvoices,
+    private readonly ?\Drupal\famtastic_pipeline\Service\AcquisitionSampleService $samples = NULL,
   ) {}
 
   public static function create(ContainerInterface $container): self {
@@ -68,6 +69,7 @@ final class CustomerPortalController extends ControllerBase {
       $container->get('famtastic_pipeline.deep_dive_invitations'),
       $container->get('famtastic_pipeline.staging_receipts'),
       $container->get('famtastic_pipeline.customer_invoices'),
+      $container->get('famtastic_pipeline.acquisition_samples'),
     );
   }
 
@@ -86,11 +88,14 @@ final class CustomerPortalController extends ControllerBase {
     // This validates the continuation before User::save() fires
     // hook_user_insert(). An invalid or unrelated value is intentionally a
     // no-op so ordinary registration retains its existing behavior.
+    try { $sampleRegistration = $this->samples?->beginRegistration($email, (string) ($data['sample_continuation'] ?? '')) ?? FALSE; }
+    catch (\InvalidArgumentException) { return $this->error('sample_continuation_invalid', 422, 'This sample continuation is unavailable for that email.'); }
     $previewDelivery = $this->portal->beginPublicPreviewRegistration($email, (string) ($data['preview_continuation'] ?? ''));
     try {
       $deepDive = $this->deepDives->beginRegistration($email, (string) ($data['deep_dive_continuation'] ?? ''));
     }
     catch (\InvalidArgumentException $error) {
+      $this->samples?->endRegistration($email);
       return $this->error('deep_dive_continuation_invalid', 422, $error->getMessage());
     }
     $storage = $this->entityTypeManager()->getStorage('user');
@@ -100,6 +105,7 @@ final class CustomerPortalController extends ControllerBase {
         $existingUser = reset($existingUsers);
         $existingCustomer = $this->portal->customerForUid((int) $existingUser->id());
         if ($existingCustomer && empty($existingCustomer['verified_at'])) {
+          $this->samples?->attachPending($email, (int) $existingCustomer['id']);
           if ($deepDive) $this->deepDives->attachPendingCustomer((string) $deepDive['public_id'], (int) $existingCustomer['id']);
           $this->sendVerification($request, $existingCustomer, $previewDelivery);
         }
@@ -116,11 +122,12 @@ final class CustomerPortalController extends ControllerBase {
       ]);
       $user->save();
       $customer = $this->portal->createCustomer($user, $data);
+      $this->samples?->attachPending($email, (int) $customer['id']);
       if ($deepDive) $this->deepDives->attachPendingCustomer((string) $deepDive['public_id'], (int) $customer['id']);
       // The preview path receives only its verification email at this point.
       // Its owner alert is queued after the one-time verification token is
       // consumed; it never inherits generic request notifications or jobs.
-      if ($previewDelivery === NULL) {
+      if ($previewDelivery === NULL && !$sampleRegistration) {
         $this->portal->queueRegistrationNotification($customer);
       }
       $this->sendVerification($request, $customer, $previewDelivery);
@@ -128,6 +135,7 @@ final class CustomerPortalController extends ControllerBase {
     }
     finally {
       $this->portal->endPublicPreviewRegistration($email);
+      $this->samples?->endRegistration($email);
     }
   }
 
@@ -136,12 +144,13 @@ final class CustomerPortalController extends ControllerBase {
     $record = $this->portal->consumeToken((string) ($data['token'] ?? ''), 'verify');
     if (!$record) return $this->error('invalid_or_expired_token', 422, 'This verification link is invalid or expired.');
     $this->portal->markVerified((int) $record['customer_id']);
+    $continuation = $this->samples?->claim((int) $record['customer_id']);
     $this->claimDeepDive((int) $record['customer_id'], (string) $record['email']);
     $payload = json_decode((string) ($record['payload'] ?? ''), TRUE);
     if (is_array($payload) && ($payload['registration_flow'] ?? '') === 'public_preview_v1') {
       $this->portal->queueVerifiedPreviewRegistrationNotification((int) $record['customer_id']);
     }
-    return new JsonResponse(['ok' => TRUE]);
+    return $this->noStore(new JsonResponse(['ok' => TRUE, 'continuation' => $continuation]));
   }
 
   public function login(Request $request): JsonResponse {
@@ -180,6 +189,7 @@ final class CustomerPortalController extends ControllerBase {
     }
     if ($customer && !empty($customer['verified_at'])) {
       $this->portal->claimPreviewsForVerifiedCustomer((int) $customer['id']);
+      $this->samples?->claim((int) $customer['id']);
       $this->claimDeepDive((int) $customer['id'], (string) $customer['email']);
     }
     user_login_finalize($user);
@@ -740,6 +750,7 @@ final class CustomerPortalController extends ControllerBase {
   private function sessionPayload(array $customer): JsonResponse {
     $payload = [
       'ok' => TRUE,
+      'continuation' => $this->samples?->continuation((int) $customer['id']),
       'can_manage_messages' => $this->account->hasPermission('administer famtastic pipeline'),
       'customer' => [
         'public_id' => $customer['public_id'],

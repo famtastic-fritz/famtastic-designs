@@ -128,6 +128,9 @@ final class OperationalLedger {
         'revoked_at' => in_array($status, ['unsubscribed', 'suppressed'], TRUE) ? $now : NULL,
       ])
       ->execute();
+    if ($consentType === 'outreach' && in_array($status, ['unsubscribed', 'bounced', 'complained', 'suppressed'], TRUE)) {
+      AcquisitionSampleSequenceService::stopContact($this->database, $this->contactHash($contact), $status, $now);
+    }
     $this->recordEvent(
       sprintf('consent:%d', $id),
       'consent.' . $status,
@@ -169,6 +172,7 @@ final class OperationalLedger {
           'recorded_at' => $now,
         ])
         ->execute();
+      AcquisitionSampleSequenceService::observeEvent($this->database, $eventType, $prospectId, $now);
       return TRUE;
     }
     catch (\Throwable $e) {

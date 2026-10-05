@@ -2956,3 +2956,13 @@ recorded separately from inbox receipt.
 ## 2026-10-04 — Inbound mailbox repair
 
 Observation: hello mail receipt was healthy but support-only ingestion had no clock. Guidance: use Drupal for correlation/retries/health and cPanel only as the dedicated clock; preserve pre-existing files, require exact sent receipt and authorized tenant, never guess by sender or auto-send. Production runtime 63d7dfb0 and eight fixture assertions verified; historical four missing drafts remain a human review item. See docs/plans/inbound-mail-repair/OPERATIONS.md.
+
+## 2026-10-05 — Acquisition source/readiness
+
+Observation: sample invitation prospects and later authenticated interview prospects differ. Guidance: persist an exact verified-customer/invitation/request mapping; attribute current Commerce captures/refunds through that mapping, never all account purchases or legacy package arithmetic. Stop sequences through verified contact/purchase evidence even after prospect changes.
+
+Observation: source workbooks and configured SMTP do not establish one safe recipient/provider slice. Guidance: preserve zero eligible and shortfall; validate business/contact/history and provider use independently. Real dispatch stays held until concrete review.
+
+Observation: an attractive phone storefront does not prove the owner can work from a phone. Guidance: show useful request/status/content actions with actual390px interaction evidence, clearly disclose illustrative unsent/unpublished state, and require release-matched physical owner acceptance. Shared candidates remain distinct from the customer's own approved proofs.
+
+Evidence: docs/research/acquisition-199/README.md and lane records. Hosted release, real inbox delivery, connected customer tools and owner acceptance are not claimed.

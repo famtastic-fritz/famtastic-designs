@@ -1,0 +1,120 @@
+{
+  "schema": "famtastic.acquisition-cohort-aggregate.v1",
+  "generated_at": "2026-10-05T20:12:16.438935+00:00",
+  "sources": [
+    {
+      "file": "FAMtastic Designs - 1000 Social Media Leads Database.xlsx",
+      "sha256": "6e8b6d4c98f4d53ded458b2070ceab9ca7302598f507d2b4ae7fa5f5083133e9",
+      "sheet": "Untitled",
+      "rows": 1000
+    },
+    {
+      "file": "FAMtastic_260_Social_Media_Leads.xlsx",
+      "sha256": "6e4c0de0d64891222fb11ca5638d621dc7f39558ed2252c64da018af19354c6f",
+      "sheet": "Untitled",
+      "rows": 260,
+      "status": "previously_contacted_history_requires_reconciliation"
+    }
+  ],
+  "candidate_count": 300,
+  "verified_eligible_count": 0,
+  "selected_count": 0,
+  "target_count": 150,
+  "niches": [
+    {
+      "niche": "beauty_hair",
+      "candidates": 100,
+      "verified_eligible": 0,
+      "selected": 0,
+      "shortfall": 50
+    },
+    {
+      "niche": "mobile_detailing",
+      "candidates": 100,
+      "verified_eligible": 0,
+      "selected": 0,
+      "shortfall": 50
+    },
+    {
+      "niche": "baking_catering",
+      "candidates": 100,
+      "verified_eligible": 0,
+      "selected": 0,
+      "shortfall": 50
+    }
+  ],
+  "all_source_categories": [
+    {
+      "category": "Beauty, Hair Styling & Braiding",
+      "candidate_rows": 100,
+      "qualification_status": "not independently qualified"
+    },
+    {
+      "category": "Mobile Detailing, Auto Care & Tinting",
+      "candidate_rows": 100,
+      "qualification_status": "not independently qualified"
+    },
+    {
+      "category": "Fitness, Personal Training & Meal Prep",
+      "candidate_rows": 100,
+      "qualification_status": "not independently qualified"
+    },
+    {
+      "category": "Photography, Videography & Media",
+      "candidate_rows": 100,
+      "qualification_status": "not independently qualified"
+    },
+    {
+      "category": "Custom Baking, Catering & Private Chefs",
+      "candidate_rows": 100,
+      "qualification_status": "not independently qualified"
+    },
+    {
+      "category": "Home Services, Cleaning & Maintenance",
+      "candidate_rows": 100,
+      "qualification_status": "not independently qualified"
+    },
+    {
+      "category": "Events, Party Rentals & Entertainment",
+      "candidate_rows": 100,
+      "qualification_status": "not independently qualified"
+    },
+    {
+      "category": "Pet Services, Grooming & Training",
+      "candidate_rows": 100,
+      "qualification_status": "not independently qualified"
+    },
+    {
+      "category": "Consulting, Tutoring & Digital Creators",
+      "candidate_rows": 100,
+      "qualification_status": "not independently qualified"
+    },
+    {
+      "category": "Handcrafted Products, Fashion & Boutiques",
+      "candidate_rows": 100,
+      "qualification_status": "not independently qualified"
+    }
+  ],
+  "scope_gate": "Row-bound current source evidence must confirm exact approved niche; broad industry labels do not qualify.",
+  "source_email_overlap_with_historical_260": 0,
+  "hold_reason_counts": {
+    "missing_row_bound_receipt": 300
+  },
+  "sending_status": "held_no_dispatch",
+  "assignment": "random_business_within_niche_once_then_persisted",
+  "private_rows": "ignored .data only; excluded from this aggregate",
+  "claims": {
+    "syntax_is_business_proof": false,
+    "no_site_inference_from_missing_column": false,
+    "statistical_winner_established": false
+  },
+  "bounded_official_identity_review": {
+    "reviewed": 12,
+    "per_niche": 4,
+    "exact_verified_business_and_contact_matches": 0,
+    "unreviewed_candidates": 288,
+    "method": "Exact-name plus supplied city; accept only official owner website evidence; rejected unrelated/near matches",
+    "result": "Identity/contact gates unresolved, no absence or fabrication claim",
+    "private_details": "ignored .data/acquisition-199/bounded-review.json"
+  }
+}

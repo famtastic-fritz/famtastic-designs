@@ -6,7 +6,7 @@ FAMtastic Designs is a **Business Solutions Engineering Studio** that builds dig
 
 We create demand by teaching businesses what a connected digital system can do, proving the capability through our own operations, and offering the smallest useful next step. 
 
-For the 55¢-a-day ($199/yr) campaign: We invest upfront because we believe in the client's business idea. Before they spend thousands of dollars on unproven agency promises, they get 1 year of hosting, domain, business email, analytics, AI-backed data tools, and 3 interactive design proofs in 48 hours. At worst, they are out 55¢ a day; we are out a promise made. We prove the process works first.
+For the $199 starter campaign, use the canonical product and deal terms. $199 is paid upfront after research, interview, and approved direction; averaging that over the first year is about 55¢/day, not daily billing. First-year hosting is included; later hosting requires separate $9.99/month authorization and domain renewal is separate. Mailbox subscriptions, paid integrations and advanced scope are not implied. Delivery timing is confirmed from measured capacity rather than advertised as an unproved guarantee.
 
 ## Governing model
 

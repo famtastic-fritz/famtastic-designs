@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-10-05 — Acquisition199 campaign source candidate
+
+**Changed source; local and synthetic evidence.** Six shared candidate recipes, nine BrandedEmail drafts, private sample invitation/preferences, verified account/interview context, held0/3/7 sequences and current Commerce capture/refund scorecard are reviewable in `docs/research/acquisition-199/README.md`. The phone demonstration has actual developer viewport/interactions, explicitly page-local reply/content actions and no connected customer inbox claim. Existing hosted SMTP configuration is read-only evidence, not outreach permission or delivery. Zero contacts are verified eligible at the cutoff. Component Studio acceptance, exact content/cohort review, hosted release, real email clients/provider exits and uncoached owner acceptance remain open; real dispatch is HOLD. No source test grants owner_accepted or general production readiness.
+
 ## 2026-10-04 — Shay SMS infrastructure deployed, sending off
 
 Shay's separate business site installed disabled-by-default appointment-SMS infrastructure at runtime `950ae837df43e4c16f66c3380bc322efff7c33fc`. Its [release receipt](https://github.com/famtastic-fritz/site-tighten-up-your-locs/blob/fb7b781051a1a2a69beec36277be6c2922c77f6b/docs/sms-pilot-v1/RELEASE-RECEIPT.md) records matching business-table digests, `sms_sent: 0` and `sms_enabled_after: false`; [live guest checks](https://github.com/famtastic-fritz/site-tighten-up-your-locs/blob/fb7b781051a1a2a69beec36277be6c2922c77f6b/docs/sms-pilot-v1/LIVE-VERIFICATION.md) passed. This does not install this agency's `sms-workflow-core` in Drupal or connect a shared sender. Shay's business sender, signed inbound reply, live STOP and owner acceptance remain open. The reusable agency workflow remains source-only and generic production readiness remains false; the earlier rows below retain their original evidence cutoffs.

@@ -1,0 +1,1053 @@
+{
+  "schema": "famtastic.build-dna.v1",
+  "build_id": "acquisition-199-creative-candidate-v1-20261005",
+  "classification": "candidate_locally_reviewed_not_owner_accepted",
+  "created_at": "2026-10-05T20:02:16.474Z",
+  "repository": {
+    "name": "famtastic-designs",
+    "revision": "eef442be41006188f4ed72ae5657bebcc4a9baac",
+    "worktree_state": "Isolated codex/acquisition-199-20261005; creative-owned source plus coordinated other lanes; no production mutation"
+  },
+  "run": {
+    "campaign_id": "acquisition-199",
+    "subject_type": "shared_illustrative_niche_samples_and_email_drafts",
+    "started_at": "2026-10-05T20:02:16.474Z",
+    "completed_at": "2026-10-05T20:07:40.027Z",
+    "session_context": {
+      "agent": "creative lane",
+      "model_status": "not_disclosed_by_runtime",
+      "no_session_transcript_retained": true
+    },
+    "unit_cost_ledger": {
+      "samples": 6,
+      "email_drafts": 9,
+      "new_provider_calls": 0,
+      "new_provider_spend_usd": 0,
+      "new_provider_spend_per_sample_usd": 0,
+      "new_provider_spend_per_draft_usd": 0,
+      "total_fully_loaded_cost": "unknown: session subscription, ideation, review and hosting not measured",
+      "paid_generation": false
+    }
+  },
+  "recipe": {
+    "routine": "acquisition_199.creative_candidate.v1",
+    "version": "1.0.0",
+    "build_class": "low",
+    "component_owner": "component-studio",
+    "recipe_status": "six import requests pending; registry not duplicated",
+    "creative_controls": {
+      "famtastic_intensity": 3,
+      "customer_worlds": "distinct editorial/service/precision/route/bake/table layouts",
+      "research_depth": "canonical product/brand/component contracts; niche workflow assumptions labeled illustrative",
+      "asset_strategy": "Original native HTML/CSS/SVG illustrations, exact owner PNG, local card QR. No customer photos or generated plates.",
+      "motion": "none; reduced-motion rule supplied",
+      "success_gates": [
+        "six distinct rendered candidates",
+        "nine full drafts with one primary action",
+        "two shared previews in each D0",
+        "local QR decode",
+        "desktop/mobile and image-blocked browser review",
+        "owner review and import acceptance remain pending"
+      ]
+    },
+    "existing_reuse_coverage": {
+      "artifact": "marketing/campaigns/acquisition-199/reuse-coverage.json",
+      "sha256": "01600da499b3d28524b55d9055d23614c8ba324ee5ea5991c2bfe95608508d85",
+      "categories": 10,
+      "readiness": "Existing source references and adaptation gaps; no additional acquisition approval or ready runtime inferred"
+    }
+  },
+  "stages": [
+    {
+      "stage_id": "creative-direction-and-copy",
+      "attempt": 1,
+      "capability": "source_grounded_email_and_layout_drafting",
+      "execution": {
+        "provider": {
+          "id": "openai_codex"
+        },
+        "model": {
+          "id": null,
+          "status": "not_disclosed_by_runtime"
+        },
+        "timing": {
+          "status": "not_instrumented_for_ideation"
+        },
+        "cost": {
+          "status": "not_available_from_runtime"
+        },
+        "input": {
+          "sources": [
+            "canonical deal-terms v4 scope2",
+            "authoritative FAMtastic definition1.0.0",
+            "shared BrandedEmail",
+            "page-component doctrine",
+            "Email Marketing Strategist pinned profile"
+          ]
+        },
+        "output": {
+          "artifact": "marketing/campaigns/acquisition-199/messages.json",
+          "sha256": "5dffd5d5bfb99ed803c25015a62a469d4c862b148c7f027712de07ed20fd0a16"
+        }
+      },
+      "result": {
+        "status": "candidate",
+        "reviewer": "creative implementation self-review",
+        "decision": "No unsupported result/turnaround claim, no inferred owner approval"
+      }
+    },
+    {
+      "stage_id": "deterministic-render",
+      "attempt": 1,
+      "capability": "local_html_email_sample_and_qr_assembly",
+      "execution": {
+        "provider": {
+          "id": "local_node_php_pillow_existing_qr_encoder"
+        },
+        "model": {
+          "id": null,
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "measured_render_only",
+          "started_at": "2026-10-05T20:02:16.474Z",
+          "completed_at": "2026-10-05T20:02:16.682Z",
+          "duration_ms": 208
+        },
+        "cost": {
+          "status": "measured_new_provider_spend_zero_existing_subscriptions_unmeasured",
+          "new_provider_spend_usd": 0,
+          "currency": "USD"
+        },
+        "input": {
+          "artifact": "scripts/acquisition-creative-build.mjs",
+          "sha256": "94d6b324654d59fa0ff334725cfc14e54dda1c24f7f1c26a367064764fc5436f"
+        },
+        "output": {
+          "artifact": "marketing/campaigns/acquisition-199/recipes.json",
+          "sha256": "3e57d9dba9c5704ea06f9f23d781ba0c2b8cf2cbd400f9c3ecb8aa40cd654ebb"
+        }
+      },
+      "result": {
+        "status": "passed_local_source",
+        "limits": [
+          "Not provider or email-client proof"
+        ]
+      }
+    },
+    {
+      "stage_id": "native-qr-decode-and-source-qa",
+      "attempt": 1,
+      "capability": "independent_qr_decode_and_draft_contract_validation",
+      "execution": {
+        "provider": {
+          "id": "local_node_and_macos_vision"
+        },
+        "model": {
+          "id": null,
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "partial_qa_timestamp_only",
+          "completed_at": "2026-10-05T20:05:28.884Z"
+        },
+        "cost": {
+          "status": "no_external_provider_called",
+          "new_provider_spend_usd": 0
+        },
+        "output": {
+          "artifact": "marketing/campaigns/acquisition-199/evidence/source-qa.json",
+          "sha256": "040a7cddb7d148e648da12b6ab6c3416084f0cfa19ad0526d188c6d27bcc9b7c"
+        }
+      },
+      "result": {
+        "status": "passed",
+        "assertions": 281,
+        "decoder": "macOS Vision",
+        "limits": [
+          "Source contracts and local rendering only",
+          "Email-client inbox rendering unverified",
+          "Physical phone scan at email display size unobserved",
+          "Owner creative review pending",
+          "Component Studio import acceptance pending",
+          "Provider/sending/real cohort held"
+        ]
+      }
+    },
+    {
+      "stage_id": "cua-browser-review",
+      "attempt": 1,
+      "capability": "desktop_mobile_images_blocked_local_browser_review",
+      "execution": {
+        "provider": {
+          "id": "codex_cua_inapp_browser"
+        },
+        "model": {
+          "id": null,
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "partial_capture_timestamp_only",
+          "completed_at": "2026-10-05T19:36:37.500Z"
+        },
+        "cost": {
+          "status": "no_external_provider_called"
+        },
+        "output": {
+          "artifact": "marketing/campaigns/acquisition-199/evidence/browser-qa.json",
+          "sha256": "9013e3d88306d5108a9e78c860ba908313b9caebc8b0fdbb2f22477acf0e730a"
+        }
+      },
+      "result": {
+        "status": "passed_prior_copy_local_browser",
+        "decision": "No horizontal overflow; loaded assets; primary buttons exceed44px; blocked images retain named text links; captured before latest phone-owner text/overview; retained as historical layout evidence",
+        "open_gates": [
+          "owner creative approval",
+          "Component Studio import acceptance",
+          "actual Gmail/Outlook/Apple Mail controlled inbox proof",
+          "physical phone scan",
+          "bound reviewed invitation/unsubscribe/QR hosting",
+          "exact cohort/content/provider sending approval"
+        ],
+        "refresh_limit": "After freeze CUA returned browsers:[] and Browser is not available: iab; no fresh CUA claim."
+      }
+    },
+    {
+      "stage_id": "current-independent-browser-review",
+      "attempt": 1,
+      "capability": "hash_bound_desktop_mobile_images_blocked_browser_checks",
+      "execution": {
+        "provider": {
+          "id": "root_local_playwright_chromium"
+        },
+        "model": {
+          "id": null,
+          "status": "not_applicable"
+        },
+        "timing": {
+          "status": "partial_timestamp_only",
+          "completed_at": "2026-10-05T19:59:31.622Z"
+        },
+        "cost": {
+          "status": "no_external_provider_called"
+        },
+        "output": {
+          "artifact": "marketing/campaigns/acquisition-199/evidence/current-browser-qa.json",
+          "sha256": "2bcac67d2a1d4259fa62b852ca21f3837e056bab004b2eb121eab98ad6fa3e3b"
+        }
+      },
+      "result": {
+        "status": "passed_current_local_browser",
+        "rows": 48,
+        "decision": "Every observed artifact hash matches current sample/email/blocked source; independent local checks, not inbox proof",
+        "limits": [
+          "Source contracts and local rendering only",
+          "Email-client inbox rendering unverified",
+          "Physical phone scan at email display size unobserved",
+          "Owner creative review pending",
+          "Component Studio import acceptance pending",
+          "Provider/sending/real cohort held"
+        ]
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "role": "rights_safe_asset",
+      "path": "marketing/campaigns/acquisition-199/assets/baking_signature-preview.jpg",
+      "sha256": "feb91de256a7000314a6afa5d21ffcf06bdb422c9f9838b4fa48cb67ef1780fe",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "rights_safe_asset",
+      "path": "marketing/campaigns/acquisition-199/assets/beauty_editorial-preview.jpg",
+      "sha256": "9c6cb1cee990435886a1ab08a0fdbb59655fc02f75cb25e30e111101244bcbac",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "rights_safe_asset",
+      "path": "marketing/campaigns/acquisition-199/assets/beauty_service_first-preview.jpg",
+      "sha256": "99fea9999a459ac3bcaad543df9fb9dc05d1d0d46dff43e56aabc51e0ceff72c",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "rights_safe_asset",
+      "path": "marketing/campaigns/acquisition-199/assets/catering_table_story-preview.jpg",
+      "sha256": "51491b81b43710bbf82302b2352c34ceaaa11b60ee3fcaf75068fb8f38c8f260",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "rights_safe_asset",
+      "path": "marketing/campaigns/acquisition-199/assets/connect-qr-matrix.json",
+      "sha256": "af3b97599b43867f19c764676ac24d8b365711c704ae52295091289a27197f05",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "rights_safe_asset",
+      "path": "marketing/campaigns/acquisition-199/assets/connect-qr.png",
+      "sha256": "ed569de9c97e0b6c960c957552a43ed41fa7b1843e0e61a3216d462286516e84",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "rights_safe_asset",
+      "path": "marketing/campaigns/acquisition-199/assets/connect-qr.svg",
+      "sha256": "b0b9f104b6d68db5a845714f99d3adfd3b901788c7e7f46e7feec4635d32b9e9",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "rights_safe_asset",
+      "path": "marketing/campaigns/acquisition-199/assets/detailing_precision-preview.jpg",
+      "sha256": "b7be92f6db9153d7d32b9007bffd0a7b7acfd8026c6cdb8e8ec4d15013665376",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "rights_safe_asset",
+      "path": "marketing/campaigns/acquisition-199/assets/detailing_route_ready-preview.jpg",
+      "sha256": "e2d445e6c666ae748df79e47d65ce95942aade749ee9c9d22d3c07762015e7e7",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "rights_safe_asset",
+      "path": "marketing/campaigns/acquisition-199/assets/famtastic-designs-logo-v1.png",
+      "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/baking_catering_d0-images-blocked.html",
+      "sha256": "cda138a1ac205e87d2ca641394ce3895181af7b9bf989ff1a34fb615b2e6d828",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/baking_catering_d0.html",
+      "sha256": "d326811bdaedce160e1aebbf63fc9b80a9a24489cfbbbf1f6ab9be9b20c4ffa3",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/baking_catering_d0.txt",
+      "sha256": "5851ca9bc088a6fdff21c76f389e39d5e5a0983bc2103adda00da4948418b39d",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/baking_catering_d3-images-blocked.html",
+      "sha256": "c74a6eb368e3fe9f71bdada2ba7394fa41ced008af3d7adc3a18ac273b4ac642",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/baking_catering_d3.html",
+      "sha256": "393fe05b40fbb70d6b4c9aa6189fce5486e171af25918561ab8be3bcc840fe21",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/baking_catering_d3.txt",
+      "sha256": "17916f93d270c0ee32d43895e34367b07f9e7ffea79e721bce4faa2f15abfbc8",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/baking_catering_d7-images-blocked.html",
+      "sha256": "86b02e67d88cbf06f5afd08562d64e0a8891b26e9d60657bef8d176c59b59a0d",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/baking_catering_d7.html",
+      "sha256": "45b6751f32c2f7916efdbfe4d634b140b3d5313b6a625db5a82f900f5aff1fdc",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/baking_catering_d7.txt",
+      "sha256": "39aaea8d800c363b1fa5de59372d56ea0edd459ab972129341113cd700fe2fde",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/beauty_hair_d0-images-blocked.html",
+      "sha256": "9d93869a28d8352d84f256aaea382314247fd739e50a1571506734e044b0daf2",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/beauty_hair_d0.html",
+      "sha256": "e11a24b9350e1d0a1559ae194e84840e7ce957ced8687aab30dc64c830e5acfb",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/beauty_hair_d0.txt",
+      "sha256": "b98aaa8783ca27b87dba8c14f4021bd4aa3a81cfd032ece7fffeab447e40877b",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/beauty_hair_d3-images-blocked.html",
+      "sha256": "fd3792e4f8e2b2c8fa5f4cca7edce6efcd778d5ed9b33488896c28f2fb548ec7",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/beauty_hair_d3.html",
+      "sha256": "bdbe61313a09fc812ec7d1aae5ad5f7b7e4a7684770f5bea90912947fb6bcd82",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/beauty_hair_d3.txt",
+      "sha256": "b8821269cd6664eb280a13cda53f2af773860744b7e73e7d60d607c4bef03e4c",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/beauty_hair_d7-images-blocked.html",
+      "sha256": "9bae3ef6e1f139e82fd7435b6c8cbaf4571de539b52f29324fda2878a7bf5b1f",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/beauty_hair_d7.html",
+      "sha256": "634db76e1b9448dceb0efb3dcf96fb68de46ac7f3123bc9448b9ba1f403233fb",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/beauty_hair_d7.txt",
+      "sha256": "43da73ed470b8e218ba12f42ce775299725301d73e8d8df8a16cbbb4bc8886f0",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/mobile_detailing_d0-images-blocked.html",
+      "sha256": "8d4853316f4866fd4aec75423bdafb7a13067a501cd53d98b37231e97f5ffc7e",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/mobile_detailing_d0.html",
+      "sha256": "1454ba86e5bdbb05914e7bdf150177e693ee596d229fc29d6ef515f0ea9d2308",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/mobile_detailing_d0.txt",
+      "sha256": "b35b7aab98f6a8d703834c062174c33c4f549bd1258ac039b482f8b79c89e76a",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/mobile_detailing_d3-images-blocked.html",
+      "sha256": "6e53ea001cfbb601a86d281bece0293641909962a70b4acd3d796e8544b29ac9",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/mobile_detailing_d3.html",
+      "sha256": "8308e9273099b9a44aa4a6d291bb4f7e6116f1f47ac9d9a9935d652f0aa85e07",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/mobile_detailing_d3.txt",
+      "sha256": "246ab98af61049150bec1e7798ad1f6067437c51855b72b7f662628e73dde4c5",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/mobile_detailing_d7-images-blocked.html",
+      "sha256": "633a2da13cc2499819ebde9f45decc6a6fa56d7d9a073c801cfdd93305b03041",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/mobile_detailing_d7.html",
+      "sha256": "d18bf7512f2a16cb4916ba1a3c2b62f2c9d37d10502ab4326d98a18eba2894d2",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/emails/mobile_detailing_d7.txt",
+      "sha256": "a774a9fe97301cc3801210198ffe71c83f298c2a019636818c00a78817e51234",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/baking_catering_d0-blocked-mobile.jpg",
+      "sha256": "34b565739537fad25e66227f153fd0c7e3e3bf2873dae790d4f041adfc3861c1",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/baking_catering_d0-desktop.jpg",
+      "sha256": "89bbea2881856f76f7fa5e2731ec0d8b1a58ddbaeda2424e349378db3f0c5084",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/baking_catering_d0-mobile.jpg",
+      "sha256": "572e1837c2fb4e1b68c675c4868cf9f74522436866886a72e8d8cebf5b29e52d",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/baking_catering_d3-blocked-mobile.jpg",
+      "sha256": "d4bcea2d85fcde53db275c7dcdb2662f987596ba387fd1cf3b2f8960788e214b",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/baking_catering_d3-desktop.jpg",
+      "sha256": "e915af4fea0a50e5632ed7a0fd885b0f10479407e1b30d3fa8104cc94b653f37",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/baking_catering_d3-mobile.jpg",
+      "sha256": "cb1bdaf5182d47eea375f71dcdd96af87e8549ff07b20a6f5609314b7db7c0b4",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/baking_catering_d7-blocked-mobile.jpg",
+      "sha256": "86f2f6e7d0661964bc64340d17d688ff05572f930070aa9f6b52088f0a12dab3",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/baking_catering_d7-desktop.jpg",
+      "sha256": "5006acb9f5cb479062677a77795504a8db72015e3bb31ed7c564e1e0c45c1404",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/baking_catering_d7-mobile.jpg",
+      "sha256": "e687e9e034f67e6bd6e6fe98803593ed83f40a38ba98c7983db46b02e0b37f90",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/baking_signature-mobile.jpg",
+      "sha256": "4fc8619af42c586108e002d5289c6200c858dfa7bf2f9d775091f58723c8ded2",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/baking_signature-shared-desktop.jpg",
+      "sha256": "fcd9eb5c880f6791482534e366520f98bb39126cf976103210a4242077bf8939",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_editorial-mobile.jpg",
+      "sha256": "44f367dce5d845a35390d064b5874cff9d78fa62a09403daa7f3428495896d26",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_editorial-shared-desktop.jpg",
+      "sha256": "4a26b62867b5bf2a261519968e5924fcd4fe46ccf98c1192a5189ab668105316",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_hair_d0-blocked-mobile.jpg",
+      "sha256": "0f50125b2c4eec8b9efce96054ea958019a8e4e194438007af08af06e293df26",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_hair_d0-desktop.jpg",
+      "sha256": "0845bbccea1f89e2730374de72812994170ca3e91288a8937601a29bb18ef926",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_hair_d0-mobile.jpg",
+      "sha256": "a7597f19aa38fdc9d887c2232a6beb8a91167d5354fe810c075685db35df26a0",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_hair_d3-blocked-mobile.jpg",
+      "sha256": "46275358a96ef80f91e8bfc3dc2567e1089c32562b662f468e55f8057da3aa4b",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_hair_d3-desktop.jpg",
+      "sha256": "2f6f82f6cbc19e72b097a5d71eb5da7f02d4ce289221cc8fba4eb20a9ecab0b4",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_hair_d3-mobile.jpg",
+      "sha256": "5c88d469b96d26adc21886fbac2ecb8938e86c4f9d0d8bd44c31899f078fe3ad",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_hair_d7-blocked-mobile.jpg",
+      "sha256": "64ae7339ca8d1007945ff815e19e519b62c8665b95fab8758930dfea7d9323d6",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_hair_d7-desktop.jpg",
+      "sha256": "0a96715b7830468db8f4779c58ed6e4f734dab5941ba50e2b44c193ebd8c3d43",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_hair_d7-mobile.jpg",
+      "sha256": "a293dfac9664c62ddfb7ea5c17217c466ae9c90f047a1fd967d2dcc5d7f7d4b1",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_service_first-mobile.jpg",
+      "sha256": "270120665a5d2a3e98856b55d3229d37af2a40760e4028cd56a91ee70856cf9d",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/beauty_service_first-shared-desktop.jpg",
+      "sha256": "97f2e5f466234e3c7a730c47e3dbae23e8dbb6d8c8d3d69db8256ad0a26c3f27",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/browser-qa.json",
+      "sha256": "9013e3d88306d5108a9e78c860ba908313b9caebc8b0fdbb2f22477acf0e730a",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/catering_table_story-mobile.jpg",
+      "sha256": "3b5a09dd27d98bf3d0a0d2a6c723ec425a0e881302c72b251abb9b58d1261fd7",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/catering_table_story-shared-desktop.jpg",
+      "sha256": "5bd1879bc26256745637fd29a17653aa0603de8d530401cc5a2e42b50ea2f513",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/current-browser-qa.json",
+      "sha256": "2bcac67d2a1d4259fa62b852ca21f3837e056bab004b2eb121eab98ad6fa3e3b",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/detailing_precision-mobile.jpg",
+      "sha256": "25e8d354eb17eb572fbbce2a8b6fd5078991d6385038a19fdd1dc20c4fc1ab1f",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/detailing_precision-shared-desktop.jpg",
+      "sha256": "c017460dedca4a5fb24b83b02f1fffa0f15cd58f965c018ae2d3a1bb6a45f4a1",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/detailing_route_ready-mobile.jpg",
+      "sha256": "cf6b92216a5841cc01a545116a65751c9b65b504933c4cc6f14f7a83fc5caf58",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/detailing_route_ready-shared-desktop.jpg",
+      "sha256": "9a88153b4cb78466d11410536bfc3044f1fb9e840a6442e649b1a41313cf879e",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/mobile_detailing_d0-blocked-mobile.jpg",
+      "sha256": "c56f433d899a542d7785005978eb7bf547bb3196bb3df2ac3cf43cd4f34d9d7e",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/mobile_detailing_d0-desktop.jpg",
+      "sha256": "d5b52f5b434cadb38a1223922f790d763b399c77dc4d1c2e55c2e60b42311759",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/mobile_detailing_d0-mobile.jpg",
+      "sha256": "1af3aeb583775dc2218a2a8c6b0453d9fd706a54727b46168bdebd0a9ebfb7f5",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/mobile_detailing_d3-blocked-mobile.jpg",
+      "sha256": "77708831dd024560bd2ba7ba22d49c897b2d20590be5ea03e3be4d0fb5afd57c",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/mobile_detailing_d3-desktop.jpg",
+      "sha256": "0c77304d1614bf1aea1752803a857810745aa10aa018cdef2e543f3151d53191",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/mobile_detailing_d3-mobile.jpg",
+      "sha256": "96d2b7a27ad0f19a52b57e5e9c87def02be02d6be80cb56ee43387e18f2b5b6a",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/mobile_detailing_d7-blocked-mobile.jpg",
+      "sha256": "8cefe73cf779b8f12db0306bf1fb7c479bc7d83161f2135d358242e1d92959d8",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/mobile_detailing_d7-desktop.jpg",
+      "sha256": "701bee32d46ca41cbd80854b5ae791a7981bba01e81716ebc12f65721d8ac7c2",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/mobile_detailing_d7-mobile.jpg",
+      "sha256": "469cb2e9860cd470c02575e1996ee04a45afced5464368e571265d26a303f47e",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/render-receipt.json",
+      "sha256": "395bb45362154cac8de0fe26b845b39562524dec6d95990ccd196248b274b330",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/six-direction-review.jpg",
+      "sha256": "4daf29d7f683f1cdb727a023b90c1b49e16b27789f946662f3375328bb9418fd",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "local_qa_evidence",
+      "path": "marketing/campaigns/acquisition-199/evidence/source-qa.json",
+      "sha256": "040a7cddb7d148e648da12b6ab6c3416084f0cfa19ad0526d188c6d27bcc9b7c",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/first-look.html",
+      "sha256": "873ceacd6e6eb508bdc59490e763dfded2f22a75532490b3270cbff5d8f7ead4",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/index.html",
+      "sha256": "4905f3b7db8c53fb3ba8e812aecae68d500c251d3426f4aa2ace81ee59a62775",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/messages.json",
+      "sha256": "5dffd5d5bfb99ed803c25015a62a469d4c862b148c7f027712de07ed20fd0a16",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/recipes.json",
+      "sha256": "3e57d9dba9c5704ea06f9f23d781ba0c2b8cf2cbd400f9c3ecb8aa40cd654ebb",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/reuse-coverage.json",
+      "sha256": "01600da499b3d28524b55d9055d23614c8ba324ee5ea5991c2bfe95608508d85",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/baking_signature-shared.html",
+      "sha256": "8a954ca381868f1ed8149f9b3fc5fa7840f1832031f0bf4eae31a7d84565dbc6",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/baking_signature.html",
+      "sha256": "1782f7de4980f3087ac38556dd5354ab6f7770cdce18f6ef95309fc0286cd153",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/beauty_editorial-shared.html",
+      "sha256": "9d4cffc5a546536d2805e6fac8225f96b418df096ada6c2237c3ea349acc68ba",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/beauty_editorial.html",
+      "sha256": "6e2736454af4003cf000afba18739e640f375eff664f68b130c2ebef17a2b6bf",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/beauty_service_first-shared.html",
+      "sha256": "b2b496a0b830c2ea960c6e0f9885eb2c72a6127a347eba7196dbd866a3a88d0f",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/beauty_service_first.html",
+      "sha256": "d080e08760366865674ab8129728d4a7f30eb1ac25f0ba06f160f5822d286499",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/catering_table_story-shared.html",
+      "sha256": "d18d49e4190bd7bc2b7bc9898e45cf16d17be8905a0578c7f22947ee6bcba920",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/catering_table_story.html",
+      "sha256": "6e972db46a5062342f5dc12a3af78836e78566d70199ef928e178670c22b1d62",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/detailing_precision-shared.html",
+      "sha256": "2459675b3de782a0512960ff2977c26c7b3f94c1a8312a60b452e0bb883fe754",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/detailing_precision.html",
+      "sha256": "3c6f359448e0fa4c0ce2858aa14e350085f97e207c9bdf846102c91eec812203",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/detailing_route_ready-shared.html",
+      "sha256": "b08f0dd32f8b8c0cb35c0aa963bb0999ded6654634f6fa710b59b28ff359ca9c",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "marketing/campaigns/acquisition-199/samples/detailing_route_ready.html",
+      "sha256": "9cee1645727922586148746c6278c93402d941cb7798e4c81a96acbd153cc272",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "candidate_binding_template",
+      "path": "marketing/campaigns/acquisition-199/templates/baking_signature.html",
+      "sha256": "a1832b1ed31f755bb034a18dd70c47dad53fa9be8cae10eb9a07f0b17db0ba7a",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "candidate_binding_template",
+      "path": "marketing/campaigns/acquisition-199/templates/beauty_editorial.html",
+      "sha256": "9191308d901d5054c26e81088d2625a958b6a03a346615fe0e7b9c9634b1d93a",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "candidate_binding_template",
+      "path": "marketing/campaigns/acquisition-199/templates/beauty_service_first.html",
+      "sha256": "babbd090b93b1afebcbfacd48f9e34ea278da1f712c361e6e00afe3a0e85d0d0",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "candidate_binding_template",
+      "path": "marketing/campaigns/acquisition-199/templates/catering_table_story.html",
+      "sha256": "5ecc60b0c29d7901f4fcfcc64e72d71238a5656af3ae9ea648f0e33e2d743f76",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "candidate_binding_template",
+      "path": "marketing/campaigns/acquisition-199/templates/detailing_precision.html",
+      "sha256": "0df5a92001b46bb0eaae8ab396b68c7b8d01e3d616fbba6d118b21bdb396c20c",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "candidate_binding_template",
+      "path": "marketing/campaigns/acquisition-199/templates/detailing_route_ready.html",
+      "sha256": "81693b6b25f99686affaa283bf5c0b9707c4b970c9a4cdb1664f506b8cc45a5a",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "scripts/acquisition-creative-build.mjs",
+      "sha256": "94d6b324654d59fa0ff334725cfc14e54dda1c24f7f1c26a367064764fc5436f",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "scripts/acquisition-creative-render.php",
+      "sha256": "dca2b6fbea8b1f1a62f46f1b4842cc4e5019dab74014221aa468fad0d18209ac",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "scripts/acquisition-creative-test.mjs",
+      "sha256": "307c30facdd7a317965c3aac2961d309a7a9c90f5440f59bae1ae8ace6d4fea3",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "scripts/acquisition-creative-decode.swift",
+      "sha256": "06d79c0cf4701c33e401bbeeb846c5eab09c60ddba5c6818931f24f45eed34c5",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "scripts/acquisition-creative-finalize.mjs",
+      "sha256": "825ba6c08e820fba0c199c7a9a7ef6a722ffc2d82459d5db730a556002483304",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "docs/research/acquisition-199/creative-reuse-coverage.md",
+      "sha256": "90e3a610aa3b7ba38331d724017b94eb1996c73f453f9106f7754c7f5099be87",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    },
+    {
+      "role": "creative_source_or_review_artifact",
+      "path": "docs/research/acquisition-199/creative-review.md",
+      "sha256": "0c592a997cee09332ad6f7e769d1dc31cc6809255041c56544ce96a18e9c7c07",
+      "rights": "Original campaign HTML/CSS/SVG and local screenshots; exact owner-approved logo; existing MIT QR encoder reference",
+      "retention": "Selected golden candidate baseline; no private recipients or customer source"
+    }
+  ],
+  "retrieval": {
+    "filesystem": {
+      "path": "marketing/campaigns/acquisition-199/build-dna.json",
+      "review": "first-look.html and index.html"
+    },
+    "database": {
+      "status": "not_registered_local_candidate_only"
+    },
+    "site_studio": {
+      "status": "not_handed_off_shared_sample_candidate_not_customer_build"
+    }
+  },
+  "integrity": {
+    "artifact_hash_algorithm": "sha256"
+  },
+  "completion": {
+    "status": "candidate",
+    "deployment": "none",
+    "owner_accepted": false
+  }
+}

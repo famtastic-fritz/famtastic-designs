@@ -74,6 +74,24 @@ class OutreachMailer {
       throw new RuntimeException('notification_transport_invalid');
     }
 
+    return $this->deliver($to, $subject, $body, $htmlBody, $oneClickHeaders, $template, $templateVersion);
+  }
+
+  /** Disabled by default, frozen-message path used only by the exact adapter. */
+  public function sendFrozenAcquisition(string $to, array $snapshot, string $unsubscribeUrl): string {
+    $this->assertAcquisitionTransportAllowed();
+    if (!filter_var($to, FILTER_VALIDATE_EMAIL) || empty($snapshot['html']) || empty($snapshot['body']) || empty($snapshot['subject']) || empty($snapshot['postal_address'])) throw new RuntimeException('acquisition_frozen_content_invalid');
+    return $this->deliver($to, (string) $snapshot['subject'], (string) $snapshot['body'], (string) $snapshot['html'], $this->oneClickUnsubscribeHeaders($unsubscribeUrl), AcquisitionSampleSequenceService::MESSAGE_KIND, 1, (array) ($snapshot['attachments'] ?? []));
+  }
+
+  public function assertAcquisitionTransportAllowed(): void {
+    $enabled = static fn(string $env, string $setting): bool => filter_var(getenv($env) !== FALSE ? getenv($env) : Settings::get($setting, FALSE), FILTER_VALIDATE_BOOL);
+    if (!$enabled('FAMTASTIC_ALLOW_REAL_OUTREACH', 'famtastic_allow_real_outreach') || !$enabled('FAMTASTIC_ALLOW_ACQUISITION_REAL_OUTREACH', 'famtastic_allow_acquisition_real_outreach')) throw new RuntimeException('acquisition_real_dispatch_disabled');
+    if (Settings::get('famtastic_protected_staging', FALSE) || (getenv('FAMTASTIC_TRANSACTIONAL_EMAIL_TRANSPORT') ?: Settings::get('famtastic_transactional_email_transport', 'smtp')) !== 'smtp') throw new RuntimeException('acquisition_real_smtp_required');
+  }
+
+  /** One shared PHPMailer configuration for native mail and frozen acquisitions. */
+  private function deliver(string $to, string $subject, string $body, string $htmlBody, array $oneClickHeaders, string $template, int $templateVersion, array $attachments = []): string {
     $smtp = $this->configFactory->get('smtp.settings');
     $host = trim((string) $smtp->get('smtp_host'));
     $port = (int) $smtp->get('smtp_port');
@@ -123,6 +141,12 @@ class OutreachMailer {
       $mailer->isHTML(TRUE);
       $mailer->Body = $htmlBody;
       $mailer->AltBody = $body;
+      foreach ($attachments as $attachment) {
+        $cid = (string) ($attachment['cid'] ?? '');
+        $bytes = base64_decode((string) ($attachment['bytes_base64'] ?? ''), TRUE);
+        if (!preg_match('/^(?:connect-qr|sample-[a-z0-9_]+)$/D', $cid) || $bytes === FALSE || strlen($bytes) > 1048576 || !hash_equals((string) ($attachment['sha256'] ?? ''), hash('sha256', $bytes)) || !in_array($attachment['media_type'] ?? '', ['image/png', 'image/jpeg'], TRUE)) throw new RuntimeException('acquisition_attachment_integrity_failed');
+        $mailer->addStringEmbeddedImage($bytes, $cid, $cid . ($attachment['media_type'] === 'image/png' ? '.png' : '.jpg'), 'base64', $attachment['media_type']);
+      }
       $mailer->send();
       $providerMessageId = trim($mailer->getLastMessageID());
       if ($providerMessageId === '') {

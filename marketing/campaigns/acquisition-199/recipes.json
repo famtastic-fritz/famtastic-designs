@@ -1,0 +1,648 @@
+{
+  "schema": "famtastic.acquisition-samples.v1",
+  "campaign_id": "acquisition-199",
+  "version": 1,
+  "review_status": "candidate",
+  "registry_owner": "component-studio",
+  "niches": [
+    {
+      "id": "beauty_hair",
+      "label": "Beauty & hair",
+      "directions": [
+        {
+          "id": "beauty_editorial",
+          "niche": "beauty_hair",
+          "title": "The Signature Edit",
+          "summary": "An editorial opening, a dedicated care note and a clear request path.",
+          "style": "editorial",
+          "palette": {
+            "background": "#21151d",
+            "paper": "#fff7ed",
+            "accent": "#eeb4c6",
+            "ink": "#21151d"
+          },
+          "headline": "Your style.\nYour signature.",
+          "eyebrow": "Hair & beauty · illustrative direction",
+          "action": "Request an appointment",
+          "services": [
+            "Your signature service",
+            "Your care & maintenance",
+            "Your next appointment"
+          ],
+          "steps": [
+            "Find the service that fits",
+            "Read the preparation notes",
+            "Request a time or open your existing booking link"
+          ],
+          "motif": "coil",
+          "about": "Make space for the details that make your work yours: the finish, the care and the conversation before an appointment.",
+          "faq": "How do I prepare? Show your real preparation and cancellation policies here.",
+          "version": 1,
+          "illustrative": true,
+          "action_label": "Request an appointment",
+          "render_path": "templates/beauty_editorial.html",
+          "review_path": "samples/beauty_editorial.html",
+          "recipe_ref": {
+            "owner": "component-studio",
+            "id": "beauty_editorial",
+            "version": 1,
+            "status": "import_request_pending",
+            "contract": "FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1"
+          },
+          "bindings_allowed": [
+            "business_name",
+            "locality",
+            "phone",
+            "booking_url",
+            "inquiry_url"
+          ],
+          "composition": {
+            "instance_prefix": "beauty_editorial",
+            "order": [
+              "hero",
+              "services",
+              "story",
+              "request"
+            ],
+            "source_reuse": [
+              "scripts/creator-credit.mjs",
+              "services.card-grid.v1"
+            ],
+            "new_candidate_parts": [
+              "hero.direction-candidate.v1",
+              "story.business.v1",
+              "inquiry.explained-flow.v1"
+            ]
+          },
+          "reuse_lineage": {
+            "reference_recipe": {
+              "id": "booked-branded-one-page-v1",
+              "version": 1,
+              "status": "existing_local_proof_not_acquisition_approval"
+            },
+            "existing_pattern_refs": [
+              "services.card-grid.v1",
+              "operations.booking-desk.v1",
+              "booking.request-form.v1"
+            ],
+            "direct_code_reuse": [
+              "scripts/creator-credit.mjs"
+            ],
+            "owner_demo_owner": "Designs native Sample Lab component AcquisitionOwnerDemo; not duplicated in the templates",
+            "owner_workflow": [
+              "review_inquiry",
+              "draft_reply",
+              "request_status",
+              "inquiry_instructions",
+              "project_and_conversation_review"
+            ],
+            "new_adaptation": "Niche-specific copy, order, geometric illustration and safely bound scanner-inert HTML",
+            "source_media_reused": false,
+            "beauty_barber_reference": {
+              "source": "frontend/public/showcase/booked-and-branded-pilot/creative-system.json",
+              "revision": "booked-branded-v5-20260827",
+              "business_families": [
+                "coastline-crown-barbers/Crown & Craft",
+                "velvet-coil-atelier/Coil & Clay"
+              ],
+              "archetype": "a/Signature Editorial",
+              "preserved": [
+                "serif editorial hierarchy",
+                "arched frame",
+                "fine contour craft motif",
+                "explicit service/request path"
+              ],
+              "not_copied": [
+                "fictional customer/service prices",
+                "generated photography",
+                "payment QR or testimonial activation",
+                "unproved package guarantees"
+              ],
+              "why_adapted": "Retain the existing visual/workflow ideas while keeping the initial acquisition sample truthful, broadly reusable, safely bound and separate from formal customer proofs."
+            }
+          }
+        },
+        {
+          "id": "beauty_service_first",
+          "niche": "beauty_hair",
+          "title": "The Service Studio",
+          "summary": "A service menu leads; practical preparation and a phone-friendly booking handoff follow.",
+          "style": "service-first",
+          "palette": {
+            "background": "#f1efe6",
+            "paper": "#ffffff",
+            "accent": "#33483c",
+            "ink": "#1e2924"
+          },
+          "headline": "Good hair starts\nwith a clear plan.",
+          "eyebrow": "Service-led hair & beauty · illustrative direction",
+          "action": "Find my service",
+          "services": [
+            "Choose your service",
+            "Plan your visit",
+            "Keep your style"
+          ],
+          "steps": [
+            "Compare your real service options",
+            "Check location and preparation",
+            "Continue to your approved contact or booking path"
+          ],
+          "motif": "menu",
+          "about": "Let a first-time client understand what to request before they reach out. Keep your existing booking service when it serves the business.",
+          "faq": "Can I book online? Connect the business-approved booking link; live calendar sync is separate scope.",
+          "version": 1,
+          "illustrative": true,
+          "action_label": "Find my service",
+          "render_path": "templates/beauty_service_first.html",
+          "review_path": "samples/beauty_service_first.html",
+          "recipe_ref": {
+            "owner": "component-studio",
+            "id": "beauty_service_first",
+            "version": 1,
+            "status": "import_request_pending",
+            "contract": "FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1"
+          },
+          "bindings_allowed": [
+            "business_name",
+            "locality",
+            "phone",
+            "booking_url",
+            "inquiry_url"
+          ],
+          "composition": {
+            "instance_prefix": "beauty_service_first",
+            "order": [
+              "services",
+              "hero",
+              "story",
+              "request"
+            ],
+            "source_reuse": [
+              "scripts/creator-credit.mjs",
+              "services.card-grid.v1"
+            ],
+            "new_candidate_parts": [
+              "hero.direction-candidate.v1",
+              "story.business.v1",
+              "inquiry.explained-flow.v1"
+            ]
+          },
+          "reuse_lineage": {
+            "reference_recipe": {
+              "id": "booked-branded-one-page-v1",
+              "version": 1,
+              "status": "existing_local_proof_not_acquisition_approval"
+            },
+            "existing_pattern_refs": [
+              "services.card-grid.v1",
+              "operations.booking-desk.v1",
+              "booking.request-form.v1"
+            ],
+            "direct_code_reuse": [
+              "scripts/creator-credit.mjs"
+            ],
+            "owner_demo_owner": "Designs native Sample Lab component AcquisitionOwnerDemo; not duplicated in the templates",
+            "owner_workflow": [
+              "review_inquiry",
+              "draft_reply",
+              "request_status",
+              "inquiry_instructions",
+              "project_and_conversation_review"
+            ],
+            "new_adaptation": "Niche-specific copy, order, geometric illustration and safely bound scanner-inert HTML",
+            "source_media_reused": false,
+            "beauty_barber_reference": {
+              "source": "frontend/public/showcase/booked-and-branded-pilot/creative-system.json",
+              "revision": "booked-branded-v5-20260827",
+              "business_families": [
+                "coastline-crown-barbers/Crown & Craft",
+                "velvet-coil-atelier/Coil & Clay"
+              ],
+              "archetype": "c/Chairside OS",
+              "preserved": [
+                "service-first utility",
+                "owner decides next step",
+                "phone-safe ordered request workflow"
+              ],
+              "not_copied": [
+                "fictional customer/service prices",
+                "generated photography",
+                "payment QR or testimonial activation",
+                "unproved package guarantees"
+              ],
+              "why_adapted": "Retain the existing visual/workflow ideas while keeping the initial acquisition sample truthful, broadly reusable, safely bound and separate from formal customer proofs."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "mobile_detailing",
+      "label": "Mobile detailing",
+      "directions": [
+        {
+          "id": "detailing_precision",
+          "niche": "mobile_detailing",
+          "title": "Precision in Motion",
+          "summary": "A bold service opening, a finish checklist and a vehicle/location inquiry.",
+          "style": "precision",
+          "palette": {
+            "background": "#101d24",
+            "paper": "#eef7f9",
+            "accent": "#9eeaf2",
+            "ink": "#101d24"
+          },
+          "headline": "Detail in every\ndirection.",
+          "eyebrow": "Mobile detailing · illustrative direction",
+          "action": "Request a detail",
+          "services": [
+            "Exterior care",
+            "Interior care",
+            "Your service packages"
+          ],
+          "steps": [
+            "Choose the kind of detail",
+            "Share vehicle and service location",
+            "Receive the owner’s response before confirming"
+          ],
+          "motif": "auto",
+          "about": "Bring the finish into focus. Explain what each service includes, where you work and what the vehicle owner should prepare.",
+          "faq": "Do you come to me? Publish only verified service areas, access needs and water/power requirements.",
+          "version": 1,
+          "illustrative": true,
+          "action_label": "Request a detail",
+          "render_path": "templates/detailing_precision.html",
+          "review_path": "samples/detailing_precision.html",
+          "recipe_ref": {
+            "owner": "component-studio",
+            "id": "detailing_precision",
+            "version": 1,
+            "status": "import_request_pending",
+            "contract": "FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1"
+          },
+          "bindings_allowed": [
+            "business_name",
+            "locality",
+            "phone",
+            "booking_url",
+            "inquiry_url"
+          ],
+          "composition": {
+            "instance_prefix": "detailing_precision",
+            "order": [
+              "hero",
+              "services",
+              "story",
+              "request"
+            ],
+            "source_reuse": [
+              "scripts/creator-credit.mjs",
+              "services.card-grid.v1"
+            ],
+            "new_candidate_parts": [
+              "hero.direction-candidate.v1",
+              "story.business.v1",
+              "inquiry.explained-flow.v1"
+            ]
+          },
+          "reuse_lineage": {
+            "reference_recipe": {
+              "id": "booked-branded-one-page-v1",
+              "version": 1,
+              "status": "existing_local_proof_not_acquisition_approval"
+            },
+            "existing_pattern_refs": [
+              "services.card-grid.v1",
+              "operations.booking-desk.v1",
+              "booking.request-form.v1"
+            ],
+            "direct_code_reuse": [
+              "scripts/creator-credit.mjs"
+            ],
+            "owner_demo_owner": "Designs native Sample Lab component AcquisitionOwnerDemo; not duplicated in the templates",
+            "owner_workflow": [
+              "review_inquiry",
+              "draft_reply",
+              "request_status",
+              "inquiry_instructions",
+              "project_and_conversation_review"
+            ],
+            "new_adaptation": "Niche-specific copy, order, geometric illustration and safely bound scanner-inert HTML",
+            "source_media_reused": false
+          }
+        },
+        {
+          "id": "detailing_route_ready",
+          "niche": "mobile_detailing",
+          "title": "Route Ready",
+          "summary": "Location comes first, followed by service choices and a tidy request checklist.",
+          "style": "route-ready",
+          "palette": {
+            "background": "#fff4da",
+            "paper": "#fffdf7",
+            "accent": "#95431b",
+            "ink": "#342516"
+          },
+          "headline": "Clean car.\nClear next step.",
+          "eyebrow": "Service-area first · illustrative direction",
+          "action": "Check my location",
+          "services": [
+            "Where you work",
+            "What your vehicle needs",
+            "How to request service"
+          ],
+          "steps": [
+            "Check the real service area",
+            "Choose a service and vehicle type",
+            "Ask about a date; availability is confirmed by the owner"
+          ],
+          "motif": "route",
+          "about": "For a business that travels, help the customer answer “Can you come here?” before asking for a detailed quote.",
+          "faq": "Is my location covered? Display the actual towns or ZIP codes approved by the business.",
+          "version": 1,
+          "illustrative": true,
+          "action_label": "Check my location",
+          "render_path": "templates/detailing_route_ready.html",
+          "review_path": "samples/detailing_route_ready.html",
+          "recipe_ref": {
+            "owner": "component-studio",
+            "id": "detailing_route_ready",
+            "version": 1,
+            "status": "import_request_pending",
+            "contract": "FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1"
+          },
+          "bindings_allowed": [
+            "business_name",
+            "locality",
+            "phone",
+            "booking_url",
+            "inquiry_url"
+          ],
+          "composition": {
+            "instance_prefix": "detailing_route_ready",
+            "order": [
+              "hero",
+              "services",
+              "story",
+              "request"
+            ],
+            "source_reuse": [
+              "scripts/creator-credit.mjs",
+              "services.card-grid.v1"
+            ],
+            "new_candidate_parts": [
+              "hero.direction-candidate.v1",
+              "story.business.v1",
+              "inquiry.explained-flow.v1"
+            ]
+          },
+          "reuse_lineage": {
+            "reference_recipe": {
+              "id": "booked-branded-one-page-v1",
+              "version": 1,
+              "status": "existing_local_proof_not_acquisition_approval"
+            },
+            "existing_pattern_refs": [
+              "services.card-grid.v1",
+              "operations.booking-desk.v1",
+              "booking.request-form.v1"
+            ],
+            "direct_code_reuse": [
+              "scripts/creator-credit.mjs"
+            ],
+            "owner_demo_owner": "Designs native Sample Lab component AcquisitionOwnerDemo; not duplicated in the templates",
+            "owner_workflow": [
+              "review_inquiry",
+              "draft_reply",
+              "request_status",
+              "inquiry_instructions",
+              "project_and_conversation_review"
+            ],
+            "new_adaptation": "Niche-specific copy, order, geometric illustration and safely bound scanner-inert HTML",
+            "source_media_reused": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "baking_catering",
+      "label": "Custom baking & catering",
+      "directions": [
+        {
+          "id": "baking_signature",
+          "niche": "baking_catering",
+          "title": "The Signature Bake",
+          "summary": "A celebration-led story, custom-work examples and a date/servings inquiry.",
+          "style": "signature-bake",
+          "palette": {
+            "background": "#4c2034",
+            "paper": "#fff4e9",
+            "accent": "#edc16d",
+            "ink": "#4c2034"
+          },
+          "headline": "Made for\nyour moment.",
+          "eyebrow": "Custom baking · illustrative direction",
+          "action": "Ask about my date",
+          "services": [
+            "Celebration cakes",
+            "Your signature bakes",
+            "Custom event requests"
+          ],
+          "steps": [
+            "Share your date and servings",
+            "Describe the style you have in mind",
+            "Receive an owner-confirmed scope and quote"
+          ],
+          "motif": "cake",
+          "about": "Show the work you have permission to share. Give each celebration a clear first conversation rather than a checkout that promises an unconfirmed date.",
+          "faq": "Can you accommodate allergies? Publish only owner-verified policies; never imply an allergen-free environment.",
+          "version": 1,
+          "illustrative": true,
+          "action_label": "Ask about my date",
+          "render_path": "templates/baking_signature.html",
+          "review_path": "samples/baking_signature.html",
+          "recipe_ref": {
+            "owner": "component-studio",
+            "id": "baking_signature",
+            "version": 1,
+            "status": "import_request_pending",
+            "contract": "FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1"
+          },
+          "bindings_allowed": [
+            "business_name",
+            "locality",
+            "phone",
+            "booking_url",
+            "inquiry_url"
+          ],
+          "composition": {
+            "instance_prefix": "baking_signature",
+            "order": [
+              "hero",
+              "services",
+              "story",
+              "request"
+            ],
+            "source_reuse": [
+              "scripts/creator-credit.mjs",
+              "services.card-grid.v1"
+            ],
+            "new_candidate_parts": [
+              "hero.direction-candidate.v1",
+              "story.business.v1",
+              "inquiry.explained-flow.v1"
+            ]
+          },
+          "reuse_lineage": {
+            "reference_recipe": {
+              "id": "booked-branded-one-page-v1",
+              "version": 1,
+              "status": "existing_local_proof_not_acquisition_approval"
+            },
+            "existing_pattern_refs": [
+              "services.card-grid.v1",
+              "operations.booking-desk.v1",
+              "booking.request-form.v1"
+            ],
+            "direct_code_reuse": [
+              "scripts/creator-credit.mjs"
+            ],
+            "owner_demo_owner": "Designs native Sample Lab component AcquisitionOwnerDemo; not duplicated in the templates",
+            "owner_workflow": [
+              "review_inquiry",
+              "draft_reply",
+              "request_status",
+              "inquiry_instructions",
+              "project_and_conversation_review"
+            ],
+            "new_adaptation": "Niche-specific copy, order, geometric illustration and safely bound scanner-inert HTML",
+            "source_media_reused": false
+          }
+        },
+        {
+          "id": "catering_table_story",
+          "niche": "baking_catering",
+          "title": "The Table Story",
+          "summary": "A menu-led welcome, event planning notes and a guest-count inquiry.",
+          "style": "table-story",
+          "palette": {
+            "background": "#f4efdf",
+            "paper": "#fffdf8",
+            "accent": "#44543a",
+            "ink": "#293125"
+          },
+          "headline": "A gathering\nworth sharing.",
+          "eyebrow": "Custom catering · illustrative direction",
+          "action": "Plan my gathering",
+          "services": [
+            "Your event menu",
+            "Serving & setup options",
+            "Custom catering inquiries"
+          ],
+          "steps": [
+            "Tell us the event date and location",
+            "Share guest count and dietary questions",
+            "Review the owner’s proposal before confirming"
+          ],
+          "motif": "table",
+          "about": "Turn a menu into an invitation to talk. Make the event details easy to send, with real service and dietary boundaries visible.",
+          "faq": "What is included? Show the verified menu, minimums, travel and setup terms after the business confirms them.",
+          "version": 1,
+          "illustrative": true,
+          "action_label": "Plan my gathering",
+          "render_path": "templates/catering_table_story.html",
+          "review_path": "samples/catering_table_story.html",
+          "recipe_ref": {
+            "owner": "component-studio",
+            "id": "catering_table_story",
+            "version": 1,
+            "status": "import_request_pending",
+            "contract": "FAMTASTIC_PAGE_COMPONENT_DOCTRINE_V1"
+          },
+          "bindings_allowed": [
+            "business_name",
+            "locality",
+            "phone",
+            "booking_url",
+            "inquiry_url"
+          ],
+          "composition": {
+            "instance_prefix": "catering_table_story",
+            "order": [
+              "hero",
+              "story",
+              "services",
+              "request"
+            ],
+            "source_reuse": [
+              "scripts/creator-credit.mjs",
+              "services.card-grid.v1"
+            ],
+            "new_candidate_parts": [
+              "hero.direction-candidate.v1",
+              "story.business.v1",
+              "inquiry.explained-flow.v1"
+            ]
+          },
+          "reuse_lineage": {
+            "reference_recipe": {
+              "id": "booked-branded-one-page-v1",
+              "version": 1,
+              "status": "existing_local_proof_not_acquisition_approval"
+            },
+            "existing_pattern_refs": [
+              "services.card-grid.v1",
+              "operations.booking-desk.v1",
+              "booking.request-form.v1"
+            ],
+            "direct_code_reuse": [
+              "scripts/creator-credit.mjs"
+            ],
+            "owner_demo_owner": "Designs native Sample Lab component AcquisitionOwnerDemo; not duplicated in the templates",
+            "owner_workflow": [
+              "review_inquiry",
+              "draft_reply",
+              "request_status",
+              "inquiry_instructions",
+              "project_and_conversation_review"
+            ],
+            "new_adaptation": "Niche-specific copy, order, geometric illustration and safely bound scanner-inert HTML",
+            "source_media_reused": false
+          }
+        }
+      ]
+    }
+  ],
+  "existing_library_audit": {
+    "initial_scope": "Two shared candidates for each of beauty/hair, mobile detailing, and custom baking/catering only; other lead-list categories remain staged.",
+    "existing_recipe_id": "booked-branded-one-page-v1",
+    "existing_recipe_version": 1,
+    "existing_creative_revision": "booked-branded-v5-20260827",
+    "sources": [
+      {
+        "path": "scripts/booked-branded-components.mjs",
+        "sha256": "412c34a86a250ab646fce1477c66bb124005bd3853b88a2f9dc1b95eed8c7ebf"
+      },
+      {
+        "path": "frontend/public/showcase/booked-and-branded-pilot/component-system.json",
+        "sha256": "c6b6f4da06aea50bdc3ca86cfba6935429574c9b8673f9f4d9acf8646c6f28de"
+      },
+      {
+        "path": "frontend/public/showcase/booked-and-branded-pilot/creative-system.json",
+        "sha256": "5ca5de43aeac5ec188d4fb847b70fbcd6828c6f18408fccd448b7cb33ad84d50"
+      }
+    ],
+    "direct_code_consumers": [
+      "scripts/creator-credit.mjs",
+      "backend/web/modules/custom/famtastic_pipeline/src/Service/BrandedEmail.php"
+    ],
+    "existing_pattern_references": [
+      "hero.split-brand.v1",
+      "services.card-grid.v1",
+      "operations.booking-desk.v1",
+      "booking.request-form.v1",
+      "navigation.site-footer.v1"
+    ],
+    "adaptation_boundary": "Existing renderBookedBrandedOnePage is a fixture-rich local proof renderer with hardcoded sample counts/payment/review modules. These candidates adapt its public service/request/owner-workflow patterns without copying fictional customers, paid media, proof-selection, package claims or a full owner suite. This is not a Component Studio implementation import."
+  }
+}

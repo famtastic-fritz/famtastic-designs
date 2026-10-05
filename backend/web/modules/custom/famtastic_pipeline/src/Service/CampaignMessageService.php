@@ -153,6 +153,7 @@ class CampaignMessageService {
       // Verified cold proof rooms have their own owner-approved exact-ID
       // dispatcher. They may never leak into this broad campaign queue.
       ->condition('template_key', 'verified_cold_preview', '<>')
+      ->condition('template_key', AcquisitionSampleSequenceService::MESSAGE_KIND, '<>')
       ->execute()
       ->fetchAllKeyed();
     foreach ($ids as $messageId => $prospectId) {
@@ -184,6 +185,9 @@ class CampaignMessageService {
     $message = $this->load($messageId);
     if (!$message) {
       throw new \RuntimeException('Email message does not exist.');
+    }
+    if ((string) ($message['template_key'] ?? '') === AcquisitionSampleSequenceService::MESSAGE_KIND) {
+      throw new \RuntimeException('Acquisition samples require a separately approved exact dispatch adapter. No mail sent.');
     }
     if ((string) ($message['template_key'] ?? '') === 'verified_cold_preview') {
       throw new \RuntimeException('Verified-cold commercial previews must use the exact-ID public preview dispatcher.');
@@ -364,7 +368,8 @@ class CampaignMessageService {
     if (!$isNew) {
       return FALSE;
     }
-    $this->setStatus((int) $message['id'], $type);
+    // Raw acquisition tracking must not promote a held message or replace dispatch status.
+    if ($message['template_key'] !== AcquisitionSampleSequenceService::MESSAGE_KIND) $this->setStatus((int) $message['id'], $type);
     if (in_array($type, ['bounced', 'complained'], TRUE)) {
       $prospect = $this->entityTypeManager->getStorage('famtastic_prospect')->load($message['prospect_id']);
       if ($prospect && ($email = (string) $prospect->get('public_email')->value)) {
@@ -392,7 +397,8 @@ class CampaignMessageService {
       (int) $message['prospect_id'],
       (int) $message['campaign_id'],
     );
-    $this->setStatus((int) $message['id'], $type);
+    // Raw acquisition tracking must not promote a held message or replace dispatch status.
+    if ($message['template_key'] !== AcquisitionSampleSequenceService::MESSAGE_KIND) $this->setStatus((int) $message['id'], $type);
     return $this->entityTypeManager->getStorage('famtastic_prospect')->load($message['prospect_id']);
   }
 
@@ -469,7 +475,7 @@ class CampaignMessageService {
    */
   public function unsubscribe(string $unsubscribeKey): bool {
     $message = $this->loadBy('unsubscribe_key', $unsubscribeKey);
-    if (!$message || (string) ($message['template_key'] ?? '') === 'verified_cold_preview') {
+    if (!$message || in_array((string) ($message['template_key'] ?? ''), ['verified_cold_preview', AcquisitionSampleSequenceService::MESSAGE_KIND], TRUE)) {
       return FALSE;
     }
     return $this->unsubscribeMessage($message);

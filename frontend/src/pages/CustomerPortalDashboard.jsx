@@ -44,6 +44,7 @@ import PortalAccountView from '../components/portal/PortalAccountView.jsx';
 import PortalSettingsView from '../components/portal/PortalSettingsView.jsx';
 import { getStaffCommandCenterLink, loadCustomerPortal } from './customerPortalLoader.js';
 import { portalReturn } from './portalReturn.js';
+import { continuationReturn } from '../api/acquisition.js';
 
 export default function CustomerPortalDashboard() {
   const navigate = useNavigate();
@@ -91,8 +92,17 @@ export default function CustomerPortalDashboard() {
       .then(({ session: nextSession, workspace: nextWorkspace, catalog: nextCatalog }) => {
         if (cancelled) return;
         setSession(nextSession);
+        if (continuationReturn(nextSession.continuation) && (!requestedTab || continuingWebsiteLead)) {
+          setSection('projects');
+          if (nextWorkspace?.website_requests?.length) setEditingRequest(null);
+          const linked = nextWorkspace?.website_requests?.find(r => r.public_id === nextSession.continuation.request_public_id);
+          if (linked) setActiveRequestId(linked.public_id);
+          setNotice('Your sample preference is saved. Continue your website interview to shape your own directions.');
+          if (!nextWorkspace?.website_requests?.length) setEditingRequest({});
+        }
         setWorkspace(nextWorkspace);
         setCatalog(nextCatalog);
+        if (continuationReturn(nextSession.continuation) && continuingWebsiteLead && nextWorkspace?.website_requests?.length) setEditingRequest(null);
         if (!nextWorkspace && nextSession.can_manage_messages === true) {
           setSection(['messages', 'billing'].includes(requestedTab) ? requestedTab : 'messages');
         }
@@ -330,6 +340,9 @@ export default function CustomerPortalDashboard() {
     data.organization = org.public_id;
     data.recommendation_requested = formData.has('recommendation_requested');
     data.utm = collectUtmParams();
+    if (continuingWebsiteLead && !explicitRequestId && !data.request_id && !editingRequest?.public_id && !activeRequestId && session?.continuation?.kind === 'acquisition_sample' && !session.continuation.request_public_id && /^[a-f0-9]{32}$/.test(session.continuation.context_id || '')) {
+      data.acquisition_context_id = session.continuation.context_id;
+    }
     data.action = event.nativeEvent?.submitter?.value || data.action || 'save';
 
     const targetId = explicitRequestId || data.request_id || editingRequest?.public_id || activeRequestId;

@@ -7,7 +7,14 @@
   ExpiresActive On
   ExpiresByType text/html "now"
 </IfModule>
+<IfModule mod_setenvif.c>
+  SetEnvIf Request_URI "^/samples/[0-9a-f]{64}/?$" fam_private_sample
+  SetEnvIf Request_URI "^/acquisition/report/" fam_private_sample
+</IfModule>
 <IfModule mod_headers.c>
+  Header always set Cache-Control "private, no-store" env=fam_private_sample
+  Header always set Referrer-Policy "no-referrer" env=fam_private_sample
+  Header always set X-Robots-Tag "noindex, nofollow, noarchive" env=fam_private_sample
   <FilesMatch "index\.html$|\.frontend-release$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
@@ -39,6 +46,10 @@
   # React will validate the token; Apache must not 404 before it can load.
   RewriteRule ^proofs/share/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]
   RewriteRule ^proofs/preview/[0-9a-f-]{36}/[0-9a-f]{64}/?$ /index.html [L]
+
+  # Private illustrative samples; token-scoped API remains separate.
+  RewriteRule ^acquisition/report/[a-zA-Z0-9_-]+/?$ /index.html [L]
+  RewriteRule ^samples/[0-9a-f]{64}/?$ /index.html [L]
 
   # Private appointment responses must resolve on a direct email-link visit.
   # Tokens are fragments in newly issued links, never part of this route.

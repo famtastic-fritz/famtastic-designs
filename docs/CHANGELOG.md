@@ -1,5 +1,11 @@
 # Product changelog
 
+## 2026-10-05 — $199 acquisition source and review candidate
+
+- Added six shared illustrative directions and nine branded Shay email drafts with card/commercial/QR, phone-owner value, explicit renewal scope and reusable lineage. Component Studio and owner acceptance remain pending.
+- Added opaque private invitations, verified account/interview continuation, held native sequences and a Commerce-based campaign report, with recipient isolation, suppression and financial reconciliation fixtures. New production routes and real campaign sending remain held.
+- Added actual390px developer browser owner-workflow interaction evidence and cloud portability, qualification/provider and release-matched review records. The reviewed source has0 verified eligible contacts; no send, purchase or deployment is claimed.
+
 ## 2026-10-04 — Personal Textbee proof recorded
 
 - Recorded the later provider-reported `delivered` state for one owner-authorized personal-phone SMS while keeping customer reminders, inbound reply handling and business sender activation unclaimed.

@@ -48,6 +48,8 @@ import PaymentHandoffPage from './pages/PaymentHandoffPage.jsx';
 import AppointmentProposalPage from './pages/AppointmentProposalPage.jsx';
 import WhyFamtasticPage from './pages/WhyFamtasticPage.jsx';
 import VideoReviewPage from './pages/VideoReviewPage.jsx';
+import AcquisitionSamplePage from './pages/AcquisitionSamplePage.jsx';
+import AcquisitionReportPage from './pages/AcquisitionReportPage.jsx';
 
 export default function App() {
   return (
@@ -68,6 +70,8 @@ export default function App() {
         <Route path="/portal" element={<CustomerPortalDashboard />} />
         <Route path="/proofs/share/:requestId/:signature" element={<ProofSharePage />} />
         <Route path="/proofs/preview/:previewDelivery/:signature" element={<PublicPreviewRoomPage />} />
+        <Route path="/acquisition/report/:campaignKey" element={<AcquisitionReportPage />} />
+        <Route path="/samples/:token" element={<AcquisitionSamplePage />} />
         <Route path="/deep-dive/:invitation" element={<DeepDivePage />} />
         <Route path="/appointment/:appointment" element={<AppointmentProposalPage />} />
 
