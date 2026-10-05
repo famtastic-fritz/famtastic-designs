@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-10-04 — Give SMS labs a private setup path
+
+**Observation:** The first Textbee technical probe required a real API key and test phone in environment variables. Fritz proved Textbee independently and asked for a secure prompt; pasting secrets into a command, chat or transcript would make repeat use fragile.
+
+**Guidance:** Use an interactive macOS Keychain prompt for the Fritz-only lab key and exact test recipient. Report readiness without values, require a fresh typed confirmation before each single fictional SMS, and provide credential removal. Keep client consent, sender, outbox, reply and delivery proof in each independent business implementation; a personal phone lab is not production SMS.
+
 ## 2026-10-03 — Offline payment must preserve the evidence boundary
 
 **Observation:** A customer used an owner-accepted offline payment method after an invoice had been designed around Stripe checkout. The old reusable offline path was customer- and amount-specific, so reusing it would have corrupted scope and provenance.

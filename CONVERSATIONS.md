@@ -4,6 +4,14 @@ This is a curated decision summary, not an unredacted transcript. Customer submi
 credentials, reset links, private email bodies, hidden reasoning and tool outputs do not
 belong in repository conversation records.
 
+## 2026-10-04 — Private Textbee lab setup
+
+Fritz reported that his Textbee phone test worked and asked for a secure prompt to
+configure another API key. The agency lab now uses local Keychain prompts and a
+single-send confirmation. No key, phone number, customer record or delivery claim
+is preserved here. Shay and other client sites remain independent; a personal
+phone probe does not authorize customer reminders.
+
 ## 2026-09-14 — Approved ecosystem reconciliation
 
 The user approved independent private repositories for each customer site, Shay first,
