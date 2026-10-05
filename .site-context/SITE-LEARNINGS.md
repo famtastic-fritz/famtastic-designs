@@ -8,6 +8,10 @@
 
 **Repair:** The first owner attempt exposed two different causes behind one `keychain_value_invalid` message: an unsupported phone format and a Keychain read restricted by the developer sandbox. Preserve a successfully written item when a read cannot be verified, normalize ordinary US phone input, and offer a phone-only retry instead of making the owner retype a saved API key. Confirm readiness from standard Mac Terminal.
 
+**Second repair:** The hidden phone prompt still failed twice for Fritz. The phone is not an API secret and must be visibly correctable before it becomes the one allowed test recipient. Keep the key in Keychain; validate and confirm the phone in a local terminal, then store it in an owner-only 0600 file outside Git. Do not use the prompt result as provider delivery or client-messaging evidence.
+
+**Push-process correction:** This repository's GitHub Actions workflow is validation-only and had run zero steps during the account billing lock; it was never the production deployer. Preserve its automatic secret, audit, build and backend checks. Require relevant local checks and exact clean pushed commits even when hosted jobs cannot start, and use the checked-in GoDaddy scripts for authorized production releases. A real failed job still needs investigation. Automatic approval review rejected a proposal to make the workflow manual-only because that would weaken these protections; the workflow was restored before integration.
+
 ## 2026-10-03 — Offline payment must preserve the evidence boundary
 
 **Observation:** A customer used an owner-accepted offline payment method after an invoice had been designed around Stripe checkout. The old reusable offline path was customer- and amount-specific, so reusing it would have corrupted scope and provenance.

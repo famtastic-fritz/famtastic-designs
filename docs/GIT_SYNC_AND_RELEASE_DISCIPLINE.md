@@ -61,6 +61,14 @@ The branch must not be unknowingly behind `origin/main`; the relevant tests and
 proofs, or unrelated user files may be staged. Push the reviewed commit and
 report its SHA and branch.
 
+Use the tests and checks for the files actually changed, including source-only
+CLI or documentation work. GitHub Actions also runs automatic source checks,
+but it is not a deployment lane. A job that records zero steps because of
+account billing is neither a code failure nor a passing test; do not poll it
+or cite it as a push blocker. If a job actually runs steps and fails,
+investigate the real failure before integration. Record the local
+command/results, exact pushed SHA, and later merge separately.
+
 A pushed feature branch is not production. Merge or fast-forward the approved
 change to `main` through the repository's normal integration path before a
 production deployment.
