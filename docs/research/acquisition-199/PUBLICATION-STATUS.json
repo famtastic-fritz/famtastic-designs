@@ -1,0 +1,18 @@
+{
+  "schema": "famtastic.acquisition-publication-status.v1",
+  "source_commit": "b32ae4236bcb2aa0f495436028c1101355215d4d",
+  "local_checkpoint_commit": "348497af3d01cd1a76d76810e4c884bf3dcf8eec",
+  "repository": "famtastic-fritz/famtastic-designs",
+  "repository_private_verified": false,
+  "repository_visibility_check": "gh repo view --json isPrivate,url,nameWithOwner returned isPrivate=false",
+  "push_status": "rejected_by_automatic_approval",
+  "push_reason": "Public external destination; explicit trusted authorization for this source/readiness export absent.",
+  "pr58_update": "not_performed",
+  "drive_export": "separately_rejected; local report retained",
+  "private_contact_scan": {
+    "addresses_checked": 1000,
+    "staged_matches": 0
+  },
+  "user_permission": "requested asynchronously; pending",
+  "dispatch": "HOLD"
+}
