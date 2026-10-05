@@ -1,0 +1,17 @@
+{
+  "schema": "famtastic.acquisition-posteval-pointer.v1",
+  "evaluation_id": "posteval_76dcc8d9e98220e8",
+  "source_revision": "e953d06bb16643f888bdcc3c1bfb864d15ddc125",
+  "repository": "famtastic-designs",
+  "branch": "codex/acquisition-199-20261005",
+  "worktree": "/Users/famtastic-fritz/Development/FAMtastic/worktrees/acquisition-199-20261005",
+  "environment": "local synthetic only",
+  "classification": "changed",
+  "shared_promotion": "candidate_shared; retrieval_unverified",
+  "canonical_report": "/Users/famtastic-fritz/Development/FAMtastic/data-center/reports/post-eval/posteval_76dcc8d9e98220e8.md",
+  "canonical_record": "/Users/famtastic-fritz/Development/FAMtastic/data-center/post-eval/posteval_76dcc8d9e98220e8.json",
+  "canonical_ledger": "/Users/famtastic-fritz/Development/FAMtastic/data-center/ledgers/post-eval.jsonl",
+  "owner_accepted": false,
+  "deployed": false,
+  "real_dispatch": "HOLD"
+}

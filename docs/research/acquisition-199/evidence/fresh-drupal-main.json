@@ -1,0 +1,32 @@
+{
+  "schema": "famtastic.acquisition-installed-proof.v1",
+  "status": "passed",
+  "classification": "local_synthetic",
+  "checks": {
+    "installed_container_services": true,
+    "installed_claim_route_csrf": true,
+    "scanner_resolution_no_events": true,
+    "frozen_bound_private_preview": true,
+    "idempotent_sample_preference": true,
+    "real_registration_controller": true,
+    "pending_account_not_claimed": true,
+    "signup_hook_no_request_or_proof_generation": true,
+    "verification_memory_capture_only": true,
+    "cross_device_verified_durable_continuation": true,
+    "verification_replay_rejected": true,
+    "distinct_production_request_prospect_and_preference_context": true,
+    "exact_native_request_association": true,
+    "installed_native_campaign_report": true,
+    "controlled_synthetic_exact_content_capture": true,
+    "controlled_synthetic_capture_replay": true,
+    "immediate_optout_exit": true,
+    "revoked_public_room_preserves_account_resume": true
+  },
+  "real_payments": false,
+  "customer_sends": false,
+  "production_deployment": false,
+  "source_revision": "e953d06bb16643f888bdcc3c1bfb864d15ddc125",
+  "raw_receipt_sha256": "aeebd24e1dff9582e5f8e998afff91eaeb6534ed202695f987bc400145422202",
+  "raw_receipt_path": "/private/tmp/acquisition-199-fresh-e14a674f/.artifacts/acquisition-sample-drupal/20261005T202158Z-36050/evidence.json",
+  "curation": "Checks only; removed synthetic report snapshot. No campaign recipient is qualified by this fixture."
+}

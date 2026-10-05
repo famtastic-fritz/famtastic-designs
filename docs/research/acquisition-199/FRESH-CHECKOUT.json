@@ -1,0 +1,92 @@
+{
+  "schema": "famtastic.acquisition-fresh-checkout.v1",
+  "observed_at": "2026-10-05T20:24:17.667494+00:00",
+  "source_revision": "e953d06bb16643f888bdcc3c1bfb864d15ddc125",
+  "checkout": "/private/tmp/acquisition-199-fresh-e14a674f",
+  "classification": "local_source_and_synthetic",
+  "initial_application_commit": "e14a674f",
+  "clean_source": "Local shared Git clone with committed files only; no symlinked node_modules, settings, private DB or lead source",
+  "node": "22.23.2",
+  "frontend_dependencies": "npm ci --ignore-scripts --no-audit --no-fund; committed lock; new temporary cache",
+  "backend_dependency_lock_sha256": "74e4984a628de3ad26b9d38aad05f97579baeb031ea6eefd2d6274f933a1e009",
+  "backend_dependencies": "Read-only copied task-lock vendor/core/contrib runtime; new isolated Drupal fixture and source PSR4 precedence",
+  "checks": {
+    "frontend_full_build": {
+      "status": "passed",
+      "modules": 623,
+      "html_outputs": 221,
+      "source_revision": "e14a674f",
+      "final_revision_frontend_bytes": "unchanged; e953d06b only corrected research preview and its HTML"
+    },
+    "frontend_privacy_and_GA": {
+      "status": "passed",
+      "tests": 5
+    },
+    "portal_DNA": {
+      "status": "passed",
+      "checks": 34
+    },
+    "cohort_synthetic": {
+      "status": "passed",
+      "checks": 21,
+      "real_eligible": 0
+    },
+    "financial_projection_synthetic": {
+      "status": "passed",
+      "checks": 30
+    },
+    "backend_unit": {
+      "status": "passed",
+      "tests": 365,
+      "assertions": 2163,
+      "existing_deprecations": 69
+    },
+    "installed_Drupal": {
+      "status": "passed",
+      "main": 18,
+      "supplemental": 11,
+      "source_revision": "e953d06bb16643f888bdcc3c1bfb864d15ddc125",
+      "proofs": [
+        "evidence/fresh-drupal-main.json",
+        "evidence/fresh-drupal-supplemental.json"
+      ]
+    },
+    "creative": {
+      "status": "passed",
+      "assertions": 281,
+      "qr": "Native exact connect target decode; physical scan pending"
+    },
+    "branded_shell": {
+      "status": "passed",
+      "assertions": 88
+    },
+    "build_DNA": {
+      "status": "passed",
+      "stages": 5,
+      "artifact_checksums": 111
+    },
+    "private_bundle": {
+      "status": "passed",
+      "files": 14,
+      "manifest_sha256": "7ee6d705df13e18cb815e837a1afb8f72ea30ee9f70bf079088cc28a1ba429c8",
+      "approval": false
+    },
+    "representative_native_compile": {
+      "status": "passed",
+      "source_revision": "e953d06bb16643f888bdcc3c1bfb864d15ddc125",
+      "transport": false,
+      "review_only_question": true
+    }
+  },
+  "findings_resolved": [
+    "Offline npm cache lacked a locked Vite tarball; exact lock installed from public registry without version change.",
+    "Canonical draft hardening exposed stale research-preview mutation; canonical bytes now unchanged and the unapproved discovery question appended only to the labeled review copy."
+  ],
+  "limits": [
+    "Local Git clone, not cloud execution.",
+    "Full build reads public CMS; no publish.",
+    "Current browser/physical-device/provider proof remain separate.",
+    "No real mail, payment, recipe approval, registry import or production release."
+  ],
+  "dispatch": "HOLD"
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "famtastic.acquisition-installed-proof.v1",
+  "status": "passed",
+  "classification": "local_synthetic",
+  "checks": {
+    "installed_container_services": true,
+    "installed_claim_route_csrf": true,
+    "installed_new_request_prospect_purchase_stop": true,
+    "ordinary_registration_without_sample_unchanged": true,
+    "ordinary_account_has_no_acquisition_continuation": true,
+    "ordinary_verification_without_sample_unchanged": true,
+    "installed_disabled_exact_sender_service": true,
+    "installed_real_sender_held": true,
+    "installed_schema_update_idempotent": true,
+    "partial_unique_approval_index_fails_closed": true,
+    "partial_migration_fails_closed": true
+  },
+  "real_payments": false,
+  "customer_sends": false,
+  "production_deployment": false,
+  "source_revision": "e953d06bb16643f888bdcc3c1bfb864d15ddc125",
+  "raw_receipt_sha256": "3caa2244629caed1b96fbebc094c35d042a64778f47fc61b3c86d622a9134442",
+  "raw_receipt_path": "/private/tmp/acquisition-199-fresh-e14a674f/.artifacts/acquisition-sample-drupal/20261005T202158Z-36050/supplemental/evidence.json",
+  "curation": "Checks only; removed synthetic report snapshot. No campaign recipient is qualified by this fixture."
+}

@@ -41,6 +41,6 @@ There is no need to qualify150 contacts to review one safe slice. The smallest m
 
 ## Verification and release
 
-Commands and evidence cutoffs are in [verification](VERIFICATION.md). Synthetic captures and test-mode payments are excluded from actual performance claims. Opens/clicks include unknown scanner/privacy activity; costs/contribution remain unknown until complete receipts exist. The150-business trial is exploratory.
+Commands and evidence cutoffs are in [verification](VERIFICATION.md), including [fresh checkout](FRESH-CHECKOUT.json) and [canonical post-evaluation pointer](POST-EVALUATION.json). Synthetic captures and test-mode payments are excluded from actual performance claims. Opens/clicks include unknown scanner/privacy activity; costs/contribution remain unknown until complete receipts exist. The150-business trial is exploratory.
 
 This work is isolated on `codex/acquisition-199-20261005`, from origin/main `eef442be`, at `/Users/famtastic-fritz/Development/FAMtastic/worktrees/acquisition-199-20261005`. Canonical agency dirty work is preserved. A scoped branch/commit makes the package resumable; main landing and runtime activation need later reviewed release work. Review-handoff classification is **changed**, with creative candidates and no deployed/owner_accepted claim. The existing umbrella plan audit remains clean; this brief is its own readiness checkpoint.

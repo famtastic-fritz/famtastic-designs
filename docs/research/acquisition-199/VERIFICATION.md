@@ -30,4 +30,6 @@ Detailed current backend checks, exact SMTP disabled seam and installed-harness 
 
 Browser receipt `.artifacts/acquisition-browser/receipt.json` includes viewport/interaction steps, zero scanner/demo writes, preference once, exact signup continuation, distinct-tab verification route, no overflow, recovery and reset. Current creative receipt `marketing/campaigns/acquisition-199/evidence/current-browser-qa.json` hashes every current reviewed page. Screenshots stay in ignored local artifact folders; curated public-safe manifests remain in Git.
 
+Fresh-checkout confirmation: [FRESH-CHECKOUT.json](FRESH-CHECKOUT.json) records the matching-lock build and installed29 checks from committed application source. It also records the resolved canonical-draft research-preview mismatch; only the review copy carries that unapproved discovery question.
+
 Still required before dispatch: exact qualified recipient/history/source/provider eligibility; frozen recipe/import/content acceptance; reviewed installation/hosted browser journey; controlled real Gmail/Outlook/Apple Mail media/unsubscribe/reply/exit proof; physical owner phone/QR acceptance; exact owner dispatch decision. Known costs are not complete contribution evidence, and no statistical winner or individual revenue-loss estimate is claimed.

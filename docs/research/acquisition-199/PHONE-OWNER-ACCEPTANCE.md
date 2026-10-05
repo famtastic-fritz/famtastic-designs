@@ -1,5 +1,7 @@
 # Phone owner workflow — release-matched acceptance
 
+Application revision: e953d06bb16643f888bdcc3c1bfb864d15ddc125, as sealed in SOURCE-CHECKPOINT.md. Owner task IDs match CAPABILITY-MATRIX.md; every owner result is pending.
+
 The campaign leads with running useful business work from a phone. Sample Lab includes a local interactive owner walkthrough tailored to the three approved inquiry types. It reuses the current owner/request/status/content interaction vocabulary, not a second connected business platform.
 
 Source evidence: `frontend/src/components/owner-desk/OwnerDesk.jsx` and `frontend/src/api/bookingOwnerAdapter.js` provide linked-site request status actions; `PortalBookingRequestsView.jsx` requires a linked owner-operated site. `usePortalInbox.js` provides authenticated conversations with FAMtastic. `CustomerPortalDashboard.jsx` and `PortalPageContentFields.jsx` save website content submissions and review project state. These source contracts do not establish a prospect's connected inbox or inclusion of every feature in the $199 package.
