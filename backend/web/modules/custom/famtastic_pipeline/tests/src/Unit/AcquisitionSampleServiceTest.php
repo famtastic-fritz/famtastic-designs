@@ -31,8 +31,8 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $this->db = new Connection(Connection::open($options), $options);
     $schemas = AcquisitionSampleSchema::tables() + _famtastic_pipeline_automation_schema() + _famtastic_pipeline_customer_portal_schema();
     foreach (['famtastic_acquisition_sample', 'famtastic_acquisition_sequence', 'famtastic_acquisition_message', 'famtastic_acquisition_request', 'famtastic_acquisition_dispatch', 'famtastic_customer', 'famtastic_consent', 'famtastic_event', 'famtastic_campaign', 'famtastic_email_message'] as $table) $this->db->schema()->createTable($table, $schemas[$table]);
-    $this->db->query('CREATE TABLE famtastic_prospect (id INTEGER PRIMARY KEY, public_email TEXT, campaign TEXT)');
-    $this->db->query("INSERT INTO famtastic_prospect VALUES (1,'owner@example.test','acquisition-199'),(2,'other@example.test','acquisition-199')");
+    $this->db->query('CREATE TABLE famtastic_prospect (id INTEGER PRIMARY KEY, public_email TEXT, campaign TEXT, business_name TEXT, business_category TEXT, contact_name TEXT)');
+    $this->db->query("INSERT INTO famtastic_prospect VALUES (1,'owner@example.test','acquisition-199','Juniper & Co','Beauty, Hair Styling & Braiding','Unknown owner'),(2,'other@example.test','acquisition-199','Other Fixture','Personal services','Unverified person')");
     $this->db->insert('famtastic_campaign')->fields(['id' => 1, 'campaign_key' => 'acquisition-199', 'name' => 'Synthetic sample test', 'status' => 'draft', 'created' => 1, 'changed' => 1])->execute();
     foreach ([1 => 'owner@example.test', 2 => 'other@example.test'] as $id => $email) $this->db->insert('famtastic_customer')->fields(['id' => $id, 'public_id' => 'fixture-' . $id, 'uid' => $id, 'prospect_id' => $id, 'display_name' => 'Fixture', 'email' => $email, 'created' => 1, 'changed' => 1])->execute();
     $time = $this->createMock(TimeInterface::class);
@@ -331,6 +331,150 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $qualification=['business_verified'=>TRUE,'contact_owned'=>TRUE,'jurisdiction_eligible'=>TRUE,'provider_eligible'=>TRUE,'history_reconciled'=>TRUE,'bindings_verified'=>TRUE,'niche_confirmed'=>TRUE,'confirmed_niche'=>'mobile_detailing','receipt'=>'synthetic-mismatch-only','sha256'=>str_repeat('a',64)];
     $this->expectExceptionMessage('verified_niche_binding_required');
     $this->samples->issue('fixture:niche-mismatch','owner@example.test',1,1,'beauty_hair',$this->recipes(),['business_name'=>'Juniper Fixture'],$qualification,$this->now+3600);
+  }
+
+  public function testBusinessOnlyRenderingOmitsUnknownContactPathsAcrossAllSixTemplates(): void {
+    $root = dirname(__DIR__, 8);
+    foreach (['beauty_editorial', 'beauty_service_first', 'detailing_precision', 'detailing_route_ready', 'baking_signature', 'catering_table_story'] as $id) {
+      $template = (string) file_get_contents($root . '/marketing/campaigns/acquisition-199/templates/' . $id . '.html');
+      $rendered = AcquisitionSampleGuard::render($template, ['business_name' => 'Juniper & Co']);
+      $this->assertStringContainsString('Juniper &amp; Co', $rendered, $id);
+      $this->assertStringNotContainsString('Contact number:', $rendered, $id);
+      $this->assertStringNotContainsString('Approved booking path', $rendered, $id);
+      $this->assertStringNotContainsString('Approved inquiry path', $rendered, $id);
+      $this->assertStringNotContainsString('href=""', $rendered, $id);
+      $this->assertStringNotContainsString('{{', $rendered, $id);
+    }
+  }
+
+  public function testVerifiedContactRenderingRetainsExistingFilledOutputAcrossAllSixTemplates(): void {
+    $root = dirname(__DIR__, 8);
+    $bindings = ['business_name' => 'Juniper & Co', 'locality' => 'Example City', 'phone' => '+1 (555) 010-0000', 'booking_url' => 'https://example.test/book', 'inquiry_url' => 'https://example.test/inquire'];
+    $expectedBindings = [];
+    foreach ($bindings as $key => $value) $expectedBindings['{{' . $key . '}}'] = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    foreach (['beauty_editorial', 'beauty_service_first', 'detailing_precision', 'detailing_route_ready', 'baking_signature', 'catering_table_story'] as $id) {
+      $template = (string) file_get_contents($root . '/marketing/campaigns/acquisition-199/templates/' . $id . '.html');
+      $rendered = AcquisitionSampleGuard::render($template, $bindings);
+      $this->assertSame(strtr($template, $expectedBindings), $rendered, $id);
+      $this->assertStringContainsString('<p>Contact number: +1 (555) 010-0000</p>', $rendered, $id);
+      $this->assertStringContainsString('href="https://example.test/book"', $rendered, $id);
+      $this->assertStringContainsString('href="https://example.test/inquire"', $rendered, $id);
+      $partial = AcquisitionSampleGuard::render($template, array_replace($bindings, ['booking_url' => '']));
+      $this->assertStringNotContainsString('Approved booking path', $partial, $id);
+      $this->assertStringContainsString('href="https://example.test/inquire"', $partial, $id);
+      $this->assertStringContainsString('Contact number: +1 (555) 010-0000', $partial, $id);
+      $this->assertStringNotContainsString('href=""', $partial, $id);
+    }
+  }
+
+  private function genericRecipe(): array {
+    $path = 'marketing/campaigns/acquisition-199/generic-review/beauty-template.html';
+    return ['id' => 'beauty_soft_power_acquisition', 'version' => 1, 'niche' => 'beauty_hair', 'title' => 'Soft Power', 'summary' => 'Illustrative beauty direction', 'artifact_path' => $path, 'sha256' => hash_file('sha256', dirname(__DIR__, 8) . '/' . $path), 'review' => ['status' => 'candidate'], 'recipe_ref' => ['owner' => 'component-studio', 'id' => 'beauty_soft_power_acquisition', 'version' => 1, 'status' => 'import_request_pending']];
+  }
+
+  private function prepare(string $key = 'fixture:generic'): array {
+    $instance = (new \ReflectionClass(\Drupal\Core\Site\Settings::class))->getProperty('instance')->getValue();
+    $settings = $instance ? \Drupal\Core\Site\Settings::getAll() : [];
+    new \Drupal\Core\Site\Settings($settings + ['famtastic_acquisition_internal_preparation' => TRUE]);
+    try { return $this->samples->prepareGeneric($key, 1, 1, $this->genericRecipe(), $this->now + 3600, TRUE); }
+    finally { new \Drupal\Core\Site\Settings($settings); }
+  }
+
+  public function testGenericStoredContextIsSuppliedOpaqueAndNeverContactVerified(): void {
+    $invitation = $this->prepare();
+    $sample = $this->samples->resolve($invitation['token']);
+    $this->assertSame('supplied_generic_preparation', $sample['context_classification']);
+    $this->assertSame('Juniper & Co', $sample['business_name']);
+    $this->assertSame('Beauty, Hair Styling & Braiding', $sample['industry']);
+    $this->assertFalse($sample['context_provenance']['niche_verified']);
+    $this->assertSame('unknown', $sample['context_provenance']['contact_ownership']);
+    $this->assertSame('', $sample['bindings']['recipient_name']);
+    $this->assertSame('', $sample['bindings']['phone']);
+    $this->assertSame('', $sample['bindings']['booking_url']);
+    $this->assertCount(1, $sample['recipes']);
+    $this->assertStringNotContainsString('owner@example.test', json_encode($sample));
+    $this->assertStringNotContainsString('Unknown owner', json_encode($sample));
+    $this->assertStringContainsString('Juniper &amp; Co', $this->samples->preview($invitation['token'], $sample['recipes'][0]['id']));
+    $this->assertMatchesRegularExpression('/^[a-f0-9]{64}$/D', $invitation['token']);
+    $row = $this->db->select('famtastic_acquisition_sample', 's')->fields('s')->condition('id', $invitation['id'])->execute()->fetchAssoc();
+    $this->assertNull($row['eligible_at']);
+    $this->assertSame('', $row['qualification_ref']);
+    $this->assertStringNotContainsString($invitation['token'], json_encode($row));
+    $this->assertTrue($this->prepare()['duplicate']);
+    $this->assertNull($this->prepare()['token']);
+  }
+
+  public function testGenericCandidateIsDisabledOutsideExplicitInternalFixture(): void {
+    new \Drupal\Core\Site\Settings([]);
+    $this->expectExceptionMessage('internal_sample_preparation_disabled');
+    $this->samples->prepareGeneric('fixture:held', 1, 1, $this->genericRecipe(), $this->now + 3600, TRUE);
+  }
+
+  public function testGenericPreparationCannotStageOutreach(): void {
+    $invitation = $this->prepare();
+    try {
+      $this->sequences->stage($invitation['id'], 'owner@example.test', $invitation['token'], $this->drafts());
+      $this->fail('Generic preparation staged outreach.');
+    }
+    catch (\InvalidArgumentException $error) { $this->assertSame('sample_outreach_qualification_required', $error->getMessage()); }
+    $this->assertSame(0, (int) $this->db->select('famtastic_acquisition_sequence', 's')->countQuery()->execute()->fetchField());
+    $this->assertSame(0, (int) $this->db->select('famtastic_email_message', 'm')->countQuery()->execute()->fetchField());
+  }
+
+  public function testGenericKnownInformationSurvivesVerificationAndPublicExpiry(): void {
+    $invitation = $this->prepare();
+    $this->samples->preference($invitation['token'], 'beauty_soft_power_acquisition');
+    $this->samples->beginRegistration('owner@example.test', $invitation['token']);
+    $this->samples->attachPending('owner@example.test', 1);
+    $this->samples->endRegistration('owner@example.test');
+    $this->assertNull($this->samples->continuation(1));
+    $this->now += 3601;
+    $this->db->update('famtastic_customer')->fields(['verified_at' => $this->now])->condition('id', 1)->execute();
+    $continuation = $this->samples->claim(1);
+    $this->assertSame(['business_name' => 'Juniper & Co', 'industry' => 'Beauty, Hair Styling & Braiding', 'business_category' => 'Beauty, Hair Styling & Braiding'], $continuation['known_information']);
+    $this->assertSame('supplied_generic_preparation', $continuation['context_classification']);
+    $this->assertNull($this->samples->resolve($invitation['token']));
+    $this->assertStringNotContainsString($invitation['token'], json_encode($continuation));
+    $context = $this->samples->requestContext(1, $continuation['context_id']);
+    $this->assertSame($continuation['known_information'], $context['known_information']);
+    $this->assertFalse($context['formal_proof_selection']);
+    $this->samples->revoke($invitation['id']);
+    $this->assertSame($continuation['known_information'], $this->samples->continuation(1)['known_information']);
+  }
+
+  public function testBroadUnrelatedIndustryCannotUseBeautyCandidate(): void {
+    $this->db->update('famtastic_prospect')->fields(['business_category' => 'Personal services'])->condition('id', 1)->execute();
+    $this->expectExceptionMessage('preparation_recipe_industry_mismatch');
+    $this->prepare();
+  }
+
+  public function testBroadBeautyRemainsSuppliedAndNotNicheQualification(): void {
+    $this->db->update('famtastic_prospect')->fields(['business_category' => 'Beauty'])->condition('id', 1)->execute();
+    $invitation = $this->prepare();
+    $sample = $this->samples->resolve($invitation['token']);
+    $this->assertSame('Beauty', $sample['industry']);
+    $this->assertFalse($sample['context_provenance']['niche_verified']);
+    $this->assertSame('stored_supplied', $sample['context_provenance']['industry_provenance']);
+  }
+
+  public function testKnownBarberCannotUseHairBeautyCandidate(): void {
+    $this->db->update('famtastic_prospect')->fields(['business_category' => 'Barber'])->condition('id', 1)->execute();
+    $this->expectExceptionMessage('preparation_recipe_industry_mismatch');
+    $this->prepare();
+  }
+
+  public function testGenericUnknownBusinessUsesDisplayFallbackWithoutInventingKnownName(): void {
+    $this->db->update('famtastic_prospect')->fields(['business_name' => '  '])->condition('id', 1)->execute();
+    $invitation = $this->prepare();
+    $sample = $this->samples->resolve($invitation['token']);
+    $this->assertSame('Your business', $sample['business_name']);
+    $this->assertSame('unknown', $sample['context_provenance']['business_name_provenance']);
+    $this->assertStringContainsString('Your business', $this->samples->preview($invitation['token'], 'beauty_soft_power_acquisition'));
+    $this->db->update('famtastic_customer')->fields(['verified_at' => $this->now])->condition('id', 1)->execute();
+    $continuation = $this->samples->claim(1, $invitation['token']);
+    $this->assertSame('', $continuation['known_information']['business_name']);
+    $this->assertSame('Beauty, Hair Styling & Braiding', $continuation['known_information']['industry']);
+    $this->assertSame('', $this->samples->requestContext(1, $continuation['context_id'])['known_information']['business_name']);
   }
 
 }

@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-05T21:25:59.342Z",
+  "results": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "one_polished_preview": true,
+      "stored_business_and_industry_supplied": true,
+      "owner_unknown_not_invented": true,
+      "scanner_get_mutations": 0,
+      "phone_practice_mutations": 0,
+      "registration_business_prefilled": true,
+      "opaque_continuation_payload": true,
+      "cross_device_verification_posts": 1,
+      "interview_business_industry_prefilled": true,
+      "environment": "Browser on routed synthetic public origin; app bytes from local Vite, HTTP fixtures from actual controlled Drupal output; strict sandbox retained; hosted CORS and deployment unverified",
+      "owner_accepted": false
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "one_polished_preview": true,
+      "stored_business_and_industry_supplied": true,
+      "owner_unknown_not_invented": true,
+      "scanner_get_mutations": 0,
+      "phone_practice_mutations": 0,
+      "registration_business_prefilled": true,
+      "opaque_continuation_payload": true,
+      "cross_device_verification_posts": 1,
+      "interview_business_industry_prefilled": true,
+      "environment": "Browser on routed synthetic public origin; app bytes from local Vite, HTTP fixtures from actual controlled Drupal output; strict sandbox retained; hosted CORS and deployment unverified",
+      "owner_accepted": false
+    }
+  ]
+}

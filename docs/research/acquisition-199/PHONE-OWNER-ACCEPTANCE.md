@@ -20,3 +20,7 @@ The walkthrough deliberately uses one fictional customer and page-local state. O
 Owner acceptance: open the reviewed Sample Lab release on a real phone, complete the four actions without coaching, describe where each result is saved, reload to confirm practice reset, then continue into the authenticated interview. Record exact commit, viewport/device, screenshots, observed saved result and any confusion. Static screenshots are not acceptance. Developer browser emulation is labeled as such; a physical phone result is not yet recorded.
 
 Review classification: changed source candidate. No hosted release or owner acceptance is claimed.
+
+## Current follow-up candidate
+
+The old six visuals are declined. New tasks generic-review-01 and generic-continue-01 apply to the follow-up application revision pinned in SOURCE-CHECKPOINT.md. Fritz reviews the new beauty email/Lab; an invited owner later completes the opaque-link/register/verify/prefilled-interview tasks on the exact hosted release. Both results remain pending. Current developer evidence is FOLLOWUP-VERIFICATION.json: actual static/native browser interactions at1440/390 and separately installed fictional Drupal persistence. Local results are unsent/unpublished and do not imply connected business operations.

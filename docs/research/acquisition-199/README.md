@@ -1,46 +1,24 @@
-# $199 acquisition review package — October 5, 2026
+# $199 outreach and Sample Lab — current review
 
-**Real dispatch HOLD.** Fritz's latest clarification requires confirmed research/checks and concrete review before any sending. No real campaign mail, provider purchase, new paid generation, merge or production release occurred in this task.
+**Current owner scope:** prepare generic outreach for all 1,000 supplied workbook records and review one polished email-to-Lab representative. Deep business research is optional. The six earlier designs were declined and are retained only as historical candidates. Dispatch remains **HOLD**.
 
-Open the [first-look presentation](../../../marketing/campaigns/acquisition-199/first-look.html) for the six shared directions and branded introductions. The [full gallery](../../../marketing/campaigns/acquisition-199/index.html) includes all nine HTML/plain drafts and image-blocked variants. The review examples are fictional; actual personalized research drafts are separate evidence-linked review artifacts. Every direction remains illustrative until a business completes its own interview and its own three directions are reviewed.
+Open the current [branded email](../../../marketing/campaigns/acquisition-199/generic-review/beauty-email.html) and [beauty Lab](../../../marketing/campaigns/acquisition-199/generic-review/beauty-lab.html). Local browser review is at http://127.0.0.1:5201/beauty-email.html. The photograph is an existing agency-owned fictional demonstration; no customer media was reused. The new design is pending owner review.
 
-The [all-ten-category reuse coverage](creative-reuse-coverage.md) identifies existing barber/beauty, lawn care, DJ, shoe and workshop references, with adaptations and gaps separated. The [representative personalized draft](representative-mobile-detailing.html) uses an actual advertised mobile-detailing business, two illustrative images and an evidence-linked discovery question; [Precision in Motion](representative-detailing_precision.html) and [Route Ready](representative-detailing_route_ready.html) bind the advertised business to the actual shared templates; its independently verified owner/contact remains unknown and dispatch is held.
+| Preparation count | Result |
+| --- | ---: |
+| Input / syntax usable | 1,000 / 1,000 |
+| Duplicates / known suppression | 0 / 0 |
+| Prepared generic records | 1,000 |
+| External verified enrichment | 0 |
+| Native history coverage / unknown | 300 / 700 |
+| Sender-ready | 0 |
 
-The first six are two per approved niche: beauty/hair, mobile detailing and baking/catering. The thousand-row source spans more categories; those are staged expansion candidates, not six proofs per recipient or universal coverage. Existing barber/beauty and owner-flow reuse is recorded in the creative lane's lineage, with Component Studio import acceptance pending. Mobile detailing does not expand to auto mechanics.
+Workbook industry is a supplied/unverified segment. Neutral greetings and category copy do not claim validated business identity, owner name, no website or lost money. Contact syntax is not mailbox delivery proof. Missing history is unknown, not clearance. Private rows and receipts stay in ignored .data with mode0600. The generic tool produces no native verified-business import or dispatch authorization. Full factual evidence remains necessary only for claims presented as verified.
 
-The central proposition is useful business work from a phone. Sample Lab includes a hands-on request/status/reply/content walkthrough. Its fictional practice actions remain local, clearly unsent/unpublished, and reset on reload. Current connected workspace capabilities and conditional linked Owner Desk scope are distinguished in [phone acceptance](PHONE-OWNER-ACCEPTANCE.md). Actual customer connections and owner acceptance remain release-specific gates.
+The representative uses one finished illustrative beauty direction, visible phone practice and the existing account/interview workflow. An opaque native invitation resolves stored supplied context; contact data is not put in the URL. Actual customer three-direction proof selection remains unchanged. Practice edits are local, unsent/unpublished and reset on reload. Connected features, customer inboxes, paid integrations and physical owner acceptance remain separately scoped and proven.
 
-The focused starter website is $199 upfront, with first-year hosting and the approved first-year available standard domain or existing-domain connection. About55c/day is an average, not daily billing. Hosting after year one requires separate $9.99/month authorization; domain renewal and mailbox services are separate. Advanced scheduling sync, ecommerce, external subscriptions and larger operational scope require their own recommendation. No turnaround, sales lift, lost-revenue estimate or statistical winner is promised.
+Actual sender blocker: the existing GoDaddy cPanel sender requires confirmed written commercial opt-in under its current terms; scoped native records contain no matching permission. No new provider, paid verifier or SMTP delivery probe was used. Hosted installation, exact media/content approval, invitation/unsubscribe bindings and controlled inbox/phone acceptance remain open. Preparation, provider readiness and owner dispatch authorization are distinct.
 
-The complete role/action/persistence/provider/consumption record is in [capability matrix](CAPABILITY-MATRIX.md); exact source revision is sealed in [source checkpoint](SOURCE-CHECKPOINT.md).
+Current records: [brief](BRIEF.md), [owner corrections](OWNER-STEERING-3.md), [generic aggregate](generic-cohort-aggregate.json), [diagnosis](QUALIFICATION-DIAGNOSIS.md), [sender facts](existing-sender-followup.json). [Original source proof](SOURCE-CHECKPOINT.md) and [fresh checkout](FRESH-CHECKOUT.json) retain their exact historical source cutoffs. [Verified-business qualification](cohort-qualification.md) is an optional personalization/import path, not a blanket bar to generic preparation.
 
-## Capability evidence matrix
-
-| Capability | Source/local evidence | Hosted/provider evidence | Owner result | State |
-| --- | --- | --- | --- | --- |
-| Six shared recipe candidates | Versioned HTML, hashes, desktop/390px CUA review | Component Studio import and production deployment pending | Creative approval pending | candidate |
-| Nine branded Shay emails | Existing BrandedEmail shell, HTML/plain, card/commercial/QR, compact D0 previews and blocked-image views | Real Gmail/Outlook/Apple Mail rendering and provider acceptance unproved | Exact final content review pending | candidate |
-| Private Sample Lab | Opaque hashed invitation, frozen approved bytes, escaped verified bindings, read-only GET, preference separate from proof selection | New production routes/schema not installed | Pending | changed source |
-| Account/interview continuation | Server-owned verified same-email context and exact request mapping; controlled Drupal proof in backend record | Hosted/different-physical-device journey pending | Pending | changed source |
-| Phone owner walkthrough | Actual developer browser interactions at390x844/1440x1000; zero demo API writes; labels/retry/reset checked | Practice-only; no real business connection | Uncoached physical phone task pending | locally proven candidate |
-| Held0/3/7 schedule and exits | Native durable content and idempotency; synchronous reply/optout/bounce/complaint/purchase stops; controlled fixtures | Real sender/reply receipt and live exit proofs pending | Dispatch HOLD | changed source |
-| Campaign scorecard | Current Commerce capture/refund authority, deduplication, exact interview mapping and privacy fixtures | Current campaign financial outcomes absent; SMTP configuration is separate | Pending | changed source |
-| Cohort |300 candidates;12 bounded identity reviews;0 exact verified contacts/0 selected;150 shortfall | Historical suppression/native recipient reconciliation pending | One valid review candidate still needed | held |
-
-The detailed lane records are [creative review](creative-review.md), [measurement contract](measurement-contract.md), [cohort qualification](cohort-qualification.md), [sender assessment](provider-assessment.md), [source provenance](source-provenance.json), [cloud portability](CLOUD-PORTABILITY.md), and [latest steering](OWNER-STEERING-LATEST.md). Cross-project lessons and representative market evidence are recorded separately by the independent measurement lane. Read those facts before approving a prospective recipient.
-
-## First-send gate record
-
-Eligible count is **0** from the reviewed source at this cutoff. Source list syntax and nonoverlap with the historical260 do not prove business identity, permission or suppression clearance. No recipient is invented to fill the150 target. The supplied Craigslist attachment is preserved unchanged in ignored private storage; the pasted twelve-lead roster and two promised full source conversations were not received here.
-
-Existing hosted SMTP is configured according to a read-only aggregate inspection. This is not permitted-provider-use, sender authentication, inbox placement or exact-recipient history proof. Mailforge remains a researched option; no account, domain, mailbox or sequencer was purchased. Published cost arithmetic is an estimate with unknown taxes/additional services, not a checkout quote or spending approval.
-
-Before one real message: identify the exact verified business/contact; reconcile existing reply/optout/complaint/bounce/purchase history; record provider-use eligibility and sender proof; approve the exact recipe/content/media hashes; install and verify the reviewed private invitation release; inspect phone continuation and real inbox media/unsubscribe/reply; then record a concrete exact-recipient owner decision. A bare SMTP configuration or successful local test cannot close these gates. Any eventual send must retain exact message/provider outcome and uncertain-state handling, with no blind retry or general queue activation.
-
-There is no need to qualify150 contacts to review one safe slice. The smallest missing review input is one actual business and confirmed owner contact, with its evidence/history/provider eligibility. Providing a contact alone does not override the dispatch hold.
-
-## Verification and release
-
-Commands and evidence cutoffs are in [verification](VERIFICATION.md), including [fresh checkout](FRESH-CHECKOUT.json) and [canonical post-evaluation pointer](POST-EVALUATION.json). Synthetic captures and test-mode payments are excluded from actual performance claims. Opens/clicks include unknown scanner/privacy activity; costs/contribution remain unknown until complete receipts exist. The150-business trial is exploratory.
-
-This work is isolated on `codex/acquisition-199-20261005`, from origin/main `eef442be`, at `/Users/famtastic-fritz/Development/FAMtastic/worktrees/acquisition-199-20261005`. Canonical agency dirty work is preserved. A scoped branch/commit makes the package resumable; main landing and runtime activation need later reviewed release work. Review-handoff classification is **changed**, with creative candidates and no deployed/owner_accepted claim. The existing umbrella plan audit remains clean; this brief is its own readiness checkpoint.
+The original source implementation is draft PR58. Follow-up revisions are recorded separately. No campaign mail, customer purchase, production deployment, merge or owner acceptance is claimed.

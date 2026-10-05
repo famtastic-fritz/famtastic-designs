@@ -9,7 +9,7 @@ use Drupal\Core\Site\Settings;
 /** Reviewed source inputs only; serving uses immutable database snapshots. */
 final class AcquisitionSampleArtifacts {
   public static function path(string $relative): string {
-    if (!preg_match('#^marketing/campaigns/acquisition-199/(?:templates/[a-z0-9_]+\.html|assets/[a-z0-9_-]+\.(?:png|jpg)|messages\.json)$#D', $relative)) throw new \InvalidArgumentException('acquisition_artifact_path_invalid');
+    if (!preg_match('#^marketing/campaigns/acquisition-199/(?:templates/[a-z0-9_]+\.html|generic-review/beauty-template\.html|assets/[a-z0-9_-]+\.(?:png|jpg)|messages\.json)$#D', $relative)) throw new \InvalidArgumentException('acquisition_artifact_path_invalid');
     $bundle = class_exists(Settings::class) ? (string) Settings::get('famtastic_acquisition_bundle_root', '') : '';
     if ($bundle === '') {
       $sourceRoot = realpath(dirname(__DIR__, 7) . '/marketing/campaigns/acquisition-199');

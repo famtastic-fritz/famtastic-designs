@@ -2966,3 +2966,13 @@ Observation: source workbooks and configured SMTP do not establish one safe reci
 Observation: an attractive phone storefront does not prove the owner can work from a phone. Guidance: show useful request/status/content actions with actual390px interaction evidence, clearly disclose illustrative unsent/unpublished state, and require release-matched physical owner acceptance. Shared candidates remain distinct from the customer's own approved proofs.
 
 Evidence: docs/research/acquisition-199/README.md and lane records. Hosted release, real inbox delivery, connected customer tools and owner acceptance are not claimed.
+
+## 2026-10-05 — Qualification and enrichment separation (candidate_shared)
+
+Observation: a universal website/booking gate unnecessarily rejected neutral business/niche drafts, while exact-name/city lookup missed a useful social-identity match. Change: optional unknowns stay absent; supplied facts/links retain current checked receipts; search aliases/handles/service areas before joining businesses. Stop: treating syntax/MX or absence of exact results as mailbox/ownership proof or fictional-lead evidence. Scope: acquisition source; provider-specific GoDaddyopt-in remains a real dependency. Proof:39 synthetic receipt cases,30boundedidentityreviews,300nativehashcomparisons. Shared retrieval/import unverified; no owneracceptance.
+
+## 2026-10-05 — Generic preparation and polished prefilled Lab follow-up
+
+Fritz corrected the critical path: supplied workbook Industry drives generic draft preparation; identity/contact enrichment is optional. All1,000 rows prepared; syntax1,000,duplicates0,known suppression0,enrichment known0,sender-ready0,history unknown700. This does not prove mailbox, ownership, opt-in, website absence or delivery.
+
+All six prior visuals were declined and excluded from the proposed send package. One new owned-asset beauty email/Lab candidate is complete. Existing opaque Drupal invitation and same-email verified continuation now carry supplied business/industry into registration/interview, with unknown facts absent and preparation barred from sequences. Local static/native browser1440/390,27 backend tests/211 assertions,32 existing regressions/211 assertions,16 installed checks and Node22 build passed; hosted and physical owner acceptance remain pending. See docs/research/acquisition-199/FOLLOWUP-VERIFICATION.md. Dispatch HOLD; no sends, purchases, merge or deployment.

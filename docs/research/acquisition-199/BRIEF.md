@@ -1,22 +1,26 @@
-# $199 acquisition first-send readiness
+# Generic outreach and polished Sample Lab
 
-Purpose: turn approved campaign scope into reviewable implementation and evidence.
+Purpose: give prospects a useful, compelling email-to-website preview while preparing the supplied list efficiently.
 
-Goal: prepare native acquisition, six sample candidates, nine draft emails and a held first-send package.
+Goal: prepare all 1,000 workbook records and deliver one polished branded email → stored prospect context → interactive Lab → account/interview continuation for owner review.
 
-- [x] Anchor latest origin/main in isolated worktree; preserve canonical dirty work.
-- [x] Reconcile Commerce/native tracking, eligible cohort and sender evidence.
-- [x] Produce six reusable recipe candidates and nine actual branded drafts; approval still held.
-- [x] Implement private Sample Lab, durable continuation, stops and native scorecard.
-- [x] Run source, controlled integration, browser/mobile and email review; fix failures.
-- [x] Commit scope and seal fresh-checkout/closeout package; review-branch delivery and mirror recorded at closeout.
+- [x] Preserve the original source checkpoint and rejected six candidates as history.
+- [x] Prepare all 1,000 records with supplied industry, syntax normalization, deduplication and known suppression.
+- [x] Keep optional enrichment separate; do not claim owner identity, website absence, mailbox delivery or opt-in.
+- [x] Reuse owned photography and finished beauty content for one polished representative email and Lab.
+- [x] Correct the primary email CTA and visitor copy after independent visual review.
+- [x] Exercise the actual static email/phone practice on desktop and at 390px.
+- [x] Finish and verify opaque native context, prefilled account/interview and one-preview support.
+- [ ] Seal source, post-evaluation, owner-review evidence and dated status mirror.
+- [ ] Obtain owner review of this new representative; current six are declined.
+- [ ] Close actual sender permitted-use and hosted readiness before any proposed dispatch.
 
-Status: checkpoint_complete — source readiness complete; external release/dispatch gates held
+Status: checkpoint_complete — generic preparation and local representative journey complete; owner/sender/hosted tasks remain open; dispatch HOLD.
 Started: 2026-10-05
-Ended: 2026-10-05
-Execution: codex/acquisition-199-20261005; /Users/famtastic-fritz/Development/FAMtastic/worktrees/acquisition-199-20261005. Root owns frontend/integration/common docs; creative owns campaign sources; backend owns invitation/auth/stops; measurement owns reports/cohort/provider assessment. Main landing requires later review; no auto-merge or deploy.
-Research: APPROVED-SCOPE.md; owner steering; prior umbrella draft 85fbe4b72 is superseded scope, preserved history. Two promised full conversations are unreceived.
-Review: changed candidate; hosted and owner acceptance pending.
-Skills: email-sequence; agency-agents pinned 765be42358100bf89d2faa567668a94c602f9a26; famtastic-build-review; client-owner-training; repository demand-engine.
+Ended: 2026-10-05 source checkpoint; original proof retained separately.
+Execution: branch codex/acquisition-199-20261005; worktree /Users/famtastic-fritz/Development/FAMtastic/worktrees/acquisition-199-20261005. Root integrates existing frontend; backend reuses the Drupal invitation/continuation service; creative owns the single polished candidate; measurement prepares the generic batch and independently critiques visuals. No merge or deployment authority.
+Research: OWNER-STEERING-3.md; generic-cohort-aggregate.json; existing-sender-followup.json. Identity research is optional and historical, not the critical path. History evidence covers 300 contacts; 700 remain unknown. Remote extension was rejected by automatic approval review; no upload occurred.
+Review: changed source; polished candidate pending owner review. All six earlier designs are declined. Local/controlled tests do not imply hosted, physical owner or inbox acceptance. Existing GoDaddy commercial permission is unresolved; no sends or purchases.
+Skills: famtastic-build-review; client-owner-training; agency-agents UI Designer, UX Architect and Game Designer profiles at pinned765be42358100bf89d2faa567668a94c602f9a26. Interaction guidance only; no game engine or new provider.
 
-Proof: application source e953d06b; SOURCE-CHECKPOINT.md, FRESH-CHECKOUT.json and VERIFICATION.md; canonical post-evaluation POST-EVALUATION.json. Sending, purchases, paid generation and production deployment held.
+Proof: generic counts input1,000/syntax1,000/duplicates0/known suppression0/prepared1,000/sender-ready0; unknown history700. Eighteen generic tests,39 strict personalization tests and27 backend tests211 assertions,32 existing regression tests211 assertions,16 installed native checks; polished static/native desktop/390 browser evidence in generic-review/evidence. Original SOURCE-CHECKPOINT.md proof is historical and separate from follow-up tests.

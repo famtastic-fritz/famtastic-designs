@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-05T21:15:17.780Z",
+  "results": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "email_to_lab": true,
+      "images_loaded": true,
+      "no_overflow": true,
+      "phone_actions": [
+        "open inquiry",
+        "save unsent reply",
+        "change status",
+        "save unpublished instructions"
+      ],
+      "practice_interview": true,
+      "practice_reload_resets": true,
+      "backend_writes": 0,
+      "environment": "local static review; native context/registration verified separately"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "email_to_lab": true,
+      "images_loaded": true,
+      "no_overflow": true,
+      "phone_actions": [
+        "open inquiry",
+        "save unsent reply",
+        "change status",
+        "save unpublished instructions"
+      ],
+      "practice_interview": true,
+      "practice_reload_resets": true,
+      "backend_writes": 0,
+      "environment": "local static review; native context/registration verified separately"
+    }
+  ],
+  "owner_accepted": false
+}

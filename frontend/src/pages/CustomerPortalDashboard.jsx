@@ -98,7 +98,10 @@ export default function CustomerPortalDashboard() {
           const linked = nextWorkspace?.website_requests?.find(r => r.public_id === nextSession.continuation.request_public_id);
           if (linked) setActiveRequestId(linked.public_id);
           setNotice('Your sample preference is saved. Continue your website interview to shape your own directions.');
-          if (!nextWorkspace?.website_requests?.length) setEditingRequest({});
+          if (!nextWorkspace?.website_requests?.length) {
+            const known = nextSession.continuation.known_information || {};
+            setEditingRequest({ business_name: known.business_name || '', project_name: known.business_name ? `${known.business_name} website` : '', intake: { industry: known.industry || '' }, context_classification: nextSession.continuation.context_classification });
+          }
         }
         setWorkspace(nextWorkspace);
         setCatalog(nextCatalog);

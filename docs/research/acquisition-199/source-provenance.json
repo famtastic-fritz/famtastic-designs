@@ -3,5 +3,13 @@
   "received_file": "craigslist_leads_proposals (1).md",
   "sha256": "0579dee67e2ac6bf14f208a62876252d12bf88999d24dad062bc0d0b9f3780ee",
   "private_copy": ".data/acquisition-199/received-craigslist-proposals.md",
-  "handling": "Private received content archived unchanged; no contacts selected or dispatched from it. Pasted twelve-lead roster and two promised full source conversations not received in this task."
+  "handling": "Private received Craigslist content archived unchanged; no contacts selected/dispatched. During follow-up, the original pasted lead framework was recovered from the source chat and archived privately. Two promised complete conversations creating workbook lists remain unreceived.",
+  "pasted_framework": {
+    "source_thread_id": "01a10d13-9d03-74c3-9ab4-15e8045e7688",
+    "source_message_id": "01a10d64-dc28-76a3-b38c-e246ac3a0748",
+    "private_copy": ".data/acquisition-199/received-pasted-lead-framework.md",
+    "sha256": "b6f19891616c69c345eadd69c6867afe1c064166b081cc658bdc7c8bfb2461d4",
+    "recovered_on": "2026-10-05",
+    "status": "Provided framework, not independently verified row-bound workbook provenance"
+  }
 }

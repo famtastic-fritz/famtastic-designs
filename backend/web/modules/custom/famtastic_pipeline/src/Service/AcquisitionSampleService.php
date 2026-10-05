@@ -6,6 +6,7 @@ namespace Drupal\famtastic_pipeline\Service;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Site\Settings;
 
 /** Reviewed Sample Lab invitations, separate from immutable public-proof delivery. */
 final class AcquisitionSampleService {
@@ -60,13 +61,70 @@ final class AcquisitionSampleService {
     return ['id' => $id, 'duplicate' => FALSE, 'token' => $token];
   }
 
+  /** Internal preparation from stored supplied facts; confers no send eligibility. */
+  public function prepareGeneric(string $key, int $prospectId, int $campaignId, array $recipe, int $expires, bool $internalCandidate = FALSE): array {
+    $now = $this->time->getRequestTime();
+    if ($prospectId < 1 || preg_match('/^[a-zA-Z0-9:_-]{8,128}$/D', $key) !== 1 || $expires <= $now || $expires > $now + 30 * 86400) throw new \InvalidArgumentException('invalid_sample_preparation');
+    $prospect = $this->database->select('famtastic_prospect', 'p')->fields('p', ['id', 'business_name', 'business_category', 'public_email', 'campaign'])->condition('id', $prospectId)->execute()->fetchAssoc();
+    if (!$prospect) throw new \InvalidArgumentException('stored_sample_prospect_required');
+    if ($campaignId > 0) {
+      $campaign = $this->database->select('famtastic_campaign', 'c')->fields('c', ['campaign_key'])->condition('id', $campaignId)->execute()->fetchField();
+      if (!$campaign || !hash_equals((string) $campaign, (string) $prospect['campaign'])) throw new \InvalidArgumentException('recipient_campaign_binding_required');
+    }
+    $suppliedBusinessName = trim((string) $prospect['business_name']);
+    $bindings = AcquisitionSampleGuard::bindings(['business_name' => $suppliedBusinessName === '' ? 'Your business' : $suppliedBusinessName]);
+    $industry = trim((string) $prospect['business_category']);
+    if (mb_strlen($industry) > 255 || preg_match('/[\x00-\x1f<>]/u', $industry)) throw new \InvalidArgumentException('unsafe_supplied_industry');
+    // Exact display categories only. Broad or unknown categories stay generic;
+    // neither this map nor a supplied category is a qualification assertion.
+    $family = match (mb_strtolower($industry)) {
+      'beauty_hair', 'hair salon', 'beauty salon', 'beauty', 'beauty services', 'beauty, hair styling & braiding' => 'hair_beauty',
+      'barber', 'barber shop' => 'barber',
+      'mobile_detailing', 'mobile detailing', 'auto detailing' => 'mobile_detailing',
+      'baking_catering', 'bakery', 'catering' => 'baking_catering',
+      default => 'general_service',
+    };
+    $niche = match ($family) { 'hair_beauty', 'barber' => 'beauty_hair', 'general_service' => 'generic', default => $family };
+    $recipe = AcquisitionSampleGuard::preparationRecipe($recipe, $internalCandidate);
+    $recipeFamily = $recipe['id'] === 'beauty_soft_power_acquisition' ? 'hair_beauty' : ($recipe['industry_family'] ?? '');
+    if ($recipeFamily !== $family || ($recipe['niche'] ?? '') !== ($niche === 'generic' ? 'general_service' : $niche)) throw new \InvalidArgumentException('preparation_recipe_industry_mismatch');
+    if ($internalCandidate && Settings::get('famtastic_acquisition_internal_preparation', FALSE) !== TRUE) throw new \InvalidArgumentException('internal_sample_preparation_disabled');
+    $path = AcquisitionSampleArtifacts::path((string) $recipe['artifact_path']);
+    if (!is_file($path) || filesize($path) > 262144 || !hash_equals((string) $recipe['sha256'], (string) hash_file('sha256', $path))) throw new \InvalidArgumentException('reviewed_sample_artifact_required');
+    $recipe['html_snapshot'] = (string) file_get_contents($path);
+    $email = mb_strtolower(trim((string) $prospect['public_email']));
+    $emailAvailable = (bool) filter_var($email, FILTER_VALIDATE_EMAIL);
+    $context = ['classification' => 'supplied_generic_preparation', 'industry' => $industry, 'business_name_provenance' => $suppliedBusinessName === '' ? 'unknown' : 'stored_supplied', 'industry_provenance' => $industry === '' ? 'unknown' : 'stored_supplied', 'niche_verified' => FALSE, 'owner_name_provenance' => 'unknown', 'contact_ownership' => 'unknown', 'delivery_eligibility' => 'unassessed', 'account_continuation_available' => $emailAvailable, 'recipe_review' => $internalCandidate ? 'internal_candidate_owner_pending' : 'approved'];
+    $bindings['_preparation'] = $context;
+    $evidence = hash('sha256', json_encode([$prospectId, $campaignId, $email, $niche, $recipe, $bindings, $expires], JSON_THROW_ON_ERROR));
+    $transaction = $this->database->startTransaction();
+    $old = $this->database->select('famtastic_acquisition_sample', 's')->fields('s')->condition('invitation_key', $key)->forUpdate()->execute()->fetchAssoc();
+    if ($old) {
+      if (!hash_equals((string) $old['evidence_hash'], $evidence)) throw new \InvalidArgumentException('invitation_replay_changed');
+      return ['id' => (int) $old['id'], 'duplicate' => TRUE, 'token' => NULL];
+    }
+    $token = bin2hex(random_bytes(32));
+    $id = (int) $this->database->insert('famtastic_acquisition_sample')->fields([
+      'invitation_key' => $key, 'token_hash' => AcquisitionSampleGuard::tokenHash($token), 'context_id' => bin2hex(random_bytes(16)),
+      'recipient_hash' => $this->ledger->contactHash($emailAvailable ? $email : 'unclaimable-prospect:' . $prospectId), 'campaign_id' => $campaignId > 0 ? $campaignId : NULL, 'prospect_id' => $prospectId,
+      'niche' => $niche, 'experiment_arm' => 'generic', 'recipe_snapshot' => json_encode([$recipe], JSON_THROW_ON_ERROR), 'bindings' => json_encode($bindings, JSON_THROW_ON_ERROR), 'evidence_hash' => $evidence,
+      'qualification_ref' => '', 'eligible_at' => NULL, 'expires' => $expires, 'created' => $now, 'changed' => $now,
+    ])->execute();
+    unset($transaction);
+    return ['id' => $id, 'duplicate' => FALSE, 'token' => $token];
+  }
+
   /** Strictly read-only: scanners cannot register, prefer, claim or create jobs. */
   public function resolve(string $token): ?array {
     $row = $this->liveRow($token);
     if (!$row) return NULL;
     $recipes = json_decode((string) $row['recipe_snapshot'], TRUE, 32, JSON_THROW_ON_ERROR);
     $bindings = json_decode((string) $row['bindings'], TRUE, 32, JSON_THROW_ON_ERROR);
+    $context = $bindings['_preparation'] ?? NULL;
+    unset($bindings['_preparation']);
     return [
+      'context_classification' => $context['classification'] ?? 'verified_outreach_sample',
+      'industry' => $context['industry'] ?? NULL, 'context_provenance' => $context,
       'schema' => 'famtastic.acquisition-sample.v1', 'illustrative' => TRUE,
       'niche' => $row['niche'], 'business_name' => $bindings['business_name'], 'bindings' => $bindings,
       'recipes' => array_map(static fn(array $recipe): array => [
@@ -86,7 +144,9 @@ final class AcquisitionSampleService {
       if ($recipe['id'] !== $recipeId) continue;
       $html = (string) ($recipe['html_snapshot'] ?? '');
       if ($html === '' || !hash_equals((string) $recipe['sha256'], hash('sha256', $html))) throw new \RuntimeException('sample_artifact_unavailable');
-      return AcquisitionSampleGuard::render($html, json_decode((string) $row['bindings'], TRUE, 32, JSON_THROW_ON_ERROR));
+      $bindings = json_decode((string) $row['bindings'], TRUE, 32, JSON_THROW_ON_ERROR);
+      unset($bindings['_preparation']);
+      return AcquisitionSampleGuard::render($html, $bindings);
     }
     return NULL;
   }
@@ -158,11 +218,11 @@ final class AcquisitionSampleService {
     if (!$customer || empty($customer['verified_at'])) return NULL;
     // Saved account context survives public-link expiry/revocation. It grants no
     // sample/proof access and carries no token, checkout or approval authority.
-    $row = $this->database->select('famtastic_acquisition_sample', 's')->fields('s', ['id', 'context_id', 'niche', 'preferred_recipe'])->condition('customer_id', $customerId)->condition('recipient_hash', $this->ledger->contactHash((string) $customer['email']))->orderBy('changed', 'DESC')->orderBy('id', 'DESC')->range(0, 1)->execute()->fetchAssoc();
+    $row = $this->database->select('famtastic_acquisition_sample', 's')->fields('s', ['id', 'context_id', 'niche', 'preferred_recipe', 'bindings'])->condition('customer_id', $customerId)->condition('recipient_hash', $this->ledger->contactHash((string) $customer['email']))->orderBy('changed', 'DESC')->orderBy('id', 'DESC')->range(0, 1)->execute()->fetchAssoc();
     if (!$row) return NULL;
     $mapping = $this->database->select('famtastic_acquisition_request', 'm')->fields('m', ['request_id'])->condition('invitation_id', (int) $row['id'])->condition('customer_id', $customerId)->execute()->fetchField();
     $requestPublic = $mapping ? $this->database->select('famtastic_project_request', 'r')->fields('r', ['public_id'])->condition('id', $mapping)->condition('customer_id', $customerId)->execute()->fetchField() : NULL;
-    return ['kind' => 'acquisition_sample', 'context_id' => $row['context_id'], 'request_public_id' => $requestPublic ?: NULL, 'niche' => $row['niche'], 'recipe_id' => $row['preferred_recipe'] ?: NULL, 'return_path' => AcquisitionSampleGuard::RETURN_PATH];
+    return $this->knownContext($row) + ['kind' => 'acquisition_sample', 'context_id' => $row['context_id'], 'request_public_id' => $requestPublic ?: NULL, 'niche' => $row['niche'], 'recipe_id' => $row['preferred_recipe'] ?: NULL, 'return_path' => AcquisitionSampleGuard::RETURN_PATH];
   }
 
   /** Server-owned intake context for an explicit request, never formal selection. */
@@ -172,7 +232,7 @@ final class AcquisitionSampleService {
     if (!$customer || empty($customer['verified_at']) || preg_match('/^[a-f0-9]{32}$/D', $contextId) !== 1) throw new \InvalidArgumentException('sample_request_context_invalid');
     $row = $this->database->select('famtastic_acquisition_sample', 's')->fields('s')->condition('context_id', $contextId)->condition('customer_id', $customerId)->condition('recipient_hash', $this->ledger->contactHash((string) $customer['email']))->execute()->fetchAssoc();
     if (!$row) throw new \InvalidArgumentException('sample_request_context_invalid');
-    return ['context_id' => $contextId, 'invitation_id' => (int) $row['id'], 'niche' => $row['niche'], 'preferred_recipe' => $row['preferred_recipe'] ?: NULL, 'formal_proof_selection' => FALSE, 'source_campaign_id' => (int) $row['campaign_id']];
+    return $this->knownContext($row) + ['context_id' => $contextId, 'invitation_id' => (int) $row['id'], 'niche' => $row['niche'], 'preferred_recipe' => $row['preferred_recipe'] ?: NULL, 'formal_proof_selection' => FALSE, 'source_campaign_id' => (int) $row['campaign_id']];
   }
 
   public function associatedRequest(int $customerId, string $contextId): ?int {
@@ -198,6 +258,13 @@ final class AcquisitionSampleService {
     $now = $this->time->getRequestTime();
     $this->database->update('famtastic_acquisition_sample')->fields(['revoked_at' => $now, 'changed' => $now])->condition('id', $id)->isNull('revoked_at')->execute();
     if ($this->database->schema()->tableExists('famtastic_acquisition_sequence')) $this->database->update('famtastic_acquisition_sequence')->fields(['status' => 'stopped', 'stop_reason' => 'revoked', 'stopped_at' => $now, 'changed' => $now])->condition('invitation_id', $id)->condition('status', ['held', 'active'], 'IN')->execute();
+  }
+
+  /** Expose known facts only through verified account continuation/intake. */
+  private function knownContext(array $row): array {
+    $bindings = json_decode((string) $row['bindings'], TRUE, 32, JSON_THROW_ON_ERROR);
+    $context = $bindings['_preparation'] ?? NULL;
+    return ['context_classification' => $context['classification'] ?? 'verified_outreach_sample', 'known_information' => ['business_name' => ($context['business_name_provenance'] ?? '') === 'unknown' ? '' : $bindings['business_name'], 'industry' => $context['industry'] ?? '', 'business_category' => $context['industry'] ?? ''], 'context_provenance' => $context];
   }
 
   private function customer(int $id): ?array {

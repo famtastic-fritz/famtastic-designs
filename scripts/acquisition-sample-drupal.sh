@@ -4,6 +4,7 @@
 # Optional ACQUISITION_INSTALL_LOCKED_DEPENDENCIES=1 installs only the task lock
 # in the copied fixture when the borrowed runtime differs. No scripts run.
 # ACQUISITION_KEEP_SANDBOX=1 retains private .test browser fixture after success.
+# ACQUISITION_GENERIC_PROOF=1 also exports the supplied-context candidate journey.
 set -euo pipefail
 
 
@@ -118,6 +119,11 @@ test -s "$sandbox/backend/web/sites/default/files/.ht.sqlite"
 "${drush[@]}" php:script "$sandbox/scripts/acquisition-sample-drupal.php" >"$evidence/test.log" 2>&1
 mkdir -p "$evidence/supplemental"
 "${isolated[@]}" "ACQUISITION_DRUPAL_EVIDENCE=$evidence/supplemental" ACQUISITION_DRUPAL_PHASE=supplemental "$php_bin" "${php_args[@]}" "$sandbox/backend/vendor/drush/drush/drush.php" "--root=$sandbox/backend/web" --uri=http://acquisition-drupal.example.test php:script "$sandbox/scripts/acquisition-sample-drupal.php" >"$evidence/supplemental.log" 2>&1
+if [[ "${ACQUISITION_GENERIC_PROOF:-0}" == 1 ]]; then
+  mkdir -p "$evidence/generic"
+  "${isolated[@]}" "ACQUISITION_DRUPAL_EVIDENCE=$evidence/generic" "ACQUISITION_GENERIC_EXPORT=$evidence/generic" ACQUISITION_DRUPAL_PHASE=generic "$php_bin" "${php_args[@]}" "$sandbox/backend/vendor/drush/drush/drush.php" "--root=$sandbox/backend/web" --uri=http://acquisition-drupal.example.test php:script "$sandbox/scripts/acquisition-sample-drupal.php" >"$evidence/generic.log" 2>&1
+  cat "$evidence/generic.log"
+fi
 cat "$evidence/test.log" "$evidence/supplemental.log"
 echo "Evidence: $evidence/evidence.json"
 echo "Fixture: $sandbox/fixture.json"

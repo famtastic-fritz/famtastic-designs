@@ -1,0 +1,92 @@
+{
+  "schema": "famtastic.acquisition-followup-proof.v1",
+  "classification": "changed",
+  "source_commit": "sealed in SOURCE-CHECKPOINT.md follow-up section",
+  "checks": {
+    "generic_preparation": {
+      "tests": 18,
+      "status": "passed"
+    },
+    "optional_personalization": {
+      "tests": 39,
+      "status": "passed"
+    },
+    "creative_renderer": {
+      "tests": 23,
+      "status": "passed"
+    },
+    "backend_generic_and_neutral": {
+      "tests": 27,
+      "assertions": 211,
+      "status": "passed"
+    },
+    "existing_request_and_public_preview_regressions": {
+      "tests": 32,
+      "assertions": 211,
+      "status": "passed",
+      "existing_phpunit_deprecations": 69
+    },
+    "installed_generic_drupal": {
+      "checks": 16,
+      "status": "passed",
+      "receipt": "evidence/generic-installed.json"
+    },
+    "static_browser": {
+      "viewports": [
+        "1440x1000",
+        "390x844"
+      ],
+      "status": "passed",
+      "receipt": "../../../marketing/campaigns/acquisition-199/generic-review/evidence/browser-receipt.json"
+    },
+    "native_browser": {
+      "viewports": [
+        "1440x1000",
+        "390x844"
+      ],
+      "status": "passed",
+      "receipt": "../../../marketing/campaigns/acquisition-199/generic-review/evidence/native-browser-receipt.json"
+    },
+    "legacy_two_preview_browser": {
+      "viewports": [
+        "1440x1000",
+        "390x844"
+      ],
+      "status": "passed"
+    },
+    "frontend_build": {
+      "runtime": "Node22.23.2",
+      "modules": 623,
+      "html_outputs": 221,
+      "status": "passed",
+      "existing_bundle_warning": true
+    }
+  },
+  "source_sha256": {
+    "frontend/src/pages/AcquisitionSamplePage.jsx": "4853e8e38b075ff9f3f1bf89f022a46b3c083ee12e49b99cee08fe8305cce64c",
+    "frontend/src/pages/LoginPage.jsx": "793897b9cce7f34500bc7c97f04e8c6d0ae4b8592099c167160a7ac3f8a3026b",
+    "frontend/src/pages/CustomerPortalDashboard.jsx": "84791273fed06bccd64ae4081a3864c329a701f84adc6f70d828de17565f41fa",
+    "frontend/src/components/portal/PortalProjectsView.jsx": "c85e226d1056451ad71e5dff5d1124ee473dcbf775ce2cc47e8529b6b0c34add",
+    "frontend/src/components/acquisition/AcquisitionOwnerDemo.jsx": "bb189442fb56fba505eb38b19540670c2a6af9bb732603597e17e64b968a5688",
+    "frontend/src/acquisition.css": "0f823f4762b2c6c7b797534e7a33622e4f2023b335d0e914ddd9f1ef17010cf8",
+    "scripts/acquisition-generic-cohort.py": "28244a507c0f6a94a10fbc5d478efb7b00ee0398ee47bc35fcb2f55204dba298",
+    "scripts/acquisition-cohort.py": "1cafc3a6cfd8708e40745b1e9a79458e7f5d173e543a61ea762cce981c3228da",
+    "scripts/acquisition-generic-review.php": "b9864d5245f63d1988f5fdf48c4f0b16b006305b0f54e64c6765b840b5816fb2",
+    "scripts/test-acquisition-generic-browser.mjs": "7160eb4ac8c9e146a1891763969a485ece701d370acf72c9cd6f1d97ad2d5d1d",
+    "scripts/test-acquisition-generic-native-browser.mjs": "d98f636462b905dd7efe7bb94fc1aed805f0851bfa3e5ecc153b515094a805a2",
+    "marketing/campaigns/acquisition-199/generic-review/beauty-email.html": "03588c3c4b4d323a8bc9965aee1a9c6a8905db190d6332d31eaab49b69e218f5",
+    "marketing/campaigns/acquisition-199/generic-review/beauty-template.html": "15be0947f318df33b0d68b68a6e0038143b7c6355933d161527cab74b1e7e58f"
+  },
+  "limits": [
+    "Controlled installed Drupal uses fictional records and local persistence; no real workbook contacts imported.",
+    "Native browser HTTP fixtures use actual controlled Drupal exports, local Vite bytes and a routed synthetic public origin; strict iframe sandbox retained.",
+    "Browser fixtures prove UI continuation and prefills; native controlled service separately proves persistence. Hosted CORS, release, email inbox and physical owner acceptance unverified.",
+    "A loopback-only Chromium image restriction was caught; test origin corrected without weakening product sandbox.",
+    "Original full-suite/fresh-checkout proof is historical; current focused suites do not claim a new full-suite or fresh-clone run."
+  ],
+  "dispatch": "HOLD",
+  "sender_ready": 0,
+  "owner_accepted": false,
+  "hosted_release_proved": false,
+  "production_deployment": false
+}

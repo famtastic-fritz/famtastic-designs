@@ -17,7 +17,7 @@ export default function LoginPage() {
     if (!validSampleToken(token)) return;
     const controller = new AbortController();
     getAcquisitionSample(token, controller.signal).then(({sample}) => {
-      if (sample?.business_name) setBusinessName(current => current || sample.business_name);
+      if (sample?.business_name && sample.context_provenance?.business_name_provenance !== 'unknown') setBusinessName(current => current || sample.business_name);
     }).catch(() => {});
     return () => controller.abort();
   }, [searchParams]);

@@ -1,0 +1,15 @@
+# Generic preparation and polished Lab proof
+
+Classification: changed source; one new visual candidate pending Fritz review. All six previous designs are declined and excluded from the proposed send package. Application revision is pinned in the follow-up section of SOURCE-CHECKPOINT.md. Original verification files remain historical.
+
+All 1,000 workbook rows are prepared privately with supplied industry labels, valid syntax and deduplication. Known suppression:0; enrichment known:0; sender-ready:0; history unknown:700. Preparation grants neither send authorization nor verified-business import. One finished beauty representative exists; the other900 records have general draft wording and adaptation pending.
+
+Current checks passed:18 generic preparation,39 optional-personalization,23 creative renderer;27 backend tests/211 assertions;32 existing request/proof/public-preview regressions/211 assertions;16 installed Drupal checks; static and native browser journeys at1440x1000 and390x844; existing two-preview browser regression; Node22 build623modules/221HTML. Detailed hashes and cutoffs: FOLLOWUP-VERIFICATION.json and backend-proof.json. Existing backend deprecations and bundle-size warning remain.
+
+The native journey resolves an opaque stored invitation, shows one frozen beauty preview and supplied business/industry, carries business into registration, verifies once across devices and prefills the existing website interview. Missing business names remain unknown, rather than treating a display fallback as a known fact. Generic preparation cannot enter the outreach sequence. No new public route or schema was introduced.
+
+Installed Drupal proof uses fictional records and actual local persistence. The browser consumes actual controlled Drupal exports through isolated HTTP fixtures with local application bytes and a synthetic public origin. This avoids Chromium's loopback image restriction while retaining the strict iframe sandbox. Browser checks prove rendered UI and continuation; the separate installed checks prove saved native context and request mapping. Hosted CORS/fonts, production transport, inbox placement and physical owner acceptance remain unverified.
+
+Review: [email](http://127.0.0.1:5201/beauty-email.html), [Lab](http://127.0.0.1:5201/beauty-lab.html), [native desktop screenshot](../../../marketing/campaigns/acquisition-199/generic-review/evidence/native-lab-1440.png), [native phone screenshot](../../../marketing/campaigns/acquisition-199/generic-review/evidence/native-lab-390.png). The static review is unbound; actual native prefills are demonstrated by the controlled native journey.
+
+Dispatch HOLD. GoDaddy written commercial opt-in is absent; this release is unhosted and the new creative awaits owner review. The remote history extension was rejected by automatic approval review because it would upload private-derived contact hashes; no upload occurred and700 records retain unknown history. Deep identity research is optional, not a prerequisite to generic preparation.

@@ -1,3 +1,7 @@
+## 2026-10-05 — Acquisition qualification follow-up (source; dispatch held)
+
+Expanded current identity research to30of300 initial candidates and compared all300privatecontact hashes with native contacts/outbox/consent/inbound history, finding0matches. Basic address syntax/domain MX checks pass without proving mailbox deliverability. Removed universal site/booking enrichment rejection; retained exact ownership, provider policy, suppression/history and verified supplied-binding evidence. Existing GoDaddycPanel commercial opt-in requirement is a specific unresolved sender dependency. Details: `docs/research/acquisition-199/cohort-qualification-followup.md`.
+
 # Product changelog
 
 ## 2026-10-05 — $199 acquisition source and review candidate
@@ -3916,3 +3920,9 @@ Historical migration receipts retain their original paths as evidence; this curr
 ## 2026-10-04 — Inbound mailbox repair
 
 Added Drupal-owned inbound mail discovery and exact sent-receipt correlation for hello replies; historical Maildir baseline, atomic message/draft idempotency, retry/health readback and marker-owned deployment gate. Deployed source 63d7dfb0; actual cron and all eight hosted fixture checks passed; 320 existing mail files preserved; fixture cleaned; no SMTP. See docs/plans/inbound-mail-repair/OPERATIONS.md.
+
+## 2026-10-05 — Generic preparation and polished prefilled Lab follow-up
+
+Fritz corrected the critical path: supplied workbook Industry drives generic draft preparation; identity/contact enrichment is optional. All1,000 rows prepared; syntax1,000,duplicates0,known suppression0,enrichment known0,sender-ready0,history unknown700. This does not prove mailbox, ownership, opt-in, website absence or delivery.
+
+All six prior visuals were declined and excluded from the proposed send package. One new owned-asset beauty email/Lab candidate is complete. Existing opaque Drupal invitation and same-email verified continuation now carry supplied business/industry into registration/interview, with unknown facts absent and preparation barred from sequences. Local static/native browser1440/390,27 backend tests/211 assertions,32 existing regressions/211 assertions,16 installed checks and Node22 build passed; hosted and physical owner acceptance remain pending. See docs/research/acquisition-199/FOLLOWUP-VERIFICATION.md. Dispatch HOLD; no sends, purchases, merge or deployment.

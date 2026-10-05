@@ -1,0 +1,96 @@
+{
+  "schema": "famtastic.acquisition-generic-preparation.v1",
+  "counts": {
+    "input": 1000,
+    "syntax_usable": 1000,
+    "duplicates": 0,
+    "suppressed": 0,
+    "enrichment_known": 0,
+    "prepared": 1000,
+    "sender_ready": 0,
+    "history_unknown": 700
+  },
+  "categories": [
+    {
+      "supplied_segment": "Beauty, Hair Styling & Braiding",
+      "input": 100,
+      "prepared": 100,
+      "sender_ready": 0
+    },
+    {
+      "supplied_segment": "Mobile Detailing, Auto Care & Tinting",
+      "input": 100,
+      "prepared": 100,
+      "sender_ready": 0
+    },
+    {
+      "supplied_segment": "Fitness, Personal Training & Meal Prep",
+      "input": 100,
+      "prepared": 100,
+      "sender_ready": 0
+    },
+    {
+      "supplied_segment": "Photography, Videography & Media",
+      "input": 100,
+      "prepared": 100,
+      "sender_ready": 0
+    },
+    {
+      "supplied_segment": "Custom Baking, Catering & Private Chefs",
+      "input": 100,
+      "prepared": 100,
+      "sender_ready": 0
+    },
+    {
+      "supplied_segment": "Home Services, Cleaning & Maintenance",
+      "input": 100,
+      "prepared": 100,
+      "sender_ready": 0
+    },
+    {
+      "supplied_segment": "Events, Party Rentals & Entertainment",
+      "input": 100,
+      "prepared": 100,
+      "sender_ready": 0
+    },
+    {
+      "supplied_segment": "Pet Services, Grooming & Training",
+      "input": 100,
+      "prepared": 100,
+      "sender_ready": 0
+    },
+    {
+      "supplied_segment": "Consulting, Tutoring & Digital Creators",
+      "input": 100,
+      "prepared": 100,
+      "sender_ready": 0
+    },
+    {
+      "supplied_segment": "Handcrafted Products, Fashion & Boutiques",
+      "input": 100,
+      "prepared": 100,
+      "sender_ready": 0
+    }
+  ],
+  "sender": {
+    "provider": "existing_approved_smtp",
+    "account": "godaddy_cpanel",
+    "policy": "opt_in_only"
+  },
+  "preparation_only": true,
+  "native_verified_business_import": false,
+  "dispatch_authorized": false,
+  "claims": {
+    "workbook_segment_verified": false,
+    "ownership_verified": false,
+    "missing_history_is_clearance": false,
+    "sender_readiness_is_dispatch_authorization": false,
+    "inbox_delivery_proven": false
+  },
+  "enrichment_known_definition": "No external enrichment is imported by this lean generic tool; workbook labels are supplied, unverified.",
+  "source": {
+    "file": "FAMtastic Designs - 1000 Social Media Leads Database.xlsx",
+    "sheet": "Untitled",
+    "sha256": "6e8b6d4c98f4d53ded458b2070ceab9ca7302598f507d2b4ae7fa5f5083133e9"
+  }
+}

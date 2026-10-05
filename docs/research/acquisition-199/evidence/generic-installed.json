@@ -1,0 +1,27 @@
+{
+    "schema": "famtastic.acquisition-installed-proof.v1",
+    "status": "passed",
+    "classification": "local_synthetic",
+    "checks": {
+        "installed_container_services": true,
+        "installed_claim_route_csrf": true,
+        "installed_generic_stored_supplied_context": true,
+        "installed_generic_unknown_owner_phone_and_no_url_pii": true,
+        "installed_generic_private_response": true,
+        "installed_generic_frozen_polished_preview": true,
+        "installed_preparation_not_outreach_eligible_and_token_hashed": true,
+        "installed_generic_stage_rejected": true,
+        "installed_generic_no_sequence": true,
+        "installed_generic_registration_pending_not_claimed": true,
+        "installed_generic_verified_known_information_resume": true,
+        "installed_generic_native_interview_saved_supplied_context": true,
+        "installed_generic_exact_request_mapping": true,
+        "installed_generic_absent_business_industry_server_prefill": true,
+        "installed_generic_explicit_customer_edits_preserved": true,
+        "installed_generic_authored_raw_input_preserved": true
+    },
+    "real_payments": false,
+    "customer_sends": false,
+    "production_deployment": false,
+    "recipe_sha256": "15be0947f318df33b0d68b68a6e0038143b7c6355933d161527cab74b1e7e58f"
+}

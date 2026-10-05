@@ -5,25 +5,25 @@
   "owner_accepted": false,
   "hosted_release_proved": false,
   "source_files": {
-    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleGuard.php": "d6939a08211b49c6b18a53189578a7aa38b37a58a8ea5f899be170263df0cade",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleGuard.php": "3fdf133d77cefc9589d08cd59a1c311904027850eb6e9cb3d3dfb42fbbe12d73",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleSchema.php": "5378e495ba584890f92a69d28e30a512d59664b01befdd2894003928c151a81d",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleExactAdapter.php": "ee56009ef747e8d8bf1b9f67965b3a11ac823a61f55d4f39aad50b3c497f6d6f",
-    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleSequenceService.php": "94381ffce827369501ba322544e65070f9126f1fcc5c34d4a240fc5e6e9e8099",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleSequenceService.php": "66ddb40a152fbe6090eed58dceabc0cf7b8bf2de4c96b6bf8c5d53d1b8d2ddbf",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleEmail.php": "1a81ddd83bcdd1b611e534b94b8aeaf408f2e295c32ca1943220d552711cb141",
-    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleService.php": "b4c84accddd9a65fe47db60080271da2dd8cfd6da32b506dedd31c39298269f5",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleService.php": "f931a3a50d4db80d7c3770e712682be48239cbcacdbecdf6d5730663c19110cf",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleMemoryAdapter.php": "d9a915eade0c8d3af74654acbf4ffabbf71de1c0df9d9599e5b58ad2e4c3e102",
-    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleArtifacts.php": "903ad38e88643db20a84f62de816caef28fa8f4757d263d5965a9402342f377a",
-    "backend/web/modules/custom/famtastic_pipeline/src/Controller/AcquisitionSampleController.php": "b270d1490968c5b52b4b27d575161ddbe16af39a85ffa9d2449f5e36879e7bcc",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleArtifacts.php": "1839546b2ce002a9ad76a02915c3e903ed7b594b35580c788aa76abaf4e7822f",
+    "backend/web/modules/custom/famtastic_pipeline/src/Controller/AcquisitionSampleController.php": "20bb57b4c61bd420f303417bc28811d7c00203e470c174802cfb5a5968752f15",
     "backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.install": "1be9a958e8b670eaa491e60a528dafe8648f0f84209fdf59dd816587bf123915",
     "backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.services.yml": "372d0189eb489649ea20fbb6f95ee4eb32eb1f243161cd82b3a2f35305405c9e",
     "backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.routing.yml": "9ce71b44cc79e4b882c8a56c3f49edeb9dbd2590550ef7129dffdc2a3bb03ba0",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/OutreachMailer.php": "bb2e8fcd99b732eebb8d2473c5584dc6058abcdf9e9d4d997f469f2cce6f32e7",
     "backend/web/modules/custom/famtastic_pipeline/src/Controller/CustomerPortalController.php": "ab444dde744a620da5fd6352bbd5d7b2d39f1a5a71dae2934c0be95f8e412c88",
-    "backend/web/modules/custom/famtastic_pipeline/src/Service/CustomerPortalService.php": "e28cc6cc0a20133195ef6f524a392b2b727133815a2144fdaafc1072b89a2da8",
-    "scripts/acquisition-sample-drupal.php": "bc2142e4d37114f0382ee90b04a3095e855179a7066dd4ff86edc75dd5511be4",
-    "scripts/acquisition-sample-drupal.sh": "948339a6345c53ec30dde12312deb2be5284c374306bd514d78d81453b0f5123",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/CustomerPortalService.php": "a108efdd2cec6d0d1f497d491f44098d427d355592a6dfda6b89ff1d27c6d274",
+    "scripts/acquisition-sample-drupal.php": "30dd909ca6c0d50664b47be3f92d15b686d439bce1595bc20d60ebff0cc0c167",
+    "scripts/acquisition-sample-drupal.sh": "32315a6679623661fe46da643dfa9ff2523ca530d7eef10ee7494128a62c3f6c",
     "scripts/acquisition-sample-package.py": "6328b7bcb91a23ba11ebdcc62e66d5d6308e8ae08a6f97465bcf7b43bfd8143a",
-    "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionSampleServiceTest.php": "fc3b5d71c9ff330870355afea3777da9db2fe2c93284f301d551034c8d4ee81e",
+    "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionSampleServiceTest.php": "4a40da1cb77c1682ce74058d385e1c046eb3912ed18b392931173b7bf9f3439e",
     "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionCampaignReportServiceTest.php": "7292ee40f9d4e8889b10d8c366899b48c0dbf40829e8f34eeb0af2ef0ae9a29d",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/CampaignMessageService.php": "fd63a8a7faa2c9913d1a73cc627d0af19abe6864e4bcfcc706981df52dfa9b26",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/OperationalLedger.php": "0cca6de57e8fac4d8794cf2ad1ca44424669876ea294113ea6fa3d48b012007b",
@@ -51,7 +51,79 @@
     "warnings": 0,
     "existing_phpunit_deprecations": 69,
     "runtime": "copied task-lock Drupal/Composer runtime; isolated SQLite fixtures",
-    "status": "passed"
+    "status": "passed",
+    "scope": "Previous full backend source checkpoint; neutral-render and generic-preparation followups verified separately by narrow suites only."
   },
-  "candidate_bundle_manifest_sha256": "da9324d028cedd5a799c59e16b2996a3082bb803c2d08f4eb919b112970e9431"
+  "candidate_bundle_manifest_sha256": "da9324d028cedd5a799c59e16b2996a3082bb803c2d08f4eb919b112970e9431",
+  "neutral_binding_render_followup": {
+    "classification": "changed",
+    "scope": "Omit exact shared optional phone/booking/inquiry paragraphs when corresponding verified binding is blank. Preserve filled escaped output and original candidate template bytes.",
+    "narrow_suite": {
+      "tests": 19,
+      "assertions": 170,
+      "errors": 0,
+      "warnings": 0,
+      "status": "passed",
+      "command": "FAMTASTIC_BACKEND_VENDOR=/private/tmp/famtastic-acquisition-drupal.2XzD9i/backend/vendor /private/tmp/famtastic-acquisition-drupal.2XzD9i/backend/vendor/bin/phpunit --bootstrap scripts/automation-test-bootstrap.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionSampleServiceTest.php"
+    },
+    "full_suite_rerun": false,
+    "template_hashes": {
+      "marketing/campaigns/acquisition-199/templates/beauty_editorial.html": "9191308d901d5054c26e81088d2625a958b6a03a346615fe0e7b9c9634b1d93a",
+      "marketing/campaigns/acquisition-199/templates/beauty_service_first.html": "babbd090b93b1afebcbfacd48f9e34ea278da1f712c361e6e00afe3a0e85d0d0",
+      "marketing/campaigns/acquisition-199/templates/detailing_precision.html": "0df5a92001b46bb0eaae8ab396b68c7b8d01e3d616fbba6d118b21bdb396c20c",
+      "marketing/campaigns/acquisition-199/templates/detailing_route_ready.html": "81693b6b25f99686affaa283bf5c0b9707c4b970c9a4cdb1664f506b8cc45a5a",
+      "marketing/campaigns/acquisition-199/templates/baking_signature.html": "a1832b1ed31f755bb034a18dd70c47dad53fa9be8cae10eb9a07f0b17db0ba7a",
+      "marketing/campaigns/acquisition-199/templates/catering_table_story.html": "5ecc60b0c29d7901f4fcfcc64e72d71238a5656af3ae9ea648f0e33e2d743f76"
+    },
+    "template_bytes_match_prior_candidate_bundle": true,
+    "deployed": false,
+    "real_dispatch": "held"
+  },
+  "generic_preparation_followup": {
+    "classification": "changed",
+    "context_classification": "supplied_generic_preparation",
+    "narrow_suite": {
+      "tests": 27,
+      "assertions": 211,
+      "errors": 0,
+      "warnings": 0,
+      "status": "passed",
+      "command": "FAMTASTIC_BACKEND_VENDOR=/private/tmp/famtastic-acquisition-drupal.2XzD9i/backend/vendor /private/tmp/famtastic-acquisition-drupal.2XzD9i/backend/vendor/bin/phpunit --bootstrap scripts/automation-test-bootstrap.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionSampleServiceTest.php"
+    },
+    "installed_drupal": {
+      "status": "passed",
+      "checks": 16,
+      "synthetic_only": true,
+      "evidence": ".artifacts/acquisition-generic-native/evidence.json",
+      "recipe_sha256": "15be0947f318df33b0d68b68a6e0038143b7c6355933d161527cab74b1e7e58f"
+    },
+    "exports": {
+      ".artifacts/acquisition-generic-native/evidence.json": "3749dd44168d08b9ca7ffc82348cfb69f4368757c1ae2d10b12b5d54464073cb",
+      ".artifacts/acquisition-generic-native/sample.json": "383714f3bcfff82dd12fbb82ed57a4dac6fe422825ef57892ba727873a53eb06",
+      ".artifacts/acquisition-generic-native/preview.html": "129035e38742a4179c00a5ba16aca362bab3d96a7b5ce38e2b0c491d604ecc38",
+      ".artifacts/acquisition-generic-native/continuation-before-request.json": "844e49a337acb8a3ca77d1450db6a2c0c2247d35e6bef1a53a24030b035de3bb",
+      ".artifacts/acquisition-generic-native/request.json": "0dc25413ab6737095de17b7a348a609e9e011ecc8f3bf24ff28d295a5808604c",
+      ".artifacts/acquisition-generic-native/continuation.json": "7006cd66a1d2db7ca60467016ba04ea705b3f502201c31992177804cf0977b6d"
+    },
+    "full_suite_rerun": false,
+    "hosted_release_proved": false,
+    "owner_accepted": false,
+    "real_dispatch": "held",
+    "focused_existing_regression": {
+      "tests": 32,
+      "assertions": 211,
+      "status": "passed",
+      "existing_phpunit_deprecations": 69,
+      "scope": "WebsiteRequestAuditPreservationTest, WebsiteRequestProofHandoffTest, PublicPreviewContentGuardTest"
+    },
+    "representative_industry": "Beauty, Hair Styling & Braiding",
+    "snapshot_scope": "Actual primary journey before/after its explicit request; an independent explicit-edit request test ran afterward.",
+    "unknown_business_followup": {
+      "display_fallback": "Your business",
+      "business_name_provenance": "unknown",
+      "known_information_business_name": "",
+      "native_positive_exports_unchanged": true,
+      "full_suite_rerun": false
+    }
+  }
 }

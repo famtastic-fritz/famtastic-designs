@@ -25,3 +25,15 @@ Owner acceptance tasks share those IDs and apply to the same application source 
 | report-01 / acq.scorecard | Authenticated staff phone; native campaign evidence | Read primary versus controlled outcomes, paid/refund amount and unknown costs; reconcile exact native source receipts | pending; live outcomes absent |
 
 This acquisition release does not publish owner CMS content or confirm appointments. Connected owner tasks must carry their own release-matched draft/preview/publish/unpublish or request-to-confirmation acceptance when those workflows are actually provisioned. Existing shared lessons are candidate_shared with retrieval/import unverified; no skill or Studio promotion is inferred from this package.
+
+## Owner correction and follow-up — changed source, local candidate
+
+Old six candidate designs: owner Fritz declined them on2026-10-05 after viewing the overview; review-01 visual acceptance is declined for that old package. Workflow tests remain historical technical evidence, not visual approval. These candidates are excluded from the proposed send package.
+
+| Capability / job | Entry/action | Saved result and reversal | Evidence | Provider / owner / next owner |
+| --- | --- | --- | --- | --- |
+| acq.generic-preparation / staff / prepare industry drafts | acquisition-generic-cohort.py; supplied workbook and history | ignored private JSONL; regenerate deterministically; no native issuance | local_tested;18 synthetic checks;1,000 prepared | GoDaddy configured_unconnected for permitted commercial use; not_requested; sender basis open |
+| acq.polished-lab / prospect / see a website possibility | new beauty-email.html → beauty-lab.html | static candidate only; local practice resets | local_tested; actual desktop/390 render and interactions; independent critique fixed | not_applicable; pending; Fritz reviews exact new bytes |
+| acq.generic-context / prospect / avoid retyping known business facts | existing opaque Sample Lab and native continuation | stored supplied context separate from verified personalization; no send eligibility | local_tested;27 backend tests/211 assertions,16 installed checks; actual native browser1440/390 prefills; FOLLOWUP-VERIFICATION.json | not_applicable; pending; reviewed hosted release required |
+
+Owner tasks: generic-review-01 (Fritz, desktop/phone, current follow-up revision) inspect email CTA, finished example and visible phone practice; result pending. generic-continue-01 (invited owner, two devices, reviewed hosted release) open opaque invitation, confirm prefilled business/industry, register/verify and resume exact interview; result pending. Developer browser/controlled service evidence is separate from uncoached owner acceptance.

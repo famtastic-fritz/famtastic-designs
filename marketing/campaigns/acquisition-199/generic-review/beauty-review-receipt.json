@@ -1,0 +1,67 @@
+{
+    "schema": "famtastic.acquisition-beauty-review.v1",
+    "created_at": "2026-10-05T21:14:59+00:00",
+    "status": "candidate_not_owner_approved",
+    "recipe": {
+        "id": "beauty_soft_power_acquisition",
+        "version": 1,
+        "frozen_artifact": "marketing/campaigns/acquisition-199/generic-review/beauty-template.html",
+        "binding": "business_name optional generic label; no verified business identity claim",
+        "native_preview": "Scanner-inert visual and request example; interactive owner practice and account CTA owned by parent native Lab"
+    },
+    "agency_profile_references": [
+        "design/design-ui-designer",
+        "game-development/game-designer"
+    ],
+    "profile_pin": "765be42358100bf89d2faa567668a94c602f9a26",
+    "source_photo": {
+        "path": "frontend/public/showcase/booked-and-branded-pilot/assets/directions/velvet-coil-atelier-a.jpg",
+        "sha256": "25a93df0d758f48ec8019e24fee1470435c2591c24209bd50610a178e5f9762a",
+        "rights_basis": "Existing agency-owned fictional product-demonstration per source build-dna and prompt/generation receipts; no customer media copied",
+        "new_generation_calls": 0
+    },
+    "existing_six": "Owner rejected; preserved canonical records, excluded from this proposed review flow",
+    "working_review_entry": "beauty-email.html",
+    "working_review_cta": "beauty-lab.html",
+    "native_account_route": "http://127.0.0.1:5199/login?mode=register&source=acquisition_review",
+    "interaction_boundary": "Local page state; reload resets; no storage, fetch, send, publish, appointment, account or real interview submission",
+    "required_gates": [
+        "owner creative approval",
+        "exact dispatch content/cohort/provider approval",
+        "bound private invitation and unsubscribe"
+    ],
+    "source_files": [
+        {
+            "path": "beauty-email.html",
+            "sha256": "03588c3c4b4d323a8bc9965aee1a9c6a8905db190d6332d31eaab49b69e218f5"
+        },
+        {
+            "path": "beauty-lab.html",
+            "sha256": "dbd57fee4f932cfae23fb63f1aa892dbbd712ac5d98d1aea9881a12a87fc1908"
+        },
+        {
+            "path": "beauty-template.html",
+            "sha256": "15be0947f318df33b0d68b68a6e0038143b7c6355933d161527cab74b1e7e58f"
+        },
+        {
+            "path": "beauty-lab.css",
+            "sha256": "1f1961e350f575314468ed961f81788a067fc1476bb7e2b7095fcc59ea7da093"
+        },
+        {
+            "path": "beauty-practice.js",
+            "sha256": "a8894102815d0432d3272a42a5aa34d3e6efd8c6fbac97a2a940c6b394162992"
+        },
+        {
+            "path": "assets/hair-studio.jpg",
+            "sha256": "25a93df0d758f48ec8019e24fee1470435c2591c24209bd50610a178e5f9762a"
+        },
+        {
+            "path": "assets/famtastic-designs-logo-v1.png",
+            "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950"
+        },
+        {
+            "path": "assets/connect-qr.png",
+            "sha256": "ed569de9c97e0b6c960c957552a43ed41fa7b1843e0e61a3216d462286516e84"
+        }
+    ]
+}

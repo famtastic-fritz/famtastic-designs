@@ -1,0 +1,32 @@
+{
+  "schema": "famtastic.acquisition-existing-sender-review.v1",
+  "checked_at": "2026-10-05T20:49:45+00:00",
+  "provider_account": "godaddy_cpanel",
+  "account_evidence": "Authorized hosted cPanelroot andsmtp configuration onknownGoDaddyhost; no credentialvalue exported",
+  "configuration": {
+    "smtp_on": true,
+    "smtp_host": "famtasticdesigns.com",
+    "smtp_hostbackup": "",
+    "smtp_port": "465",
+    "smtp_protocol": "ssl",
+    "smtp_autotls": true,
+    "username_domain": "@famtasticdesigns.com",
+    "password_present": true,
+    "from_domain": "famtasticdesigns.com",
+    "reply_to_domain": "famtasticdesigns.com"
+  },
+  "current_policy": {
+    "source": "https://www.godaddy.com/en/legal/agreements/universal-terms-of-service-agreement",
+    "section": 18,
+    "commercial_opt_in_required": true,
+    "hosting_terms_source": "https://www.godaddy.com/en/legal/agreements/hosting-agreement",
+    "account_exception_evidence": "none supplied",
+    "matching_native_opt_in_contacts": 0
+  },
+  "sender_authentication": "not freshly tested",
+  "inbox_delivery": "not tested",
+  "smtp_delivery_probes": false,
+  "new_purchase": false,
+  "dispatch": "HOLD",
+  "result": "Configured existing sender is not qualified for this unsolicited workbookcohort without confirmed writtenrecipientopt-in; no generalbanon lawfulcommercialemailasserted"
+}

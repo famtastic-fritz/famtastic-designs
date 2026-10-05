@@ -1,0 +1,71 @@
+{
+  "schema": "famtastic.acquisition-history-aggregate.v1",
+  "checked_at": "2026-10-05T20:49:45+00:00",
+  "read_only": true,
+  "candidate_contacts_checked": 300,
+  "native_exact_matches": 0,
+  "negative_consent_matches": 0,
+  "granted_consent_matches": 0,
+  "sent_matches": 0,
+  "incoming_matches": 0,
+  "tables": {
+    "famtastic_prospect": {
+      "exists": true,
+      "fields": [
+        "id",
+        "public_email",
+        "contact_value"
+      ],
+      "rows": 303
+    },
+    "famtastic_customer": {
+      "exists": true,
+      "fields": [
+        "id",
+        "email",
+        "prospect_id",
+        "uid"
+      ],
+      "rows": 18
+    },
+    "famtastic_email_message": {
+      "exists": true,
+      "fields": [
+        "id",
+        "recipient_hash",
+        "recipient_address",
+        "prospect_id",
+        "status",
+        "sent_at"
+      ],
+      "rows": 271
+    },
+    "famtastic_consent": {
+      "exists": true,
+      "fields": [
+        "id",
+        "contact_hash",
+        "consent_type",
+        "status"
+      ],
+      "rows": 3
+    },
+    "famtastic_inbound_message": {
+      "exists": true,
+      "fields": [
+        "id",
+        "sender_hash"
+      ],
+      "rows": 4
+    },
+    "famtastic_event": {
+      "exists": true
+    }
+  },
+  "ledger_revision": "event_max:954",
+  "private_evidence_sha256": "ec1f88d2787740717abc6f5238aa145c0a4cbc43b7853361f7ea239b72f2d1ea",
+  "history_scope": "Current native normalized contact values/hashes plus previously checked260workbook nonoverlap. External/manual/mailbox history not exhausted; does not prove never contacted globally.",
+  "provider_permission": false,
+  "recipient_ownership": false,
+  "sending_approved": false
+}

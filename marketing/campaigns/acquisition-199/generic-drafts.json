@@ -1,0 +1,496 @@
+{
+    "schema": "famtastic.acquisition-generic-review.v1",
+    "created_at": "2026-10-05T21:07:22+00:00",
+    "source_workbook_sha256": "6e8b6d4c98f4d53ded458b2070ceab9ca7302598f507d2b4ae7fa5f5083133e9",
+    "scope": "Ten supplied broad Industry segments; 100 candidate rows each; 1000 supplied rows, no eligibility or business identity inferred. Generic D0 review only, no schedule/dispatch.",
+    "messages": [
+        {
+            "id": "segment-01-d0",
+            "day": 0,
+            "version": 1,
+            "status": "retained_prior_generic_draft_not_current_proposal",
+            "industry_segment": "Beauty, Hair Styling & Braiding",
+            "segment_source": "supplied workbook label; industry and contacts unverified",
+            "candidate_rows": 100,
+            "greeting": "Hello,",
+            "business_identity_claimed": false,
+            "recipient_owner_name_claimed": false,
+            "subject": "Website ideas for Beauty, Hair Styling & Braiding",
+            "preview": "Shared illustrative ideas, a practical phone workflow and the eligible $199 starter.",
+            "headline": "Your craft. A clearer next step.",
+            "paragraphs": [
+                "Hello,",
+                "A website can give customers a clear place to understand an offer and make an inquiry. We also build around the work an owner needs to do from a phone.",
+                "These two shared hair and beauty examples show an editorial approach and a service-first approach. They are illustrative starting points, not a tailored site or verified service menu.",
+                "In the illustrative phone walkthrough, an owner can open an example inquiry, save a reply draft, update request status and edit inquiry instructions. The demo resets on reload; it sends no reply and publishes no change. Your actual connected workflow and integrations are agreed during the interview.",
+                "If this approach is useful, the next step is to tell us about the business and the daily work you want to simplify. We confirm fit and scope, then prepare the project directions and staging for review before purchase and launch.",
+                "The eligible focused starter is $199 upfront. It is a website with the accepted owner workflow, not an automatic promise of a complete business suite. Mailbox subscriptions, ecommerce, calendar synchronization and more complex needs are scoped separately."
+            ],
+            "sample_previews": [
+                {
+                    "id": "beauty_editorial",
+                    "title": "The Signature Edit",
+                    "image": "../assets/beauty_editorial-preview.jpg",
+                    "review_path": "../samples/beauty_editorial-shared.html",
+                    "alt": "The Signature Edit \u2014 shared illustrative design example"
+                },
+                {
+                    "id": "beauty_service_first",
+                    "title": "The Service Studio",
+                    "image": "../assets/beauty_service_first-preview.jpg",
+                    "review_path": "../samples/beauty_service_first-shared.html",
+                    "alt": "The Service Studio \u2014 shared illustrative design example"
+                }
+            ],
+            "generic_review_path": null,
+            "cta_label": "Explore the next step",
+            "invitation_url": "https://example.invalid/invitation-not-bound",
+            "unsubscribe_url": "https://example.invalid/unsubscribe-not-bound",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "assistant_identity": "FAMtastic Designs assistant",
+            "secondary": {
+                "card": "https://famtasticdesigns.com/connect",
+                "commercial": "https://famtasticdesigns.com/connect/commercial.mp4",
+                "qr": "../assets/connect-qr.png"
+            },
+            "send_policy": {
+                "approved": false,
+                "provider_loaded": false,
+                "dispatch_connected": false,
+                "hold": "Owner review of concrete content and exact first-send approval remain required"
+            },
+            "proposal_eligible": false,
+            "preview_status": "retired_owner_rejected_initial_six"
+        },
+        {
+            "id": "segment-02-d0",
+            "day": 0,
+            "version": 1,
+            "status": "retained_prior_generic_draft_not_current_proposal",
+            "industry_segment": "Mobile Detailing, Auto Care & Tinting",
+            "segment_source": "supplied workbook label; industry and contacts unverified",
+            "candidate_rows": 100,
+            "greeting": "Hello,",
+            "business_identity_claimed": false,
+            "recipient_owner_name_claimed": false,
+            "subject": "Website ideas for Mobile Detailing, Auto Care & Tinting",
+            "preview": "Shared illustrative ideas, a practical phone workflow and the eligible $199 starter.",
+            "headline": "Keep the next service request clear.",
+            "paragraphs": [
+                "Hello,",
+                "A website can give customers a clear place to understand an offer and make an inquiry. We also build around the work an owner needs to do from a phone.",
+                "These two shared mobile-detailing examples show a finish-led approach and a service-area-first approach. Auto care and tinting have different requirements; these examples do not claim to cover those services.",
+                "In the illustrative phone walkthrough, an owner can open an example inquiry, save a reply draft, update request status and edit inquiry instructions. The demo resets on reload; it sends no reply and publishes no change. Your actual connected workflow and integrations are agreed during the interview.",
+                "If this approach is useful, the next step is to tell us about the business and the daily work you want to simplify. We confirm fit and scope, then prepare the project directions and staging for review before purchase and launch.",
+                "The eligible focused starter is $199 upfront. It is a website with the accepted owner workflow, not an automatic promise of a complete business suite. Mailbox subscriptions, ecommerce, calendar synchronization and more complex needs are scoped separately."
+            ],
+            "sample_previews": [
+                {
+                    "id": "detailing_precision",
+                    "title": "Precision in Motion",
+                    "image": "../assets/detailing_precision-preview.jpg",
+                    "review_path": "../samples/detailing_precision-shared.html",
+                    "alt": "Precision in Motion \u2014 shared illustrative design example"
+                },
+                {
+                    "id": "detailing_route_ready",
+                    "title": "Route Ready",
+                    "image": "../assets/detailing_route_ready-preview.jpg",
+                    "review_path": "../samples/detailing_route_ready-shared.html",
+                    "alt": "Route Ready \u2014 shared illustrative design example"
+                }
+            ],
+            "generic_review_path": null,
+            "cta_label": "Explore the next step",
+            "invitation_url": "https://example.invalid/invitation-not-bound",
+            "unsubscribe_url": "https://example.invalid/unsubscribe-not-bound",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "assistant_identity": "FAMtastic Designs assistant",
+            "secondary": {
+                "card": "https://famtasticdesigns.com/connect",
+                "commercial": "https://famtasticdesigns.com/connect/commercial.mp4",
+                "qr": "../assets/connect-qr.png"
+            },
+            "send_policy": {
+                "approved": false,
+                "provider_loaded": false,
+                "dispatch_connected": false,
+                "hold": "Owner review of concrete content and exact first-send approval remain required"
+            },
+            "proposal_eligible": false,
+            "preview_status": "retired_owner_rejected_initial_six"
+        },
+        {
+            "id": "segment-03-d0",
+            "day": 0,
+            "version": 1,
+            "status": "retained_prior_generic_draft_not_current_proposal",
+            "industry_segment": "Fitness, Personal Training & Meal Prep",
+            "segment_source": "supplied workbook label; industry and contacts unverified",
+            "candidate_rows": 100,
+            "greeting": "Hello,",
+            "business_identity_claimed": false,
+            "recipient_owner_name_claimed": false,
+            "subject": "A clearer website and phone workflow \u2014 Fitness, Personal Training & Meal Prep",
+            "preview": "Shared illustrative ideas, a practical phone workflow and the eligible $199 starter.",
+            "headline": "A clear front door. Useful owner work.",
+            "paragraphs": [
+                "Hello,",
+                "A website can give customers a clear place to understand an offer and make an inquiry. We also build around the work an owner needs to do from a phone.",
+                "Here is a general service-business example: a clear offer, a useful inquiry path and a phone owner workflow. It is a shared concept, not a category-specific template or a site made for a particular business.",
+                "In the illustrative phone walkthrough, an owner can open an example inquiry, save a reply draft, update request status and edit inquiry instructions. The demo resets on reload; it sends no reply and publishes no change. Your actual connected workflow and integrations are agreed during the interview.",
+                "If this approach is useful, the next step is to tell us about the business and the daily work you want to simplify. We confirm fit and scope, then prepare the project directions and staging for review before purchase and launch.",
+                "The eligible focused starter is $199 upfront. It is a website with the accepted owner workflow, not an automatic promise of a complete business suite. Mailbox subscriptions, ecommerce, calendar synchronization and more complex needs are scoped separately."
+            ],
+            "sample_previews": [],
+            "generic_review_path": "service-business-preview.html",
+            "cta_label": "Explore the next step",
+            "invitation_url": "https://example.invalid/invitation-not-bound",
+            "unsubscribe_url": "https://example.invalid/unsubscribe-not-bound",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "assistant_identity": "FAMtastic Designs assistant",
+            "secondary": {
+                "card": "https://famtasticdesigns.com/connect",
+                "commercial": "https://famtasticdesigns.com/connect/commercial.mp4",
+                "qr": "../assets/connect-qr.png"
+            },
+            "send_policy": {
+                "approved": false,
+                "provider_loaded": false,
+                "dispatch_connected": false,
+                "hold": "Owner review of concrete content and exact first-send approval remain required"
+            },
+            "proposal_eligible": false
+        },
+        {
+            "id": "segment-04-d0",
+            "day": 0,
+            "version": 1,
+            "status": "retained_prior_generic_draft_not_current_proposal",
+            "industry_segment": "Photography, Videography & Media",
+            "segment_source": "supplied workbook label; industry and contacts unverified",
+            "candidate_rows": 100,
+            "greeting": "Hello,",
+            "business_identity_claimed": false,
+            "recipient_owner_name_claimed": false,
+            "subject": "A clearer website and phone workflow \u2014 Photography, Videography & Media",
+            "preview": "Shared illustrative ideas, a practical phone workflow and the eligible $199 starter.",
+            "headline": "A clear front door. Useful owner work.",
+            "paragraphs": [
+                "Hello,",
+                "A website can give customers a clear place to understand an offer and make an inquiry. We also build around the work an owner needs to do from a phone.",
+                "Here is a general service-business example: a clear offer, a useful inquiry path and a phone owner workflow. It is a shared concept, not a category-specific template or a site made for a particular business.",
+                "In the illustrative phone walkthrough, an owner can open an example inquiry, save a reply draft, update request status and edit inquiry instructions. The demo resets on reload; it sends no reply and publishes no change. Your actual connected workflow and integrations are agreed during the interview.",
+                "If this approach is useful, the next step is to tell us about the business and the daily work you want to simplify. We confirm fit and scope, then prepare the project directions and staging for review before purchase and launch.",
+                "The eligible focused starter is $199 upfront. It is a website with the accepted owner workflow, not an automatic promise of a complete business suite. Mailbox subscriptions, ecommerce, calendar synchronization and more complex needs are scoped separately."
+            ],
+            "sample_previews": [],
+            "generic_review_path": "service-business-preview.html",
+            "cta_label": "Explore the next step",
+            "invitation_url": "https://example.invalid/invitation-not-bound",
+            "unsubscribe_url": "https://example.invalid/unsubscribe-not-bound",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "assistant_identity": "FAMtastic Designs assistant",
+            "secondary": {
+                "card": "https://famtasticdesigns.com/connect",
+                "commercial": "https://famtasticdesigns.com/connect/commercial.mp4",
+                "qr": "../assets/connect-qr.png"
+            },
+            "send_policy": {
+                "approved": false,
+                "provider_loaded": false,
+                "dispatch_connected": false,
+                "hold": "Owner review of concrete content and exact first-send approval remain required"
+            },
+            "proposal_eligible": false
+        },
+        {
+            "id": "segment-05-d0",
+            "day": 0,
+            "version": 1,
+            "status": "retained_prior_generic_draft_not_current_proposal",
+            "industry_segment": "Custom Baking, Catering & Private Chefs",
+            "segment_source": "supplied workbook label; industry and contacts unverified",
+            "candidate_rows": 100,
+            "greeting": "Hello,",
+            "business_identity_claimed": false,
+            "recipient_owner_name_claimed": false,
+            "subject": "Website ideas for Custom Baking, Catering & Private Chefs",
+            "preview": "Shared illustrative ideas, a practical phone workflow and the eligible $199 starter.",
+            "headline": "Make the first event conversation easier.",
+            "paragraphs": [
+                "Hello,",
+                "A website can give customers a clear place to understand an offer and make an inquiry. We also build around the work an owner needs to do from a phone.",
+                "These two shared baking and catering examples show a celebration-led approach and a gathering-led approach. Private-chef requirements need a separate conversation.",
+                "In the illustrative phone walkthrough, an owner can open an example inquiry, save a reply draft, update request status and edit inquiry instructions. The demo resets on reload; it sends no reply and publishes no change. Your actual connected workflow and integrations are agreed during the interview.",
+                "If this approach is useful, the next step is to tell us about the business and the daily work you want to simplify. We confirm fit and scope, then prepare the project directions and staging for review before purchase and launch.",
+                "The eligible focused starter is $199 upfront. It is a website with the accepted owner workflow, not an automatic promise of a complete business suite. Mailbox subscriptions, ecommerce, calendar synchronization and more complex needs are scoped separately."
+            ],
+            "sample_previews": [
+                {
+                    "id": "baking_signature",
+                    "title": "The Signature Bake",
+                    "image": "../assets/baking_signature-preview.jpg",
+                    "review_path": "../samples/baking_signature-shared.html",
+                    "alt": "The Signature Bake \u2014 shared illustrative design example"
+                },
+                {
+                    "id": "catering_table_story",
+                    "title": "The Table Story",
+                    "image": "../assets/catering_table_story-preview.jpg",
+                    "review_path": "../samples/catering_table_story-shared.html",
+                    "alt": "The Table Story \u2014 shared illustrative design example"
+                }
+            ],
+            "generic_review_path": null,
+            "cta_label": "Explore the next step",
+            "invitation_url": "https://example.invalid/invitation-not-bound",
+            "unsubscribe_url": "https://example.invalid/unsubscribe-not-bound",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "assistant_identity": "FAMtastic Designs assistant",
+            "secondary": {
+                "card": "https://famtasticdesigns.com/connect",
+                "commercial": "https://famtasticdesigns.com/connect/commercial.mp4",
+                "qr": "../assets/connect-qr.png"
+            },
+            "send_policy": {
+                "approved": false,
+                "provider_loaded": false,
+                "dispatch_connected": false,
+                "hold": "Owner review of concrete content and exact first-send approval remain required"
+            },
+            "proposal_eligible": false,
+            "preview_status": "retired_owner_rejected_initial_six"
+        },
+        {
+            "id": "segment-06-d0",
+            "day": 0,
+            "version": 1,
+            "status": "retained_prior_generic_draft_not_current_proposal",
+            "industry_segment": "Home Services, Cleaning & Maintenance",
+            "segment_source": "supplied workbook label; industry and contacts unverified",
+            "candidate_rows": 100,
+            "greeting": "Hello,",
+            "business_identity_claimed": false,
+            "recipient_owner_name_claimed": false,
+            "subject": "A clearer website and phone workflow \u2014 Home Services, Cleaning & Maintenance",
+            "preview": "Shared illustrative ideas, a practical phone workflow and the eligible $199 starter.",
+            "headline": "A clear front door. Useful owner work.",
+            "paragraphs": [
+                "Hello,",
+                "A website can give customers a clear place to understand an offer and make an inquiry. We also build around the work an owner needs to do from a phone.",
+                "Here is a general service-business example: a clear offer, a useful inquiry path and a phone owner workflow. It is a shared concept, not a category-specific template or a site made for a particular business.",
+                "In the illustrative phone walkthrough, an owner can open an example inquiry, save a reply draft, update request status and edit inquiry instructions. The demo resets on reload; it sends no reply and publishes no change. Your actual connected workflow and integrations are agreed during the interview.",
+                "If this approach is useful, the next step is to tell us about the business and the daily work you want to simplify. We confirm fit and scope, then prepare the project directions and staging for review before purchase and launch.",
+                "The eligible focused starter is $199 upfront. It is a website with the accepted owner workflow, not an automatic promise of a complete business suite. Mailbox subscriptions, ecommerce, calendar synchronization and more complex needs are scoped separately."
+            ],
+            "sample_previews": [],
+            "generic_review_path": "service-business-preview.html",
+            "cta_label": "Explore the next step",
+            "invitation_url": "https://example.invalid/invitation-not-bound",
+            "unsubscribe_url": "https://example.invalid/unsubscribe-not-bound",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "assistant_identity": "FAMtastic Designs assistant",
+            "secondary": {
+                "card": "https://famtasticdesigns.com/connect",
+                "commercial": "https://famtasticdesigns.com/connect/commercial.mp4",
+                "qr": "../assets/connect-qr.png"
+            },
+            "send_policy": {
+                "approved": false,
+                "provider_loaded": false,
+                "dispatch_connected": false,
+                "hold": "Owner review of concrete content and exact first-send approval remain required"
+            },
+            "proposal_eligible": false
+        },
+        {
+            "id": "segment-07-d0",
+            "day": 0,
+            "version": 1,
+            "status": "retained_prior_generic_draft_not_current_proposal",
+            "industry_segment": "Events, Party Rentals & Entertainment",
+            "segment_source": "supplied workbook label; industry and contacts unverified",
+            "candidate_rows": 100,
+            "greeting": "Hello,",
+            "business_identity_claimed": false,
+            "recipient_owner_name_claimed": false,
+            "subject": "A clearer website and phone workflow \u2014 Events, Party Rentals & Entertainment",
+            "preview": "Shared illustrative ideas, a practical phone workflow and the eligible $199 starter.",
+            "headline": "A clear front door. Useful owner work.",
+            "paragraphs": [
+                "Hello,",
+                "A website can give customers a clear place to understand an offer and make an inquiry. We also build around the work an owner needs to do from a phone.",
+                "Here is a general service-business example: a clear offer, a useful inquiry path and a phone owner workflow. It is a shared concept, not a category-specific template or a site made for a particular business.",
+                "In the illustrative phone walkthrough, an owner can open an example inquiry, save a reply draft, update request status and edit inquiry instructions. The demo resets on reload; it sends no reply and publishes no change. Your actual connected workflow and integrations are agreed during the interview.",
+                "If this approach is useful, the next step is to tell us about the business and the daily work you want to simplify. We confirm fit and scope, then prepare the project directions and staging for review before purchase and launch.",
+                "The eligible focused starter is $199 upfront. It is a website with the accepted owner workflow, not an automatic promise of a complete business suite. Mailbox subscriptions, ecommerce, calendar synchronization and more complex needs are scoped separately."
+            ],
+            "sample_previews": [],
+            "generic_review_path": "service-business-preview.html",
+            "cta_label": "Explore the next step",
+            "invitation_url": "https://example.invalid/invitation-not-bound",
+            "unsubscribe_url": "https://example.invalid/unsubscribe-not-bound",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "assistant_identity": "FAMtastic Designs assistant",
+            "secondary": {
+                "card": "https://famtasticdesigns.com/connect",
+                "commercial": "https://famtasticdesigns.com/connect/commercial.mp4",
+                "qr": "../assets/connect-qr.png"
+            },
+            "send_policy": {
+                "approved": false,
+                "provider_loaded": false,
+                "dispatch_connected": false,
+                "hold": "Owner review of concrete content and exact first-send approval remain required"
+            },
+            "proposal_eligible": false
+        },
+        {
+            "id": "segment-08-d0",
+            "day": 0,
+            "version": 1,
+            "status": "retained_prior_generic_draft_not_current_proposal",
+            "industry_segment": "Pet Services, Grooming & Training",
+            "segment_source": "supplied workbook label; industry and contacts unverified",
+            "candidate_rows": 100,
+            "greeting": "Hello,",
+            "business_identity_claimed": false,
+            "recipient_owner_name_claimed": false,
+            "subject": "A clearer website and phone workflow \u2014 Pet Services, Grooming & Training",
+            "preview": "Shared illustrative ideas, a practical phone workflow and the eligible $199 starter.",
+            "headline": "A clear front door. Useful owner work.",
+            "paragraphs": [
+                "Hello,",
+                "A website can give customers a clear place to understand an offer and make an inquiry. We also build around the work an owner needs to do from a phone.",
+                "Here is a general service-business example: a clear offer, a useful inquiry path and a phone owner workflow. It is a shared concept, not a category-specific template or a site made for a particular business.",
+                "In the illustrative phone walkthrough, an owner can open an example inquiry, save a reply draft, update request status and edit inquiry instructions. The demo resets on reload; it sends no reply and publishes no change. Your actual connected workflow and integrations are agreed during the interview.",
+                "If this approach is useful, the next step is to tell us about the business and the daily work you want to simplify. We confirm fit and scope, then prepare the project directions and staging for review before purchase and launch.",
+                "The eligible focused starter is $199 upfront. It is a website with the accepted owner workflow, not an automatic promise of a complete business suite. Mailbox subscriptions, ecommerce, calendar synchronization and more complex needs are scoped separately."
+            ],
+            "sample_previews": [],
+            "generic_review_path": "service-business-preview.html",
+            "cta_label": "Explore the next step",
+            "invitation_url": "https://example.invalid/invitation-not-bound",
+            "unsubscribe_url": "https://example.invalid/unsubscribe-not-bound",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "assistant_identity": "FAMtastic Designs assistant",
+            "secondary": {
+                "card": "https://famtasticdesigns.com/connect",
+                "commercial": "https://famtasticdesigns.com/connect/commercial.mp4",
+                "qr": "../assets/connect-qr.png"
+            },
+            "send_policy": {
+                "approved": false,
+                "provider_loaded": false,
+                "dispatch_connected": false,
+                "hold": "Owner review of concrete content and exact first-send approval remain required"
+            },
+            "proposal_eligible": false
+        },
+        {
+            "id": "segment-09-d0",
+            "day": 0,
+            "version": 1,
+            "status": "retained_prior_generic_draft_not_current_proposal",
+            "industry_segment": "Consulting, Tutoring & Digital Creators",
+            "segment_source": "supplied workbook label; industry and contacts unverified",
+            "candidate_rows": 100,
+            "greeting": "Hello,",
+            "business_identity_claimed": false,
+            "recipient_owner_name_claimed": false,
+            "subject": "A clearer website and phone workflow \u2014 Consulting, Tutoring & Digital Creators",
+            "preview": "Shared illustrative ideas, a practical phone workflow and the eligible $199 starter.",
+            "headline": "A clear front door. Useful owner work.",
+            "paragraphs": [
+                "Hello,",
+                "A website can give customers a clear place to understand an offer and make an inquiry. We also build around the work an owner needs to do from a phone.",
+                "Here is a general service-business example: a clear offer, a useful inquiry path and a phone owner workflow. It is a shared concept, not a category-specific template or a site made for a particular business.",
+                "In the illustrative phone walkthrough, an owner can open an example inquiry, save a reply draft, update request status and edit inquiry instructions. The demo resets on reload; it sends no reply and publishes no change. Your actual connected workflow and integrations are agreed during the interview.",
+                "If this approach is useful, the next step is to tell us about the business and the daily work you want to simplify. We confirm fit and scope, then prepare the project directions and staging for review before purchase and launch.",
+                "The eligible focused starter is $199 upfront. It is a website with the accepted owner workflow, not an automatic promise of a complete business suite. Mailbox subscriptions, ecommerce, calendar synchronization and more complex needs are scoped separately."
+            ],
+            "sample_previews": [],
+            "generic_review_path": "service-business-preview.html",
+            "cta_label": "Explore the next step",
+            "invitation_url": "https://example.invalid/invitation-not-bound",
+            "unsubscribe_url": "https://example.invalid/unsubscribe-not-bound",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "assistant_identity": "FAMtastic Designs assistant",
+            "secondary": {
+                "card": "https://famtasticdesigns.com/connect",
+                "commercial": "https://famtasticdesigns.com/connect/commercial.mp4",
+                "qr": "../assets/connect-qr.png"
+            },
+            "send_policy": {
+                "approved": false,
+                "provider_loaded": false,
+                "dispatch_connected": false,
+                "hold": "Owner review of concrete content and exact first-send approval remain required"
+            },
+            "proposal_eligible": false
+        },
+        {
+            "id": "segment-10-d0",
+            "day": 0,
+            "version": 1,
+            "status": "retained_prior_generic_draft_not_current_proposal",
+            "industry_segment": "Handcrafted Products, Fashion & Boutiques",
+            "segment_source": "supplied workbook label; industry and contacts unverified",
+            "candidate_rows": 100,
+            "greeting": "Hello,",
+            "business_identity_claimed": false,
+            "recipient_owner_name_claimed": false,
+            "subject": "A clearer website and phone workflow \u2014 Handcrafted Products, Fashion & Boutiques",
+            "preview": "Shared illustrative ideas, a practical phone workflow and the eligible $199 starter.",
+            "headline": "A clear front door. Useful owner work.",
+            "paragraphs": [
+                "Hello,",
+                "A website can give customers a clear place to understand an offer and make an inquiry. We also build around the work an owner needs to do from a phone.",
+                "Here is a general service-business example: a clear offer, a useful inquiry path and a phone owner workflow. It is a shared concept, not a category-specific template or a site made for a particular business.",
+                "In the illustrative phone walkthrough, an owner can open an example inquiry, save a reply draft, update request status and edit inquiry instructions. The demo resets on reload; it sends no reply and publishes no change. Your actual connected workflow and integrations are agreed during the interview.",
+                "If this approach is useful, the next step is to tell us about the business and the daily work you want to simplify. We confirm fit and scope, then prepare the project directions and staging for review before purchase and launch.",
+                "The eligible focused starter is $199 upfront. It is a website with the accepted owner workflow, not an automatic promise of a complete business suite. Mailbox subscriptions, ecommerce, calendar synchronization and more complex needs are scoped separately."
+            ],
+            "sample_previews": [],
+            "generic_review_path": "service-business-preview.html",
+            "cta_label": "Explore the next step",
+            "invitation_url": "https://example.invalid/invitation-not-bound",
+            "unsubscribe_url": "https://example.invalid/unsubscribe-not-bound",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "assistant_identity": "FAMtastic Designs assistant",
+            "secondary": {
+                "card": "https://famtasticdesigns.com/connect",
+                "commercial": "https://famtasticdesigns.com/connect/commercial.mp4",
+                "qr": "../assets/connect-qr.png"
+            },
+            "send_policy": {
+                "approved": false,
+                "provider_loaded": false,
+                "dispatch_connected": false,
+                "hold": "Owner review of concrete content and exact first-send approval remain required"
+            },
+            "proposal_eligible": false
+        }
+    ],
+    "current_review": {
+        "entry": "generic-review/beauty-email.html",
+        "cta_label": "See what your website could look like",
+        "cta_local_review": "generic-review/beauty-lab.html",
+        "status": "candidate_not_owner_approved",
+        "existing_six_retired_from_proposed_flow": true,
+        "all10_ideation": "paused for owner review of one complete journey",
+        "dispatch": "HOLD"
+    },
+    "status": "prior_generic_segment_drafts_historical_paused"
+}

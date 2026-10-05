@@ -22,6 +22,7 @@ final class AcquisitionSampleSequenceService {
     $transaction = $this->database->startTransaction();
     $sample = $this->database->select('famtastic_acquisition_sample', 's')->fields('s')->condition('id', $invitationId)->condition('token_hash', AcquisitionSampleGuard::tokenHash($token))->forUpdate()->execute()->fetchAssoc();
     if (!$sample || !AcquisitionSampleGuard::live($sample, $this->time->getRequestTime()) || !hash_equals((string) $sample['recipient_hash'], $this->ledger->contactHash($email)) || $this->ledger->isSuppressed($email)) throw new \InvalidArgumentException('sample_recipient_unavailable');
+    if (empty($sample['eligible_at']) || empty($sample['qualification_ref'])) throw new \InvalidArgumentException('sample_outreach_qualification_required');
     $now = $this->time->getRequestTime();
     $sequence = $this->database->select('famtastic_acquisition_sequence', 's')->fields('s')->condition('invitation_id', $invitationId)->execute()->fetchAssoc();
     if (!$sequence) {

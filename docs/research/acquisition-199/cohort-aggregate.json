@@ -1,6 +1,6 @@
 {
   "schema": "famtastic.acquisition-cohort-aggregate.v1",
-  "generated_at": "2026-10-05T20:12:16.438935+00:00",
+  "generated_at": "2026-10-05T20:54:39.843362+00:00",
   "sources": [
     {
       "file": "FAMtastic Designs - 1000 Social Media Leads Database.xlsx",
@@ -107,14 +107,5 @@
     "syntax_is_business_proof": false,
     "no_site_inference_from_missing_column": false,
     "statistical_winner_established": false
-  },
-  "bounded_official_identity_review": {
-    "reviewed": 12,
-    "per_niche": 4,
-    "exact_verified_business_and_contact_matches": 0,
-    "unreviewed_candidates": 288,
-    "method": "Exact-name plus supplied city; accept only official owner website evidence; rejected unrelated/near matches",
-    "result": "Identity/contact gates unresolved, no absence or fabrication claim",
-    "private_details": "ignored .data/acquisition-199/bounded-review.json"
   }
 }

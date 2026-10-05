@@ -30,7 +30,7 @@ final class AcquisitionSampleController extends ControllerBase {
     try { $html = $this->samples->preview($token, $recipe); }
     catch (\RuntimeException) { $html = NULL; }
     $response = new Response($html ?? 'Sample unavailable.', $html === NULL ? 404 : 200, ['Content-Type' => 'text/html; charset=UTF-8']);
-    $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; sandbox allow-same-origin");
+    $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; font-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; sandbox allow-same-origin");
     return $this->secure($response);
   }
 

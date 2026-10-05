@@ -831,6 +831,7 @@ export function WebsiteRequestIntakeEditor({
       className="portal-request-form"
     >
       <form onSubmit={onSave}>
+        {editingRequest.context_classification === 'supplied_generic_preparation' && <p className="portal-form-stepnote">Your saved business information is here: <strong>{editingRequest.business_name || 'Your business'}</strong>{editingRequest.intake?.industry ? ` · ${editingRequest.intake.industry}` : ''}. Review it as part of your brief.</p>}
         {editingRequest.public_id && (
           <input type="hidden" name="request_id" value={editingRequest.public_id} />
         )}

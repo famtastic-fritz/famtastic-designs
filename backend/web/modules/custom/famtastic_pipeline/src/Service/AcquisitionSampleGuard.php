@@ -55,14 +55,35 @@ final class AcquisitionSampleGuard {
     return array_values($recipes);
   }
 
+  /** A single illustrative recipe, with an explicit internal candidate boundary. */
+  public static function preparationRecipe(array $recipe, bool $internalCandidate): array {
+    if (preg_match('/^[a-z0-9_-]{3,96}$/D', (string) ($recipe['id'] ?? '')) !== 1 || (int) ($recipe['version'] ?? 0) < 1 || ($recipe['recipe_ref']['owner'] ?? '') !== 'component-studio' || empty($recipe['recipe_ref']['id']) || empty($recipe['recipe_ref']['version']) || preg_match('/^[a-f0-9]{64}$/D', (string) ($recipe['sha256'] ?? '')) !== 1 || empty($recipe['artifact_path'])) throw new \InvalidArgumentException('preparation_recipe_evidence_required');
+    if ($internalCandidate) {
+      if (($recipe['review']['status'] ?? '') !== 'candidate' || ($recipe['recipe_ref']['status'] ?? '') !== 'import_request_pending' || $recipe['id'] !== 'beauty_soft_power_acquisition' || $recipe['recipe_ref']['id'] !== $recipe['id'] || (int) $recipe['recipe_ref']['version'] !== (int) $recipe['version'] || $recipe['artifact_path'] !== 'marketing/campaigns/acquisition-199/generic-review/beauty-template.html') throw new \InvalidArgumentException('internal_candidate_recipe_required');
+    }
+    elseif (($recipe['review']['status'] ?? '') !== 'approved' || empty($recipe['review']['reviewer']) || empty($recipe['review']['receipt']) || ($recipe['recipe_ref']['status'] ?? '') !== 'registered') throw new \InvalidArgumentException('reviewed_recipe_evidence_required');
+    return $recipe;
+  }
+
   public static function live(array $row, int $now): bool {
     return empty($row['revoked_at']) && (int) ($row['expires'] ?? 0) > $now;
   }
 
   /** Strict replacement, including attribute contexts. Never execute bindings. */
   public static function render(string $html, array $bindings): string {
+    $verified = self::bindings($bindings);
+    // The shared contact paragraphs are optional. Unknown contact facts must
+    // not become blank links or imply an approved business contact path.
+    $optionalParagraphs = [
+      'phone' => '<p>Contact number: {{phone}}</p>',
+      'booking_url' => '<p><a href="{{booking_url}}" rel="noreferrer">Approved booking path</a></p>',
+      'inquiry_url' => '<p><a href="{{inquiry_url}}" rel="noreferrer">Approved inquiry path</a></p>',
+    ];
+    foreach ($optionalParagraphs as $key => $paragraph) {
+      if ($verified[$key] === '') $html = str_replace($paragraph, '', $html);
+    }
     $replace = [];
-    foreach (self::bindings($bindings) as $key => $value) if (is_string($value)) $replace['{{' . $key . '}}'] = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    foreach ($verified as $key => $value) if (is_string($value)) $replace['{{' . $key . '}}'] = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $html = strtr($html, $replace);
     if (preg_match('/\{\{[^}]+\}\}/', $html)) throw new \RuntimeException('unknown_sample_placeholder');
     return $html;

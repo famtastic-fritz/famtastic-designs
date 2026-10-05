@@ -1,0 +1,63 @@
+{
+  "schema": "famtastic.acquisition-address-domain-evidence.v1",
+  "checked_at": "2026-10-05T20:54:05.118931+00:00",
+  "syntax_pass": 300,
+  "candidate_rows": 300,
+  "domains": [
+    {
+      "domain": "gmail.com",
+      "candidate_rows": 223,
+      "mx_records": [
+        "20 alt2.gmail-smtp-in.l.google.com.",
+        "40 alt4.gmail-smtp-in.l.google.com.",
+        "30 alt3.gmail-smtp-in.l.google.com.",
+        "10 alt1.gmail-smtp-in.l.google.com.",
+        "5 gmail-smtp-in.l.google.com."
+      ],
+      "domain_can_route_mail": true,
+      "mailbox_deliverability": "unknown"
+    },
+    {
+      "domain": "yahoo.com",
+      "candidate_rows": 41,
+      "mx_records": [
+        "1 mta5.am0.yahoodns.net.",
+        "1 mta7.am0.yahoodns.net.",
+        "1 mta6.am0.yahoodns.net."
+      ],
+      "domain_can_route_mail": true,
+      "mailbox_deliverability": "unknown"
+    },
+    {
+      "domain": "outlook.com",
+      "candidate_rows": 28,
+      "mx_records": [
+        "5 outlook-com.olc.protection.outlook.com."
+      ],
+      "domain_can_route_mail": true,
+      "mailbox_deliverability": "unknown"
+    },
+    {
+      "domain": "icloud.com",
+      "candidate_rows": 5,
+      "mx_records": [
+        "10 mx01.mail.icloud.com.",
+        "10 mx02.mail.icloud.com."
+      ],
+      "domain_can_route_mail": true,
+      "mailbox_deliverability": "unknown"
+    },
+    {
+      "domain": "hotmail.com",
+      "candidate_rows": 3,
+      "mx_records": [
+        "2 hotmail-com.olc.protection.outlook.com."
+      ],
+      "domain_can_route_mail": true,
+      "mailbox_deliverability": "unknown"
+    }
+  ],
+  "contact_association": "unproved by syntax/DNS",
+  "smtp_probes": false,
+  "paid_verifier": false
+}

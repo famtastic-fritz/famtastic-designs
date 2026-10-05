@@ -349,9 +349,15 @@ final class CustomerPortalService {
     $sampleContext = $this->acquisitionSamples?->requestContext($customerId, (string) ($input['acquisition_context_id'] ?? ''));
     if ($sampleContext && $this->acquisitionSamples->associatedRequest($customerId, $sampleContext['context_id'])) throw new \InvalidArgumentException('sample_context_already_attached');
     $transaction = $sampleContext ? $this->database->startTransaction() : NULL;
+    $authoredInput = $input;
+    // Known supplied facts are durable server context. Explicit customer edits
+    // win; fallback fields do not become customer-authored or verified claims.
+    foreach (['business_name', 'industry'] as $field) {
+      if ($sampleContext && trim((string) ($input[$field] ?? '')) === '') $input[$field] = (string) ($sampleContext['known_information'][$field] ?? '');
+    }
     $clean = $this->validateWebsiteRequest($input);
     if ($sampleContext) $clean['intake']['acquisition_context'] = $sampleContext;
-    $clean['intake']['authored_content'] = SelectedRequestContent::record($input, $customerId, $rawInput);
+    $clean['intake']['authored_content'] = SelectedRequestContent::record($authoredInput, $customerId, $rawInput);
     $clean['intake']['request_submission'] = ['raw_json' => $rawInput, 'sha256' => $rawInput === NULL ? NULL : hash('sha256', $rawInput)];
     $now = $this->time->getRequestTime();
     $attribution = $this->attribution->snapshotFromArray($input, 'customer_portal');

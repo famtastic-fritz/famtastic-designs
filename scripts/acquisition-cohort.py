@@ -19,7 +19,9 @@ NICHES = {
     "Mobile Detailing, Auto Care & Tinting": "mobile_detailing",
     "Custom Baking, Catering & Private Chefs": "baking_catering",
 }
-EVIDENCE_KEYS = ("business", "niche", "source", "contact_ownership", "jurisdiction", "provider_eligibility", "address_verification", "site_booking", "history_suppression")
+EVIDENCE_KEYS = ("business", "niche", "source", "contact_ownership", "jurisdiction", "provider_eligibility", "address_verification", "history_suppression")
+OPTIONAL_EVIDENCE_KEYS = ("site_booking",)
+OPTIONAL_BINDINGS = ("recipient_name", "locality", "phone", "booking_url", "inquiry_url")
 
 
 def xlsx_rows(path):
@@ -64,7 +66,8 @@ def normalized_email(row):
 def public_source(url):
     try:
         p = urllib.parse.urlsplit(url)
-        return p.scheme == "https" and bool(p.hostname) and not p.username and not p.password and not p.query and not p.fragment and p.hostname not in ("localhost", "127.0.0.1")
+        public_profile_id = p.hostname in ("facebook.com", "www.facebook.com", "m.facebook.com") and p.path == "/profile.php" and re.fullmatch(r"id=[0-9]{1,25}", p.query) is not None
+        return p.scheme == "https" and bool(p.hostname) and not p.username and not p.password and (not p.query or public_profile_id) and not p.fragment and p.hostname not in ("localhost", "127.0.0.1")
     except (ValueError, TypeError):
         return False
 
@@ -78,8 +81,12 @@ def qualification_reasons(row, evidence, now=None):
         reasons.append("invalid_email_syntax")
     if evidence.get("source_key") != row.get("source_key") or evidence.get("contact_email", "").strip().lower() != email:
         return reasons + ["missing_row_bound_receipt"]
-    for key in EVIDENCE_KEYS:
-        item = evidence.get(key, {})
+    required_items = [(key, evidence.get(key, {})) for key in EVIDENCE_KEYS]
+    required_items += [("binding_" + key, evidence.get("binding_evidence", {}).get(key, {}))
+                       for key, value in evidence.get("bindings", {}).items() if value]
+    if evidence.get("provider_eligibility", {}).get("provider") == "existing_approved_smtp":
+        required_items.append(("provider_opt_in", evidence.get("provider_eligibility", {}).get("opt_in_evidence", {})))
+    for key, item in required_items:
         if item.get("status") != "verified" or not item.get("reviewer") or not item.get("artifact_sha256") or not re.fullmatch(r"[a-f0-9]{64}", item.get("artifact_sha256", "")):
             reasons.append("unverified_" + key)
             continue
@@ -104,10 +111,27 @@ def qualification_reasons(row, evidence, now=None):
         reasons.append("jurisdiction_unresolved")
     if evidence.get("provider_eligibility", {}).get("provider") not in ("mailforge", "existing_approved_smtp") or evidence.get("provider_eligibility", {}).get("sending_permitted") is not True:
         reasons.append("provider_unresolved")
-    if evidence.get("address_verification", {}).get("result") != "valid":
-        reasons.append("address_unverified")
-    if evidence.get("site_booking", {}).get("site_status") not in ("existing", "verified_absent") or evidence.get("site_booking", {}).get("booking_status") not in ("existing", "verified_absent", "not_applicable"):
-        reasons.append("site_booking_unresolved")
+    address = evidence.get("address_verification", {})
+    provider = evidence.get("provider_eligibility", {})
+    # A mailbox verification result and a reviewed published/confirmed address
+    # are different evidence levels. Do not call the latter deliverability proof.
+    if provider.get("provider") == "mailforge" or provider.get("address_policy") != "published_owned_contact_with_domain":
+        if address.get("result") != "valid":
+            reasons.append("address_unverified")
+    elif address.get("result") not in ("valid", "published_business_contact", "recipient_confirmed_address") or address.get("syntax_valid") is not True or address.get("domain_mail_status") not in ("mx_present", "implicit_mx"):
+        reasons.append("address_basis_unresolved")
+    # The currently configured GoDaddy cPanel sender is opt-in only. This is
+    # provider-specific, not a claim that every commercial sender needs opt-in.
+    if provider.get("provider") == "existing_approved_smtp":
+        if provider.get("provider_account") != "godaddy_cpanel":
+            reasons.append("existing_sender_account_unresolved")
+        if provider.get("opt_in_verified") is not True:
+            reasons.append("godaddy_commercial_opt_in_missing")
+    for key, value in evidence.get("bindings", {}).items():
+        if key not in OPTIONAL_BINDINGS:
+            reasons.append("unsupported_optional_binding")
+        elif value and evidence.get("binding_evidence", {}).get(key, {}).get("status") != "verified":
+            reasons.append("unverified_supplied_binding_" + key)
     if row.get("previous_260") and history.get("prior_contact") != "reviewed_eligible":
         reasons.append("historical_260_requires_review")
     return sorted(set(reasons))
@@ -127,8 +151,15 @@ def assign(cohort, rng=None):
 def artifact_reasons(receipt, private_root):
     """Integrity checks cannot certify factual truth; reviewed source receipts do."""
     reasons = []
-    for key in EVIDENCE_KEYS:
-        item = receipt.get(key, {})
+    keys = list(EVIDENCE_KEYS)
+    # Enrichment is optional; only fields actually supplied to a tailored room
+    # require checked evidence. Unknown enrichment is never silently promoted.
+    items = [(key, receipt.get(key, {})) for key in keys]
+    items += [("binding_" + key, receipt.get("binding_evidence", {}).get(key, {}))
+              for key, value in receipt.get("bindings", {}).items() if value]
+    if receipt.get("provider_eligibility", {}).get("provider") == "existing_approved_smtp":
+        items.append(("provider_opt_in", receipt["provider_eligibility"].get("opt_in_evidence", {})))
+    for key, item in items:
         name = item.get("artifact_path")
         if not name:
             reasons.append("missing_artifact_" + key)
@@ -197,6 +228,8 @@ def run(args):
         if not held:
             row["qualification_ref"] = hashlib.sha256(json.dumps(receipt, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
             row["business_identity"] = identity
+            row["verified_optional_bindings"] = {k: v for k, v in receipt.get("bindings", {}).items() if v and k in OPTIONAL_BINDINGS}
+            row["deliverability_evidence"] = "verified_mailbox_receipt" if receipt.get("address_verification", {}).get("result") == "valid" else "unknown; published/recipient-confirmed address and domain only"
             # This is a server-side staff handoff only, never an outbound approval.
             row["qualification"] = {"business_verified": True, "contact_owned": True, "jurisdiction_eligible": True, "provider_eligible": True, "history_reconciled": True, "bindings_verified": True, "niche_confirmed": True, "confirmed_niche": row["niche"], "receipt": "cohort:" + row["qualification_ref"], "sha256": row["qualification_ref"]}
             eligible.append(row)
@@ -218,7 +251,7 @@ def run(args):
     private_write(private / "cohort.jsonl", "".join(json.dumps(r) + "\n" for r in selected))
     template = []
     for row in candidates:
-        template.append({"source_key": row["source_key"], "contact_email": normalized_email(row), "business_identity": None, "niche_confirmed": False, "confirmed_niche": None, **{key: {"status": "unknown", "reviewer": None, "source_url": None, "artifact_path": None, "artifact_sha256": None, "checked_at": None, "expires_at": None} for key in EVIDENCE_KEYS}})
+        template.append({"source_key": row["source_key"], "contact_email": normalized_email(row), "business_identity": None, "niche_confirmed": False, "confirmed_niche": None, **{key: {"status": "unknown", "reviewer": None, "source_url": None, "artifact_path": None, "artifact_sha256": None, "checked_at": None, "expires_at": None} for key in EVIDENCE_KEYS + OPTIONAL_EVIDENCE_KEYS}})
     private_write(private / "receipt-template.json", json.dumps(template, indent=2) + "\n")
     summary = {
         "schema": "famtastic.acquisition-cohort-aggregate.v1", "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
