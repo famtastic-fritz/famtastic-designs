@@ -5,6 +5,8 @@
 # in the copied fixture when the borrowed runtime differs. No scripts run.
 # ACQUISITION_KEEP_SANDBOX=1 retains private .test browser fixture after success.
 # ACQUISITION_GENERIC_PROOF=1 also exports the supplied-context candidate journey.
+# ACQUISITION_GENERIC_D0_PROOF=1 + ACQUISITION_GENERIC_D0_BUNDLE=/private/candidate/bundle
+# proves D0 source against private bundle only (synthetic data, no cohort export).
 set -euo pipefail
 
 
@@ -123,6 +125,13 @@ if [[ "${ACQUISITION_GENERIC_PROOF:-0}" == 1 ]]; then
   mkdir -p "$evidence/generic"
   "${isolated[@]}" "ACQUISITION_DRUPAL_EVIDENCE=$evidence/generic" "ACQUISITION_GENERIC_EXPORT=$evidence/generic" ACQUISITION_DRUPAL_PHASE=generic "$php_bin" "${php_args[@]}" "$sandbox/backend/vendor/drush/drush/drush.php" "--root=$sandbox/backend/web" --uri=http://acquisition-drupal.example.test php:script "$sandbox/scripts/acquisition-sample-drupal.php" >"$evidence/generic.log" 2>&1
   cat "$evidence/generic.log"
+fi
+if [[ "${ACQUISITION_GENERIC_D0_PROOF:-0}" == 1 ]]; then
+  test -f "${ACQUISITION_GENERIC_D0_BUNDLE:?Explicit reviewed candidate bundle required}/manifest.json"
+  mkdir -p "$sandbox/backend/private/generic-d0" "$evidence/generic-d0"
+  rsync -a "$ACQUISITION_GENERIC_D0_BUNDLE/" "$sandbox/backend/private/generic-d0/"
+  "${isolated[@]}" "ACQUISITION_DRUPAL_EVIDENCE=$evidence/generic-d0" ACQUISITION_DRUPAL_PHASE=generic_delivery "$php_bin" "${php_args[@]}" "$sandbox/backend/vendor/drush/drush/drush.php" "--root=$sandbox/backend/web" --uri=http://acquisition-drupal.example.test php:script "$sandbox/scripts/acquisition-sample-drupal.php" >"$evidence/generic-d0.log" 2>&1
+  cat "$evidence/generic-d0.log"
 fi
 cat "$evidence/test.log" "$evidence/supplemental.log"
 echo "Evidence: $evidence/evidence.json"

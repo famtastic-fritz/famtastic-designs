@@ -30,6 +30,72 @@ $sequences = \Drupal::service('famtastic_pipeline.acquisition_sample_sequences')
 $check(\Drupal::hasService('famtastic_pipeline.acquisition_report'), 'installed_container_services');
 $route = \Drupal::service('router.route_provider')->getRouteByName('famtastic_pipeline.acquisition_sample_claim');
 $check($route->getRequirement('_csrf_request_header_token') === 'TRUE', 'installed_claim_route_csrf');
+if (getenv('ACQUISITION_DRUPAL_PHASE') === 'generic_delivery') {
+  // Request-local synthetic account values only: no configuration save,
+  // credentials, provider activation or live recipient import.
+  $GLOBALS['config']['smtp.settings']=['smtp_on'=>TRUE,'smtp_host'=>'smtp.synthetic.invalid','smtp_port'=>587,'smtp_username'=>'sender@example.test','smtp_from'=>'sender@example.test','smtp_protocol'=>'tls'];
+  $GLOBALS['config']['famtastic_pipeline.settings']=array_replace($GLOBALS['config']['famtastic_pipeline.settings'] ?? [], ['outreach_postal_address'=>'123 Fictional Test Street, Example City, FL 00000']);
+  \Drupal::service('config.factory')->reset('smtp.settings')->reset('famtastic_pipeline.settings');
+  $bundle=$sandbox.'/backend/private/generic-d0';
+  if (!is_file($bundle.'/manifest.json')) throw new RuntimeException('Synthetic private reviewed bundle required.');
+  new \Drupal\Core\Site\Settings(array_replace(\Drupal\Core\Site\Settings::getAll(),['famtastic_acquisition_bundle_root'=>$bundle,'famtastic_acquisition_bundle_sha256'=>hash_file('sha256',$bundle.'/manifest.json')]));
+  $originalMarketing=$sandbox.'/marketing';$heldMarketing=$sandbox.'/marketing-proof-held';
+  $originalApproval=$sandbox.'/docs/research/acquisition-199/CREATIVE-APPROVAL.json';$heldApproval=$originalApproval.'.proof-held';
+  if(is_dir($heldMarketing)||is_file($heldApproval))throw new RuntimeException('Refuse existing source hold paths.');
+  if(is_dir($originalMarketing))rename($originalMarketing,$heldMarketing);
+  if(is_file($originalApproval))rename($originalApproval,$heldApproval);
+  try {
+    $check(!is_dir($originalMarketing)&&!is_file($originalApproval),'generic_private_bundle_without_source_checkout');
+    $now=\Drupal::time()->getRequestTime();$runKey=bin2hex(random_bytes(4));$email='generic-d0-'.$runKey.'@example.test';
+    $prospect=\Drupal::entityTypeManager()->getStorage('famtastic_prospect')->create(['business_name'=>'Juniper Source Proof','business_category'=>'Beauty, Hair Styling & Braiding','public_email'=>$email,'campaign'=>'acquisition-199','source'=>'local_synthetic','status'=>'new']);$prospect->save();
+    $campaignId=(int)$db->select('famtastic_campaign','c')->fields('c',['id'])->condition('campaign_key','acquisition-199')->execute()->fetchField();
+    $approval=['reference'=>'docs/research/acquisition-199/CREATIVE-APPROVAL.json','sha256'=>hash_file('sha256',$bundle.'/docs/research/acquisition-199/CREATIVE-APPROVAL.json')];
+    $path='marketing/campaigns/acquisition-199/generic-review/beauty-template.html';
+    $recipe=['id'=>'beauty_soft_power_acquisition','version'=>1,'niche'=>'beauty_hair','artifact_path'=>$path,'sha256'=>hash_file('sha256',$bundle.'/'.$path),'review'=>['status'=>'approved_campaign_artifact','approval_record'=>$approval],'recipe_ref'=>['owner'=>'component-studio','id'=>'beauty_soft_power_acquisition','version'=>1,'status'=>'import_request_pending']];
+    $invitation=$samples->prepareGeneric('synthetic:generic:d0:'.$runKey,(int)$prospect->id(),$campaignId,$recipe,$now+86400);
+    $row=$db->select('famtastic_acquisition_sample','s')->fields('s')->condition('id',$invitation['id'])->execute()->fetchAssoc();
+    $check($row['eligible_at']===NULL && !$samples->resolve($invitation['token'])['context_provenance']['component_studio_registration_proved'],'approved_artifact_preparation_still_not_dispatch_authority');
+    try{$sequences->stageGenericD0($invitation['id'],$email,$invitation['token']);$check(FALSE,'bare_generic_prep_cannot_stage_d0');}catch(InvalidArgumentException $e){$check($e->getMessage()==='sample_outreach_qualification_required','bare_generic_prep_cannot_stage_d0');}
+    $account=$sequences->senderAccount();
+    $binding=['invitation_id'=>(int)$row['id'],'prospect_id'=>(int)$row['prospect_id'],'campaign_id'=>(int)$row['campaign_id'],'recipient_hash'=>$row['recipient_hash'],'invitation_evidence_hash'=>$row['evidence_hash'],'account_sha256'=>$account['account_sha256'],'from'=>$account['from']];
+    $receipt=['status'=>'owner_reviewed','reference'=>'synthetic-source-proof-no-real-recipient-permission','sha256'=>str_repeat('c',64),'checked_at'=>$now,'binding'=>$binding];
+    $authorization=['schema'=>'famtastic.acquisition-generic-authorization.v1','issued_at'=>$now,'expires'=>$now+3600,'binding'=>$binding,'sender'=>$account,'provider_permission_receipt'=>$receipt+['provider'=>'godaddy_cpanel','policy'=>'opt_in_only','permitted_use'=>TRUE,'written_opt_in_reference'=>'synthetic-source-test-only','written_opt_in_sha256'=>str_repeat('d',64)],'history_receipt'=>$receipt+['classification'=>'actual_native_history_reconciled','coverage_complete'=>TRUE,'eligible_for_new_outreach'=>TRUE,'known_stop_reasons'=>[]],'creative_approval'=>$approval,'content_id'=>'acquisition-199:beauty_soft_power_generic_d0:v1'];
+    $secret=str_repeat('synthetic-generic-owner-key-',3);putenv('FAMTASTIC_ACQUISITION_OWNER_SIGNING_SECRET='.$secret);
+    $sign=static fn(array $a):string=>hash_hmac('sha256',json_encode($a,JSON_THROW_ON_ERROR),$secret);
+    foreach(['wrong_account','wrong_row','stale_history','missing_permission'] as $case){
+      $bad=$authorization;
+      if($case==='wrong_account')$bad['sender']['account_sha256']=str_repeat('e',64);
+      elseif($case==='wrong_row')$bad['binding']['recipient_hash']=str_repeat('e',64);
+      elseif($case==='stale_history')$bad['history_receipt']['checked_at']=$now-3601;
+      else $bad['provider_permission_receipt']['permitted_use']=FALSE;
+      try{$samples->authorizeGeneric($invitation['id'],$bad,$sign($bad));$check(FALSE,'generic_authorization_rejects_'.$case);}catch(InvalidArgumentException){$check(TRUE,'generic_authorization_rejects_'.$case);}
+    }
+    $samples->authorizeGeneric($invitation['id'],$authorization,$sign($authorization));
+    $check(!$db->select('famtastic_email_message','m')->condition('prospect_id',(int)$prospect->id())->countQuery()->execute()->fetchField(),'generic_evidence_transition_does_not_stage');
+    $stage=$sequences->stageGenericD0($invitation['id'],$email,$invitation['token']);
+    $check(count($stage['message_ids'])===1 && $stage['status']==='held' && !$stage['real_dispatch_enabled'],'generic_one_d0_held_native_ledger');
+    $check($sequences->stageGenericD0($invitation['id'],$email,$invitation['token'])['duplicate'],'generic_d0_immutable_staging_replay');
+    $content=$db->select('famtastic_acquisition_message','c')->fields('c')->condition('message_id',$stage['message_ids'][0])->execute()->fetchAssoc();$snapshot=json_decode($content['snapshot'],TRUE);
+    $check($snapshot['sample_image_count']===1 && count($snapshot['attachments'])===2 && str_contains($snapshot['html'],'See what your website could look like') && !str_contains($snapshot['html'],'beauty_editorial') && !str_contains($snapshot['html'],'example.invalid'),'generic_new_approved_visual_only');
+    $check($snapshot['greeting_source']==='neutral' && !$snapshot['component_studio_registration_proved'] && str_contains($snapshot['body'],'/web/api/pipeline/email/click/') && str_contains($snapshot['body'],'/unsubscribe/confirm/'),'generic_neutral_and_bound_native_tracking_unsubscribe');
+    $check($snapshot['branding_asset']['url']===\Drupal\famtastic_pipeline\Service\BrandedEmail::LOGO_URL && $snapshot['branding_asset']['sha256']===hash_file('sha256',$bundle.'/marketing/campaigns/acquisition-199/generic-review/assets/famtastic-designs-logo-v1.png'),'generic_approved_logo_frozen_existing_remote_url');
+    $check(str_contains((string)$samples->preview($invitation['token'],$recipe['id']),'Juniper Source Proof'),'generic_snapshot_preview_without_source_checkout');
+    $sequences->activate($stage['sequence_id'],$now,'synthetic-generic-schedule');
+    $memorySecret=str_repeat('synthetic-generic-memory-',3);putenv('FAMTASTIC_ACQUISITION_MEMORY_SECRET='.$memorySecret);
+    $manifest=['transport'=>'synthetic_memory_only','sequence_id'=>$stage['sequence_id'],'expires'=>$now+3600,'approval_ref'=>'synthetic-generic-d0-memory','messages'=>[(string)$content['message_id']=>['recipient'=>$email,'content_hash'=>$content['content_hash']]]];$sig=hash_hmac('sha256',json_encode($manifest,JSON_THROW_ON_ERROR),$memorySecret);
+    $captured=\Drupal::service('famtastic_pipeline.acquisition_sample_memory')->capture($stage['sequence_id'],(int)$content['message_id'],$manifest,$sig);
+    $check(!$captured['inbox_delivery'] && $captured['captured']['authorization_hash']===hash('sha256',json_encode($authorization,JSON_THROW_ON_ERROR)),'generic_memory_only_capture_no_provider_delivery');
+    $check(\Drupal::service('famtastic_pipeline.acquisition_sample_memory')->capture($stage['sequence_id'],(int)$content['message_id'],$manifest,$sig)['duplicate'],'generic_memory_replay_no_second_capture');
+    $GLOBALS['config']['smtp.settings']['smtp_on']=FALSE;\Drupal::service('config.factory')->reset('smtp.settings');
+    $check($sequences->due($stage['sequence_id'])===[] && $db->select('famtastic_acquisition_sequence','s')->fields('s',['stop_reason'])->condition('id',$stage['sequence_id'])->execute()->fetchField()==='generic_authorization_stale','generic_disabled_or_changed_account_stops_due');
+    try{\Drupal::service('famtastic_pipeline.mailer')->assertAcquisitionTransportAllowed();$check(FALSE,'generic_real_dispatch_held');}catch(RuntimeException $e){$check($e->getMessage()==='acquisition_real_dispatch_disabled','generic_real_dispatch_held');}
+    $report['status']='passed';$report['receipt_classification']='synthetic-shaped evidence, not actual permission/history';$report['remote_logo_received_rendering']='unproved';$report['bundle_manifest_sha256']=hash_file('sha256',$bundle.'/manifest.json');$report['content_hash']=$content['content_hash'];
+  } finally {
+    if(is_dir($heldMarketing))rename($heldMarketing,$originalMarketing);
+    if(is_file($heldApproval))rename($heldApproval,$originalApproval);
+  }
+  return;
+}
 if (getenv('ACQUISITION_DRUPAL_PHASE') === 'generic') {
   $settings = \Drupal\Core\Site\Settings::getAll();
   new \Drupal\Core\Site\Settings($settings + ['famtastic_acquisition_internal_preparation' => TRUE]);

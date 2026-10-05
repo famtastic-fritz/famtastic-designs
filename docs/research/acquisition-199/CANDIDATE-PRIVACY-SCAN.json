@@ -1,0 +1,9 @@
+{
+  "schema": "famtastic.acquisition-candidate-privacy-scan.v1",
+  "lead_addresses_compared": 1260,
+  "address_or_hash_matches": 0,
+  "candidate_files_scanned": 30,
+  "private_data_exported": false,
+  "public_export_authorized": false,
+  "scope": "Final candidate compared locally against all1260 supplied lead addresses and their sha256 hashes; identical staged blobs checked before commit."
+}

@@ -302,7 +302,7 @@ services:
 
   famtastic_pipeline.acquisition_samples:
     class: Drupal\famtastic_pipeline\Service\AcquisitionSampleService
-    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.operational_ledger']
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.operational_ledger', '@config.factory']
 
   famtastic_pipeline.acquisition_sample_sequences:
     class: Drupal\famtastic_pipeline\Service\AcquisitionSampleSequenceService

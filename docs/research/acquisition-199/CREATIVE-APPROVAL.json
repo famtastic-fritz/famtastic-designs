@@ -1,0 +1,27 @@
+{
+  "schema": "famtastic.acquisition-creative-approval.v1",
+  "approved_by": "Fritz Medine",
+  "approved_date": "2026-10-05",
+  "approval_source": "Fritz visited implementation chat and approved new beauty email/Lab, relayed by source chat01a10d13-9d03-74c3-9ab4-15e8045e7688",
+  "status": "approved",
+  "scope": "NEW beauty email and Lab visual candidate, including explicit hair subtitle; exact hashes below",
+  "source_application_revision": "d24c5925028584f0ee57e0352ffb07c6455a54eb",
+  "artifact_sha256": {
+    "marketing/campaigns/acquisition-199/generic-review/beauty-email.html": "03588c3c4b4d323a8bc9965aee1a9c6a8905db190d6332d31eaab49b69e218f5",
+    "marketing/campaigns/acquisition-199/generic-review/beauty-email.txt": "77ec40639f3743dbbe11c2149bb5cef905fdf11ff159e137ac078de6585d5ac4",
+    "marketing/campaigns/acquisition-199/generic-review/beauty-lab.html": "e931221bff90fde38a7e465fdbf6b1747818137d44af12999b6d3c141fcee2c0",
+    "marketing/campaigns/acquisition-199/generic-review/beauty-template.html": "3fcc8bd5d0a37f103ee8c2c985aa75ac2c7f2971614a56fc95e95997ebaeec8f",
+    "marketing/campaigns/acquisition-199/generic-review/beauty-lab.css": "1f1961e350f575314468ed961f81788a067fc1476bb7e2b7095fcc59ea7da093",
+    "marketing/campaigns/acquisition-199/generic-review/beauty-practice.js": "a8894102815d0432d3272a42a5aa34d3e6efd8c6fbac97a2a940c6b394162992",
+    "marketing/campaigns/acquisition-199/generic-review/assets/hair-studio.jpg": "25a93df0d758f48ec8019e24fee1470435c2591c24209bd50610a178e5f9762a",
+    "marketing/campaigns/acquisition-199/generic-review/assets/connect-qr.png": "ed569de9c97e0b6c960c957552a43ed41fa7b1843e0e61a3216d462286516e84",
+    "marketing/campaigns/acquisition-199/generic-review/assets/famtastic-designs-logo-v1.png": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950"
+  },
+  "previous_six_status": "declined; excluded from proposed send package",
+  "owner_journey_accepted": false,
+  "component_studio_registration_proved": false,
+  "export_authorized": false,
+  "provider_permission_proved": false,
+  "production_apply_authorized": false,
+  "customer_dispatch_intent": "Owner explicitly wants smaller paced customer batches; real execution still subject to complete hosted journey, sender use, exact recipient/content and runtime guards."
+}

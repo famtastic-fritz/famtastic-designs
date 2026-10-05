@@ -59,4 +59,43 @@ final class AcquisitionSampleEmail {
     return ['subject' => (string) $draft['subject'], 'body' => $plain, 'html' => $html, 'preview' => (string) $draft['preview'], 'content_id' => (string) $draft['content_id'], 'draft_hash' => hash('sha256', json_encode($draft, JSON_THROW_ON_ERROR)), 'attachments' => $attachments, 'sample_image_count' => count($images), 'postal_address' => $postal, 'unsubscribe_key' => $unsubscribe, 'invitation_token_hash' => AcquisitionSampleGuard::tokenHash($token), 'tracking_key' => $tracking, 'research_observation' => $observation, 'greeting_source' => $bindings['recipient_name'] === '' ? 'verified_business_name' : 'verified_recipient_name'];
   }
 
+  /** Freeze only the approved NEW D0 source; no old draft/recipe fallback. */
+  public static function compileGeneric(array $authorization, string $token, string $unsubscribe, string $tracking, string $postal): array {
+    AcquisitionSampleGuard::tokenHash($token);
+    if (!preg_match('/^[a-f0-9]{48}$/D', $unsubscribe) || !preg_match('/^[a-f0-9]{48}$/D', $tracking) || trim($postal) === '' || strlen($postal) > 1000 || preg_match('/[<>\x00-\x1f]/', $postal)) throw new \InvalidArgumentException('generic_native_bindings_required');
+    $recordBytes = (string) file_get_contents(AcquisitionSampleArtifacts::path($authorization['creative_approval']['reference']));
+    $creative = AcquisitionSampleGuard::creativeApproval($authorization['creative_approval'], $recordBytes);
+    $read = static function (string $relative) use ($creative): string {
+      $path = AcquisitionSampleArtifacts::path($relative);
+      if (!isset($creative['artifact_sha256'][$relative]) || filesize($path) > (str_ends_with($relative, 'famtastic-designs-logo-v1.png') ? 2097152 : 1048576) || !hash_equals((string) $creative['artifact_sha256'][$relative], (string) hash_file('sha256', $path))) throw new \InvalidArgumentException('generic_approved_artifact_changed');
+      return (string) file_get_contents($path);
+    };
+    $base = 'marketing/campaigns/acquisition-199/generic-review/';
+    $html = $read($base . 'beauty-email.html');
+    $plain = $read($base . 'beauty-email.txt');
+    if (!preg_match('/\ASubject: ([^\r\n]+)\r?\nPreview: ([^\r\n]+)\r?\n\r?\n/', $plain, $metadata)) throw new \InvalidArgumentException('generic_approved_plain_required');
+    $plain = substr($plain, strlen($metadata[0]));
+    $invitation = 'https://famtasticdesigns.com/web/api/pipeline/email/click/' . $tracking;
+    $stop = 'https://famtasticdesigns.com/web/api/pipeline/email/unsubscribe/confirm/' . $unsubscribe;
+    if (substr_count($html, 'href="beauty-lab.html"') !== 2 || substr_count($html, 'https://example.invalid/unsubscribe-not-bound') !== 1 || substr_count($plain, 'beauty-lab.html (local review only)') !== 1) throw new \InvalidArgumentException('generic_approved_binding_slots_required');
+    // Only fixed review scaffolding and declared delivery slots change. The
+    // approved primary CTA, branding, terms, signature and footer remain intact.
+    $html = preg_replace('#<div role="note"[^>]*>Owner review candidate · this local CTA opens the actual sample\. Sending remains held; no invitation or unsubscribe binding is issued\.</div>#', '', $html, 1, $noteCount);
+    if ($noteCount !== 1) throw new \InvalidArgumentException('generic_review_scaffold_changed');
+    $html = str_replace(['href="beauty-lab.html"', 'https://example.invalid/unsubscribe-not-bound', ' (unbound review placeholder)'], ['href="' . $invitation . '"', $stop, ''], $html);
+    $plain = str_replace(['beauty-lab.html (local review only)', 'https://example.invalid/unsubscribe-not-bound (unbound review placeholder)', "Owner review candidate. No sending binding issued.\n"], [$invitation, $stop, ''], $plain);
+    $attachments = [];
+    foreach (['connect-qr.png' => ['connect-qr', 'digital-card', 'image/png'], 'hair-studio.jpg' => ['sample-beauty_soft_power_acquisition', 'illustrative-generic-sample', 'image/jpeg']] as $name => [$cid, $purpose, $type]) {
+      $bytes = $read($base . 'assets/' . $name);
+      $attachments[] = ['cid' => $cid, 'sha256' => hash('sha256', $bytes), 'purpose' => $purpose, 'media_type' => $type, 'bytes_base64' => base64_encode($bytes)];
+      $html = str_replace('src="assets/' . $name . '"', 'src="cid:' . $cid . '"', $html);
+    }
+    $logo = $read($base . 'assets/famtastic-designs-logo-v1.png');
+    $html = str_replace('src="assets/famtastic-designs-logo-v1.png"', 'src="' . BrandedEmail::LOGO_URL . '"', $html);
+    $html = str_replace('</body>', '<p style="font-size:12px">FAMtastic Designs<br>' . htmlspecialchars($postal, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p><img src="https://famtasticdesigns.com/web/api/pipeline/email/open/' . $tracking . '" width="1" height="1" alt=""></body>', $html);
+    $plain = rtrim($plain) . "\n\nFAMtastic Designs\n" . $postal;
+    if (preg_match('#(?:example\.invalid|beauty-lab\.html|(?:src|href)="assets/|unbound review placeholder|Owner review candidate)#', $html . $plain) || !str_contains($html, 'data-famtastic-email-brand=') || !str_contains($html, 'See what your website could look like') || !str_contains($html, 'Shay-Shay')) throw new \InvalidArgumentException('generic_bound_content_invariants_required');
+    return ['schema' => 'famtastic.acquisition-generic-d0.v1', 'subject' => $metadata[1], 'preview' => $metadata[2], 'body' => $plain, 'html' => $html, 'content_id' => $authorization['content_id'], 'draft_hash' => hash('sha256', $read($base . 'beauty-email.html') . $read($base . 'beauty-email.txt')), 'source_artifacts' => $creative['artifact_sha256'], 'creative_approval_record' => $recordBytes, 'authorization' => $authorization, 'authorization_hash' => hash('sha256', json_encode($authorization, JSON_THROW_ON_ERROR)), 'attachments' => $attachments, 'sample_image_count' => 1, 'branding_asset' => ['url' => BrandedEmail::LOGO_URL, 'sha256' => hash('sha256', $logo)], 'postal_address' => $postal, 'unsubscribe_key' => $unsubscribe, 'tracking_key' => $tracking, 'invitation_token_hash' => AcquisitionSampleGuard::tokenHash($token), 'greeting_source' => 'neutral', 'component_studio_registration_proved' => FALSE];
+  }
+
 }

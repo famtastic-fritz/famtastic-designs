@@ -1,0 +1,14 @@
+{
+  "connector": "Gmail",
+  "read_only_profile_returned": true,
+  "account_domains": [
+    "gmail.com"
+  ],
+  "native_acquisition_transport_connected": false,
+  "permitted_campaign_use_proved": false,
+  "quota_remaining_proved": false,
+  "message_sent": false,
+  "policy_source": "https://support.google.com/mail/answer/16734397",
+  "policy_section": "Spam and bulk mail; unsolicited commercial mail prohibited",
+  "new_provider_required_claimed": false
+}

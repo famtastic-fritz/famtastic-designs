@@ -1,8 +1,8 @@
 # $199 outreach and Sample Lab — current review
 
-**Current owner scope:** prepare generic outreach for all 1,000 supplied workbook records and review one polished email-to-Lab representative. Deep business research is optional. The six earlier designs were declined and are retained only as historical candidates. Dispatch remains **HOLD**.
+**Current owner scope:** prepare generic outreach for all 1,000 supplied workbook records and review one polished email-to-Lab representative. Deep business research is optional. The six earlier designs were declined and are retained only as historical candidates. Owner authorizes paced sending in principle; actual execution remains **blocked by sender/release/runtime checks**.
 
-Open the current [branded email](../../../marketing/campaigns/acquisition-199/generic-review/beauty-email.html) and [beauty Lab](../../../marketing/campaigns/acquisition-199/generic-review/beauty-lab.html). Local browser review is at http://127.0.0.1:5201/beauty-email.html. The photograph is an existing agency-owned fictional demonstration; no customer media was reused. The new design is pending owner review.
+Open the current [branded email](../../../marketing/campaigns/acquisition-199/generic-review/beauty-email.html) and [beauty Lab](../../../marketing/campaigns/acquisition-199/generic-review/beauty-lab.html). Local browser review is at http://127.0.0.1:5201/beauty-email.html. The photograph is an existing agency-owned fictional demonstration; no customer media was reused. Fritz approved this NEW visual candidate; CREATIVE-APPROVAL.json pins the exact bytes. Physical owner-journey acceptance remains separate.
 
 | Preparation count | Result |
 | --- | ---: |
@@ -23,7 +23,7 @@ Actual sender blocker: the existing GoDaddy cPanel sender requires confirmed wri
 
 Current records: [brief](BRIEF.md), [owner corrections](OWNER-STEERING-3.md), [generic aggregate](generic-cohort-aggregate.json), [diagnosis](QUALIFICATION-DIAGNOSIS.md), [sender facts](existing-sender-followup.json). [Original source proof](SOURCE-CHECKPOINT.md) and [fresh checkout](FRESH-CHECKOUT.json) retain their exact historical source cutoffs. [Verified-business qualification](cohort-qualification.md) is an optional personalization/import path, not a blanket bar to generic preparation.
 
-The original source implementation is draft PR58. Follow-up revisions are recorded separately. No campaign mail, customer purchase, production deployment, merge or owner acceptance is claimed.
+The original source implementation is draft PR58. Follow-up revisions are recorded separately. No new campaign mail, customer purchase, production deployment or merge occurred. NEW creative approval is recorded; hosted/owner-journey acceptance remains unproved.
 
 ## Current repository release lane
 
@@ -34,3 +34,11 @@ Smallest release preflight: fetch current origin/main, inspect divergence and cl
 The actual export approval rejection is separate: public GitHub follow-up push and Drive copy remain unperformed. Source candidate review is still available locally. No rejected contact-hash upload is retried. Existing local native export contains only300 scoped address lookups, not a complete native suppression dataset; local comparison reconfirms300 covered/700 unknown and cannot extend coverage. Generic preparation continues.
 
 Actual no-apply preflight receipt: RELEASE-PREFLIGHT.json. Both current scripts refused candidate d24c5925 because remote main is eef442be. Backend first read the existing inbound clock; it did not invoke broad dispatch. No apply, source upload or contact upload occurred.
+
+Current first25 proposal and shortest path: FIRST-25-PROPOSAL.json and FIRST-BATCH-PLAN.md. All25 proposed records are new beauty-industry entries with known native-history coverage and no known flags; no historical260 restart. Existing sender audit confirms prior260SMTPacceptances, existing authentication DNS, unsub/footer and suppression paths. It does not prove a GoDaddy policy exception or current account capacity. Existing Gmail connector is connected but its consumer policy also restricts unsolicited commercial mail; it is not a permitted native-campaign substitute. No new provider purchase is assumed.
+
+Approved generic release inputs: `python3 scripts/acquisition-sample-package.py build --scope generic-d0 --bundle <new-private-path>` builds the exact ten-file generic bundle, excluding declined drafts. Verify with the same scope. Module-only deployment does not supply these source artifacts; the authorized release must also install this private bundle and configure `famtastic_acquisition_bundle_root` before issuance. Frozen database snapshots serve customer reads afterward. Packaging grants neither provider permission nor dispatch authority. Five local packaging checks passed (GENERIC-BUNDLE-PROOF.json).
+
+Selected sender: hello@famtasticdesigns.com; fresh hosted SMTP username and From match. Selection alone does not establish account-specific recipient permission or remaining capacity.
+
+Existing Resend fallback (owner steering): no additional bill, upgrades, overages, domains, add-ons or purchases. A nonempty Resend-format key exists in Site Studio local environment; values were not printed/exported, API authentication/quota were not tested and no client/report route changed. Resend is not connected to the native acquisition campaign. The owner-reported verified FAMtastic report domain can be considered for an appropriate consented/transactional purpose after its route/allowance is verified; the MBSH client domain must not be used for this FAMtastic campaign. Current Resend acceptable-use policy explicitly prohibits unsolicited cold outreach and requires opt-in. This does not clear the cold cohort. Zero-new-spend options are the existing selected GoDaddy account for verified permitted recipients, or existing Resend for a legitimate permitted purpose within verified existing allowance; no new provider integration is started. See existing-resend-assessment.json and https://resend.com/legal/acceptable-use.

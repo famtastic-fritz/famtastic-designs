@@ -1,3 +1,7 @@
+# Current source state
+
+The approved generic D0 follow-up is locally complete, pending final source seal below. Fritz approved the NEW visual and requested smaller batches; hello@famtasticdesigns.com matches active SMTP username and From. Earlier sections retain historical revisions. Actual sending remains blocked by recipient/provider evidence and reviewed hosted release, independently of public-export/apply authority. No sends or new bill.
+
 # Acquisition source checkpoint
 
 Application source: `e953d06bb16643f888bdcc3c1bfb864d15ddc125`. Initial implementation: `e14a674f`; fresh-checkout research-preview correction: `e953d06b`. Branch: `codex/acquisition-199-20261005`. Base: origin/main `eef442be`. The remaining closeout commit contains documentation only. This exact application revision keys the capability matrix and pending owner tasks.

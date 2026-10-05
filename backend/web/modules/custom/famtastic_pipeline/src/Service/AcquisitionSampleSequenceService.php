@@ -23,6 +23,7 @@ final class AcquisitionSampleSequenceService {
     $sample = $this->database->select('famtastic_acquisition_sample', 's')->fields('s')->condition('id', $invitationId)->condition('token_hash', AcquisitionSampleGuard::tokenHash($token))->forUpdate()->execute()->fetchAssoc();
     if (!$sample || !AcquisitionSampleGuard::live($sample, $this->time->getRequestTime()) || !hash_equals((string) $sample['recipient_hash'], $this->ledger->contactHash($email)) || $this->ledger->isSuppressed($email)) throw new \InvalidArgumentException('sample_recipient_unavailable');
     if (empty($sample['eligible_at']) || empty($sample['qualification_ref'])) throw new \InvalidArgumentException('sample_outreach_qualification_required');
+    if (isset(json_decode((string) $sample['bindings'], TRUE)['_preparation'])) throw new \InvalidArgumentException('generic_d0_stage_required');
     $now = $this->time->getRequestTime();
     $sequence = $this->database->select('famtastic_acquisition_sequence', 's')->fields('s')->condition('invitation_id', $invitationId)->execute()->fetchAssoc();
     if (!$sequence) {
@@ -69,6 +70,52 @@ final class AcquisitionSampleSequenceService {
     return ['sequence_id' => $id, 'message_ids' => $ids, 'status' => 'held', 'dispatch_implemented' => TRUE, 'real_dispatch_enabled' => FALSE];
   }
 
+  public function senderAccount(): array {
+    return AcquisitionSampleGuard::senderAccount($this->configFactory);
+  }
+
+  /** Revalidate the append-only signed evidence, including current account. */
+  public function genericAuthorization(array $sample, ?string $frozenCreative = NULL): array {
+    if (empty($sample['eligible_at']) || empty($sample['qualification_ref'])) throw new \InvalidArgumentException('sample_outreach_qualification_required');
+    $payload = $this->database->select('famtastic_event', 'e')->fields('e', ['payload'])->condition('event_key', 'acquisition:generic:authorization:' . $sample['id'] . ':' . $sample['qualification_ref'])->condition('event_type', 'acquisition.generic_authorized')->execute()->fetchField();
+    $event = $payload ? json_decode((string) $payload, TRUE, 32, JSON_THROW_ON_ERROR) : [];
+    $authorization = $event['authorization'] ?? [];
+    $json = json_encode($authorization, JSON_THROW_ON_ERROR);
+    $secret = (string) getenv('FAMTASTIC_ACQUISITION_OWNER_SIGNING_SECRET');
+    if (strlen($secret) < 32 || !hash_equals((string) $sample['qualification_ref'], hash('sha256', $json)) || !hash_equals(hash_hmac('sha256', $json, $secret), (string) ($event['signature'] ?? ''))) throw new \InvalidArgumentException('generic_signed_authorization_required');
+    AcquisitionSampleGuard::genericAuthorization($authorization, $sample, $this->senderAccount(), $this->time->getRequestTime(), $frozenCreative);
+    return $authorization;
+  }
+
+  /** Only the approved new generic D0; native held ledger, no dispatch effect. */
+  public function stageGenericD0(int $invitationId, string $email, string $token): array {
+    $email = mb_strtolower(trim($email));
+    $transaction = $this->database->startTransaction();
+    $sample = $this->database->select('famtastic_acquisition_sample', 's')->fields('s')->condition('id', $invitationId)->condition('token_hash', AcquisitionSampleGuard::tokenHash($token))->forUpdate()->execute()->fetchAssoc();
+    if (!$sample || !AcquisitionSampleGuard::live($sample, $this->time->getRequestTime()) || !hash_equals($sample['recipient_hash'], $this->ledger->contactHash($email)) || $this->ledger->isSuppressed($email) || (json_decode((string) $sample['bindings'], TRUE)['_preparation']['classification'] ?? '') !== 'supplied_generic_preparation') throw new \InvalidArgumentException('sample_recipient_unavailable');
+    $authorization = $this->genericAuthorization($sample);
+    $key = 'sample-v1:' . $invitationId . ':day:0';
+    $old = $this->database->select('famtastic_email_message', 'm')->fields('m')->condition('message_key', $key)->execute()->fetchAssoc();
+    $tracking = $old ? $old['tracking_key'] : bin2hex(random_bytes(24));
+    $unsubscribe = $old ? $old['unsubscribe_key'] : bin2hex(random_bytes(24));
+    $snapshot = AcquisitionSampleEmail::compileGeneric($authorization, $token, $unsubscribe, $tracking, (string) $this->configFactory?->get('famtastic_pipeline.settings')->get('outreach_postal_address'));
+    $json = json_encode($snapshot, JSON_THROW_ON_ERROR);
+    $hash = hash('sha256', $json);
+    if ($old) {
+      $content = $this->database->select('famtastic_acquisition_message', 'c')->fields('c')->condition('message_id', $old['id'])->execute()->fetchAssoc();
+      if (!$content || !hash_equals($content['content_hash'], $hash)) throw new \InvalidArgumentException('sample_content_replay_changed');
+      $sequenceId = $this->database->select('famtastic_acquisition_sequence', 's')->fields('s', ['id'])->condition('invitation_id', $invitationId)->execute()->fetchField();
+      return ['sequence_id' => (int) $sequenceId, 'message_ids' => [(int) $old['id']], 'status' => 'held', 'duplicate' => TRUE, 'real_dispatch_enabled' => FALSE];
+    }
+    $now = $this->time->getRequestTime();
+    $sequenceId = (int) $this->database->insert('famtastic_acquisition_sequence')->fields(['invitation_id' => $invitationId, 'recipient_hash' => $sample['recipient_hash'], 'campaign_id' => $sample['campaign_id'], 'prospect_id' => $sample['prospect_id'], 'status' => 'held', 'created' => $now, 'changed' => $now])->execute();
+    $messageId = (int) $this->database->insert('famtastic_email_message')->fields(['message_key' => $key, 'recipient_hash' => $sample['recipient_hash'], 'recipient_address' => $email, 'prospect_id' => $sample['prospect_id'], 'campaign_id' => $sample['campaign_id'], 'template_key' => self::MESSAGE_KIND, 'template_version' => 1, 'subject' => $snapshot['subject'], 'body_snapshot' => $snapshot['body'], 'proof_url' => 'https://famtasticdesigns.com/samples/' . $token, 'status' => 'held', 'tracking_key' => $tracking, 'unsubscribe_key' => $unsubscribe, 'created' => $now, 'changed' => $now])->execute();
+    $this->database->insert('famtastic_acquisition_message')->fields(['message_id' => $messageId, 'invitation_id' => $invitationId, 'day' => 0, 'content_id' => $snapshot['content_id'], 'content_hash' => $hash, 'draft_hash' => $snapshot['draft_hash'], 'snapshot' => $json])->execute();
+    $this->reconcile($sequenceId);
+    unset($transaction);
+    return ['sequence_id' => $sequenceId, 'message_ids' => [$messageId], 'status' => 'held', 'duplicate' => FALSE, 'real_dispatch_enabled' => FALSE];
+  }
+
   /** Scheduling authorization is separate from exact provider/customer dispatch. */
   public function activate(int $id, int $start, string $approval): void {
     if ($start < $this->time->getRequestTime() || preg_match('/^[a-zA-Z0-9:_.-]{8,128}$/D', $approval) !== 1) throw new \InvalidArgumentException('exact_schedule_approval_required');
@@ -97,11 +144,20 @@ final class AcquisitionSampleSequenceService {
     if (!$sequence || $sequence['status'] === 'stopped') return;
     $sample = $this->database->select('famtastic_acquisition_sample', 's')->fields('s')->condition('id', (int) $sequence['invitation_id'])->execute()->fetchAssoc();
     $reason = !$sample || !AcquisitionSampleGuard::live($sample, $this->time->getRequestTime()) ? 'expired_or_revoked' : NULL;
+    if (!$reason && isset(json_decode((string) $sample['bindings'], TRUE)['_preparation'])) {
+      $snapshot = $this->database->select('famtastic_acquisition_message', 'c')->fields('c', ['snapshot'])->condition('invitation_id', (int) $sample['id'])->condition('day', 0)->execute()->fetchField();
+      try { $this->genericAuthorization($sample, $snapshot ? (json_decode((string) $snapshot, TRUE)['creative_approval_record'] ?? NULL) : NULL); }
+      catch (\InvalidArgumentException) { $reason = 'generic_authorization_stale'; }
+    }
     if (!$reason && $this->database->select('famtastic_consent', 'c')->condition('contact_hash', $sequence['recipient_hash'])->condition('consent_type', 'outreach')->condition('status', ['unsubscribed', 'bounced', 'complained', 'suppressed'], 'IN')->countQuery()->execute()->fetchField()) $reason = 'suppressed';
     // Current Commerce fulfillment is authoritative, never legacy paid-order math.
     if (!$reason && $this->database->schema()->tableExists('famtastic_commerce_fulfillment')) {
       $customer = $sample['customer_id'] ?? $sample['pending_customer_id'] ?? NULL;
       if (!$customer) $customer = $this->database->select('famtastic_customer', 'c')->fields('c', ['id'])->condition('prospect_id', (int) $sequence['prospect_id'])->execute()->fetchField();
+      if (!$customer && isset(json_decode((string) $sample['bindings'], TRUE)['_preparation'])) {
+        $email = $this->database->select('famtastic_prospect', 'p')->fields('p', ['public_email'])->condition('id', (int) $sample['prospect_id'])->execute()->fetchField();
+        $customer = $this->database->select('famtastic_customer', 'c')->fields('c', ['id'])->condition('email', mb_strtolower(trim((string) $email)))->condition('verified_at', 0, '>')->execute()->fetchField();
+      }
       if ($customer && $this->database->select('famtastic_commerce_fulfillment', 'f')->condition('customer_id', $customer)->countQuery()->execute()->fetchField()) $reason = 'purchase';
     }
     if (!$reason && $this->database->schema()->tableExists('famtastic_inbound_message') && $this->database->select('famtastic_inbound_message', 'm')->condition('sender_hash', $sequence['recipient_hash'])->countQuery()->execute()->fetchField()) $reason = 'incoming_reply_review';

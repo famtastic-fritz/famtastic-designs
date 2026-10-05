@@ -43,7 +43,22 @@ final class AcquisitionSampleExactAdapter {
       if (!in_array($messageId, $due, TRUE) || $message['status'] !== 'held' || $sequence['status'] !== 'active' || !AcquisitionSampleGuard::live($sample, $now) || $this->ledger->isSuppressed((string) $message['recipient_address'])) throw new \RuntimeException('acquisition_message_not_due_or_stopped');
       $snapshot = json_decode((string) $content['snapshot'], TRUE, 32, JSON_THROW_ON_ERROR);
       if (!hash_equals((string) ($snapshot['tracking_key'] ?? ''), (string) $message['tracking_key']) || !hash_equals((string) ($snapshot['unsubscribe_key'] ?? ''), (string) $message['unsubscribe_key']) || !hash_equals((string) ($snapshot['invitation_token_hash'] ?? ''), (string) $sample['token_hash']) || trim((string) ($snapshot['subject'] ?? '')) !== $message['subject'] || trim((string) ($snapshot['body'] ?? '')) !== $message['body_snapshot']) throw new \InvalidArgumentException('acquisition_native_header_content_drift');
-      if (empty($snapshot['postal_address']) || !str_contains((string) $snapshot['html'], 'data-famtastic-email-brand=') || !str_contains((string) $snapshot['html'], 'cid:connect-qr') || !str_contains((string) $snapshot['body'], 'Shay-Shay') || count($snapshot['attachments'] ?? []) !== ((int) $content['day'] === 0 ? 3 : 1)) throw new \InvalidArgumentException('acquisition_frozen_release_content_required');
+      $generic = ($snapshot['schema'] ?? '') === 'famtastic.acquisition-generic-d0.v1';
+      if ($generic) {
+        $authorization = $this->sequences->genericAuthorization($sample, (string) ($snapshot['creative_approval_record'] ?? ''));
+        if (($snapshot['authorization'] ?? []) !== $authorization || ($manifest['provider_permission_receipt'] ?? []) !== $authorization['provider_permission_receipt'] || ($manifest['history_receipt'] ?? []) !== $authorization['history_receipt'] || ($manifest['sender_account_sha256'] ?? '') !== $authorization['sender']['account_sha256'] || ($manifest['generic_authorization_hash'] ?? '') !== $sample['qualification_ref'] || (int) $content['day'] !== 0 || $snapshot['content_id'] !== $authorization['content_id']) throw new \InvalidArgumentException('generic_dispatch_receipt_binding_required');
+        $creative = AcquisitionSampleGuard::creativeApproval($authorization['creative_approval'], $snapshot['creative_approval_record']);
+        $expectedMedia = ['connect-qr' => ['connect-qr.png', 'digital-card'], 'sample-beauty_soft_power_acquisition' => ['hair-studio.jpg', 'illustrative-generic-sample']];
+        $media = [];
+        foreach ($snapshot['attachments'] ?? [] as $attachment) {
+          $cid = $attachment['cid'] ?? '';
+          if (!isset($expectedMedia[$cid]) || isset($media[$cid]) || ($attachment['purpose'] ?? '') !== $expectedMedia[$cid][1] || ($attachment['sha256'] ?? '') !== ($creative['artifact_sha256']['marketing/campaigns/acquisition-199/generic-review/assets/' . $expectedMedia[$cid][0]] ?? '')) throw new \InvalidArgumentException('generic_approved_media_binding_required');
+          $media[$cid] = TRUE;
+        }
+        if (count($media) !== 2 || ($snapshot['sample_image_count'] ?? 0) !== 1) throw new \InvalidArgumentException('generic_approved_media_binding_required');
+      }
+      if ($generic && (($snapshot['branding_asset']['sha256'] ?? '') !== ($creative['artifact_sha256']['marketing/campaigns/acquisition-199/generic-review/assets/famtastic-designs-logo-v1.png'] ?? '') || ($snapshot['branding_asset']['url'] ?? '') !== BrandedEmail::LOGO_URL || !str_contains((string) $snapshot['html'], BrandedEmail::LOGO_URL))) throw new \InvalidArgumentException('generic_approved_branding_binding_required');
+      if (empty($snapshot['postal_address']) || !str_contains((string) $snapshot['html'], 'data-famtastic-email-brand=') || !str_contains((string) $snapshot['html'], 'cid:connect-qr') || !str_contains((string) $snapshot['body'], 'Shay-Shay') || count($snapshot['attachments'] ?? []) !== ($generic ? 2 : ((int) $content['day'] === 0 ? 3 : 1))) throw new \InvalidArgumentException('acquisition_frozen_release_content_required');
       foreach ($snapshot['attachments'] as $attachment) {
         $bytes = base64_decode((string) ($attachment['bytes_base64'] ?? ''), TRUE);
         if ($bytes === FALSE || strlen($bytes) > 1048576 || !hash_equals((string) ($attachment['sha256'] ?? ''), hash('sha256', $bytes))) throw new \InvalidArgumentException('acquisition_frozen_media_integrity_required');

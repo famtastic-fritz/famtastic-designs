@@ -1,5 +1,7 @@
 # Acquisition capability and owner acceptance record
 
+Current state (2026-10-05): NEW visual approved in CREATIVE-APPROVAL.json; old six declined. The approved generic D0 source bridge is locally complete and verified. Sender hello@famtasticdesigns.com matches the hosted SMTP username and From; actual recipient-use evidence and hosted journey remain pending. Older revision matrices below are historical source evidence.
+
 Release: exact application source commit in SOURCE-CHECKPOINT.md. Repository: famtastic-designs; branch codex/acquisition-199-20261005; isolated worktree recorded in BRIEF.md. Date: 2026-10-05. Classification: changed. Runtime: local synthetic Drupal/SQLite and browser fixtures. New hosted release and owner acceptance remain unverified.
 
 | Capability ID / role / job | Entry, action and input | Saved result and visibility/reversal | Evidence level / proof | Provider state | Acceptance / consumption / next owner |
@@ -41,3 +43,13 @@ Owner tasks: generic-review-01 (Fritz, desktop/phone, current follow-up revision
 Follow-up application revision for generic-review-01 and generic-continue-01: b32ae4236bcb2aa0f495436028c1101355215d4d. Owner results remain pending; classification changed.
 
 Beauty consistency follow-up: generic-review-01 and generic-continue-01 remain pending for the corrected exact bytes in BEAUTY-CONSISTENCY-FIX.json. Supplied fictional fixture is Juniper Hair Studio / Beauty, Hair Styling & Braiding; rendered subtitle explicitly hair-specific. Developer static/native1440/390 checks passed; no hosted or owner acceptance inferred.
+
+Owner visual approval update2026-10-05: Fritz approved the NEW beautyemail/Lab candidate after visiting this implementation chat. generic-review-01 visual judgment is approved for exact artifacts in CREATIVE-APPROVAL.json. This does not complete generic-continue-01, hosted physical-owner tasks, Component Studio registration or export permission. Prior six remain declined. Owner now requests paced sending in smaller batches; actual sending is subject to sender/use evidence, exact hosted release and per-message runtime gates.
+
+| Capability / job | Entry/action | Saved result and reversal | Evidence | Provider / owner / next owner |
+| --- | --- | --- | --- | --- |
+| acq.generic-bundle / release operator / carry approved inputs | acquisition-sample-package.py --scope generic-d0 | Ten immutable files including exact creative receipt, approved email/Lab and media; source-only; rebuild after changes | local_tested; GENERIC-BUNDLE-PROOF.json, five real build/verify/tamper checks; declined six excluded | not_applicable; visual approved; production source-bundle installation pending |
+
+| acq.generic-d0 / staff / bind the approved first-touch email | Internal authorizeGeneric and stageGenericD0; fresh HMAC-signed exact recipient/account/provider/history evidence | Native immutable held one-message snapshot; approved photo+QR, neutral greeting, opaque native click/unsubscribe; no old drafts/follow-ups; native suppression/reply/purchase exits and uncertain no-retry preserved | local_tested + simulated;34 units/283 assertions,20 installed checks; private10-file bundle; actual provider/history receipts are synthetic proof only | hello SMTP identity configured; recipient permission/release pending; visual approved; actual exact-message and hosted owner-task approval pending |
+
+Current generic D0 proof files: backend-generic-d0.md; backend-proof.json; evidence/generic-d0-installed.json; GENERIC-BUNDLE-PROOF.json. Full older suite and browser proof remain historical. Current focused regressions36 tests/245 assertions passed with69 pre-existing mock deprecations.

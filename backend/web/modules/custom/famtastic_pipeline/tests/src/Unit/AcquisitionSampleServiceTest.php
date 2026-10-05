@@ -24,6 +24,8 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
   private AcquisitionSampleSequenceService $sequences;
   private OperationalLedger $ledger;
   private int $now = 1800000000;
+  private \Drupal\Core\Config\ConfigFactoryInterface $factory;
+  private string|false|null $previousGenericSecret = NULL;
 
   protected function setUp(): void {
     parent::setUp();
@@ -38,12 +40,20 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $time = $this->createMock(TimeInterface::class);
     $time->method('getRequestTime')->willReturnCallback(fn(): int => $this->now);
     $this->ledger = new OperationalLedger($this->db, $time);
-    $this->samples = new AcquisitionSampleService($this->db, $time, $this->ledger);
     $config = $this->createMock(\Drupal\Core\Config\ImmutableConfig::class);
     $config->method('get')->willReturn('123 Fictional Test Street, Example City, FL 00000');
     $factory = $this->createMock(\Drupal\Core\Config\ConfigFactoryInterface::class);
-    $factory->method('get')->willReturn($config);
+    $smtp = $this->createMock(\Drupal\Core\Config\ImmutableConfig::class);
+    $smtp->method('get')->willReturnCallback(static fn(string $key): mixed => ['smtp_on'=>TRUE,'smtp_host'=>'smtp.synthetic.invalid','smtp_port'=>587,'smtp_username'=>'sender@example.test','smtp_from'=>'sender@example.test','smtp_protocol'=>'tls'][$key] ?? NULL);
+    $factory->method('get')->willReturnCallback(static fn(string $name): mixed => $name === 'smtp.settings' ? $smtp : $config);
+    $this->factory = $factory;
+    $this->samples = new AcquisitionSampleService($this->db, $time, $this->ledger, $factory);
     $this->sequences = new AcquisitionSampleSequenceService($this->db, $time, $this->ledger, $factory);
+  }
+
+  protected function tearDown(): void {
+    if ($this->previousGenericSecret !== NULL) putenv($this->previousGenericSecret === FALSE ? 'FAMTASTIC_ACQUISITION_OWNER_SIGNING_SECRET' : 'FAMTASTIC_ACQUISITION_OWNER_SIGNING_SECRET=' . $this->previousGenericSecret);
+    parent::tearDown();
   }
 
   private function recipes(): array {
@@ -475,6 +485,137 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $this->assertSame('', $continuation['known_information']['business_name']);
     $this->assertSame('Beauty, Hair Styling & Braiding', $continuation['known_information']['industry']);
     $this->assertSame('', $this->samples->requestContext(1, $continuation['context_id'])['known_information']['business_name']);
+  }
+
+  private function genericAuthorizationReceipt(array $invitation): array {
+    $sample = $this->db->select('famtastic_acquisition_sample', 's')->fields('s')->condition('id', $invitation['id'])->execute()->fetchAssoc();
+    $account = AcquisitionSampleGuard::senderAccount($this->factory);
+    $binding = ['invitation_id'=>(int)$sample['id'],'prospect_id'=>(int)$sample['prospect_id'],'campaign_id'=>(int)$sample['campaign_id'],'recipient_hash'=>$sample['recipient_hash'],'invitation_evidence_hash'=>$sample['evidence_hash'],'account_sha256'=>$account['account_sha256'],'from'=>$account['from']];
+    $receipt = ['status'=>'owner_reviewed','reference'=>'synthetic-source-proof-not-real-permission','sha256'=>str_repeat('c',64),'checked_at'=>$this->now,'binding'=>$binding];
+    return ['schema'=>'famtastic.acquisition-generic-authorization.v1','issued_at'=>$this->now,'expires'=>$this->now+3600,'binding'=>$binding,'sender'=>$account,'provider_permission_receipt'=>$receipt+['provider'=>'godaddy_cpanel','policy'=>'opt_in_only','permitted_use'=>TRUE,'written_opt_in_reference'=>'synthetic-only','written_opt_in_sha256'=>str_repeat('d',64)],'history_receipt'=>$receipt+['classification'=>'actual_native_history_reconciled','coverage_complete'=>TRUE,'eligible_for_new_outreach'=>TRUE,'known_stop_reasons'=>[]],'creative_approval'=>['reference'=>'docs/research/acquisition-199/CREATIVE-APPROVAL.json','sha256'=>hash_file('sha256',dirname(__DIR__,8).'/docs/research/acquisition-199/CREATIVE-APPROVAL.json')],'content_id'=>'acquisition-199:beauty_soft_power_generic_d0:v1'];
+  }
+
+  private function genericSignature(array $value): string {
+    if ($this->previousGenericSecret === NULL) $this->previousGenericSecret = getenv('FAMTASTIC_ACQUISITION_OWNER_SIGNING_SECRET');
+    $secret = str_repeat('synthetic-generic-key-',3);
+    putenv('FAMTASTIC_ACQUISITION_OWNER_SIGNING_SECRET=' . $secret);
+    return hash_hmac('sha256',json_encode($value,JSON_THROW_ON_ERROR),$secret);
+  }
+
+  public function testGenericD0RequiresFreshExactEvidenceAndKeepsPreparationUnstaged(): void {
+    $invitation = $this->prepare();
+    $authorization = $this->genericAuthorizationReceipt($invitation);
+    $mutations = [
+      static function(array $a):array {$a['binding']['recipient_hash']=str_repeat('e',64);return $a;},
+      static function(array $a):array {$a['sender']['account_sha256']=str_repeat('e',64);return $a;},
+      static function(array $a):array {$a['provider_permission_receipt']['binding']['prospect_id']=2;return $a;},
+      static function(array $a):array {$a['provider_permission_receipt']['permitted_use']=FALSE;return $a;},
+      static function(array $a):array {$a['provider_permission_receipt']['written_opt_in_sha256']='';return $a;},
+      static function(array $a):array {$a['history_receipt']['coverage_complete']=FALSE;return $a;},
+      static function(array $a):array {$a['history_receipt']['eligible_for_new_outreach']=FALSE;return $a;},
+      static function(array $a):array {$a['history_receipt']['known_stop_reasons']=['prior_reply'];return $a;},
+      static function(array $a):array {$a['history_receipt']['checked_at']-=3601;return $a;},
+      static function(array $a):array {$a['expires']-=3601;return $a;},
+      static function(array $a):array {$a['creative_approval']['sha256']=str_repeat('e',64);return $a;},
+    ];
+    foreach ($mutations as $mutate) {
+      $bad=$mutate($authorization);
+      try {$this->samples->authorizeGeneric($invitation['id'],$bad,$this->genericSignature($bad));$this->fail('Invalid generic evidence accepted.');}
+      catch (\InvalidArgumentException) {$this->addToAssertionCount(1);}
+      $this->assertNull($this->db->select('famtastic_acquisition_sample','s')->fields('s',['eligible_at'])->condition('id',$invitation['id'])->execute()->fetchField());
+    }
+    try {$this->sequences->stageGenericD0($invitation['id'],'owner@example.test',$invitation['token']);$this->fail('Bare preparation staged.');}
+    catch(\InvalidArgumentException $error){$this->assertSame('sample_outreach_qualification_required',$error->getMessage());}
+    $this->assertSame(0,(int)$this->db->select('famtastic_email_message','m')->countQuery()->execute()->fetchField());
+  }
+
+  public function testApprovedGenericD0FreezesNewBytesOnlyAndMemoryCaptureIsIdempotent(): void {
+    $invitation=$this->prepare();$authorization=$this->genericAuthorizationReceipt($invitation);$signature=$this->genericSignature($authorization);
+    $this->assertFalse($this->samples->authorizeGeneric($invitation['id'],$authorization,$signature)['staged']);
+    $this->assertTrue($this->samples->authorizeGeneric($invitation['id'],$authorization,$signature)['duplicate']);
+    try {$this->sequences->stage($invitation['id'],'owner@example.test',$invitation['token'],$this->drafts());$this->fail('Retired draft lane admitted.');}
+    catch(\InvalidArgumentException $error){$this->assertSame('generic_d0_stage_required',$error->getMessage());}
+    $sequence=$this->sequences->stageGenericD0($invitation['id'],'owner@example.test',$invitation['token']);
+    $this->assertCount(1,$sequence['message_ids']);
+    $this->assertTrue($this->sequences->stageGenericD0($invitation['id'],'owner@example.test',$invitation['token'])['duplicate']);
+    $content=$this->db->select('famtastic_acquisition_message','c')->fields('c')->condition('message_id',$sequence['message_ids'][0])->execute()->fetchAssoc();$snapshot=json_decode($content['snapshot'],TRUE);
+    $this->assertSame('neutral',$snapshot['greeting_source']);$this->assertSame(1,$snapshot['sample_image_count']);$this->assertFalse($snapshot['component_studio_registration_proved']);
+    $this->assertSame('See what a website could look like — FAMtastic Designs',$snapshot['subject']);
+    foreach(['See what your website could look like','Same Energy. Different Message.','Always FAMtastic.','$199 upfront','Shay-Shay','cid:sample-beauty_soft_power_acquisition','cid:connect-qr'] as $text)$this->assertStringContainsString($text,$snapshot['html']);
+    foreach(['beauty_editorial','beauty_service_first','example.invalid','beauty-lab.html','Owner review candidate','unbound review placeholder'] as $text)$this->assertStringNotContainsString($text,$snapshot['html'].$snapshot['body']);
+    foreach($snapshot['attachments'] as $media)$this->assertSame($media['sha256'],hash('sha256',base64_decode($media['bytes_base64'])));
+    $this->assertStringContainsString('/web/api/pipeline/email/click/',$snapshot['body']);$this->assertStringContainsString('/web/api/pipeline/email/open/',$snapshot['html']);
+    $this->assertSame('supplied_generic_preparation',$this->samples->resolve($invitation['token'])['context_classification']);
+    $this->sequences->activate($sequence['sequence_id'],$this->now,'synthetic-generic-schedule');
+    $time=$this->createMock(TimeInterface::class);$time->method('getRequestTime')->willReturn($this->now);
+    $memory=new AcquisitionSampleMemoryAdapter($this->db,$time,$this->ledger,$this->sequences);
+    $old=getenv('FAMTASTIC_ACQUISITION_MEMORY_SECRET');$secret=str_repeat('synthetic-memory-key-',3);putenv('FAMTASTIC_ACQUISITION_MEMORY_SECRET='.$secret);
+    try {
+      $manifest=['transport'=>'synthetic_memory_only','sequence_id'=>$sequence['sequence_id'],'expires'=>$this->now+3600,'approval_ref'=>'synthetic-generic-memory','messages'=>[(string)$content['message_id']=>['recipient'=>'owner@example.test','content_hash'=>$content['content_hash']]]];$sig=hash_hmac('sha256',json_encode($manifest),$secret);
+      $this->assertFalse($memory->capture($sequence['sequence_id'],(int)$content['message_id'],$manifest,$sig)['inbox_delivery']);$this->assertTrue($memory->capture($sequence['sequence_id'],(int)$content['message_id'],$manifest,$sig)['duplicate']);
+    }finally{putenv($old===FALSE?'FAMTASTIC_ACQUISITION_MEMORY_SECRET':'FAMTASTIC_ACQUISITION_MEMORY_SECRET='.$old);}
+  }
+
+  public function testGenericD0CurrentHistoryAndAuthorizationExpiryStop(): void {
+    foreach(['permission_expired','history_reply','suppressed'] as $reason){
+      $invitation=$this->prepare('fixture:generic:'.$reason);$authorization=$this->genericAuthorizationReceipt($invitation);$this->samples->authorizeGeneric($invitation['id'],$authorization,$this->genericSignature($authorization));
+      $sequence=$this->sequences->stageGenericD0($invitation['id'],'owner@example.test',$invitation['token']);$this->sequences->activate($sequence['sequence_id'],$this->now,'synthetic-generic-schedule');
+      if($reason==='permission_expired')$this->now+=3601;
+      elseif($reason==='history_reply')$this->ledger->recordEvent('synthetic:generic:reply','email.replied',[],1,1);
+      else $this->ledger->recordConsent('owner@example.test','unsubscribed',1);
+      $this->assertSame([],$this->sequences->due($sequence['sequence_id']));
+      $this->assertSame('stopped',$this->db->select('famtastic_acquisition_sequence','s')->fields('s',['status'])->condition('id',$sequence['sequence_id'])->execute()->fetchField());
+      $this->db->delete('famtastic_event')->condition('event_type','email.replied')->execute();
+    }
+  }
+
+  public function testApprovedCampaignRecipeNeedsNoInventedComponentRegistrationOrCandidateFlag(): void {
+    $recipe=$this->genericRecipe();
+    $recipe['review']=['status'=>'approved_campaign_artifact','approval_record'=>['reference'=>'docs/research/acquisition-199/CREATIVE-APPROVAL.json','sha256'=>hash_file('sha256',dirname(__DIR__,8).'/docs/research/acquisition-199/CREATIVE-APPROVAL.json')]];
+    $invitation=$this->samples->prepareGeneric('fixture:approved-artifact',1,1,$recipe,$this->now+3600);
+    $sample=$this->samples->resolve($invitation['token']);
+    $this->assertSame('owner_approved_campaign_artifact',$sample['context_provenance']['recipe_review']);
+    $this->assertFalse($sample['context_provenance']['component_studio_registration_proved']);
+    $this->assertFalse($sample['context_provenance']['niche_verified']);
+    $this->assertNull($this->db->select('famtastic_acquisition_sample','s')->fields('s',['eligible_at'])->condition('id',$invitation['id'])->execute()->fetchField());
+  }
+
+  public function testGenericExactAdapterRequiresMatchingReceiptAndPreservesCapAndUncertainRetry(): void {
+    $invitation=$this->prepare();$auth=$this->genericAuthorizationReceipt($invitation);$this->samples->authorizeGeneric($invitation['id'],$auth,$this->genericSignature($auth));
+    $sequence=$this->sequences->stageGenericD0($invitation['id'],'owner@example.test',$invitation['token']);$this->sequences->activate($sequence['sequence_id'],$this->now,'synthetic-generic-schedule');
+    $content=$this->db->select('famtastic_acquisition_message','c')->fields('c')->condition('message_id',$sequence['message_ids'][0])->execute()->fetchAssoc();
+    $sample=$this->db->select('famtastic_acquisition_sample','s')->fields('s')->condition('id',$invitation['id'])->execute()->fetchAssoc();
+    $manifest=['schema'=>'famtastic.acquisition-exact-send.v1','transport'=>'native_smtp','cap'=>1,'sequence_id'=>$sequence['sequence_id'],'message_id'=>(int)$content['message_id'],'recipient'=>'owner@example.test','from'=>'sender@example.test','content_id'=>$content['content_id'],'content_hash'=>$content['content_hash'],'qualification_ref'=>$sample['qualification_ref'],'invitation_evidence_hash'=>$sample['evidence_hash'],'approval_ref'=>'synthetic-generic-cap1','expires'=>$this->now+3600,'provider_permission_receipt'=>$auth['provider_permission_receipt'],'history_receipt'=>$auth['history_receipt'],'release_proof'=>['status'=>'owner_reviewed','reference'=>'synthetic-release-not-hosted','sha256'=>str_repeat('e',64)],'sender_account_sha256'=>$auth['sender']['account_sha256'],'generic_authorization_hash'=>$sample['qualification_ref']];
+    $time=$this->createMock(TimeInterface::class);$time->method('getRequestTime')->willReturn($this->now);
+    $mailer=$this->createMock(\Drupal\famtastic_pipeline\Service\OutreachMailer::class);$mailer->method('fromAddress')->willReturn('sender@example.test');$mailer->expects($this->once())->method('sendFrozenAcquisition')->willReturn('<synthetic-generic-not-real@example.test>');
+    $adapter=new \Drupal\famtastic_pipeline\Service\AcquisitionSampleExactAdapter($this->db,$time,$this->ledger,$this->sequences,$mailer);
+    $bad=$manifest;$bad['provider_permission_receipt']['reference']='different-permission';
+    try{$adapter->dispatch($bad,$this->genericSignature($bad));$this->fail('Different provider receipt admitted.');}catch(\InvalidArgumentException $e){$this->assertSame('generic_dispatch_receipt_binding_required',$e->getMessage());}
+    $this->assertSame(0,(int)$this->db->select('famtastic_acquisition_dispatch','d')->countQuery()->execute()->fetchField());
+    $this->assertFalse($adapter->dispatch($manifest,$this->genericSignature($manifest))['inbox_delivery']);
+    $this->assertTrue($adapter->dispatch($manifest,$this->genericSignature($manifest))['duplicate']);
+    $this->db->update('famtastic_acquisition_dispatch')->fields(['status'=>'uncertain'])->condition('message_id',$manifest['message_id'])->execute();
+    try{$adapter->dispatch($manifest,$this->genericSignature($manifest));$this->fail('Uncertain generic send retried.');}catch(\RuntimeException $e){$this->assertSame('acquisition_dispatch_reserved_or_uncertain_no_retry',$e->getMessage());}
+  }
+
+  public function testGenericContactExistingVerifiedCustomerPurchaseStopsBeforeClaim(): void {
+    $this->db->query('CREATE TABLE famtastic_commerce_fulfillment (id INTEGER PRIMARY KEY, customer_id INTEGER)');
+    $this->db->query('INSERT INTO famtastic_commerce_fulfillment VALUES (1,1)');
+    $this->db->update('famtastic_customer')->fields(['verified_at'=>$this->now,'prospect_id'=>2])->condition('id',1)->execute();
+    $invitation=$this->prepare();$auth=$this->genericAuthorizationReceipt($invitation);$this->samples->authorizeGeneric($invitation['id'],$auth,$this->genericSignature($auth));
+    $sequence=$this->sequences->stageGenericD0($invitation['id'],'owner@example.test',$invitation['token']);
+    $this->assertSame('purchase',$this->db->select('famtastic_acquisition_sequence','s')->fields('s',['stop_reason'])->condition('id',$sequence['sequence_id'])->execute()->fetchField());
+    $this->assertSame([],$this->sequences->due($sequence['sequence_id']));
+  }
+
+  public function testDisabledNativeSmtpCannotAuthorizeGenericEvidence(): void {
+    $invitation=$this->prepare();$auth=$this->genericAuthorizationReceipt($invitation);
+    $smtp=$this->createMock(\Drupal\Core\Config\ImmutableConfig::class);$smtp->method('get')->willReturnCallback(static fn(string $key):mixed=>['smtp_on'=>FALSE,'smtp_host'=>'smtp.synthetic.invalid','smtp_port'=>587,'smtp_username'=>'sender@example.test','smtp_from'=>'sender@example.test','smtp_protocol'=>'tls'][$key]??NULL);
+    $factory=$this->createMock(\Drupal\Core\Config\ConfigFactoryInterface::class);$factory->method('get')->willReturn($smtp);
+    $time=$this->createMock(TimeInterface::class);$time->method('getRequestTime')->willReturn($this->now);
+    $samples=new AcquisitionSampleService($this->db,$time,$this->ledger,$factory);
+    $this->expectExceptionMessage('acquisition_native_account_required');
+    $samples->authorizeGeneric($invitation['id'],$auth,$this->genericSignature($auth));
   }
 
 }

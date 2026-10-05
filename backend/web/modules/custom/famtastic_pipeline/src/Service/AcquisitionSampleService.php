@@ -17,6 +17,7 @@ final class AcquisitionSampleService {
     private readonly Connection $database,
     private readonly TimeInterface $time,
     private readonly OperationalLedger $ledger,
+    private readonly ?\Drupal\Core\Config\ConfigFactoryInterface $configFactory = NULL,
   ) {}
 
   /** Staff/tool-only creation. No public issuance endpoint, sending or generation. */
@@ -94,7 +95,7 @@ final class AcquisitionSampleService {
     $recipe['html_snapshot'] = (string) file_get_contents($path);
     $email = mb_strtolower(trim((string) $prospect['public_email']));
     $emailAvailable = (bool) filter_var($email, FILTER_VALIDATE_EMAIL);
-    $context = ['classification' => 'supplied_generic_preparation', 'industry' => $industry, 'business_name_provenance' => $suppliedBusinessName === '' ? 'unknown' : 'stored_supplied', 'industry_provenance' => $industry === '' ? 'unknown' : 'stored_supplied', 'niche_verified' => FALSE, 'owner_name_provenance' => 'unknown', 'contact_ownership' => 'unknown', 'delivery_eligibility' => 'unassessed', 'account_continuation_available' => $emailAvailable, 'recipe_review' => $internalCandidate ? 'internal_candidate_owner_pending' : 'approved'];
+    $context = ['classification' => 'supplied_generic_preparation', 'industry' => $industry, 'business_name_provenance' => $suppliedBusinessName === '' ? 'unknown' : 'stored_supplied', 'industry_provenance' => $industry === '' ? 'unknown' : 'stored_supplied', 'niche_verified' => FALSE, 'owner_name_provenance' => 'unknown', 'contact_ownership' => 'unknown', 'delivery_eligibility' => 'unassessed', 'account_continuation_available' => $emailAvailable, 'recipe_review' => $internalCandidate ? 'internal_candidate_owner_pending' : (($recipe['review']['status'] ?? '') === 'approved_campaign_artifact' ? 'owner_approved_campaign_artifact' : 'approved'), 'component_studio_registration_proved' => ($recipe['recipe_ref']['status'] ?? '') === 'registered'];
     $bindings['_preparation'] = $context;
     $evidence = hash('sha256', json_encode([$prospectId, $campaignId, $email, $niche, $recipe, $bindings, $expires], JSON_THROW_ON_ERROR));
     $transaction = $this->database->startTransaction();
@@ -112,6 +113,29 @@ final class AcquisitionSampleService {
     ])->execute();
     unset($transaction);
     return ['id' => $id, 'duplicate' => FALSE, 'token' => $token];
+  }
+
+  /** Explicit internal delivery-evidence transition; never stages or sends. */
+  public function authorizeGeneric(int $invitationId, array $authorization, string $signature): array {
+    $secret = (string) getenv('FAMTASTIC_ACQUISITION_OWNER_SIGNING_SECRET');
+    $json = json_encode($authorization, JSON_THROW_ON_ERROR);
+    if (strlen($secret) < 32 || !hash_equals(hash_hmac('sha256', $json, $secret), $signature)) throw new \InvalidArgumentException('acquisition_owner_signature_invalid');
+    $transaction = $this->database->startTransaction();
+    $sample = $this->database->select('famtastic_acquisition_sample', 's')->fields('s')->condition('id', $invitationId)->forUpdate()->execute()->fetchAssoc();
+    $context = $sample ? json_decode((string) $sample['bindings'], TRUE) : [];
+    if (!$sample || ($context['_preparation']['classification'] ?? '') !== 'supplied_generic_preparation' || !AcquisitionSampleGuard::live($sample, $this->time->getRequestTime())) throw new \InvalidArgumentException('generic_prepared_invitation_required');
+    $prospectEmail = $this->database->select('famtastic_prospect', 'p')->fields('p', ['public_email'])->condition('id', (int) $sample['prospect_id'])->execute()->fetchField();
+    if (!filter_var($prospectEmail, FILTER_VALIDATE_EMAIL) || !hash_equals($sample['recipient_hash'], $this->ledger->contactHash((string) $prospectEmail)) || $this->ledger->isSuppressed((string) $prospectEmail)) throw new \InvalidArgumentException('sample_recipient_unavailable');
+    AcquisitionSampleGuard::genericAuthorization($authorization, $sample, AcquisitionSampleGuard::senderAccount($this->configFactory), $this->time->getRequestTime());
+    $hash = hash('sha256', $json);
+    if (!empty($sample['eligible_at'])) {
+      if (!hash_equals($sample['qualification_ref'], $hash)) throw new \InvalidArgumentException('generic_authorization_replay_changed');
+      return ['invitation_id' => $invitationId, 'authorization_hash' => $hash, 'duplicate' => TRUE, 'staged' => FALSE];
+    }
+    $this->ledger->recordEvent('acquisition:generic:authorization:' . $invitationId . ':' . $hash, 'acquisition.generic_authorized', ['authorization' => $authorization, 'signature' => $signature], (int) $sample['prospect_id'], (int) $sample['campaign_id']);
+    $this->database->update('famtastic_acquisition_sample')->fields(['qualification_ref' => $hash, 'eligible_at' => $this->time->getRequestTime()])->condition('id', $invitationId)->isNull('eligible_at')->execute();
+    unset($transaction);
+    return ['invitation_id' => $invitationId, 'authorization_hash' => $hash, 'duplicate' => FALSE, 'staged' => FALSE];
   }
 
   /** Strictly read-only: scanners cannot register, prefer, claim or create jobs. */

@@ -1,0 +1,30 @@
+{
+  "smtp_on": true,
+  "host": "famtasticdesigns.com",
+  "port": "465",
+  "username_present": true,
+  "password_present": true,
+  "transactional_transport": "smtp",
+  "alternative_provider_config_names": [],
+  "alternative_environment_credential_presence": {
+    "MAILFORGE_API_KEY": false,
+    "RESEND_API_KEY": false,
+    "POSTMARK_SERVER_TOKEN": false,
+    "SENDGRID_API_KEY": false,
+    "MAILGUN_API_KEY": false,
+    "AWS_SES_ACCESS_KEY_ID": false
+  },
+  "authentication_tested": false,
+  "message_sent": false,
+  "scope": "Active native Drupal SMTP configuration; matching provider configs and named environment presence only. Does not enumerate every stored external credential.",
+  "owner_selected_sender": "hello@famtasticdesigns.com",
+  "selection_source": "Direct owner reply in implementation chat, 2026-10-05",
+  "selected_identity_readback": {
+    "smtp_username_matches_selected": true,
+    "smtp_from_matches_selected": true,
+    "system_site_mail_matches_selected": false,
+    "read_only": true,
+    "message_sent": false
+  },
+  "account_recipient_permission_established": false
+}

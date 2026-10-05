@@ -1,0 +1,48 @@
+{
+  "unsubscribe_routes": [
+    {
+      "route": "famtastic_pipeline.email_unsubscribe",
+      "path": "/api/pipeline/email/unsubscribe/{unsubscribe_key}",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "route": "famtastic_pipeline.email_unsubscribe_verified_cold",
+      "path": "/api/pipeline/email/unsubscribe/confirm/{unsubscribe_key}",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    }
+  ],
+  "campaign_unsubscribe_key_rows": 260,
+  "read_only": true,
+  "test_email_sent": false,
+  "suppression_service_present": true,
+  "public_authentication_dns": {
+    "famtasticdesigns.com": {
+      "lookup_exit": 0,
+      "record_present": true,
+      "spf_published": true,
+      "dmarc_published": false,
+      "dkim_public_key_published": false
+    },
+    "_dmarc.famtasticdesigns.com": {
+      "lookup_exit": 0,
+      "record_present": true,
+      "spf_published": false,
+      "dmarc_published": true,
+      "dkim_public_key_published": false
+    },
+    "default._domainkey.famtasticdesigns.com": {
+      "lookup_exit": 0,
+      "record_present": true,
+      "spf_published": false,
+      "dmarc_published": false,
+      "dkim_public_key_published": true
+    }
+  },
+  "historical_gmail_authentication": "SPF/DKIM/DMARC passes recorded2026-09-19 for existing standard/v2 SMTP owner notices; exact receipts in docs/marketing/local-video-studio",
+  "current_message_authentication": "No fresh message sent; DNS publication is not a new received-message header proof"
+}

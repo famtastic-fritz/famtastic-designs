@@ -1,0 +1,32 @@
+{
+  "schema": "famtastic.acquisition-generic-bundle-proof.v1",
+  "checks": [
+    {
+      "name": "approved_generic_bundle_exact_ten_files",
+      "passed": true
+    },
+    {
+      "name": "tamper_rejected",
+      "passed": true
+    },
+    {
+      "name": "rehashing_manifest_cannot_replace_owner_approval",
+      "passed": true
+    },
+    {
+      "name": "historical_strict_bundle_preserved",
+      "passed": true
+    },
+    {
+      "name": "generic_scope_rejects_historical_bundle",
+      "passed": true
+    }
+  ],
+  "file_count": 10,
+  "contains_declined_six": false,
+  "contains_private_recipients": false,
+  "dispatch_authorized": false,
+  "deployed": false,
+  "manifest_source_revision": "1af4c35d8001ea40aa49101af548a92e38354260",
+  "note": "Working source bundle checked locally; rebuild from final clean candidate before release."
+}

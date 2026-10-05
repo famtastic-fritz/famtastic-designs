@@ -1,0 +1,48 @@
+{
+  "schema": "famtastic.acquisition-paced-batch-proposal.v1",
+  "status": "proposed_not_staged",
+  "owner_paced_sending_intent": true,
+  "actual_execution_authorized_by_runtime": false,
+  "new_campaign_only": true,
+  "historical_260_restarted": false,
+  "selected_supplied_segment": "Beauty, Hair Styling & Braiding",
+  "selected_count": 25,
+  "eligible_count": 0,
+  "native_issued": false,
+  "pacing": {
+    "first_wave": 5,
+    "second_wave": 10,
+    "third_wave": 10,
+    "minimum_spacing_minutes": 10,
+    "provider_limit_may_require_slower": true,
+    "review_pause_after_sent_counts": [
+      5,
+      15,
+      25
+    ],
+    "automatic_followups": false,
+    "future_total_daily_budget_including_followups": [
+      200,
+      300
+    ],
+    "future_budget_verified": false
+  },
+  "private_proposal_sha256": "6dbdfa8443c3122b45a86252acadd5ab6b4987a006fe7fa0f5f0fda2f0868400",
+  "selected_history_covered": 25,
+  "source_counts": {
+    "new_prepared": 1000,
+    "historical_separate": 260,
+    "cross_overlap": 0
+  },
+  "required_current_inputs": [
+    "Applicable sender permitted-use receipt and current account capacity",
+    "Exact approved source integrated/pushed to main; production apply authority",
+    "Hosted opaque invitation/registration/unsubscribe/stop-path proof",
+    "Per-message recipient/content/approval manifest and operator outcome review"
+  ],
+  "owner_selected_sender": "hello@famtasticdesigns.com",
+  "selected_smtp_identity_matches": true,
+  "account_recipient_permission_established": false,
+  "batch_size_is_owner_requirement": false,
+  "actual_size_and_rate_depend_on_available_account_capacity": true
+}

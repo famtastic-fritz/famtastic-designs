@@ -9,10 +9,10 @@ use Drupal\Core\Site\Settings;
 /** Reviewed source inputs only; serving uses immutable database snapshots. */
 final class AcquisitionSampleArtifacts {
   public static function path(string $relative): string {
-    if (!preg_match('#^marketing/campaigns/acquisition-199/(?:templates/[a-z0-9_]+\.html|generic-review/beauty-template\.html|assets/[a-z0-9_-]+\.(?:png|jpg)|messages\.json)$#D', $relative)) throw new \InvalidArgumentException('acquisition_artifact_path_invalid');
+    if ($relative !== 'docs/research/acquisition-199/CREATIVE-APPROVAL.json' && !preg_match('#^marketing/campaigns/acquisition-199/(?:templates/[a-z0-9_]+\.html|generic-review/(?:beauty-(?:template|email|lab)\.html|beauty-email\.txt|beauty-lab\.css|beauty-practice\.js|assets/(?:hair-studio\.jpg|connect-qr\.png|famtastic-designs-logo-v1\.png))|assets/[a-z0-9_-]+\.(?:png|jpg)|messages\.json)$#D', $relative)) throw new \InvalidArgumentException('acquisition_artifact_path_invalid');
     $bundle = class_exists(Settings::class) ? (string) Settings::get('famtastic_acquisition_bundle_root', '') : '';
     if ($bundle === '') {
-      $sourceRoot = realpath(dirname(__DIR__, 7) . '/marketing/campaigns/acquisition-199');
+      $sourceRoot = realpath(dirname(__DIR__, 7) . ($relative === 'docs/research/acquisition-199/CREATIVE-APPROVAL.json' ? '/docs/research/acquisition-199' : '/marketing/campaigns/acquisition-199'));
       $path = realpath(dirname(__DIR__, 7) . '/' . $relative);
       if (!$sourceRoot || !$path || !str_starts_with($path, $sourceRoot . '/') || is_link(dirname(__DIR__, 7) . '/' . $relative)) throw new \RuntimeException('acquisition_source_artifact_unavailable');
       return $path;

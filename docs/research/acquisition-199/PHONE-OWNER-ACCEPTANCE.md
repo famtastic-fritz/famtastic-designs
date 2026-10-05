@@ -1,5 +1,7 @@
 # Phone owner workflow — release-matched acceptance
 
+Current owner result (2026-10-05): Fritz approved the NEW beauty email/Lab visual for exact hashes in CREATIVE-APPROVAL.json. Generic-review-01 visual approval is complete. Generic-continue-01 and physical-device/hosted tasks remain pending. Older revision rows below are historical records; they do not revoke the new approval.
+
 Application revision: e953d06bb16643f888bdcc3c1bfb864d15ddc125, as sealed in SOURCE-CHECKPOINT.md. Owner task IDs match CAPABILITY-MATRIX.md; every owner result is pending.
 
 The campaign leads with running useful business work from a phone. Sample Lab includes a local interactive owner walkthrough tailored to the three approved inquiry types. It reuses the current owner/request/status/content interaction vocabulary, not a second connected business platform.

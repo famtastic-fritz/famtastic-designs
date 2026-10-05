@@ -1,0 +1,71 @@
+{
+  "schema": "famtastic.acquisition-existing-resend-assessment.v1",
+  "owner_requested_fallback_only": true,
+  "no_additional_bill_required": true,
+  "keychain_identifier": "studio.resend.api_key",
+  "identifier_indexed": true,
+  "keychain_item_present": false,
+  "secret_value_read": false,
+  "existing_studio_config_present": true,
+  "existing_studio_notification_provider": "resend",
+  "native_campaign_resend_connected": false,
+  "domains_owner_reported_verified": [
+    "reports.famtasticinc.com",
+    "send.mbsh96reunion.com"
+  ],
+  "domains_live_api_verified": false,
+  "mbsh_client_domain_allowed_for_famtastic_campaign": false,
+  "provider_policy_source": "https://resend.com/legal/acceptable-use",
+  "provider_policy_checked_date": "2026-10-05",
+  "provider_policy_allows_unsolicited_cold_outreach": false,
+  "provider_policy_requires_explicit_opt_in": true,
+  "account_plan_remaining_quota_and_bill_verified": false,
+  "api_calls_made": 0,
+  "messages_sent": 0,
+  "config_mutations": 0,
+  "cold_campaign_integration_created": false,
+  "zero_new_spend_options": [
+    "Keep selected native hello@famtasticdesigns.com for verified GoDaddy-permitted recipients after exact hosted release.",
+    "Use existing Resend only for legitimate consented/transactional purpose within verified existing allowance, on a FAMtastic-owned approved domain; separate approved adapter would be required."
+  ],
+  "actual_dependency": "Hosted approved generic release and actual appropriate provider/recipient permission; domain verification, stored credential presence and lower volume do not supply that permission.",
+  "keychain_lookup_return_code": 44,
+  "keychain_presence_result": "item_not_found",
+  "indexed_resend_credential_metadata_checks": [
+    {
+      "identifier": "studio.resend.api_key",
+      "result": "item_not_found"
+    },
+    {
+      "identifier": "alreadybuilt.resend.sending_key",
+      "result": "item_not_found"
+    },
+    {
+      "identifier": "alreadybuilt.resend.live_webhook",
+      "result": "item_not_found"
+    }
+  ],
+  "local_environment_presence": {
+    "file_exists": true,
+    "source": "Existing Site Studio local environment",
+    "resend_api_key_configured_nonempty": true,
+    "resembles_resend_key_format": true,
+    "resend_variable_names": [
+      "RESEND_FROM_DOMAIN",
+      "RESEND_FROM_NOREPLY",
+      "RESEND_FROM_COMMITTEE",
+      "RESEND_FROM_HARRY",
+      "RESEND_REPLY_TO",
+      "RESEND_API_KEY"
+    ],
+    "secret_values_printed": false,
+    "credential_values_exported": false,
+    "api_authentication_tested": false,
+    "existing_routes_mutated": false
+  },
+  "keychain_absence_not_all_credential_absence": true,
+  "dns_account_domain_changes_authorized": false,
+  "dns_changes_made": 0,
+  "additional_provider_catalog_research_required": false,
+  "batch_size_25_is_owner_requirement": false
+}

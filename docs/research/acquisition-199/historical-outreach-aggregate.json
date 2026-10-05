@@ -1,0 +1,47 @@
+{
+  "schema": "famtastic.acquisition-historical-outreach.v1",
+  "checked_at": "2026-10-05T22:31:54+00:00",
+  "read_only": true,
+  "campaign": "cold-260-aug-2026",
+  "customer_sends": false,
+  "contact_data_exported": false,
+  "account_policy_exception_proved": false,
+  "current_rate_capacity": "not_available_from_this_readback",
+  "campaign_exists": true,
+  "prospect_rows": 260,
+  "native_campaign_messages": {
+    "rows": 260,
+    "status_counts": {
+      "sent": 260
+    },
+    "provider_counts": {
+      "cpanel_smtp": 260
+    },
+    "template_counts": {
+      "cold_outreach:v1": 260
+    },
+    "provider_acceptance_id_present": 260,
+    "sent_timestamp_present": 260,
+    "delivered_timestamp_present": 0,
+    "bounced_timestamp_present": 0,
+    "complained_timestamp_present": 0,
+    "unsubscribed_timestamp_present": 0,
+    "frozen_body_present": 260,
+    "body_unsubscribe_link_present": 260,
+    "body_postal_footer_present": 260
+  },
+  "notification_outbox": {
+    "explicit_campaign_or_exact_provider_link_rows": 0,
+    "status_counts": [],
+    "template_counts": [],
+    "recipient_only_unattributed_rows": 0,
+    "provider_id_present": 0,
+    "sent_timestamp_present": 0
+  },
+  "campaign_event_counts": {
+    "campaign.work.quarantined": 243,
+    "email.sent": 245,
+    "lead.imported": 260
+  },
+  "historical_contact_consent_status_counts": []
+}
