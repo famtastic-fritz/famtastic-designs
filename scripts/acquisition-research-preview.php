@@ -7,19 +7,22 @@ foreach(['BrandedEmail','AcquisitionSampleArtifacts','AcquisitionSampleGuard','A
 $data=json_decode(file_get_contents($root.'/marketing/campaigns/acquisition-199/messages.json'),true,512,JSON_THROW_ON_ERROR);
 $draft=array_values(array_filter($data['messages'],fn(array $d):bool=>$d['id']==='mobile_detailing_d0'))[0];
 $business='Schwarzbär Global Mobile Car Detailing';
-array_unshift($draft['paragraphs'],'Your publicly posted mobile detailing and restoration offering prompted one question: would a clear vehicle-and-location quote request help you review complex jobs before confirming them? This is a discovery question, not a finding about your current process.');
-$draft['subject']='Two illustrative directions for Schwarzbär Global';
+$reviewQuestion='Your publicly posted mobile detailing and restoration offering prompted one question: would a clear vehicle-and-location quote request help you review complex jobs before confirming them? This is a discovery question, not a finding about your current process.';
 $qr=$root.'/marketing/campaigns/acquisition-199/assets/connect-qr.png';
 $result=\Drupal\famtastic_pipeline\Service\AcquisitionSampleEmail::compile($draft,['business_name'=>$business],str_repeat('ab',32),str_repeat('cd',24),hash_file('sha256',$qr),'1729 NW St. Lucie West Blvd #1181, Port Saint Lucie, FL 34986');
-$html=$result['html'];
+// Canonical draft bytes stay unchanged. This unapproved question is appended
+// only to a clearly labeled research review, never to the native frozen send.
+$greeting='Hello, '.htmlspecialchars($business,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8').',';
+$html=str_replace('<p>'.$greeting.'</p>','<p>'.$greeting.'</p><p>'.htmlspecialchars($reviewQuestion,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8').'</p>',$result['html']);
 $html=str_replace('https://famtasticdesigns.com/samples/'.str_repeat('ab',32),'https://example.invalid/research-invitation-not-bound',$html);
 $html=str_replace('https://famtasticdesigns.com/web/api/pipeline/email/unsubscribe/confirm/'.str_repeat('cd',24),'https://example.invalid/research-unsubscribe-not-bound',$html);
 $html=str_replace(\Drupal\famtastic_pipeline\Service\BrandedEmail::LOGO_URL,'../../../marketing/campaigns/acquisition-199/assets/famtastic-designs-logo-v1.png',$html);
 foreach($result['attachments'] as $attachment){$path=$attachment['purpose']==='digital-card'?'marketing/campaigns/acquisition-199/assets/connect-qr.png':$attachment['source_path'];$html=str_replace('cid:'.$attachment['cid'],'../../../'.$path,$html);}
-$note='<div role="note" style="padding:18px;background:#fff4c2;color:#302400;font:14px/1.6 Arial">UNSENT RESEARCH REVIEW · business name is advertiser-presented; independent owner/contact unknown. No recipient is selected. Source restrictions prevent unsolicited contact using Craigslist information. Invitation/unsubscribe deliberately unbound. <a href="measurement-prospect-research.md">Research card and factual limits</a></div>';
+$note='<div role="note" style="padding:18px;background:#fff4c2;color:#302400;font:14px/1.6 Arial">UNSENT RESEARCH REVIEW · business name is advertiser-presented; independent owner/contact unknown. No recipient is selected. Source restrictions prevent unsolicited contact using Craigslist information. Discovery question appended for review; it is not approved native message content. Invitation/unsubscribe deliberately unbound. <a href="measurement-prospect-research.md">Research card and factual limits</a></div>';
 $html=preg_replace('/(<body[^>]*>)/','$1'.$note,$html,1);
 $out=$root.'/docs/research/acquisition-199/representative-mobile-detailing.html';file_put_contents($out,$html);
 $body=str_replace(['https://famtasticdesigns.com/samples/'.str_repeat('ab',32),'https://famtasticdesigns.com/web/api/pipeline/email/unsubscribe/confirm/'.str_repeat('cd',24)],['https://example.invalid/research-invitation-not-bound','https://example.invalid/research-unsubscribe-not-bound'],$result['body']);
+$body=str_replace("Hello, {$business},\n\n","Hello, {$business},\n\n{$reviewQuestion}\n\n",$body);
 file_put_contents(dirname($out).'/representative-mobile-detailing.txt',"UNSENT REVIEW; no eligible recipient/contact; see measurement-prospect-research.md\n\n".$body);
 foreach (['detailing_precision','detailing_route_ready'] as $recipe) {
   $template=file_get_contents($root.'/marketing/campaigns/acquisition-199/templates/'.$recipe.'.html');
