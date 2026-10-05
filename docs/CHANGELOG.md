@@ -3,6 +3,7 @@
 ## 2026-10-04 — Private Textbee lab setup
 
 - Added hidden macOS Keychain setup, redacted readiness, one-send confirmation and local credential removal to the Fritz-only fictional Textbee probe. No customer SMS route or hosted integration was enabled.
+- Recorded the exact source-bound owner setup/check/forget task with acceptance pending; no private key or phone is stored in the repository record.
 
 ## 2026-10-04 — Customer SMS technical lab source
 

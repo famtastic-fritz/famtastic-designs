@@ -8,6 +8,14 @@ On Fritz's Mac, run `node scripts/textbee-lab.mjs --setup` in an interactive ter
 
 The older environment-only path remains for explicitly controlled automation: `TEXTBEE_LAB_ENABLED=1`, `TEXTBEE_API_KEY`, `TEXTBEE_LAB_TO` (Fritz-controlled E.164 number), and `TEXTBEE_LAB_ACK=FRITZ_ONLY_FICTIONAL_TEST`. If either credential value is provided through the environment, the script never mixes it with a Keychain value. This path should use a private secret channel, not a pasted shell command. The script makes one send attempt only; an uncertain outcome must be inspected in Textbee before another attempt.
 
+## Release-matched review and owner task
+
+| Capability ID | Owner job and action | Saved result, visibility and reversal | Evidence and provider state | Owner acceptance and next owner |
+| --- | --- | --- | --- | --- |
+| `famtastic.textbee.fictional-lab-setup.v1` | Fritz uses `--setup` on his Mac to store a Textbee key and his own test phone, then `--check`. `--send` is a separate, confirmed action. | Two local macOS Keychain items; no agency or customer application state. `--forget` removes them. `--check` prints only redacted readiness. | `local_tested` no-send and redaction at source `254f64eef4b43df46ca39cd0d451d51c73d2b643` on 2026-10-04; actual Keychain entry and Textbee receipt `unverified`. Provider state `connected_unverified` from Fritz's reported earlier test; this new local Keychain setup is still unconfigured. | `pending`: Fritz must enter his new key and own number in the open private terminal, inspect `--check`, then decide whether to send. No customer consumption; Component Studio source is `install_tested` in this agency lab. |
+
+Owner task `TL-SETUP-01` is bound to the source revision above. Intended owner: Fritz, on his Mac terminal. Preconditions: Textbee account and an API key already obtained outside this repo; own E.164 test phone. Run `node scripts/textbee-lab.mjs --setup`, paste the key and number only into the hidden Keychain prompts, then run `node scripts/textbee-lab.mjs --check`. Expected result: `key_present: true`, `test_recipient_valid: true`, `ready: true`, `sent: false`; no public page or message changes. Reversal: `node scripts/textbee-lab.mjs --forget` with typed `FORGET`. Uncoached owner observation: pending. The Keychain prompt was opened on 2026-10-04, but no credential entry or check result was observed by Codex.
+
 The output reports `provider_accepted`, not handset delivery. Confirm recipient receipt and a YES reply on the test devices/Textbee dashboard. A signed webhook into an authenticated application is a later integration, not proven by this CLI. Textbee's [webhook specification](https://textbee.dev/docs/webhooks) requires public HTTPS, raw-body HMAC verification and duplicate suppression. Remove the temporary test subscription after any tunnel-based lab.
 
 ## Future FAMtastic Designs service
