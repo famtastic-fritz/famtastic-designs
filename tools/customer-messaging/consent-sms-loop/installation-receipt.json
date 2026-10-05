@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "id": "consent-sms-loop",
+  "version": "0.1.0",
+  "source_repository": "https://github.com/famtastic-fritz/component-studio",
+  "binding": null,
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "1aba1afeaa9afa59478c48a8a12ddd7051851ecbb26f03a28e2bdad159bc5f3a"
+    },
+    {
+      "path": "design.md",
+      "sha256": "dfcd536991b1c5731e4930569c0358f7c6d3a48df155fa52861a7bf9fcfe33a8"
+    },
+    {
+      "path": "package.json",
+      "sha256": "c796c2d38501ea3446437d49a91b1236d6d6118e518d8a2b7da037c5f09a19bc"
+    },
+    {
+      "path": "src/index.mjs",
+      "sha256": "53fc9c48d8a66099d3f84681edd57b6fd862198d2a29600b9a05de3523eaeb70"
+    },
+    {
+      "path": "tests/contract.test.mjs",
+      "sha256": "e062cb11e825ee3224f27d0fb0ad25d02a35144522dd99a868d3b3459469e843"
+    }
+  ]
+}

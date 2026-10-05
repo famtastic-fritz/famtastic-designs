@@ -1,5 +1,9 @@
 # FAMtastic Designs site learnings
 
+## 2026-10-04 — Agency mail and customer SMS are different channels
+
+The existing mailbox/SMTP offer cannot serve as an approved business SMS transport; T-Mobile prohibits business traffic on email-to-text. A personal Textbee phone can prove transport mechanics only. Keep each customer's consent, suppression, appointment state and outbox in that customer's site. A reusable contract belongs in Component Studio; this agency repo may consume a pinned copy for controlled test or staff tooling, never an adjacent checkout at runtime.
+
 ## 2026-10-02 — Delivery, ownership, fulfillment, and attribution are four contracts
 
 - A complete agency handoff needs separate records for service delivery, ownership/permissions, customer commerce fulfillment, and brand/creator-credit use. Scattered policies are too easy to apply inconsistently.
