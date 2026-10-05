@@ -1,5 +1,11 @@
 # FAMtastic Designs site learnings
 
+## 2026-10-04 — Keep reusable SMS logic separate from provider lab and customer truth
+
+**Observation:** A successful one-off Textbee transport test does not provide a customer appointment ledger, consent, quota, template administration or reply authority. The existing Component Studio adapter is a pinned, hashed lab copy; editing it inside the agency site would break provenance.
+
+**Guidance:** Keep a disabled, provider-neutral workflow source candidate beside the pinned lab. Each independent customer site must atomically recheck confirmed appointment/version, SMS consent, suppression, unique send key and quota before one provider call; store outcomes and stop automatic retries after uncertainty. Record business sender, provider connection, actual delivery and owner usability per installation. Upstream the reusable package to Component Studio through a separately reviewed version and receipt before calling it Studio-consumed.
+
 ## 2026-10-04 — Give SMS labs a private setup path
 
 **Observation:** The first Textbee technical probe required a real API key and test phone in environment variables. Fritz proved Textbee independently and asked for a secure prompt; pasting secrets into a command, chat or transcript would make repeat use fragile.

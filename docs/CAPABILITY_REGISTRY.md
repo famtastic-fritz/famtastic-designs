@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-10-04 — Reusable SMS workflow core
+
+**Source candidate; local contract tests only.** `tools/customer-messaging/sms-workflow-core` provides a disabled-by-default provider-neutral orchestration API and customer-host install contract for confirmed appointment SMS. Eight fictional Node tests cover pre-send eligibility, quota math, template bounds, stable idempotency, reserve-before-one-send, duplicate suppression, uncertain outcomes and status reconciliation. It has no installed Drupal or Shay route, durable host adapter, scheduler, business sender, verified customer consent or live production reminders. Each customer installation needs its own transactional ledger and release proof. The existing hashed Component Studio `consent-sms-loop` Textbee lab copy is unchanged.
+
 ## 2026-10-04 — Textbee fictional lab private setup
 
 **Local source and no-send path tested; provider proof owner-reported.** The Fritz-only CLI stores the API key through a hidden macOS Keychain prompt and the exact test phone through a validated visible prompt into a private 0600 local allowlist file. It reports redacted readiness, requires typed confirmation for one fixed fictional SMS, and can remove its local items. Automated local tests cover no-secret output, file permissions and noninteractive/no-ack refusal. Fritz reports a Textbee phone test, but this source change has no independently inspected send, delivery or reply receipt. There is no customer integration, hosted sender, booking reminder or production rollout. Evidence: `scripts/textbee-lab.test.mjs`, `scripts/textbee-lab-phone.test.mjs` and `docs/products/customer-messaging-pilot.md`.

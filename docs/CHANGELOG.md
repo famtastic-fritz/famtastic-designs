@@ -1,5 +1,9 @@
 # Product changelog
 
+## 2026-10-04 — Reusable SMS workflow source candidate
+
+- Added a disabled-by-default, provider-neutral SMS workflow core with explicit consent, suppression, template, quota, atomic reservation, idempotency, outcome audit and status contracts. Fictional local tests pass; no customer sender, scheduler or site integration was enabled.
+
 ## 2026-10-04 — Private Textbee lab setup
 
 - Replaced the hidden test-phone Keychain entry with a visible, validated local prompt and private 0600 allowlist file. The API key stays in Keychain; `--check` remains redacted and setup sends nothing.
