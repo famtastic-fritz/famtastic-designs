@@ -1,0 +1,14 @@
+{
+  "evaluation_id": "posteval_91e80612455a4e7a",
+  "report_path": "/Users/famtastic-fritz/Development/FAMtastic/data-center/reports/post-eval/posteval_91e80612455a4e7a.md",
+  "report_sha256": "d5b2accb094ace91724caeb6c48f7b0190be165f85287a0c0267bd68dda57983",
+  "record_path": "/Users/famtastic-fritz/Development/FAMtastic/data-center/post-eval/posteval_91e80612455a4e7a.json",
+  "source_commit": "326266f46d2bb00101dc18d938eae4b373396bc4",
+  "classification": "changed",
+  "creative_approved": true,
+  "owner_journey_accepted": false,
+  "hosted_release_proved": false,
+  "dispatch_intent": "Paced sending approved in principle; actual execution blocked by gates",
+  "customer_sends": 0,
+  "new_spend": 0
+}

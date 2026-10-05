@@ -14,5 +14,11 @@
     "staged_matches": 0
   },
   "user_permission": "requested asynchronously; pending",
-  "dispatch": "HOLD"
+  "dispatch": "HOLD",
+  "latest_application_source": "326266f46d2bb00101dc18d938eae4b373396bc4",
+  "latest_application_local_only": true,
+  "creative_approved": true,
+  "paced_send_intent_approved": true,
+  "customer_sends": 0,
+  "export_rejections_retried": false
 }

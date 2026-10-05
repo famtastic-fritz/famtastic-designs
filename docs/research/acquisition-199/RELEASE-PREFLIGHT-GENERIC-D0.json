@@ -1,0 +1,28 @@
+{
+  "schema": "famtastic.acquisition-generic-release-preflight.v1",
+  "source_commit": "326266f46d2bb00101dc18d938eae4b373396bc4",
+  "remote_main": "eef442be41006188f4ed72ae5657bebcc4a9baac",
+  "clean_candidate": true,
+  "mode": "without_apply",
+  "front": {
+    "chunk_id": "39751d",
+    "wall_time_seconds": 0.245475458,
+    "exit_code": 1,
+    "original_token_count": 45,
+    "output": "Refusing deployment: local HEAD is not the current origin/main commit.\nlocal HEAD:  326266f46d2bb00101dc18d938eae4b373396bc4\norigin/main: eef442be41006188f4ed72ae5657bebcc4a9baac\n"
+  },
+  "backend": {
+    "chunk_id": "ea189c",
+    "wall_time_seconds": 6.887864125,
+    "exit_code": 1,
+    "original_token_count": 70,
+    "output": "tput: No value for $TERM and no -T specified\n{\"clock_installed\":true,\"broad_dispatch\":\"not_invoked\"}\nRefusing deployment: local HEAD is not the current origin/main commit.\nlocal HEAD:  326266f46d2bb00101dc18d938eae4b373396bc4\norigin/main: eef442be41006188f4ed72ae5657bebcc4a9baac\n"
+  },
+  "blocked_by": "Source candidate has not been exported/integrated/pushed to current main",
+  "backend_read_only_clock": true,
+  "broad_dispatch_invoked": false,
+  "apply": false,
+  "source_upload": false,
+  "private_contact_upload": false,
+  "deployed": false
+}
