@@ -16,7 +16,7 @@ try{
   assert.equal(await page.locator('img').evaluateAll(images=>images.filter(i=>!i.complete||i.naturalWidth===0).length),0);
   await page.screenshot({path:new URL(`email-${viewport.width}.png`,out).pathname,fullPage:true});
   await page.getByRole('link',{name:'See what your website could look like',exact:true}).click();
-  await page.getByRole('heading',{name:/Good hair/}).waitFor();await page.evaluate(()=>document.fonts.ready);
+  await page.getByRole('heading',{name:/Good hair/}).waitFor();assert.equal(await page.locator('.brand small').innerText(),'HAIR CARE · STYLE · CONFIDENCE');assert.ok(!/\b(?:caf[eé]|coffee|espresso|roastery)\b/iu.test(await page.locator('body').innerText()));await page.evaluate(()=>document.fonts.ready);
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Lab overflow');
   assert.equal(await page.locator('a[href=""]').count(),0);
   assert.equal(await page.locator('img').evaluateAll(images=>images.filter(i=>!i.complete||i.naturalWidth===0).length),0);

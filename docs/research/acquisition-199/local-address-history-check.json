@@ -1,0 +1,31 @@
+{
+  "schema": "famtastic.acquisition-local-address-history.v1",
+  "new_workbook": {
+    "rows": 1000,
+    "syntax_usable": 1000,
+    "unique_addresses": 1000,
+    "duplicates": 0,
+    "prepared": 1000
+  },
+  "historical_workbook": {
+    "rows": 260,
+    "syntax_usable": 260,
+    "unique_addresses": 260,
+    "duplicates": 0,
+    "recontact_authorized": false
+  },
+  "cross_workbook_overlap": 0,
+  "combined_unique_addresses": 1260,
+  "combined_dispatch_authorized": false,
+  "native_export_sha256": "ec1f88d2787740717abc6f5238aa145c0a4cbc43b7853361f7ea239b72f2d1ea",
+  "no_network_or_upload": true,
+  "local_native_history_match": {
+    "covered_new_addresses": 300,
+    "known_native_matches": 0,
+    "uncovered_new_addresses": 700,
+    "export_scope": "Per-address lookup results for300 previously checked addresses; not a complete native contact/history dump",
+    "extended_matching_possible_from_this_export": false,
+    "rejected_remote_upload_retried": false,
+    "unknown_history_is_not_clearance": true
+  }
+}

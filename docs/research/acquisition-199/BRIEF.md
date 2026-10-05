@@ -10,6 +10,8 @@ Goal: prepare all 1,000 workbook records and deliver one polished branded email 
 - [x] Reuse owned photography and finished beauty content for one polished representative email and Lab.
 - [x] Correct the primary email CTA and visitor copy after independent visual review.
 - [x] Exercise the actual static email/phone practice on desktop and at 390px.
+- [x] Clarify hair-only subtitle/fictional name, refresh immutable fixture/screenshots and assert category consistency.
+- [x] Verify1,260 local unique addresses and re-anchor existing script-based release lane; no CI billing gate.
 - [x] Finish and verify opaque native context, prefilled account/interview and one-preview support.
 - [x] Seal source, post-evaluation and owner-review evidence.
 - [ ] Copy prepared dated status mirror to Drive if Fritz approves the cloud export.

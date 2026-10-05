@@ -20,10 +20,10 @@
     "backend/web/modules/custom/famtastic_pipeline/src/Service/OutreachMailer.php": "bb2e8fcd99b732eebb8d2473c5584dc6058abcdf9e9d4d997f469f2cce6f32e7",
     "backend/web/modules/custom/famtastic_pipeline/src/Controller/CustomerPortalController.php": "ab444dde744a620da5fd6352bbd5d7b2d39f1a5a71dae2934c0be95f8e412c88",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/CustomerPortalService.php": "a108efdd2cec6d0d1f497d491f44098d427d355592a6dfda6b89ff1d27c6d274",
-    "scripts/acquisition-sample-drupal.php": "30dd909ca6c0d50664b47be3f92d15b686d439bce1595bc20d60ebff0cc0c167",
+    "scripts/acquisition-sample-drupal.php": "80a10037c737dfeebf8662a9a1403ae5df3bba999a8f1edd53e37b108a1df357",
     "scripts/acquisition-sample-drupal.sh": "32315a6679623661fe46da643dfa9ff2523ca530d7eef10ee7494128a62c3f6c",
     "scripts/acquisition-sample-package.py": "6328b7bcb91a23ba11ebdcc62e66d5d6308e8ae08a6f97465bcf7b43bfd8143a",
-    "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionSampleServiceTest.php": "4a40da1cb77c1682ce74058d385e1c046eb3912ed18b392931173b7bf9f3439e",
+    "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionSampleServiceTest.php": "ee8c809e23808cd5f518b1498c97590af264e84e6379b04781a01665c8d1fef9",
     "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionCampaignReportServiceTest.php": "7292ee40f9d4e8889b10d8c366899b48c0dbf40829e8f34eeb0af2ef0ae9a29d",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/CampaignMessageService.php": "fd63a8a7faa2c9913d1a73cc627d0af19abe6864e4bcfcc706981df52dfa9b26",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/OperationalLedger.php": "0cca6de57e8fac4d8794cf2ad1ca44424669876ea294113ea6fa3d48b012007b",
@@ -95,15 +95,15 @@
       "checks": 16,
       "synthetic_only": true,
       "evidence": ".artifacts/acquisition-generic-native/evidence.json",
-      "recipe_sha256": "15be0947f318df33b0d68b68a6e0038143b7c6355933d161527cab74b1e7e58f"
+      "recipe_sha256": "3fcc8bd5d0a37f103ee8c2c985aa75ac2c7f2971614a56fc95e95997ebaeec8f"
     },
     "exports": {
-      ".artifacts/acquisition-generic-native/evidence.json": "3749dd44168d08b9ca7ffc82348cfb69f4368757c1ae2d10b12b5d54464073cb",
-      ".artifacts/acquisition-generic-native/sample.json": "383714f3bcfff82dd12fbb82ed57a4dac6fe422825ef57892ba727873a53eb06",
-      ".artifacts/acquisition-generic-native/preview.html": "129035e38742a4179c00a5ba16aca362bab3d96a7b5ce38e2b0c491d604ecc38",
-      ".artifacts/acquisition-generic-native/continuation-before-request.json": "844e49a337acb8a3ca77d1450db6a2c0c2247d35e6bef1a53a24030b035de3bb",
-      ".artifacts/acquisition-generic-native/request.json": "0dc25413ab6737095de17b7a348a609e9e011ecc8f3bf24ff28d295a5808604c",
-      ".artifacts/acquisition-generic-native/continuation.json": "7006cd66a1d2db7ca60467016ba04ea705b3f502201c31992177804cf0977b6d"
+      ".artifacts/acquisition-generic-native/evidence.json": "0ec32b23972ba94b7438ade3b4e148b0f67a58eb86ed6d731564981c7c63e15e",
+      ".artifacts/acquisition-generic-native/sample.json": "301b47b55e77eb6e0b03fdb385cc434d13321d2bc12281a48621b975460eb116",
+      ".artifacts/acquisition-generic-native/preview.html": "07bfde819002353aabf27f500764069be365bc6824db1d5e037aae9f614137be",
+      ".artifacts/acquisition-generic-native/continuation-before-request.json": "c29f25023b2b35b9a7e760cdfbf6d68d4049cd3f367511cdb2d204644e42bb05",
+      ".artifacts/acquisition-generic-native/request.json": "e8ba833b1d9f011801358c197181b584d252b7383cf18c402c156e7696d517c1",
+      ".artifacts/acquisition-generic-native/continuation.json": "1b412a137df0d3e979f3c3fe121b5b7fb77cfbb4a664b06941b86487fe53db68"
     },
     "full_suite_rerun": false,
     "hosted_release_proved": false,
@@ -124,6 +124,8 @@
       "known_information_business_name": "",
       "native_positive_exports_unchanged": true,
       "full_suite_rerun": false
-    }
+    },
+    "representative_business_name": "Juniper Hair Studio",
+    "beauty_copy_consistency": "HAIR CARE \u00b7 STYLE \u00b7 CONFIDENCE; no coffee copy"
   }
 }

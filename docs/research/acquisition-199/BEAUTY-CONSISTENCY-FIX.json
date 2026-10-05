@@ -1,0 +1,44 @@
+{
+  "schema": "famtastic.acquisition-small-fix.v1",
+  "classification": "changed",
+  "fix": "Explicit hair-specific subtitle and Juniper Hair Studio fictional stored name; coffee copy absent in actual rendered previews",
+  "subtitle": "HAIR CARE \u00b7 STYLE \u00b7 CONFIDENCE",
+  "business": "Juniper Hair Studio",
+  "industry": "Beauty, Hair Styling & Braiding",
+  "proof": {
+    "creative_checks": 24,
+    "backend_tests": 27,
+    "backend_assertions": 211,
+    "installed_checks": 16,
+    "static_browser_viewports": [
+      "1440x1000",
+      "390x844"
+    ],
+    "native_browser_viewports": [
+      "1440x1000",
+      "390x844"
+    ],
+    "native_receipt": "../../../marketing/campaigns/acquisition-199/generic-review/evidence/native-browser-receipt.json",
+    "full_suite_rerun": false,
+    "frontend_product_code_changed": false,
+    "immutable_fixture_reissued": true
+  },
+  "source_and_screenshot_sha256": {
+    "scripts/acquisition-generic-review.php": "275fba0365cb9f3ad3ee44dde8215dcdf16853e767add0a370652319d8e77569",
+    "scripts/acquisition-sample-drupal.php": "80a10037c737dfeebf8662a9a1403ae5df3bba999a8f1edd53e37b108a1df357",
+    "scripts/test-acquisition-generic-browser.mjs": "4528fbd329f5f2de52c89ea6e9a1e95872b543fc304e3cbb8f38b76ee3c19ad7",
+    "scripts/test-acquisition-generic-native-browser.mjs": "108111bfd2f3d1dd09068c5387b48dee0d2c53e770c5b7379406df4c32e15a3a",
+    "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionSampleServiceTest.php": "ee8c809e23808cd5f518b1498c97590af264e84e6379b04781a01665c8d1fef9",
+    "marketing/campaigns/acquisition-199/generic-review/beauty-template.html": "3fcc8bd5d0a37f103ee8c2c985aa75ac2c7f2971614a56fc95e95997ebaeec8f",
+    "marketing/campaigns/acquisition-199/generic-review/beauty-lab.html": "e931221bff90fde38a7e465fdbf6b1747818137d44af12999b6d3c141fcee2c0",
+    "marketing/campaigns/acquisition-199/generic-review/evidence/native-lab-390.png": "e443849c2cf06af54bf8f4c19f2d8b65275b2feecd623f11b032d830d3389922",
+    "marketing/campaigns/acquisition-199/generic-review/evidence/native-lab-1440.png": "a8fa438efe31333f38e57fb1347b4571d5b0addbd579bbc43d9221f426c84182"
+  },
+  "sender_next_dependency": "Evidence of confirmed written commercial opt-in for an exact prepared recipient slice under the selected existing GoDaddy account, or an explicitly authorized alternative permitted sender basis.",
+  "release_lane": "checked-in deploy scripts; exact clean pushed current-main SHA; explicit --apply authority separate",
+  "ci_billing_is_push_gate": false,
+  "owner_accepted": false,
+  "hosted_release_proved": false,
+  "exports_retried": false,
+  "dispatch": "HOLD"
+}

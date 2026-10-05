@@ -12,7 +12,7 @@
       "status": "passed"
     },
     "creative_renderer": {
-      "tests": 23,
+      "tests": 24,
       "status": "passed"
     },
     "backend_generic_and_neutral": {
@@ -71,11 +71,11 @@
     "frontend/src/acquisition.css": "0f823f4762b2c6c7b797534e7a33622e4f2023b335d0e914ddd9f1ef17010cf8",
     "scripts/acquisition-generic-cohort.py": "28244a507c0f6a94a10fbc5d478efb7b00ee0398ee47bc35fcb2f55204dba298",
     "scripts/acquisition-cohort.py": "1cafc3a6cfd8708e40745b1e9a79458e7f5d173e543a61ea762cce981c3228da",
-    "scripts/acquisition-generic-review.php": "b9864d5245f63d1988f5fdf48c4f0b16b006305b0f54e64c6765b840b5816fb2",
-    "scripts/test-acquisition-generic-browser.mjs": "7160eb4ac8c9e146a1891763969a485ece701d370acf72c9cd6f1d97ad2d5d1d",
-    "scripts/test-acquisition-generic-native-browser.mjs": "d98f636462b905dd7efe7bb94fc1aed805f0851bfa3e5ecc153b515094a805a2",
+    "scripts/acquisition-generic-review.php": "275fba0365cb9f3ad3ee44dde8215dcdf16853e767add0a370652319d8e77569",
+    "scripts/test-acquisition-generic-browser.mjs": "4528fbd329f5f2de52c89ea6e9a1e95872b543fc304e3cbb8f38b76ee3c19ad7",
+    "scripts/test-acquisition-generic-native-browser.mjs": "108111bfd2f3d1dd09068c5387b48dee0d2c53e770c5b7379406df4c32e15a3a",
     "marketing/campaigns/acquisition-199/generic-review/beauty-email.html": "03588c3c4b4d323a8bc9965aee1a9c6a8905db190d6332d31eaab49b69e218f5",
-    "marketing/campaigns/acquisition-199/generic-review/beauty-template.html": "15be0947f318df33b0d68b68a6e0038143b7c6355933d161527cab74b1e7e58f"
+    "marketing/campaigns/acquisition-199/generic-review/beauty-template.html": "3fcc8bd5d0a37f103ee8c2c985aa75ac2c7f2971614a56fc95e95997ebaeec8f"
   },
   "limits": [
     "Controlled installed Drupal uses fictional records and local persistence; no real workbook contacts imported.",
@@ -88,5 +88,6 @@
   "sender_ready": 0,
   "owner_accepted": false,
   "hosted_release_proved": false,
-  "production_deployment": false
+  "production_deployment": false,
+  "beauty_copy_correction": "See BEAUTY-CONSISTENCY-FIX.json for current exact-byte proof; prior application source retained as historical integration cutoff."
 }

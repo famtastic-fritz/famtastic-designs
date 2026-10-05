@@ -36,7 +36,7 @@ if (getenv('ACQUISITION_DRUPAL_PHASE') === 'generic') {
   $now = \Drupal::time()->getRequestTime();
   $runKey = bin2hex(random_bytes(4));
   $email = 'generic-' . $runKey . '@example.test';
-  $prospect = \Drupal::entityTypeManager()->getStorage('famtastic_prospect')->create(['business_name' => 'Juniper & Co', 'business_category' => 'Beauty, Hair Styling & Braiding', 'public_email' => $email, 'campaign' => 'acquisition-199', 'source' => 'local_synthetic', 'status' => 'new']);
+  $prospect = \Drupal::entityTypeManager()->getStorage('famtastic_prospect')->create(['business_name' => 'Juniper Hair Studio', 'business_category' => 'Beauty, Hair Styling & Braiding', 'public_email' => $email, 'campaign' => 'acquisition-199', 'source' => 'local_synthetic', 'status' => 'new']);
   $prospect->save();
   $campaignId = (int) $db->select('famtastic_campaign', 'c')->fields('c', ['id'])->condition('campaign_key', 'acquisition-199')->execute()->fetchField();
   $artifact = 'marketing/campaigns/acquisition-199/generic-review/beauty-template.html';
@@ -45,11 +45,11 @@ if (getenv('ACQUISITION_DRUPAL_PHASE') === 'generic') {
   $controller = AcquisitionSampleController::create(\Drupal::getContainer());
   $response = $controller->resolve($invitation['token']);
   $sample = json_decode($response->getContent(), TRUE)['sample'];
-  $check($sample['context_classification'] === 'supplied_generic_preparation' && $sample['business_name'] === 'Juniper & Co' && $sample['industry'] === 'Beauty, Hair Styling & Braiding' && !$sample['context_provenance']['niche_verified'], 'installed_generic_stored_supplied_context');
+  $check($sample['context_classification'] === 'supplied_generic_preparation' && $sample['business_name'] === 'Juniper Hair Studio' && $sample['industry'] === 'Beauty, Hair Styling & Braiding' && !$sample['context_provenance']['niche_verified'], 'installed_generic_stored_supplied_context');
   $check($sample['bindings']['recipient_name'] === '' && $sample['bindings']['phone'] === '' && !str_contains($response->getContent(), $email), 'installed_generic_unknown_owner_phone_and_no_url_pii');
   $check($response->headers->get('Cache-Control') === 'no-store, private', 'installed_generic_private_response');
   $preview = $controller->preview($invitation['token'], $recipe['id']);
-  $check($preview->getStatusCode() === 200 && str_contains($preview->getContent(), 'Juniper &amp; Co') && !str_contains($preview->getContent(), '{{business_name}}'), 'installed_generic_frozen_polished_preview');
+  $check($preview->getStatusCode() === 200 && str_contains($preview->getContent(), 'Juniper Hair Studio') && !str_contains($preview->getContent(), '{{business_name}}') && str_contains($preview->getContent(), 'HAIR CARE · STYLE · CONFIDENCE') && !preg_match('/\b(?:caf[eé]|coffee|espresso|roastery)\b/iu', strip_tags($preview->getContent())), 'installed_generic_frozen_polished_preview');
   $samples->preference($invitation['token'], $recipe['id']);
   $samples->preference($invitation['token'], $recipe['id']);
   $row = $db->select('famtastic_acquisition_sample', 's')->fields('s')->condition('id', $invitation['id'])->execute()->fetchAssoc();
@@ -67,7 +67,7 @@ if (getenv('ACQUISITION_DRUPAL_PHASE') === 'generic') {
   preg_match('/token=([A-Za-z0-9_-]+)/', end($verification)['body'], $match);
   $verified = $auth->verify(Request::create('http://acquisition-drupal.example.test/api/customer/verify', 'POST', [], [], [], ['CONTENT_TYPE' => 'application/json'], json_encode(['token' => $match[1]])));
   $continuation = json_decode($verified->getContent(), TRUE)['continuation'];
-  $check($verified->getStatusCode() === 200 && $continuation['known_information']['business_name'] === 'Juniper & Co' && $continuation['known_information']['business_category'] === 'Beauty, Hair Styling & Braiding', 'installed_generic_verified_known_information_resume');
+  $check($verified->getStatusCode() === 200 && $continuation['known_information']['business_name'] === 'Juniper Hair Studio' && $continuation['known_information']['business_category'] === 'Beauty, Hair Styling & Braiding', 'installed_generic_verified_known_information_resume');
   $output = (string) getenv('ACQUISITION_GENERIC_EXPORT');
   if (!$output || !is_dir($output)) throw new RuntimeException('Private generic export directory required.');
   file_put_contents($output . '/continuation-before-request.json', json_encode($continuation, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));

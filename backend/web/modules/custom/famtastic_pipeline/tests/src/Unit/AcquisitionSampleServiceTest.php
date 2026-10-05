@@ -32,7 +32,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $schemas = AcquisitionSampleSchema::tables() + _famtastic_pipeline_automation_schema() + _famtastic_pipeline_customer_portal_schema();
     foreach (['famtastic_acquisition_sample', 'famtastic_acquisition_sequence', 'famtastic_acquisition_message', 'famtastic_acquisition_request', 'famtastic_acquisition_dispatch', 'famtastic_customer', 'famtastic_consent', 'famtastic_event', 'famtastic_campaign', 'famtastic_email_message'] as $table) $this->db->schema()->createTable($table, $schemas[$table]);
     $this->db->query('CREATE TABLE famtastic_prospect (id INTEGER PRIMARY KEY, public_email TEXT, campaign TEXT, business_name TEXT, business_category TEXT, contact_name TEXT)');
-    $this->db->query("INSERT INTO famtastic_prospect VALUES (1,'owner@example.test','acquisition-199','Juniper & Co','Beauty, Hair Styling & Braiding','Unknown owner'),(2,'other@example.test','acquisition-199','Other Fixture','Personal services','Unverified person')");
+    $this->db->query("INSERT INTO famtastic_prospect VALUES (1,'owner@example.test','acquisition-199','Juniper Hair Studio','Beauty, Hair Styling & Braiding','Unknown owner'),(2,'other@example.test','acquisition-199','Other Fixture','Personal services','Unverified person')");
     $this->db->insert('famtastic_campaign')->fields(['id' => 1, 'campaign_key' => 'acquisition-199', 'name' => 'Synthetic sample test', 'status' => 'draft', 'created' => 1, 'changed' => 1])->execute();
     foreach ([1 => 'owner@example.test', 2 => 'other@example.test'] as $id => $email) $this->db->insert('famtastic_customer')->fields(['id' => $id, 'public_id' => 'fixture-' . $id, 'uid' => $id, 'prospect_id' => $id, 'display_name' => 'Fixture', 'email' => $email, 'created' => 1, 'changed' => 1])->execute();
     $time = $this->createMock(TimeInterface::class);
@@ -337,8 +337,8 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $root = dirname(__DIR__, 8);
     foreach (['beauty_editorial', 'beauty_service_first', 'detailing_precision', 'detailing_route_ready', 'baking_signature', 'catering_table_story'] as $id) {
       $template = (string) file_get_contents($root . '/marketing/campaigns/acquisition-199/templates/' . $id . '.html');
-      $rendered = AcquisitionSampleGuard::render($template, ['business_name' => 'Juniper & Co']);
-      $this->assertStringContainsString('Juniper &amp; Co', $rendered, $id);
+      $rendered = AcquisitionSampleGuard::render($template, ['business_name' => 'Juniper Hair Studio']);
+      $this->assertStringContainsString('Juniper Hair Studio', $rendered, $id);
       $this->assertStringNotContainsString('Contact number:', $rendered, $id);
       $this->assertStringNotContainsString('Approved booking path', $rendered, $id);
       $this->assertStringNotContainsString('Approved inquiry path', $rendered, $id);
@@ -349,7 +349,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
 
   public function testVerifiedContactRenderingRetainsExistingFilledOutputAcrossAllSixTemplates(): void {
     $root = dirname(__DIR__, 8);
-    $bindings = ['business_name' => 'Juniper & Co', 'locality' => 'Example City', 'phone' => '+1 (555) 010-0000', 'booking_url' => 'https://example.test/book', 'inquiry_url' => 'https://example.test/inquire'];
+    $bindings = ['business_name' => 'Juniper Hair Studio', 'locality' => 'Example City', 'phone' => '+1 (555) 010-0000', 'booking_url' => 'https://example.test/book', 'inquiry_url' => 'https://example.test/inquire'];
     $expectedBindings = [];
     foreach ($bindings as $key => $value) $expectedBindings['{{' . $key . '}}'] = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     foreach (['beauty_editorial', 'beauty_service_first', 'detailing_precision', 'detailing_route_ready', 'baking_signature', 'catering_table_story'] as $id) {
@@ -384,7 +384,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $invitation = $this->prepare();
     $sample = $this->samples->resolve($invitation['token']);
     $this->assertSame('supplied_generic_preparation', $sample['context_classification']);
-    $this->assertSame('Juniper & Co', $sample['business_name']);
+    $this->assertSame('Juniper Hair Studio', $sample['business_name']);
     $this->assertSame('Beauty, Hair Styling & Braiding', $sample['industry']);
     $this->assertFalse($sample['context_provenance']['niche_verified']);
     $this->assertSame('unknown', $sample['context_provenance']['contact_ownership']);
@@ -394,7 +394,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $this->assertCount(1, $sample['recipes']);
     $this->assertStringNotContainsString('owner@example.test', json_encode($sample));
     $this->assertStringNotContainsString('Unknown owner', json_encode($sample));
-    $this->assertStringContainsString('Juniper &amp; Co', $this->samples->preview($invitation['token'], $sample['recipes'][0]['id']));
+    $this->assertStringContainsString('Juniper Hair Studio', $this->samples->preview($invitation['token'], $sample['recipes'][0]['id']));
     $this->assertMatchesRegularExpression('/^[a-f0-9]{64}$/D', $invitation['token']);
     $row = $this->db->select('famtastic_acquisition_sample', 's')->fields('s')->condition('id', $invitation['id'])->execute()->fetchAssoc();
     $this->assertNull($row['eligible_at']);
@@ -431,7 +431,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $this->now += 3601;
     $this->db->update('famtastic_customer')->fields(['verified_at' => $this->now])->condition('id', 1)->execute();
     $continuation = $this->samples->claim(1);
-    $this->assertSame(['business_name' => 'Juniper & Co', 'industry' => 'Beauty, Hair Styling & Braiding', 'business_category' => 'Beauty, Hair Styling & Braiding'], $continuation['known_information']);
+    $this->assertSame(['business_name' => 'Juniper Hair Studio', 'industry' => 'Beauty, Hair Styling & Braiding', 'business_category' => 'Beauty, Hair Styling & Braiding'], $continuation['known_information']);
     $this->assertSame('supplied_generic_preparation', $continuation['context_classification']);
     $this->assertNull($this->samples->resolve($invitation['token']));
     $this->assertStringNotContainsString($invitation['token'], json_encode($continuation));
