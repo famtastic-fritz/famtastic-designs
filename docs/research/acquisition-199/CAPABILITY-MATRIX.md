@@ -37,3 +37,5 @@ Old six candidate designs: owner Fritz declined them on2026-10-05 after viewing 
 | acq.generic-context / prospect / avoid retyping known business facts | existing opaque Sample Lab and native continuation | stored supplied context separate from verified personalization; no send eligibility | local_tested;27 backend tests/211 assertions,16 installed checks; actual native browser1440/390 prefills; FOLLOWUP-VERIFICATION.json | not_applicable; pending; reviewed hosted release required |
 
 Owner tasks: generic-review-01 (Fritz, desktop/phone, current follow-up revision) inspect email CTA, finished example and visible phone practice; result pending. generic-continue-01 (invited owner, two devices, reviewed hosted release) open opaque invitation, confirm prefilled business/industry, register/verify and resume exact interview; result pending. Developer browser/controlled service evidence is separate from uncoached owner acceptance.
+
+Follow-up application revision for generic-review-01 and generic-continue-01: b32ae4236bcb2aa0f495436028c1101355215d4d. Owner results remain pending; classification changed.

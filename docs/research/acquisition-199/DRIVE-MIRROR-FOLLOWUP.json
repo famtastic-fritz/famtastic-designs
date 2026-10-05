@@ -1,0 +1,12 @@
+{
+  "status": "blocked_by_automatic_approval",
+  "local_prepared_report": "/private/tmp/acquisition-199-generic-lab-review.md",
+  "sha256": "103cb6797ae446380401c476fd42c9eba7d785d5da7c5d8be2ab634cccb7d240",
+  "destination": "Google Drive / FAMtastic / famtasticdesigns.com / 2026-10-05-acquisition-199-generic-lab-review.md",
+  "rejection_reason": "Internal project/provider/workflow/source details to cloud-synced destination without explicit trusted export authorization.",
+  "copy_performed": false,
+  "cloud_sync": "not_claimed",
+  "original_mirror": "preserved",
+  "private_contacts_included": false,
+  "source_commit": "b32ae4236bcb2aa0f495436028c1101355215d4d"
+}

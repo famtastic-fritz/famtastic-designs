@@ -24,3 +24,5 @@ Review classification: changed source candidate. No hosted release or owner acce
 ## Current follow-up candidate
 
 The old six visuals are declined. New tasks generic-review-01 and generic-continue-01 apply to the follow-up application revision pinned in SOURCE-CHECKPOINT.md. Fritz reviews the new beauty email/Lab; an invited owner later completes the opaque-link/register/verify/prefilled-interview tasks on the exact hosted release. Both results remain pending. Current developer evidence is FOLLOWUP-VERIFICATION.json: actual static/native browser interactions at1440/390 and separately installed fictional Drupal persistence. Local results are unsent/unpublished and do not imply connected business operations.
+
+Follow-up application revision for generic-review-01 and generic-continue-01: b32ae4236bcb2aa0f495436028c1101355215d4d. Owner results remain pending; classification changed.

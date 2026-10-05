@@ -1,7 +1,7 @@
 {
   "schema": "famtastic.acquisition-followup-proof.v1",
   "classification": "changed",
-  "source_commit": "sealed in SOURCE-CHECKPOINT.md follow-up section",
+  "source_commit": "b32ae4236bcb2aa0f495436028c1101355215d4d",
   "checks": {
     "generic_preparation": {
       "tests": 18,

@@ -1,0 +1,14 @@
+{
+  "evaluation_id": "posteval_a2694c1076c8634c",
+  "report_path": "/Users/famtastic-fritz/Development/FAMtastic/data-center/reports/post-eval/posteval_a2694c1076c8634c.md",
+  "report_sha256": "45c1948cdd2d2669f0415e38077aff1e1a52e43c23e086523d89b43f07451920",
+  "record_path": "/Users/famtastic-fritz/Development/FAMtastic/data-center/post-eval/posteval_a2694c1076c8634c.json",
+  "source_commit": "b32ae4236bcb2aa0f495436028c1101355215d4d",
+  "branch": "codex/acquisition-199-20261005",
+  "worktree": "/Users/famtastic-fritz/Development/FAMtastic/worktrees/acquisition-199-20261005",
+  "classification": "changed",
+  "dispatch": "HOLD",
+  "owner_accepted": false,
+  "hosted_release_proved": false,
+  "original_evaluation_preserved": "posteval_76dcc8d9e98220e8"
+}

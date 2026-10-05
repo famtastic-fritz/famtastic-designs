@@ -9,3 +9,11 @@ Candidate immutable private input bundle: 14 files, manifest SHA-256 `7ee6d705df
 Canonical checkout remained on `feat/youtube-brand-channel-activation` at `ee9edf9e`, with its two modified schedules and unrelated untracked marketing/video work preserved. No merge/deployment occurred. The [canonical post-evaluation pointer](POST-EVALUATION.json) records lessons in the existing Data Center. Plan audit:14 active,0drift/conflicts/orphans.
 
 Classification: changed. Creative/import state: candidate. Hosted release and owner result: pending. Eligible real contacts:0. **All real recipient dispatch HOLD.** The next owner step is review of [first-look presentation](../../../marketing/campaigns/acquisition-199/first-look.html) and exact draft/phone scope, then evidence for one qualified business/contact and the separate hosted/provider/owner gates in README.md.
+
+## Current generic-preparation and polished-Lab follow-up
+
+Application source: b32ae4236bcb2aa0f495436028c1101355215d4d. This section supersedes the initial creative/qualification next-step above; the original full-suite/fresh-checkout revision remains historical. All six earlier visuals are owner-declined and excluded from the proposed send package. One new beauty candidate is pending owner review. All1,000 rows are prepared using supplied industry; sender-ready0 and history unknown700. Deep identity research is optional.
+
+Current source proof: FOLLOWUP-VERIFICATION.json/.md, backend-proof.json, public-safe16-check installed receipt and actual static/native1440/390 browser screenshots. Node22 full build passed623modules/221HTML. Native browser uses controlled Drupal exports and routed public-origin fixtures; separate installed service proves local persistence. Hosted CORS/deployment, physical owner acceptance and inbox delivery remain unverified. Current owner tasks generic-review-01 and generic-continue-01 apply to this exact application revision; both pending.
+
+Classification: changed. Canonical post-evaluation: posteval_a2694c1076c8634c, pointer POST-EVALUATION-FOLLOWUP.json. No merge, deployment, provider purchase, paid generation or campaign send. Dispatch HOLD. Review http://127.0.0.1:5201/beauty-email.html then its website CTA.
