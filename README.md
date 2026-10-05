@@ -47,8 +47,10 @@ npm --prefix frontend run build
 ./scripts/acceptance-autonomous-pipeline.sh
 ```
 
-GitHub Actions also builds the frontend, validates and audits the backend, and
-runs the autonomous pipeline acceptance suite.
+Run the checks relevant to the changed source locally before push, as required
+by [Git sync and release discipline](docs/GIT_SYNC_AND_RELEASE_DISCIPLINE.md).
+The older GitHub Actions acceptance workflow is manual-only; it does not deploy
+and its no-step billing-lock results are not a source or release gate.
 
 ## Deployment
 

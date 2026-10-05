@@ -17,6 +17,12 @@ found in Keychain through a redacted status check, while the test number had bee
 removed. The setup is being changed to support a phone-only retry and to keep
 Keychain-read restrictions distinct from invalid phone format. No SMS was sent.
 
+Fritz then reported another rejected phone attempt and corrected the process claim
+that GitHub Actions was a deploy method. The checked-in workflow only ran tests;
+the repository's exact-commit GoDaddy scripts remain the release path. The old
+automatic Actions trigger is being retired in favor of local push evidence, and
+the lab phone entry is being simplified without exposing or guessing his number.
+
 ## 2026-09-14 — Approved ecosystem reconciliation
 
 The user approved independent private repositories for each customer site, Shay first,

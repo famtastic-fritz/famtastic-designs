@@ -2,7 +2,7 @@
 
 ## 2026-10-04 — Textbee fictional lab private setup
 
-**Local source and no-send path tested; provider proof owner-reported.** The Fritz-only CLI can request an API key and exact test phone through hidden macOS Keychain prompts, report redacted readiness, require typed confirmation for one fixed fictional SMS, and remove its local Keychain entries. Automated local tests cover no-secret output and noninteractive/no-ack refusal. Fritz reports a Textbee phone test, but this source change has no independently inspected send, delivery or reply receipt. There is no customer integration, hosted sender, booking reminder or production rollout. Evidence: `scripts/textbee-lab.test.mjs` and `docs/products/customer-messaging-pilot.md`.
+**Local source and no-send path tested; provider proof owner-reported.** The Fritz-only CLI stores the API key through a hidden macOS Keychain prompt and the exact test phone through a validated visible prompt into a private 0600 local allowlist file. It reports redacted readiness, requires typed confirmation for one fixed fictional SMS, and can remove its local items. Automated local tests cover no-secret output, file permissions and noninteractive/no-ack refusal. Fritz reports a Textbee phone test, but this source change has no independently inspected send, delivery or reply receipt. There is no customer integration, hosted sender, booking reminder or production rollout. Evidence: `scripts/textbee-lab.test.mjs`, `scripts/textbee-lab-phone.test.mjs` and `docs/products/customer-messaging-pilot.md`.
 
 ## 2026-10-03 — Owner-attested offline invoice payment (controlled pilot)
 

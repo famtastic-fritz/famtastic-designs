@@ -2,13 +2,17 @@
 // Fritz-only fictional SMS transport proof. No customer lookup or automatic send.
 import { spawnSync } from 'node:child_process';
 import { createInterface } from 'node:readline/promises';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 import { createTextbeeLabAdapter } from '../tools/customer-messaging/consent-sms-loop/src/index.mjs';
+import { createPrivatePhoneStore, normalizeTestPhone } from './textbee-lab-phone.mjs';
 
 const ACCOUNT = 'fritz-fictional-lab';
 const KEY_SERVICE = 'com.famtasticdesigns.textbee.lab.api-key';
 const TO_SERVICE = 'com.famtasticdesigns.textbee.lab.test-recipient';
 const SECURITY = '/usr/bin/security';
 const MESSAGE = 'FAMtastic fictional SMS lab test. Reply YES for the test only.';
+const phoneStore = createPrivatePhoneStore(join(homedir(), 'Library', 'Application Support', 'FAMtastic', 'TextbeeLab'));
 const mode = process.argv[2] ?? '--check';
 const keychainMode = !process.env.TEXTBEE_API_KEY && !process.env.TEXTBEE_LAB_TO;
 
@@ -39,17 +43,34 @@ function requireMacTerminal() {
   if (!process.stdin.isTTY || !process.stdout.isTTY) throw new Error('interactive_terminal_required');
 }
 
-function normalizedPhone(value) {
-  const compact = (value ?? '').trim().replace(/[\s().-]/g, '');
-  const candidate = /^\d{10}$/.test(compact) ? `+1${compact}`
-    : /^1\d{10}$/.test(compact) ? `+${compact}` : compact;
-  return /^\+[1-9]\d{1,14}$/.test(candidate) ? candidate : null;
-}
-
 async function confirm(prompt, expected) {
   const input = createInterface({ input: process.stdin, output: process.stdout });
   try { return (await input.question(prompt)).trim() === expected; }
   finally { input.close(); }
+}
+
+async function configurePhone() {
+  const input = createInterface({ input: process.stdin, output: process.stdout });
+  try {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const raw = await input.question('Your own test phone (10 US digits or +1..., visible only here): ');
+      const phone = normalizeTestPhone(raw);
+      if (!phone) {
+        process.stdout.write('That is not a valid phone number. Try ten digits without an extension.\n');
+        continue;
+      }
+      if ((await input.question(`Save ${phone} as the only test recipient? Type SAVE: `)).trim() !== 'SAVE') {
+        process.stdout.write('Not saved. Try again or press Control-C to cancel.\n');
+        continue;
+      }
+      phoneStore.save(phone);
+      process.stdout.write('Private test recipient saved. No message sent. Run --check.\n');
+      return;
+    }
+    throw new Error('test_phone_not_saved');
+  } finally {
+    input.close();
+  }
 }
 
 async function main() {
@@ -64,38 +85,27 @@ async function main() {
       process.stdout.write('Paste the Textbee API key at the hidden macOS Keychain prompt, then press Return.\n');
       storeSecret(KEY_SERVICE, 'FAMtastic Textbee fictional lab API key');
     }
-    process.stdout.write('Enter your own US test phone as 10 digits or +1 followed by 10 digits at the hidden prompt.\n');
-    storeSecret(TO_SERVICE, 'FAMtastic Textbee fictional lab test phone');
-    const storedPhone = readSecret(TO_SERVICE);
-    if (storedPhone === null) {
-      process.stdout.write('Keychain accepted the phone, but this process cannot read it to validate. Nothing sent. Run --check from standard Mac Terminal.\n');
-      process.exitCode = 1;
-      return;
-    }
-    if (!normalizedPhone(storedPhone)) {
-      removeSecret(TO_SERVICE);
-      throw new Error('test_phone_invalid; use 10 US digits or +1 followed by 10 digits; test phone not saved');
-    }
-    process.stdout.write('Test phone saved in macOS Keychain. No message sent. Run --check.\n');
+    await configurePhone();
     return;
   }
 
   if (mode === '--forget') {
     requireMacTerminal();
-    if (!await confirm('Remove this lab key and test phone from macOS Keychain? Type FORGET: ', 'FORGET')) {
+    if (!await confirm('Remove this lab key and private test phone? Type FORGET: ', 'FORGET')) {
       process.stdout.write('Cancelled; nothing removed.\n');
       return;
     }
     const keyRemoved = removeSecret(KEY_SERVICE);
-    const recipientRemoved = removeSecret(TO_SERVICE);
-    if (!keyRemoved || !recipientRemoved) throw new Error('keychain_removal_incomplete; inspect Keychain Access');
-    process.stdout.write('Local lab Keychain items removed.\n');
+    const recipientRemoved = phoneStore.remove();
+    removeSecret(TO_SERVICE); // best-effort cleanup for earlier Keychain phone setup
+    if (!keyRemoved || !recipientRemoved) throw new Error('lab_removal_incomplete; inspect Keychain and private test phone');
+    process.stdout.write('Local lab key and test recipient removed.\n');
     return;
   }
 
   if (mode === '--send' && keychainMode) requireMacTerminal();
   const apiKey = keychainMode && process.platform === 'darwin' ? readSecret(KEY_SERVICE) : process.env.TEXTBEE_API_KEY;
-  const to = normalizedPhone(keychainMode && process.platform === 'darwin' ? readSecret(TO_SERVICE) : process.env.TEXTBEE_LAB_TO);
+  const to = keychainMode ? phoneStore.read() : normalizeTestPhone(process.env.TEXTBEE_LAB_TO);
   if (mode === '--check') {
     process.stdout.write(JSON.stringify({
       mode: 'fritz_only_fictional_lab',
