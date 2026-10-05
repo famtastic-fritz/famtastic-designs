@@ -1,7 +1,10 @@
-name: Optional legacy acceptance checks
+name: Autonomous pipeline acceptance
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: read

@@ -49,8 +49,9 @@ npm --prefix frontend run build
 
 Run the checks relevant to the changed source locally before push, as required
 by [Git sync and release discipline](docs/GIT_SYNC_AND_RELEASE_DISCIPLINE.md).
-The older GitHub Actions acceptance workflow is manual-only; it does not deploy
-and its no-step billing-lock results are not a source or release gate.
+GitHub Actions also runs secret, audit, build and backend validation on PRs
+and main; it does not deploy. If billing prevents a job from starting, record
+that infrastructure status separately from local test and release evidence.
 
 ## Deployment
 

@@ -19,9 +19,10 @@ Keychain-read restrictions distinct from invalid phone format. No SMS was sent.
 
 Fritz then reported another rejected phone attempt and corrected the process claim
 that GitHub Actions was a deploy method. The checked-in workflow only ran tests;
-the repository's exact-commit GoDaddy scripts remain the release path. The old
-automatic Actions trigger is being retired in favor of local push evidence, and
-the lab phone entry is being simplified without exposing or guessing his number.
+the repository's exact-commit GoDaddy scripts remain the release path. The
+automatic source checks remain in place; a no-step billing result is reported
+separately from local push evidence. The lab phone entry is being simplified
+without exposing or guessing his number.
 
 ## 2026-09-14 — Approved ecosystem reconciliation
 
