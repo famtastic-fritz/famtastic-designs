@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-10-04 — Textbee fictional lab private setup
+
+**Local source and no-send path tested; provider proof owner-reported.** The Fritz-only CLI can request an API key and exact test phone through hidden macOS Keychain prompts, report redacted readiness, require typed confirmation for one fixed fictional SMS, and remove its local Keychain entries. Automated local tests cover no-secret output and noninteractive/no-ack refusal. Fritz reports a Textbee phone test, but this source change has no independently inspected send, delivery or reply receipt. There is no customer integration, hosted sender, booking reminder or production rollout. Evidence: `scripts/textbee-lab.test.mjs` and `docs/products/customer-messaging-pilot.md`.
+
 ## 2026-10-03 — Owner-attested offline invoice payment (controlled pilot)
 
 **Production-proven for one controlled invoice.** Authorized staff can record a payment received outside checkout without inventing Stripe or bank-provider evidence. The operation uses a disabled manual Commerce gateway, requires exact tenant/amount/snapshot binding, records owner attestation, distinguishes record time from settlement time, and is replay safe. Production `bb91a07b` passed a rollback-only run, one apply, exact replay and read-only reconciliation. It unlocked only the owner-hosting handoff; customer notification, fulfillment, DNS and launch stayed absent.
