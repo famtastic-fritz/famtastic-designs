@@ -12,6 +12,11 @@ single-send confirmation. No key, phone number, customer record or delivery clai
 is preserved here. Shay and other client sites remain independent; a personal
 phone probe does not authorize customer reminders.
 
+After two setup attempts, Fritz reported a combined validation error. The key was
+found in Keychain through a redacted status check, while the test number had been
+removed. The setup is being changed to support a phone-only retry and to keep
+Keychain-read restrictions distinct from invalid phone format. No SMS was sent.
+
 ## 2026-09-14 — Approved ecosystem reconciliation
 
 The user approved independent private repositories for each customer site, Shay first,

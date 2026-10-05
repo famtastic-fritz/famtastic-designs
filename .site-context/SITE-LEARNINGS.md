@@ -6,6 +6,8 @@
 
 **Guidance:** Use an interactive macOS Keychain prompt for the Fritz-only lab key and exact test recipient. Report readiness without values, require a fresh typed confirmation before each single fictional SMS, and provide credential removal. Keep client consent, sender, outbox, reply and delivery proof in each independent business implementation; a personal phone lab is not production SMS.
 
+**Repair:** The first owner attempt exposed two different causes behind one `keychain_value_invalid` message: an unsupported phone format and a Keychain read restricted by the developer sandbox. Preserve a successfully written item when a read cannot be verified, normalize ordinary US phone input, and offer a phone-only retry instead of making the owner retype a saved API key. Confirm readiness from standard Mac Terminal.
+
 ## 2026-10-03 — Offline payment must preserve the evidence boundary
 
 **Observation:** A customer used an owner-accepted offline payment method after an invoice had been designed around Stripe checkout. The old reusable offline path was customer- and amount-specific, so reusing it would have corrupted scope and provenance.
