@@ -35,9 +35,9 @@
     "assertions": 1098,
     "deprecation_notices": 72
   },
-  "manual_review_resume": "pending actualMySQLmigration/zeroattempt/indexchecks; uncertain-or-accepted retries forbidden",
+  "manual_review_resume": "complete; actual32 MySQL/zeroattempt/prior51customer+50beauty reviewed before restoring clock and creating new source-versioned input; no accepted/uncertain retry",
   "diagnostic_sha256": "85084f8b1776a2b98f922bba95b9d35dd4dfce6c44cc767712101469d1d4bb24",
-  "private_resume_driver_sha256": "47df2fdcb7acf60d0a2c7d2331d3781520fe4e10cb2857cbfc5868f4ad11b760",
+  "private_resume_driver_sha256": "664e28f7a552a607ef2664fdbc6be944c9bef14e3b23302e4a5d7c919e57e356",
   "native_migration_proof": {
     "checked_at": "2026-10-06T22:11:53Z",
     "backend_commit": "f25cf94c7d4057b48d4c26073b091234e611d5a3",
@@ -58,5 +58,7 @@
     "window_and_schema_tests": 30,
     "combined_assertions": 1262,
     "zero_budget_over_observed_reserve": "Observed251/day101/hour produces validclamped0 allowance, defersbefore reservation and later resumes unchangedqueue;30tests1262assertions passed"
-  }
+  },
+  "final_backend_commit": "07da2fa65cbaa07202b15f35db9606750ddc6f0e",
+  "manual_review_receipt_sha256": "143723638ffa3c8cbbbbbe5bdddc5ef663ecf53d5bb94b1d123efd15459194f9"
 }

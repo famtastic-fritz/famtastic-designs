@@ -1,17 +1,19 @@
-Current industry activation checkpoint: source3b2a5010 is deployed in front/backend; timers installed for999records, preserving50acceptedkeys and949remaining. Nativecampaign5revision4saved/reloaded. Firstindustry18window stopped before anyreservation/message/SMTP because productionwindow keys were limited to13characters. The27bytekey requires the tested32char migration. The latch remains held while the correction is deployed and manually reviewed against actualMySQL. CustomerSMTPtotal51, newindustryacceptances0, unresolved0. See INDUSTRY-WINDOW-KEY-REPAIR-20261006.json. Earlier source proof below is a dated checkpoint, not the current live execution status.
-
 <!-- INDUSTRY-ACTIVATION-CURRENT -->
-The approved nine-industry native integration is source-complete and tested locally. Classification: **changed**; current live backend2c1d908d/frontendcb8f5b07 and customer SMTP total51 remain the last verified production state. Fresh private900audit passed900eligible/0held; native production preparation repeats each audit. Deployment and900sending remain pending at this source checkpoint.
+The approved nine-industry email/Lab release is **deployed** at backend `07da2fa6` / frontend `3b2a5010`. The first industry window completed with **50 new customer SMTP acceptances, zero failed or uncertain dispatches**, across all nine industries. Customer campaign total: **101**; the separate owned probe counts against the shared daily allowance (102 used). All 50 native recipe/content/account links matched; 18 hosted desktop/phone interaction checks passed. Inbox delivery and physical owner acceptance remain unproved.
+
+The installed private clock includes tonight's 7/8 p.m. Eastern windows and October 7–16 at 9/10/11 a.m./noon Eastern. Limits remain 50/window and 200 TOTAL/day including prior traffic and the owned probe. The combined queue has 899 unused keys after this window: 49 beauty and 850 industry. Every contact repeats history/suppression checks; fresh zero allowance defers, failure/uncertainty halts. Future sends and a guaranteed finishing date are not claimed. Generic D3/D7 remain held.
 
 | Capability / actor / task | Entry and stored result | Evidence | Provider / owner boundary |
 | --- | --- | --- | --- |
-| acq.industry-d0-v1 / invited owner / open matching Lab | Exact suppliedindustry→approved immutable email/nativeclick/account/unsubscribe binding; pinned private93filebundle |91installed synthetic checks across9industries;40sampletests559assertions |9fakecaptures only; actualSMTP/inbox pending; physicalowner pending |
-| acq.industry-lab-v1 / invited owner / practice inquiry work | Stored interactiveHTML/CSS/JS, isolated opaqueiframe; localfictional reply/status/instructions reset on reload |18desktop1280/phone390 installed browser checks; source/bundle-absent storedpreview | Local practice; no external persistence; uncoached owner pending |
-| acq.industry-context-v1 / verified owner / continue interview | Native same-email verification and exact business/category/recipe continuation |9installed real-controller registration/verification checks with memorymail | Actual customer verification/inbox pending |
-| acq.industry-clock-v1 / operator / finish remaining outreach | Shared durable cap50/window200TOTAL/day, hourlysame-day expiry, no uncertain replay; finite routinewindows |28SQLite tests1080assertions;51prior+149max same-day modeled | Live installation/sends pending; other native traffic and reserves counted |
+| Industry D0 / invited owner / open matching Lab | Approved immutable native content, click/account/unsubscribe links and exact category/recipe | 50 actual SMTP acceptances and 50 matching native snapshots across9industries | SMTP accepted; customer inbox and actual account verification pending |
+| Industry Lab / invited owner / practice inquiry | Opaque iframe; fictional reply/status/instructions/reset | 18 actual hosted1280/390 browser interaction checks passed | Local practice; physical uncoached owner task pending |
+| Industry continuation / invited owner / register and save interview | Same-email native invitation/account context | 9 installed synthetic full registration/verification journeys; actual50 link bindings | Customer verification/draft acceptance pending |
+| Finite clock / operator / finish queued outreach | Signed999queue; native reservations skip accepted keys; actual32char MySQL window columns | First industry50 complete; installed/readback routine and today timers;30window/schema tests1262assertions | Conservative fresh budget;50/window200TOTAL/day; future SMTP outcomes pending |
 
-Exact source proof: [INDUSTRY-NATIVE-SOURCE-PROOF-20261006.json](INDUSTRY-NATIVE-SOURCE-PROOF-20261006.json). Approval applies to the54original reviewed bytes; compiler only binds production links and required sender/footer slots.
+Aggregate live proof: [INDUSTRY-LIVE-ACTIVATION-20261006.json](INDUSTRY-LIVE-ACTIVATION-20261006.json). Initial13char database failure had zero industry attempts; the reviewed migration preserved all prior50beauty slots/51customer acceptances. Original failed config/receipt remain private and preserved.
 <!-- /INDUSTRY-ACTIVATION-CURRENT -->
+
+Dated historical checkpoints follow; the current live receipt above controls execution.
 
 <!-- EXECUTOR-CURRENT -->
 # Fifty beauty emails accepted — October 6

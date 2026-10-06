@@ -1,0 +1,145 @@
+{
+  "schema": "famtastic.acquisition-industry-live-activation.v1",
+  "checked_at": "2026-10-06T22:32:33+00:00",
+  "classification": "deployed",
+  "frontend_commit": "3b2a50101115611c561f0b82040be1bce11a81d6",
+  "backend_commit": "07da2fa65cbaa07202b15f35db9606750ddc6f0e",
+  "first_industry_window_backend_commit": "f12bdff9ed5ca451bd4e1a1c831fe8af52859ffe",
+  "actual": {
+    "checked_at": "2026-10-06T22:32:33+00:00",
+    "clock_status": "active",
+    "industry_slot_counts": {
+      "accepted": 50
+    },
+    "industry_accepted_native_context_matches": 50,
+    "binding_failures": 0,
+    "accepted_industries": 9,
+    "customer_campaign_total_smtp_accepted": 101,
+    "unresolved_dispatches": 0,
+    "shared_usage": {
+      "day": 102,
+      "window": 50
+    },
+    "customer_inbox_delivery_proved": false,
+    "physical_owner_acceptance": false,
+    "pilot_lock": true,
+    "routine_timer_installed": true,
+    "today_timer_installed": true,
+    "routine_starts_on": "2026-10-07",
+    "routine_ends_on": "2026-10-16",
+    "routine_hours": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "timezone": "America/New_York",
+    "window_cap": 50,
+    "day_cap": 200,
+    "routine_queue_rows": 999,
+    "routine_remaining_unused_keys": 899,
+    "routine_config_sha256": "f2f808cc44b6f8cbb4926e7ef3aac9d488ad59c00f1689a423ea1da7642e6efd",
+    "current_industry_window": {
+      "window_key": "asap-industry-2026-10-06-18",
+      "status": "complete",
+      "reason": "",
+      "counts": {
+        "accepted": 50
+      },
+      "inbox_delivery_proved": false
+    },
+    "frontend_commit": "3b2a50101115611c561f0b82040be1bce11a81d6",
+    "backend_commit": "07da2fa65cbaa07202b15f35db9606750ddc6f0e"
+  },
+  "native_campaign_plan": {
+    "checked_at": "2026-10-06T22:32:24+00:00",
+    "campaign_id": 5,
+    "revision_before": 4,
+    "revision_after": 5,
+    "native_saved_reloaded": true,
+    "timer_verified": true,
+    "release_commit": "07da2fa65cbaa07202b15f35db9606750ddc6f0e",
+    "customer_accepted_at_plan_update": 101,
+    "messages_sent_by_plan_update": 0,
+    "generic_followups_enabled": false
+  },
+  "hosted_browser": {
+    "viewport_interaction_checks": 18,
+    "industries": 9,
+    "production": true,
+    "physical_owner_acceptance": false,
+    "email_sends_by_browser": 0,
+    "backend_at_browser_check": "f12bdff9ed5ca451bd4e1a1c831fe8af52859ffe"
+  },
+  "unit_window_schema_proof": {
+    "tests": 30,
+    "assertions": 1262
+  },
+  "manual_review": {
+    "zero_attempt_review_complete": true,
+    "actual_mysql_key_width": 32,
+    "prior_customer_acceptances_preserved": 51,
+    "prior_beauty_slots_preserved": 50,
+    "accepted_or_uncertain_retry": false,
+    "review_sent": 0,
+    "private_receipt_sha256": "143723638ffa3c8cbbbbbe5bdddc5ef663ecf53d5bb94b1d123efd15459194f9",
+    "checked_at": "2026-10-06T22:19:11+00:00",
+    "backend_at_review": "f12bdff9ed5ca451bd4e1a1c831fe8af52859ffe"
+  },
+  "finishing_schedule": {
+    "today": "2026-10-06",
+    "later_today_hours_eastern": [
+      19,
+      20
+    ],
+    "starts_on": "2026-10-07",
+    "ends_on": "2026-10-16",
+    "hours_eastern": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "window_cap": 50,
+    "all_campaign_day_cap": 200,
+    "prior_sends_and_probe_counted": true,
+    "valid_fresh_zero_allowance": "defer_before_reservation",
+    "failed_or_uncertain_transport": "halt_for_manual_review",
+    "completion_date_guaranteed": false,
+    "future_sends_already_completed": false,
+    "generic_d3_d7_enabled": false
+  },
+  "approved_creative_manifest_sha256": "c4d9e431c97ae424fae83671d84fd88cf777c7d11581ba6445a67d6a6e0a0f1b",
+  "private_driver_sha256": {
+    "industry-today-clock.php": "007a688abe53d527785f79a535c8c9460cb034cb351ad6d6cc10ad9a32afbd18",
+    "review-resume-industry-clock.php": "664e28f7a552a607ef2664fdbc6be944c9bef14e3b23302e4a5d7c919e57e356",
+    "pause-industry-today-clock.php": "163fc07f301e470ae4f8e655ef4994cf8fea3dadf2dda6e5ce44c551b0cbb386",
+    "industry-runtime-readback.php": "71b71c61f563dc75061c16eabb6d99031033fedd8731dedff48ac555e293666b",
+    "apply-final-industry-native-plan.php": "e5a758eae36018b95c963f4c98c220ea97b9c39aed6145eb59bca867d7265748",
+    "industry-live-browser.mjs": "dcf4db64b98adcc89f3f6ca2cde8a255b7bc66efc738f646ae6d056a51a549e8",
+    "rebind-active-industry-clock.php": "f7665a77af54af8470bcb0276d5266f01b2443935348c65fb5e0a36784545e0c"
+  },
+  "private_evidence_sha256": {
+    "industry-runtime-readback.json": "bccee62afd5f423e75e4c3d5dc2a419ca450b8dc91f808631e876bdfbdc43679",
+    "industry-live-browser-proof.json": "ff85d11a5bd724f52c059301bb00fc4b694f82d7e46808b3c7a3c0dc41d750f2",
+    "industry-native-final-plan-receipt.json": "550561b78f3a982369a0a0c9d08956e54959734fd7927c9cb914d6f3e5addb04"
+  },
+  "physical_owner_acceptance": "pending",
+  "customer_inbox_delivery_proved": false,
+  "source_only_rebind": {
+    "checked_at": "2026-10-06T22:31:58+00:00",
+    "status": "active_clock_source_rebound",
+    "backend_commit": "07da2fa65cbaa07202b15f35db9606750ddc6f0e",
+    "frontend_commit": "3b2a50101115611c561f0b82040be1bce11a81d6",
+    "prior_industry_acceptances_preserved": 50,
+    "prior_customer_acceptances_preserved": 101,
+    "unresolved_dispatches": 0,
+    "clock_status": "active",
+    "routine_config_checked": true,
+    "queue_rows": 999,
+    "ends_on": "2026-10-16",
+    "accepted_or_uncertain_retry": false,
+    "clock_latch_reset": false,
+    "sent_by_rebind": 0
+  }
+}
