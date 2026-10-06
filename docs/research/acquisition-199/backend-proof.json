@@ -5,9 +5,9 @@
   "owner_accepted": false,
   "hosted_release_proved": false,
   "source_files": {
-    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleGuard.php": "24bbd223f215c4ac58cfae848f99750e71946dcb8dd7db4df3338b3c73bbe9f5",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleGuard.php": "a047dad15fddd89e6b0b152c28e0dd78bd4d9a283f4805a658423e5a64af0151",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleSchema.php": "5378e495ba584890f92a69d28e30a512d59664b01befdd2894003928c151a81d",
-    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleExactAdapter.php": "201377f2464cd3145a050af36d67c9e206a4f31fa86c068b0fc5f99479a0ee81",
+    "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleExactAdapter.php": "5b2d570299c83a0652e944b93664b19403dee2c3d61661e9646893131a18397c",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleSequenceService.php": "1ee93e139733bbf5761632768460cccb5cfd64f7f4e6a3544eec4959d4ac0d83",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleEmail.php": "875da7dd90ac889302c032a12aa16fb708dd5bb511f45c711865af4ad53818ab",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/AcquisitionSampleService.php": "1f6f2c29b0df84d42ec8b1962252a5b84b3f8f7f90b1e5f56610cb66e003f850",
@@ -20,10 +20,10 @@
     "backend/web/modules/custom/famtastic_pipeline/src/Service/OutreachMailer.php": "bb2e8fcd99b732eebb8d2473c5584dc6058abcdf9e9d4d997f469f2cce6f32e7",
     "backend/web/modules/custom/famtastic_pipeline/src/Controller/CustomerPortalController.php": "ab444dde744a620da5fd6352bbd5d7b2d39f1a5a71dae2934c0be95f8e412c88",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/CustomerPortalService.php": "a108efdd2cec6d0d1f497d491f44098d427d355592a6dfda6b89ff1d27c6d274",
-    "scripts/acquisition-sample-drupal.php": "a76495819b3d4775c20ae828eebe4bb308a563faba596e10461630fa01993163",
-    "scripts/acquisition-sample-drupal.sh": "cc9a5564180f04735bb47380014ed5a52a9ab7de97afd69814daadf4df447abc",
+    "scripts/acquisition-sample-drupal.php": "1d73126a3b95492442ace4fa3eceae34de535b9ac633166a348cc9e5034e0964",
+    "scripts/acquisition-sample-drupal.sh": "131bcbb6d72f900f85770abd5cfb492433b6a1cc1ef3d4149212ecab562c7928",
     "scripts/acquisition-sample-package.py": "eba1c98017db3098561e60928e402913d722d0b784509be716fb838268775154",
-    "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionSampleServiceTest.php": "e8cca88110d303b644b1539233a28913d0705c4f566a5b1786e00cf76e54f36a",
+    "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionSampleServiceTest.php": "906f36993cb4b3ad951ddfca523912f1f281027431f35100003c1154aa45b491",
     "backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionCampaignReportServiceTest.php": "7292ee40f9d4e8889b10d8c366899b48c0dbf40829e8f34eeb0af2ef0ae9a29d",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/CampaignMessageService.php": "fd63a8a7faa2c9913d1a73cc627d0af19abe6864e4bcfcc706981df52dfa9b26",
     "backend/web/modules/custom/famtastic_pipeline/src/Service/OperationalLedger.php": "0cca6de57e8fac4d8794cf2ad1ca44424669876ea294113ea6fa3d48b012007b",
@@ -179,6 +179,69 @@
       "Approved hash-pinned hosted backend/frontend/private bundle and physical sender postal configuration",
       "Owner-signed exact message/content manifest, cap one, reviewed release receipt and bounded expiry",
       "Explicit real-transport execution permission and runtime/tool enablement after review; durable reservation and uncertainty reconciliation remain mandatory"
+    ]
+  },
+  "owner_cold_basis_followup": {
+    "classification": "changed",
+    "date": "2026-10-06",
+    "status": "source_checkpoint_complete",
+    "authorization_basis": "owner_authorized_cold_outreach",
+    "provider_policy_conflict": true,
+    "recipient_opt_in": false,
+    "provider_permission_proved": false,
+    "owner_source_record": {
+      "reference": "docs/research/acquisition-199/OWNER-COLD-SEND-AUTHORIZATION.json",
+      "sha256": "365c237c22673211f30515942fbc4a7587acc50a5e0e7ad21ddcbf24e48efc22",
+      "classification": "actual owner source artifact; not recipient consent or provider exception"
+    },
+    "narrow_suite": {
+      "tests": 36,
+      "assertions": 341,
+      "status": "passed",
+      "errors": 0,
+      "warnings": 0,
+      "command": "FAMTASTIC_BACKEND_VENDOR=/private/tmp/famtastic-acquisition-drupal.2XzD9i/backend/vendor /private/tmp/famtastic-acquisition-drupal.2XzD9i/backend/vendor/bin/phpunit --bootstrap scripts/automation-test-bootstrap.php backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionSampleServiceTest.php"
+    },
+    "focused_existing_regressions": {
+      "tests": 36,
+      "assertions": 245,
+      "status": "passed",
+      "existing_phpunit_deprecations": 69,
+      "scope": "AcquisitionCampaignReportServiceTest, WebsiteRequestAuditPreservationTest, WebsiteRequestProofHandoffTest, PublicPreviewContentGuardTest, PublicPreviewDeliveryVerifiedColdDispatchGateTest, PublicPreviewDeliveryCommercialGateOrderTest"
+    },
+    "installed_drupal": {
+      "status": "passed",
+      "classification": "local_synthetic",
+      "checks": 33,
+      "evidence": "docs/research/acquisition-199/evidence/owner-cold-basis-installed.json",
+      "sha256": "d70d3049d22df75ee6d9a88e99a1d21741bf4b4e795ba4730af0d0a4f77cc40e",
+      "cold_basis_classification": "actual owner source artifact, synthetic row/account/history receipts; no actual dispatch",
+      "owner_cold_source_sha256": "365c237c22673211f30515942fbc4a7587acc50a5e0e7ad21ddcbf24e48efc22",
+      "actual_customer_send": false
+    },
+    "no_consent_insert": true,
+    "opt_in_branch_preserved": true,
+    "schema_migration": false,
+    "public_routes_added": false,
+    "full_suite_rerun": false,
+    "php_syntax": "four affected PHP files passed",
+    "shell_syntax": "passed",
+    "git_diff_check": "passed",
+    "actions_performed": {
+      "actual_send": false,
+      "recipient_import": false,
+      "recipient_export": false,
+      "production_deployment": false,
+      "account_dns_mutation": false,
+      "purchase": false,
+      "commit": false
+    },
+    "remaining_actual_runtime_inputs": [
+      "Fresh exact row/account owner receipt and frozen actual authorization source bytes",
+      "Actual native history coverage and current suppression/stop reconciliation",
+      "Exact active selected SMTP fingerprint and reviewed physical postal configuration",
+      "Approved exact hosted frontend/backend/private creative bundle and verified live journey",
+      "Matching owner-signed exact cap-one content/release manifest and execution/runtime permission"
     ]
   }
 }

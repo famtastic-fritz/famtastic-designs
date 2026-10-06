@@ -1,0 +1,39 @@
+{
+  "schema": "famtastic.acquisition-release-owner-authorization.v1",
+  "approved_by": "Fritz Medine",
+  "date": "2026-10-06",
+  "source_thread_id": "01a10d13-9d03-74c3-9ab4-15e8045e7688",
+  "kind": "owner_direction_relayed_by_source_chat",
+  "instruction": "Deploy, please. Deploy, commit, update docs, do everything needed to resolve and start sending ASAP.",
+  "authorized_actions": [
+    "Scoped approved campaign source commits/docs",
+    "Necessary source publication to existing public GitHub repository",
+    "Current-main integration using existing repository Git release lane",
+    "Normal checked-in frontend/backend production GoDaddy deployment",
+    "Controlled owner email/inbox and live journey verification",
+    "Owner-authorized first customer batch within actual remaining account limits after technical readiness"
+  ],
+  "supersedes_prior_missing_source_export_and_apply_authorization": true,
+  "private_lead_lists_and_credentials_remain_private": true,
+  "drive_archive_export_authorized": false,
+  "private_bulk_contact_hash_export_authorized": false,
+  "additional_bill_authorized": false,
+  "new_provider_or_client_domain_use_authorized": false,
+  "recurring_unattended_automation_authorized": false,
+  "preserve": [
+    "independent work",
+    "unsubscribe/suppression",
+    "native reply/bounce/complaint/purchase exits",
+    "privacy/isolation",
+    "atomic send reservation and uncertain no-retry",
+    "known reversible deployment/rollback",
+    "no broad historical queue tick"
+  ],
+  "milestones_to_report": [
+    "source released",
+    "production markers and hosted journey passed",
+    "actual provider accepted counts separately from inbox delivery"
+  ],
+  "cold_send_authority_reference": "OWNER-COLD-SEND-AUTHORIZATION.json",
+  "note": "Risk receipt reflects earlier narrower scope; this later record explicitly grants source release/apply. No consent or provider exception is manufactured."
+}

@@ -1,3 +1,11 @@
+# Current owner-authorized release — 2026-10-06
+
+Fritz explicitly authorized cold customer outreach through existing GoDaddy hello@famtasticdesigns.com and scoped public source/main integration plus normal checked-in production deployment. RELEASE-OWNER-AUTHORIZATION.json supersedes earlier missing export/apply authority. OWNER-COLD-SEND-AUTHORIZATION.json records account-risk acceptance truthfully: no recipient opt-in or provider exception is inferred. No repeated risk decision is pending.
+
+Cold authorization source passed36 unit tests/341 assertions,36 regression tests/245 assertions and33 installed checks. The private exact operator passed14 installed checks, including idempotent preparation, signed frozen cap-one dispatch and no uncertain retry. These are local synthetic proofs; current hosted release/inbox/customer sends remain unproved. Approved creative bytes are unchanged. Actual per-recipient native history/suppression and available capacity remain required before dispatch. Current execution brief: OWNER-COLD-READINESS-BRIEF.md. One approved beauty D0 is supported; other industries and followups remain held. SCHEDULE-1000-PROPOSAL.md is a projection, not a provider quota or unattended automation.
+
+Earlier sections below retain their historical checkpoint state; authority and next actions above control this release.
+
 # Acquisition capability and owner acceptance record
 
 Current state (2026-10-05): NEW visual approved in CREATIVE-APPROVAL.json; old six declined. The approved generic D0 source bridge is locally complete and verified. Sender hello@famtasticdesigns.com matches the hosted SMTP username and From; actual recipient-use evidence and hosted journey remain pending. Older revision matrices below are historical source evidence.

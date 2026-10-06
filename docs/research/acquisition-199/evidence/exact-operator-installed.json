@@ -1,0 +1,25 @@
+{
+    "schema": "famtastic.acquisition-operator-proof.v1",
+    "status": "passed",
+    "classification": "local_synthetic",
+    "checks": {
+        "operator_confines_input": true,
+        "operator_requires_0600": true,
+        "operator_rejects_unsigned_input": true,
+        "operator_rejects_symlink_input": true,
+        "operator_does_not_relabel_wrong_history": true,
+        "operator_prepares_one_native_d0_without_sending": true,
+        "operator_exactly_one_message": true,
+        "operator_prepare_replay_no_second_invitation": true,
+        "operator_status_no_pii_or_secret": true,
+        "operator_changed_input_replay_rejected": true,
+        "operator_frozen_manifest_tamper_rejected": true,
+        "operator_fake_exact_dispatch_once": true,
+        "operator_accepted_replay_no_second_transport": true,
+        "operator_uncertain_never_retries": true
+    },
+    "actual_sends": false,
+    "production_deployment": false,
+    "source_sha256": "47a9777332d5fcc770238580c47ac3a2fdb5fb686a86061d45bb61b04a8dcf12",
+    "evidence_scope": "Actual operator\/native services in disposable SQLite; owner source bytes actual, row\/history\/release\/fake transport synthetic. No recipient outputs."
+}

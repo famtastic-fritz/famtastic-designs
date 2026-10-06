@@ -1,0 +1,8 @@
+{
+  "schema": "famtastic.acquisition-source-privacy-scan.v1",
+  "addresses_checked": 1260,
+  "candidate_files": 296,
+  "private_address_or_hash_matches": 0,
+  "scope": "tracked diff from current main plus nonignored untracked candidate files",
+  "credentials_exported": false
+}

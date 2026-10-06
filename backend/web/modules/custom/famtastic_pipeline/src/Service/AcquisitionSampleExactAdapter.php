@@ -19,7 +19,9 @@ final class AcquisitionSampleExactAdapter {
     if (strlen($secret) < 32 || !hash_equals(hash_hmac('sha256', $json, $secret), $signature)) throw new \InvalidArgumentException('acquisition_owner_signature_invalid');
     $now = $this->time->getRequestTime();
     if (($manifest['schema'] ?? '') !== 'famtastic.acquisition-exact-send.v1' || ($manifest['transport'] ?? '') !== 'native_smtp' || ($manifest['cap'] ?? 0) !== 1 || (int) ($manifest['expires'] ?? 0) <= $now || (int) $manifest['expires'] > $now + 3600 || !preg_match('/^[a-zA-Z0-9:_.-]{8,128}$/D', (string) ($manifest['approval_ref'] ?? ''))) throw new \InvalidArgumentException('acquisition_exact_manifest_invalid');
-    foreach (['provider_permission_receipt', 'history_receipt', 'release_proof'] as $receipt) {
+    $basis = AcquisitionSampleGuard::authorizationBasis($manifest);
+    $permissionKey = $basis === 'owner_authorized_cold_outreach' ? 'owner_authorization_receipt' : 'provider_permission_receipt';
+    foreach ([$permissionKey, 'history_receipt', 'release_proof'] as $receipt) {
       if (($manifest[$receipt]['status'] ?? '') !== 'owner_reviewed' || !preg_match('/^[a-f0-9]{64}$/D', (string) ($manifest[$receipt]['sha256'] ?? '')) || empty($manifest[$receipt]['reference'])) throw new \InvalidArgumentException('acquisition_reviewed_receipts_required');
     }
     $messageId = (int) ($manifest['message_id'] ?? 0);
@@ -44,9 +46,10 @@ final class AcquisitionSampleExactAdapter {
       $snapshot = json_decode((string) $content['snapshot'], TRUE, 32, JSON_THROW_ON_ERROR);
       if (!hash_equals((string) ($snapshot['tracking_key'] ?? ''), (string) $message['tracking_key']) || !hash_equals((string) ($snapshot['unsubscribe_key'] ?? ''), (string) $message['unsubscribe_key']) || !hash_equals((string) ($snapshot['invitation_token_hash'] ?? ''), (string) $sample['token_hash']) || trim((string) ($snapshot['subject'] ?? '')) !== $message['subject'] || trim((string) ($snapshot['body'] ?? '')) !== $message['body_snapshot']) throw new \InvalidArgumentException('acquisition_native_header_content_drift');
       $generic = ($snapshot['schema'] ?? '') === 'famtastic.acquisition-generic-d0.v1';
+      if (!$generic && $basis === 'owner_authorized_cold_outreach') throw new \InvalidArgumentException('acquisition_cold_basis_generic_only');
       if ($generic) {
         $authorization = $this->sequences->genericAuthorization($sample, (string) ($snapshot['creative_approval_record'] ?? ''));
-        if (($snapshot['authorization'] ?? []) !== $authorization || ($manifest['provider_permission_receipt'] ?? []) !== $authorization['provider_permission_receipt'] || ($manifest['history_receipt'] ?? []) !== $authorization['history_receipt'] || ($manifest['sender_account_sha256'] ?? '') !== $authorization['sender']['account_sha256'] || ($manifest['generic_authorization_hash'] ?? '') !== $sample['qualification_ref'] || (int) $content['day'] !== 0 || $snapshot['content_id'] !== $authorization['content_id']) throw new \InvalidArgumentException('generic_dispatch_receipt_binding_required');
+        if ($basis !== AcquisitionSampleGuard::authorizationBasis($authorization) || ($snapshot['authorization'] ?? []) !== $authorization || ($manifest[$permissionKey] ?? []) !== $authorization[$permissionKey] || ($manifest['history_receipt'] ?? []) !== $authorization['history_receipt'] || ($manifest['sender_account_sha256'] ?? '') !== $authorization['sender']['account_sha256'] || ($manifest['generic_authorization_hash'] ?? '') !== $sample['qualification_ref'] || (int) $content['day'] !== 0 || $snapshot['content_id'] !== $authorization['content_id']) throw new \InvalidArgumentException('generic_dispatch_receipt_binding_required');
         $creative = AcquisitionSampleGuard::creativeApproval($authorization['creative_approval'], $snapshot['creative_approval_record']);
         $expectedMedia = ['connect-qr' => ['connect-qr.png', 'digital-card'], 'sample-beauty_soft_power_acquisition' => ['hair-studio.jpg', 'illustrative-generic-sample']];
         $media = [];

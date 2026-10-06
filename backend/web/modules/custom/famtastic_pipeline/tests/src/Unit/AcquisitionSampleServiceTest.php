@@ -25,6 +25,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
   private OperationalLedger $ledger;
   private int $now = 1800000000;
   private \Drupal\Core\Config\ConfigFactoryInterface $factory;
+  private string $smtpFrom = 'sender@example.test';
   private string|false|null $previousGenericSecret = NULL;
 
   protected function setUp(): void {
@@ -44,7 +45,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $config->method('get')->willReturn('123 Fictional Test Street, Example City, FL 00000');
     $factory = $this->createMock(\Drupal\Core\Config\ConfigFactoryInterface::class);
     $smtp = $this->createMock(\Drupal\Core\Config\ImmutableConfig::class);
-    $smtp->method('get')->willReturnCallback(static fn(string $key): mixed => ['smtp_on'=>TRUE,'smtp_host'=>'smtp.synthetic.invalid','smtp_port'=>587,'smtp_username'=>'sender@example.test','smtp_from'=>'sender@example.test','smtp_protocol'=>'tls'][$key] ?? NULL);
+    $smtp->method('get')->willReturnCallback(fn(string $key): mixed => ['smtp_on'=>TRUE,'smtp_host'=>'smtp.synthetic.invalid','smtp_port'=>587,'smtp_username'=>$this->smtpFrom,'smtp_from'=>$this->smtpFrom,'smtp_protocol'=>'tls'][$key] ?? NULL);
     $factory->method('get')->willReturnCallback(static fn(string $name): mixed => $name === 'smtp.settings' ? $smtp : $config);
     $this->factory = $factory;
     $this->samples = new AcquisitionSampleService($this->db, $time, $this->ledger, $factory);
@@ -502,6 +503,62 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     return hash_hmac('sha256',json_encode($value,JSON_THROW_ON_ERROR),$secret);
   }
 
+  private function coldAuthorizationReceipt(array $invitation): array {
+    $this->smtpFrom = 'hello@famtasticdesigns.com';
+    $authorization = $this->genericAuthorizationReceipt($invitation);
+    $owner = $authorization['provider_permission_receipt'];
+    unset($authorization['provider_permission_receipt']);
+    $authorization += ['authorization_basis' => 'owner_authorized_cold_outreach', 'provider_policy_conflict' => TRUE, 'recipient_opt_in' => FALSE, 'provider_permission_proved' => FALSE, 'owner_authorization_receipt' => array_intersect_key($owner, array_flip(['status', 'reference', 'sha256', 'checked_at', 'binding'])) + ['approved_by' => 'Fritz Medine']];
+    $path='docs/research/acquisition-199/OWNER-COLD-SEND-AUTHORIZATION.json';
+    $authorization['owner_authorization_record']=file_get_contents(dirname(__DIR__,8).'/'.$path);
+    $authorization['owner_authorization_receipt']['reference']=$path;
+    $authorization['owner_authorization_receipt']['sha256']=hash('sha256',$authorization['owner_authorization_record']);
+    return $authorization;
+  }
+
+  public function testColdOwnerBasisRequiresTruthfulFreshExactOwnerAndHistoryEvidence(): void {
+    $invitation = $this->prepare();
+    $authorization = $this->coldAuthorizationReceipt($invitation);
+    $mutations = [
+      static function(array $a): array { unset($a['owner_authorization_receipt']); return $a; },
+      static function(array $a): array { $a['owner_authorization_receipt']['approved_by']='Other owner'; return $a; },
+      static function(array $a): array { $a['owner_authorization_receipt']['reference']=''; return $a; },
+      static function(array $a): array { $a['owner_authorization_receipt']['sha256']='invalid'; return $a; },
+      static function(array $a): array { $a['owner_authorization_receipt']['checked_at']-=3601; return $a; },
+      static function(array $a): array { $a['owner_authorization_receipt']['binding']['prospect_id']=2; return $a; },
+      static function(array $a): array { $a['owner_authorization_receipt']['binding']['account_sha256']=str_repeat('e',64); return $a; },
+      static function(array $a): array { $a['sender']['account_sha256']=str_repeat('e',64); return $a; },
+      static function(array $a): array { $a['provider_policy_conflict']=FALSE; return $a; },
+      static function(array $a): array { $a['recipient_opt_in']=TRUE; return $a; },
+      static function(array $a): array { $a['provider_permission_proved']=TRUE; return $a; },
+      static function(array $a): array { $a['provider_permission_receipt']=[]; return $a; },
+      static function(array $a): array { $a['authorization_basis']='unknown'; return $a; },
+      static function(array $a): array { unset($a['owner_authorization_record']); return $a; },
+      static function(array $a): array { $a['owner_authorization_record'].='changed'; return $a; },
+      static function(array $a): array { $a['history_receipt']['known_stop_reasons']=['prior_reply']; return $a; },
+    ];
+    foreach ($mutations as $mutate) {
+      $bad=$mutate($authorization);
+      try { $this->samples->authorizeGeneric($invitation['id'],$bad,$this->genericSignature($bad)); $this->fail('Invalid owner cold evidence admitted.'); }
+      catch (\InvalidArgumentException) { $this->addToAssertionCount(1); }
+      $this->assertNull($this->db->select('famtastic_acquisition_sample','s')->fields('s',['eligible_at'])->condition('id',$invitation['id'])->execute()->fetchField());
+    }
+    $this->assertFalse($this->samples->authorizeGeneric($invitation['id'],$authorization,$this->genericSignature($authorization))['staged']);
+    $this->assertTrue($this->samples->authorizeGeneric($invitation['id'],$authorization,$this->genericSignature($authorization))['duplicate']);
+    $changed=$authorization; $changed['owner_authorization_receipt']['checked_at']--;
+    try { $this->samples->authorizeGeneric($invitation['id'],$changed,$this->genericSignature($changed)); $this->fail('Changed cold approval replay admitted.'); }
+    catch (\InvalidArgumentException $e) { $this->assertSame('generic_authorization_replay_changed',$e->getMessage()); }
+    $this->assertSame(0,(int)$this->db->select('famtastic_email_message','m')->countQuery()->execute()->fetchField());
+    $sequence=$this->sequences->stageGenericD0($invitation['id'],'owner@example.test',$invitation['token']);
+    $snapshot=json_decode($this->db->select('famtastic_acquisition_message','m')->fields('m',['snapshot'])->condition('message_id',$sequence['message_ids'][0])->execute()->fetchField(),TRUE);
+    $this->assertSame($authorization,$snapshot['authorization']);
+    $this->assertArrayNotHasKey('provider_permission_receipt',$snapshot['authorization']);
+    $this->assertFalse($snapshot['authorization']['recipient_opt_in']);
+    $this->assertFalse($snapshot['authorization']['provider_permission_proved']);
+    $this->assertTrue($snapshot['authorization']['provider_policy_conflict']);
+    $this->assertSame(0,(int)$this->db->select('famtastic_consent','c')->countQuery()->execute()->fetchField());
+  }
+
   public function testGenericD0RequiresFreshExactEvidenceAndKeepsPreparationUnstaged(): void {
     $invitation = $this->prepare();
     $authorization = $this->genericAuthorizationReceipt($invitation);
@@ -581,17 +638,42 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
   }
 
   public function testGenericExactAdapterRequiresMatchingReceiptAndPreservesCapAndUncertainRetry(): void {
-    $invitation=$this->prepare();$auth=$this->genericAuthorizationReceipt($invitation);$this->samples->authorizeGeneric($invitation['id'],$auth,$this->genericSignature($auth));
+    $this->assertGenericExactAdapterBasis(FALSE);
+  }
+
+  public function testColdExactAdapterRequiresMatchingOwnerBasisAndPreservesCapAndUncertainRetry(): void {
+    $this->assertGenericExactAdapterBasis(TRUE);
+  }
+
+  private function assertGenericExactAdapterBasis(bool $cold): void {
+    $invitation=$this->prepare();$auth=$cold ? $this->coldAuthorizationReceipt($invitation) : $this->genericAuthorizationReceipt($invitation);$this->samples->authorizeGeneric($invitation['id'],$auth,$this->genericSignature($auth));
     $sequence=$this->sequences->stageGenericD0($invitation['id'],'owner@example.test',$invitation['token']);$this->sequences->activate($sequence['sequence_id'],$this->now,'synthetic-generic-schedule');
     $content=$this->db->select('famtastic_acquisition_message','c')->fields('c')->condition('message_id',$sequence['message_ids'][0])->execute()->fetchAssoc();
     $sample=$this->db->select('famtastic_acquisition_sample','s')->fields('s')->condition('id',$invitation['id'])->execute()->fetchAssoc();
-    $manifest=['schema'=>'famtastic.acquisition-exact-send.v1','transport'=>'native_smtp','cap'=>1,'sequence_id'=>$sequence['sequence_id'],'message_id'=>(int)$content['message_id'],'recipient'=>'owner@example.test','from'=>'sender@example.test','content_id'=>$content['content_id'],'content_hash'=>$content['content_hash'],'qualification_ref'=>$sample['qualification_ref'],'invitation_evidence_hash'=>$sample['evidence_hash'],'approval_ref'=>'synthetic-generic-cap1','expires'=>$this->now+3600,'provider_permission_receipt'=>$auth['provider_permission_receipt'],'history_receipt'=>$auth['history_receipt'],'release_proof'=>['status'=>'owner_reviewed','reference'=>'synthetic-release-not-hosted','sha256'=>str_repeat('e',64)],'sender_account_sha256'=>$auth['sender']['account_sha256'],'generic_authorization_hash'=>$sample['qualification_ref']];
+    $manifest=['schema'=>'famtastic.acquisition-exact-send.v1','transport'=>'native_smtp','cap'=>1,'sequence_id'=>$sequence['sequence_id'],'message_id'=>(int)$content['message_id'],'recipient'=>'owner@example.test','from'=>'sender@example.test','content_id'=>$content['content_id'],'content_hash'=>$content['content_hash'],'qualification_ref'=>$sample['qualification_ref'],'invitation_evidence_hash'=>$sample['evidence_hash'],'approval_ref'=>'synthetic-generic-cap1','expires'=>$this->now+3600,'history_receipt'=>$auth['history_receipt'],'release_proof'=>['status'=>'owner_reviewed','reference'=>'synthetic-release-not-hosted','sha256'=>str_repeat('e',64)],'sender_account_sha256'=>$auth['sender']['account_sha256'],'generic_authorization_hash'=>$sample['qualification_ref']];
+    $permissionKey=$cold ? 'owner_authorization_receipt' : 'provider_permission_receipt';
+    $manifest[$permissionKey]=$auth[$permissionKey];
+    if ($cold) foreach (['authorization_basis','provider_policy_conflict','recipient_opt_in','provider_permission_proved'] as $key) $manifest[$key]=$auth[$key];
+    $manifest['from']=$auth['sender']['from'];
     $time=$this->createMock(TimeInterface::class);$time->method('getRequestTime')->willReturn($this->now);
-    $mailer=$this->createMock(\Drupal\famtastic_pipeline\Service\OutreachMailer::class);$mailer->method('fromAddress')->willReturn('sender@example.test');$mailer->expects($this->once())->method('sendFrozenAcquisition')->willReturn('<synthetic-generic-not-real@example.test>');
+    $mailer=$this->createMock(\Drupal\famtastic_pipeline\Service\OutreachMailer::class);$mailer->method('fromAddress')->willReturn($auth['sender']['from']);$mailer->expects($this->once())->method('sendFrozenAcquisition')->willReturn('<synthetic-generic-not-real@example.test>');
     $adapter=new \Drupal\famtastic_pipeline\Service\AcquisitionSampleExactAdapter($this->db,$time,$this->ledger,$this->sequences,$mailer);
-    $bad=$manifest;$bad['provider_permission_receipt']['reference']='different-permission';
+    $bad=$manifest;$bad[$permissionKey]['reference']='different-permission';
     try{$adapter->dispatch($bad,$this->genericSignature($bad));$this->fail('Different provider receipt admitted.');}catch(\InvalidArgumentException $e){$this->assertSame('generic_dispatch_receipt_binding_required',$e->getMessage());}
     $this->assertSame(0,(int)$this->db->select('famtastic_acquisition_dispatch','d')->countQuery()->execute()->fetchField());
+    if ($cold) {
+      foreach (['missing_owner','wrong_account','wrong_row','false_permission','wrong_basis'] as $case) {
+        $bad=$manifest;
+        if ($case==='missing_owner') unset($bad[$permissionKey]);
+        elseif ($case==='wrong_account') $bad[$permissionKey]['binding']['account_sha256']=str_repeat('e',64);
+        elseif ($case==='wrong_row') $bad[$permissionKey]['binding']['prospect_id']=2;
+        elseif ($case==='false_permission') $bad['provider_permission_proved']=TRUE;
+        else unset($bad['authorization_basis']);
+        try { $adapter->dispatch($bad,$this->genericSignature($bad)); $this->fail('Invalid cold manifest admitted.'); }
+        catch (\InvalidArgumentException) { $this->addToAssertionCount(1); }
+        $this->assertSame(0,(int)$this->db->select('famtastic_acquisition_dispatch','d')->countQuery()->execute()->fetchField());
+      }
+    }
     $this->assertFalse($adapter->dispatch($manifest,$this->genericSignature($manifest))['inbox_delivery']);
     $this->assertTrue($adapter->dispatch($manifest,$this->genericSignature($manifest))['duplicate']);
     $this->db->update('famtastic_acquisition_dispatch')->fields(['status'=>'uncertain'])->condition('message_id',$manifest['message_id'])->execute();

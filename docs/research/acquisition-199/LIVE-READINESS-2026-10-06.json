@@ -1,0 +1,32 @@
+{
+  "schema": "famtastic.acquisition-live-readiness.v1",
+  "checked_date": "2026-10-06",
+  "read_only": true,
+  "owner_cold_send_authorized": true,
+  "source_release_apply_authorized": true,
+  "smtp_on": true,
+  "selected_smtp_from_matches_hello": true,
+  "outreach_postal_present": true,
+  "front_base": "https://famtasticdesigns.com",
+  "api_base": "https://famtasticdesigns.com/web",
+  "pilot_exact_dispatch_only": false,
+  "acquisition_tables_present": false,
+  "owner_signing_secret_configured": false,
+  "hosted_approved_generic_release": false,
+  "account_capacity": {
+    "uapi_present": true,
+    "cpanel_user_file_accessible": false,
+    "get_user_information_parseable": false,
+    "remaining_allowance": null,
+    "250_total_per_day_is_target_not_quota": true
+  },
+  "messages_sent": 0,
+  "changes_made": false,
+  "release_markers_before": {
+    "frontend": "8432dc1231012a5bf0182aee439d026dd5471d7c",
+    "backend": "bb91a07b6c5e2c332b70881df2937f0400bdeb5c"
+  },
+  "broad_scheduler_entries": 0,
+  "bounded_worker_present": true,
+  "inbound_clock_present": true
+}

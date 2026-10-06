@@ -5,20 +5,21 @@
   "repository": "famtastic-fritz/famtastic-designs",
   "repository_private_verified": false,
   "repository_visibility_check": "gh repo view --json isPrivate,url,nameWithOwner returned isPrivate=false",
-  "push_status": "rejected_by_automatic_approval",
+  "push_status": "authorized_pending_execution",
   "push_reason": "Public external destination; explicit trusted authorization for this source/readiness export absent.",
-  "pr58_update": "not_performed",
+  "pr58_update": "pending_source_publication",
   "drive_export": "separately_rejected; local report retained",
   "private_contact_scan": {
     "addresses_checked": 1000,
     "staged_matches": 0
   },
-  "user_permission": "requested asynchronously; pending",
-  "dispatch": "HOLD",
+  "user_permission": "Explicit Oct6 owner scoped public source/main/deploy authorization; see RELEASE-OWNER-AUTHORIZATION.json",
+  "dispatch": "authorized_pending_technical_readiness",
   "latest_application_source": "326266f46d2bb00101dc18d938eae4b373396bc4",
   "latest_application_local_only": true,
   "creative_approved": true,
   "paced_send_intent_approved": true,
   "customer_sends": 0,
-  "export_rejections_retried": false
+  "export_rejections_retried": false,
+  "prior_rejection_superseded_by_new_authority": true
 }

@@ -89,6 +89,50 @@ if (getenv('ACQUISITION_DRUPAL_PHASE') === 'generic_delivery') {
     $GLOBALS['config']['smtp.settings']['smtp_on']=FALSE;\Drupal::service('config.factory')->reset('smtp.settings');
     $check($sequences->due($stage['sequence_id'])===[] && $db->select('famtastic_acquisition_sequence','s')->fields('s',['stop_reason'])->condition('id',$stage['sequence_id'])->execute()->fetchField()==='generic_authorization_stale','generic_disabled_or_changed_account_stops_due');
     try{\Drupal::service('famtastic_pipeline.mailer')->assertAcquisitionTransportAllowed();$check(FALSE,'generic_real_dispatch_held');}catch(RuntimeException $e){$check($e->getMessage()==='acquisition_real_dispatch_disabled','generic_real_dispatch_held');}
+    // Actual owner source bytes; row/account/history receipts stay synthetic.
+    // The real mailer remains disabled and PHP network functions unavailable.
+    $ownerBytes=(string)file_get_contents($sandbox.'/backend/private/owner-cold-source-record.json');
+    $GLOBALS['config']['smtp.settings']['smtp_on']=TRUE;
+    $GLOBALS['config']['smtp.settings']['smtp_username']='hello@famtasticdesigns.com';
+    $GLOBALS['config']['smtp.settings']['smtp_from']='hello@famtasticdesigns.com';
+    \Drupal::service('config.factory')->reset('smtp.settings');
+    $coldEmail='cold-d0-'.$runKey.'@example.test';
+    $coldProspect=\Drupal::entityTypeManager()->getStorage('famtastic_prospect')->create(['business_name'=>'Juniper Cold Source Proof','business_category'=>'Beauty, Hair Styling & Braiding','public_email'=>$coldEmail,'campaign'=>'acquisition-199','source'=>'local_synthetic','status'=>'new']);$coldProspect->save();
+    $cold=$samples->prepareGeneric('synthetic:cold:d0:'.$runKey,(int)$coldProspect->id(),$campaignId,$recipe,$now+86400);
+    $coldRow=$db->select('famtastic_acquisition_sample','s')->fields('s')->condition('id',$cold['id'])->execute()->fetchAssoc();
+    $coldAccount=$sequences->senderAccount();
+    $coldBinding=['invitation_id'=>(int)$coldRow['id'],'prospect_id'=>(int)$coldRow['prospect_id'],'campaign_id'=>(int)$coldRow['campaign_id'],'recipient_hash'=>$coldRow['recipient_hash'],'invitation_evidence_hash'=>$coldRow['evidence_hash'],'account_sha256'=>$coldAccount['account_sha256'],'from'=>$coldAccount['from']];
+    $ownerReceipt=['status'=>'owner_reviewed','reference'=>'docs/research/acquisition-199/OWNER-COLD-SEND-AUTHORIZATION.json','sha256'=>hash('sha256',$ownerBytes),'checked_at'=>$now,'binding'=>$coldBinding,'approved_by'=>'Fritz Medine'];
+    $coldAuth=$authorization;unset($coldAuth['provider_permission_receipt']);
+    $coldAuth['binding']=$coldBinding;$coldAuth['sender']=$coldAccount;$coldAuth['history_receipt']['binding']=$coldBinding;
+    $coldAuth+=['authorization_basis'=>'owner_authorized_cold_outreach','provider_policy_conflict'=>TRUE,'recipient_opt_in'=>FALSE,'provider_permission_proved'=>FALSE,'owner_authorization_receipt'=>$ownerReceipt,'owner_authorization_record'=>$ownerBytes];
+    foreach(['missing_owner','wrong_owner','wrong_row','wrong_account','changed_artifact','false_permission','stale_owner'] as $case){
+      $bad=$coldAuth;
+      if($case==='missing_owner')unset($bad['owner_authorization_receipt']);
+      elseif($case==='wrong_owner')$bad['owner_authorization_receipt']['approved_by']='Other owner';
+      elseif($case==='wrong_row')$bad['owner_authorization_receipt']['binding']['prospect_id']++;
+      elseif($case==='wrong_account')$bad['owner_authorization_receipt']['binding']['account_sha256']=str_repeat('e',64);
+      elseif($case==='changed_artifact')$bad['owner_authorization_record'].='changed';
+      elseif($case==='false_permission')$bad['provider_permission_proved']=TRUE;
+      else $bad['owner_authorization_receipt']['checked_at']=$now-3601;
+      try{$samples->authorizeGeneric($cold['id'],$bad,$sign($bad));$check(FALSE,'cold_basis_rejects_'.$case);}catch(InvalidArgumentException){$check(TRUE,'cold_basis_rejects_'.$case);}
+    }
+    $consentsBefore=(int)$db->select('famtastic_consent','c')->countQuery()->execute()->fetchField();
+    $samples->authorizeGeneric($cold['id'],$coldAuth,$sign($coldAuth));
+    $check($samples->authorizeGeneric($cold['id'],$coldAuth,$sign($coldAuth))['duplicate'],'cold_basis_same_authorization_replay');
+    $bad=$coldAuth;$bad['owner_authorization_receipt']['checked_at']--;
+    try{$samples->authorizeGeneric($cold['id'],$bad,$sign($bad));$check(FALSE,'cold_basis_changed_replay_rejected');}catch(InvalidArgumentException $e){$check($e->getMessage()==='generic_authorization_replay_changed','cold_basis_changed_replay_rejected');}
+    $coldStage=$sequences->stageGenericD0($cold['id'],$coldEmail,$cold['token']);
+    $coldContent=$db->select('famtastic_acquisition_message','c')->fields('c')->condition('message_id',$coldStage['message_ids'][0])->execute()->fetchAssoc();$coldSnapshot=json_decode($coldContent['snapshot'],TRUE);
+    $check($coldSnapshot['authorization']===$coldAuth && !isset($coldSnapshot['authorization']['provider_permission_receipt']) && !$coldSnapshot['authorization']['recipient_opt_in'] && !$coldSnapshot['authorization']['provider_permission_proved'] && $coldSnapshot['authorization']['provider_policy_conflict'],'cold_basis_truth_and_actual_source_bytes_frozen');
+    $check((int)$db->select('famtastic_consent','c')->countQuery()->execute()->fetchField()===$consentsBefore,'cold_basis_does_not_create_consent');
+    $sequences->activate($coldStage['sequence_id'],$now,'synthetic-cold-schedule');
+    $coldManifest=['transport'=>'synthetic_memory_only','sequence_id'=>$coldStage['sequence_id'],'expires'=>$now+3600,'approval_ref'=>'synthetic-cold-d0-memory','messages'=>[(string)$coldContent['message_id']=>['recipient'=>$coldEmail,'content_hash'=>$coldContent['content_hash']]]];$coldSignature=hash_hmac('sha256',json_encode($coldManifest,JSON_THROW_ON_ERROR),$memorySecret);
+    $coldCapture=\Drupal::service('famtastic_pipeline.acquisition_sample_memory')->capture($coldStage['sequence_id'],(int)$coldContent['message_id'],$coldManifest,$coldSignature);
+    $check(!$coldCapture['inbox_delivery'] && $coldCapture['captured']['authorization']===$coldAuth,'cold_basis_memory_capture_only');
+    \Drupal::service('famtastic_pipeline.operational_ledger')->recordEvent('synthetic:cold:reply:'.$runKey,'email.replied',[],(int)$coldProspect->id(),$campaignId);
+    $check($sequences->due($coldStage['sequence_id'])===[],'cold_basis_native_reply_stop');
+    $report['cold_basis_classification']='actual owner source artifact, synthetic row/account/history receipts; no actual dispatch';$report['owner_cold_source_sha256']=hash('sha256',$ownerBytes);
     $report['status']='passed';$report['receipt_classification']='synthetic-shaped evidence, not actual permission/history';$report['remote_logo_received_rendering']='unproved';$report['bundle_manifest_sha256']=hash_file('sha256',$bundle.'/manifest.json');$report['content_hash']=$content['content_hash'];
   } finally {
     if(is_dir($heldMarketing))rename($heldMarketing,$originalMarketing);

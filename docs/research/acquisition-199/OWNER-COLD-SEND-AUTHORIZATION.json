@@ -1,0 +1,34 @@
+{
+  "schema": "famtastic.acquisition-owner-cold-send-authorization.v1",
+  "status": "authorized",
+  "approved_by": "Fritz Medine",
+  "authorized_date": "2026-10-06",
+  "authorization_source": {
+    "kind": "owner_direction_relayed_by_source_chat",
+    "source_thread_id": "01a10d13-9d03-74c3-9ab4-15e8045e7688",
+    "instruction": "Owner explicitly directs customer sending through existing GoDaddy despite its list policy and accepts subsequent account consequences. This is send authorization, not evidence of recipient opt-in or provider exception."
+  },
+  "authorization_basis": "owner_authorized_cold_outreach",
+  "provider": "godaddy_cpanel",
+  "sender": "hello@famtasticdesigns.com",
+  "provider_policy_conflict": true,
+  "recipient_opt_in": false,
+  "provider_permission_proved": false,
+  "account_specific_exception_proved": false,
+  "customer_send_authorized": true,
+  "scope": "Previously supplied new acquisition-199 cohort in smaller capacity-bound batches; no restart of historical260. Each exact recipient/content requires fresh native history/suppression, hosted release and owner-signed cap-one manifest.",
+  "no_additional_bill": true,
+  "provider_purchase_authorized": false,
+  "public_source_export_authorized": false,
+  "production_apply_authorized": false,
+  "dns_account_changes_authorized": false,
+  "hosted_journey_proved": false,
+  "risk_question_resolved": true,
+  "preserve": [
+    "native unsubscribe and suppression",
+    "hard-bounce/complaint/reply/purchase exits",
+    "privacy and isolation",
+    "atomic reservation and uncertain-send no-retry"
+  ],
+  "dispatch_readiness": "Explicit sending authority exists; technical release/live-link/capacity/runtime blockers remain."
+}

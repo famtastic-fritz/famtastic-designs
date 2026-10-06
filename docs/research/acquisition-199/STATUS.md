@@ -1,3 +1,9 @@
+# Current owner authorization —2026-10-06
+
+Owner explicitly authorizes cold customer sending through existing GoDaddy, accepts provider-policy consequences, and explicitly authorizes necessary source publication/main integration and normal production deployment. No opt-in/provider exception is claimed. No repeat risk question is outstanding. Private contacts/credentials stay private; no extra bill, Drive archive, private bulk contact-hash export, purchases or clientdomain use.
+
+Bounded cold-basis source proof:36 acquisition tests/341assertions;36 regressions/245assertions;33 installed checks passed. Root now integrates/publishes/deploys exact source and verifies hosted/customer journey before first bounded actual send. Fresh live readback shows old frontend8432dc12/backendbb91a07b, no acquisition tables/signing key; SMTPhello/postal/bases correct; no broad scheduler entries, existing bounded/inbound clocks. Capacity lookup returned no usable account allowance. Historical sections below retain prior scopes and must not revive consent/approval questions.
+
 # Acquisition status — 2026-10-05
 
 Source classification: changed. Fritz approved the NEW beauty email/Lab visual; the old six remain declined. Owner authorized paced customer sending in principle. Execution is blocked by sender/release/runtime gates; it is not waiting for visual approval.

@@ -1,0 +1,77 @@
+{
+  "schema": "famtastic.acquisition-reviewable-schedule.v1",
+  "status": "held_projection",
+  "native_queue_created": false,
+  "recurring_unattended_automation_authorized": false,
+  "contacts": 1000,
+  "target_total_campaign_messages_per_day": 250,
+  "verified_account_daily_allowance": null,
+  "actual_daily_budget": "min(target250, verified shared/permailbox remaining allowance after transactional traffic)",
+  "target_max_batch_size": 50,
+  "sending_windows_target": 5,
+  "new_cohort_schedule": [
+    {
+      "relative_day": 0,
+      "new": 250
+    },
+    {
+      "relative_day": 1,
+      "new": 250
+    },
+    {
+      "relative_day": 2,
+      "new": 250
+    },
+    {
+      "relative_day": 3,
+      "projected_d3": 250
+    },
+    {
+      "relative_day": 4,
+      "projected_d3": 250
+    },
+    {
+      "relative_day": 5,
+      "projected_d3": 250
+    },
+    {
+      "relative_day": 6,
+      "new": 250
+    },
+    {
+      "relative_day": 7,
+      "projected_d7": 250
+    },
+    {
+      "relative_day": 8,
+      "projected_d7": 250
+    },
+    {
+      "relative_day": 9,
+      "projected_d7": 250,
+      "d3_cohort4_held_overdue": 250
+    },
+    {
+      "relative_day": 10,
+      "projected_overdue_d3": 250
+    },
+    {
+      "relative_day": 13,
+      "projected_d7": 250
+    }
+  ],
+  "initial_invites_finish_relative_day": 6,
+  "maximum_messages_with_full_two_followups": 3000,
+  "minimum_full250_sending_days": 12,
+  "illustrative_calendar_days": 14,
+  "followup_content_and_native_generic_support": "unapproved/unimplemented; projected only; do not create due messages",
+  "current_approved_generic_slice": "beauty/hair D0 only; additional industries need matching approved content",
+  "outcome_controls": [
+    "Inspect firstbatch provider acceptance/rejection and available bounces/complaints/replies before continuing",
+    "Immediate native suppression and reply/purchase exits",
+    "All followups count against same total daily allowance; oldest due queue carries over",
+    "Uncertain sends never automatically retry",
+    "No inbox delivery claim from SMTP acceptance"
+  ],
+  "start_gate": "Exact main/production marker/live personalized Lab/signup/interview/card/QR/unsubscribe and controlled owner received-email verification."
+}

@@ -93,17 +93,39 @@ final class AcquisitionSampleGuard {
     if (($authorization['schema'] ?? '') !== 'famtastic.acquisition-generic-authorization.v1' || (int) ($authorization['issued_at'] ?? 0) > $now || (int) ($authorization['issued_at'] ?? 0) < $now - 3600 || (int) ($authorization['expires'] ?? 0) <= $now || (int) $authorization['expires'] > $now + 3600 || ($authorization['sender'] ?? []) !== $account) throw new \InvalidArgumentException('generic_fresh_sender_authorization_required');
     $binding = ['invitation_id' => (int) $sample['id'], 'prospect_id' => (int) $sample['prospect_id'], 'campaign_id' => (int) $sample['campaign_id'], 'recipient_hash' => (string) $sample['recipient_hash'], 'invitation_evidence_hash' => (string) $sample['evidence_hash'], 'account_sha256' => $account['account_sha256'], 'from' => $account['from']];
     if (($authorization['binding'] ?? []) !== $binding || $binding['prospect_id'] < 1 || $binding['campaign_id'] < 1) throw new \InvalidArgumentException('generic_exact_row_binding_required');
-    foreach (['provider_permission_receipt', 'history_receipt'] as $key) {
+    $basis = self::authorizationBasis($authorization);
+    $permissionKey = $basis === 'owner_authorized_cold_outreach' ? 'owner_authorization_receipt' : 'provider_permission_receipt';
+    foreach ([$permissionKey, 'history_receipt'] as $key) {
       $receipt = $authorization[$key] ?? [];
       if (($receipt['status'] ?? '') !== 'owner_reviewed' || empty($receipt['reference']) || preg_match('/^[a-f0-9]{64}$/D', (string) ($receipt['sha256'] ?? '')) !== 1 || ($receipt['binding'] ?? []) !== $binding || (int) ($receipt['checked_at'] ?? 0) > $now || (int) ($receipt['checked_at'] ?? 0) < $now - 3600) throw new \InvalidArgumentException('generic_row_receipt_required:' . $key);
     }
-    $permission = $authorization['provider_permission_receipt'];
-    if (($permission['provider'] ?? '') !== $account['provider'] || ($permission['policy'] ?? '') !== 'opt_in_only' || ($permission['permitted_use'] ?? FALSE) !== TRUE || empty($permission['written_opt_in_reference']) || preg_match('/^[a-f0-9]{64}$/D', (string) ($permission['written_opt_in_sha256'] ?? '')) !== 1) throw new \InvalidArgumentException('generic_actual_sender_use_required');
+    if ($basis === 'owner_authorized_cold_outreach') {
+      if (($authorization['owner_authorization_receipt']['approved_by'] ?? '') !== 'Fritz Medine') throw new \InvalidArgumentException('generic_actual_owner_authorization_required');
+      $ownerReceipt = $authorization['owner_authorization_receipt'];
+      $ownerBytes = $authorization['owner_authorization_record'] ?? '';
+      if ($ownerReceipt['reference'] !== 'docs/research/acquisition-199/OWNER-COLD-SEND-AUTHORIZATION.json' || !is_string($ownerBytes) || strlen($ownerBytes) > 32768 || !hash_equals($ownerReceipt['sha256'], hash('sha256', $ownerBytes))) throw new \InvalidArgumentException('generic_owner_authorization_artifact_required');
+      $ownerRecord = json_decode($ownerBytes, TRUE, 32, JSON_THROW_ON_ERROR);
+      if (($ownerRecord['schema'] ?? '') !== 'famtastic.acquisition-owner-cold-send-authorization.v1' || ($ownerRecord['status'] ?? '') !== 'authorized' || ($ownerRecord['approved_by'] ?? '') !== 'Fritz Medine' || ($ownerRecord['customer_send_authorized'] ?? FALSE) !== TRUE || ($ownerRecord['provider'] ?? '') !== $account['provider'] || ($ownerRecord['sender'] ?? '') !== $account['from'] || self::authorizationBasis($ownerRecord) !== $basis) throw new \InvalidArgumentException('generic_owner_authorization_artifact_binding_required');
+    }
+    else {
+      $permission = $authorization['provider_permission_receipt'];
+      if (($permission['provider'] ?? '') !== $account['provider'] || ($permission['policy'] ?? '') !== 'opt_in_only' || ($permission['permitted_use'] ?? FALSE) !== TRUE || empty($permission['written_opt_in_reference']) || preg_match('/^[a-f0-9]{64}$/D', (string) ($permission['written_opt_in_sha256'] ?? '')) !== 1) throw new \InvalidArgumentException('generic_actual_sender_use_required');
+    }
     if (($authorization['history_receipt']['classification'] ?? '') !== 'actual_native_history_reconciled' || ($authorization['history_receipt']['coverage_complete'] ?? FALSE) !== TRUE || ($authorization['history_receipt']['eligible_for_new_outreach'] ?? FALSE) !== TRUE || ($authorization['history_receipt']['known_stop_reasons'] ?? NULL) !== []) throw new \InvalidArgumentException('generic_actual_history_required');
     $creative = self::creativeApproval((array) ($authorization['creative_approval'] ?? []), $frozenCreative);
     $recipes = json_decode((string) $sample['recipe_snapshot'], TRUE, 32, JSON_THROW_ON_ERROR);
     if (count($recipes) !== 1 || $recipes[0]['id'] !== 'beauty_soft_power_acquisition' || $recipes[0]['sha256'] !== ($creative['artifact_sha256'][$recipes[0]['artifact_path']] ?? '') || !hash_equals($recipes[0]['sha256'], hash('sha256', (string) $recipes[0]['html_snapshot']))) throw new \InvalidArgumentException('generic_approved_recipe_binding_required');
     if (($authorization['content_id'] ?? '') !== 'acquisition-199:beauty_soft_power_generic_d0:v1') throw new \InvalidArgumentException('generic_approved_content_identity_required');
+  }
+
+  /** Owner intent is distinct from recipient consent and provider permission. */
+  public static function authorizationBasis(array $value): string {
+    $basis = $value['authorization_basis'] ?? 'provider_permitted_opt_in';
+    if ($basis === 'owner_authorized_cold_outreach') {
+      if (($value['provider_policy_conflict'] ?? NULL) !== TRUE || ($value['recipient_opt_in'] ?? NULL) !== FALSE || ($value['provider_permission_proved'] ?? NULL) !== FALSE || array_key_exists('provider_permission_receipt', $value)) throw new \InvalidArgumentException('acquisition_cold_basis_truth_required');
+    }
+    elseif ($basis !== 'provider_permitted_opt_in' || array_key_exists('owner_authorization_receipt', $value) || array_key_exists('owner_authorization_record', $value)) throw new \InvalidArgumentException('acquisition_authorization_basis_invalid');
+    return $basis;
   }
 
   public static function live(array $row, int $now): bool {

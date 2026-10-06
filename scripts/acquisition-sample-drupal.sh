@@ -130,6 +130,7 @@ if [[ "${ACQUISITION_GENERIC_D0_PROOF:-0}" == 1 ]]; then
   test -f "${ACQUISITION_GENERIC_D0_BUNDLE:?Explicit reviewed candidate bundle required}/manifest.json"
   mkdir -p "$sandbox/backend/private/generic-d0" "$evidence/generic-d0"
   rsync -a "$ACQUISITION_GENERIC_D0_BUNDLE/" "$sandbox/backend/private/generic-d0/"
+  cp "$repo_root/docs/research/acquisition-199/OWNER-COLD-SEND-AUTHORIZATION.json" "$sandbox/backend/private/owner-cold-source-record.json"
   "${isolated[@]}" "ACQUISITION_DRUPAL_EVIDENCE=$evidence/generic-d0" ACQUISITION_DRUPAL_PHASE=generic_delivery "$php_bin" "${php_args[@]}" "$sandbox/backend/vendor/drush/drush/drush.php" "--root=$sandbox/backend/web" --uri=http://acquisition-drupal.example.test php:script "$sandbox/scripts/acquisition-sample-drupal.php" >"$evidence/generic-d0.log" 2>&1
   cat "$evidence/generic-d0.log"
 fi
