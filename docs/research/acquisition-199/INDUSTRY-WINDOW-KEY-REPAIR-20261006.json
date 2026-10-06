@@ -1,0 +1,41 @@
+{
+  "checked_at": "2026-10-06T22:03:07+00:00",
+  "read_only": true,
+  "fields": {
+    "famtastic_acquisition_window": {
+      "type": "varchar(13)",
+      "key": "PRI",
+      "nullable": "NO"
+    },
+    "famtastic_acquisition_slot": {
+      "type": "varchar(13)",
+      "key": "MUL",
+      "nullable": "NO"
+    }
+  },
+  "clock": {
+    "status": "halted",
+    "reason": "acquisition_private_failure_review",
+    "changed": "1791324006"
+  },
+  "industry_window_key_bytes": 27,
+  "failed_window_rows": 0,
+  "industry_slots": 0,
+  "industry_messages": 0,
+  "unresolved_dispatches": 0,
+  "accepted_beauty_slots": 50,
+  "customer_campaign_accepted": 51,
+  "industry_contact_packet_files": 0,
+  "schema": "famtastic.acquisition-window-key-repair.v1",
+  "classification": "deployed_with_zero_attempt_clock_hold",
+  "root_cause": "New27byteASAPindustrykey exceeded existingMySQLvarchar13; SQLite did not enforcevarchar length.",
+  "source_fix": "Bothwindow_keycolumns32characters;normalDrupalupdate8070;preservejournal/indexes;nochangeacceptedcontent.",
+  "candidate_tests": {
+    "tests": 29,
+    "assertions": 1098,
+    "deprecation_notices": 72
+  },
+  "manual_review_resume": "pending actualMySQLmigration/zeroattempt/indexchecks; uncertain-or-accepted retries forbidden",
+  "diagnostic_sha256": "85084f8b1776a2b98f922bba95b9d35dd4dfce6c44cc767712101469d1d4bb24",
+  "private_resume_driver_sha256": "47df2fdcb7acf60d0a2c7d2331d3781520fe4e10cb2857cbfc5868f4ad11b760"
+}

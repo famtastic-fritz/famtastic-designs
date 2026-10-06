@@ -1,3 +1,5 @@
+Current industry activation checkpoint: source3b2a5010 is deployed in front/backend; timers installed for999records, preserving50acceptedkeys and949remaining. Nativecampaign5revision4saved/reloaded. Firstindustry18window stopped before anyreservation/message/SMTP because productionwindow keys were limited to13characters. The27bytekey requires the tested32char migration. The latch remains held while the correction is deployed and manually reviewed against actualMySQL. CustomerSMTPtotal51, newindustryacceptances0, unresolved0. See INDUSTRY-WINDOW-KEY-REPAIR-20261006.json. Earlier source proof below is a dated checkpoint, not the current live execution status.
+
 <!-- INDUSTRY-ACTIVATION-CURRENT -->
 The approved nine-industry native integration is source-complete and tested locally. Classification: **changed**; current live backend2c1d908d/frontendcb8f5b07 and customer SMTP total51 remain the last verified production state. Fresh private900audit passed900eligible/0held; native production preparation repeats each audit. Deployment and900sending remain pending at this source checkpoint.
 

@@ -3524,3 +3524,9 @@ function famtastic_pipeline_update_8069(&$sandbox) {
   }
   return 'Installed acquisition window reservation journal. No clock or sender was activated.';
 }
+
+/** Widen window identity columns for the industry ASAP key, preserving journals. */
+function famtastic_pipeline_update_8070(&$sandbox) {
+  \Drupal\famtastic_pipeline\Service\AcquisitionWindowSchema::upgradeWindowKeyColumns(\Drupal::database());
+  return 'Widened acquisition window identity columns to 32 characters; existing reservations and indexes were preserved.';
+}
