@@ -1,0 +1,22 @@
+{
+  "schema": "famtastic.acquisition-asap-owner-record.v1",
+  "approved_by": "Fritz Medine",
+  "source_chat": "01a10d13-9d03-74c3-9ab4-15e8045e7688",
+  "recorded_at": "2026-10-06T19:07:47.000862+00:00",
+  "local_date": "2026-10-06",
+  "campaign_id": 5,
+  "sender": "hello@famtasticdesigns.com",
+  "one_initial_batch": true,
+  "cap": 50,
+  "outside_regular_windows_exception": true,
+  "owner_words": "if the first fifty beauty is ready to go, send that.",
+  "routine_policy_unchanged": true,
+  "retry_uncertain": false,
+  "previous_preparation_attempt": {
+    "accepted": 0,
+    "uncertain": 0,
+    "stopped_before_native_preparation": true
+  },
+  "creative_content_id": "acquisition-199:beauty_soft_power_generic_d0:v2",
+  "owner_authorized_next_steps_revision": true
+}

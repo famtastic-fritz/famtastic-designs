@@ -1148,7 +1148,12 @@ if [[ ! -f "$source_dir/commit.txt" ]] || ! grep -qx "$commit_sha" "$source_dir/
   # exact committed backend tree into a normal private directory instead. The
   # mirror commit check above remains the authority; no working-tree content is
   # accepted and the frontend release tree is left untouched.
-  git --git-dir="$mirror_dir" archive "$commit_sha" backend | tar -x -C "$source_dir"
+  # The narrow acquisition clock reuses these exact committed CLI libraries;
+  # their release paths and hashes are pinned in its private signed config.
+  git --git-dir="$mirror_dir" archive "$commit_sha" backend \
+    scripts/acquisition-exact-operator.php \
+    scripts/acquisition-window-contact.php \
+    scripts/acquisition-window-capacity.php | tar -x -C "$source_dir"
   printf '%s\n' "$commit_sha" > "$source_dir/commit.txt"
 fi
 grep -qx "$commit_sha" "$source_dir/commit.txt"

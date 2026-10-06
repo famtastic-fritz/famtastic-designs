@@ -1,14 +1,14 @@
 {
   "schema": "famtastic.acquisition-creative-approval.v1",
   "approved_by": "Fritz Medine",
-  "approved_date": "2026-10-05",
+  "approved_date": "2026-10-06",
   "approval_source": "Fritz visited implementation chat and approved new beauty email/Lab, relayed by source chat01a10d13-9d03-74c3-9ab4-15e8045e7688",
   "status": "approved",
-  "scope": "NEW beauty email and Lab visual candidate, including explicit hair subtitle; exact hashes below",
+  "scope": "Original approved beauty visual plus owner-authorized compact implementation next steps and invitation-preserving free-account CTA",
   "source_application_revision": "d24c5925028584f0ee57e0352ffb07c6455a54eb",
   "artifact_sha256": {
-    "marketing/campaigns/acquisition-199/generic-review/beauty-email.html": "03588c3c4b4d323a8bc9965aee1a9c6a8905db190d6332d31eaab49b69e218f5",
-    "marketing/campaigns/acquisition-199/generic-review/beauty-email.txt": "77ec40639f3743dbbe11c2149bb5cef905fdf11ff159e137ac078de6585d5ac4",
+    "marketing/campaigns/acquisition-199/generic-review/beauty-email.html": "9ab30ba266b917d1be1fb825a7f83963d5238abfc7d62571f113d35cf3300258",
+    "marketing/campaigns/acquisition-199/generic-review/beauty-email.txt": "d5b150650c7d6b527dc6d120a6c0e7d464a25b1e26f92c1221ac82a17df6f6a0",
     "marketing/campaigns/acquisition-199/generic-review/beauty-lab.html": "e931221bff90fde38a7e465fdbf6b1747818137d44af12999b6d3c141fcee2c0",
     "marketing/campaigns/acquisition-199/generic-review/beauty-template.html": "3fcc8bd5d0a37f103ee8c2c985aa75ac2c7f2971614a56fc95e95997ebaeec8f",
     "marketing/campaigns/acquisition-199/generic-review/beauty-lab.css": "1f1961e350f575314468ed961f81788a067fc1476bb7e2b7095fcc59ea7da093",
@@ -23,5 +23,11 @@
   "export_authorized": false,
   "provider_permission_proved": false,
   "production_apply_authorized": false,
-  "customer_dispatch_intent": "Owner explicitly wants smaller paced customer batches; real execution still subject to complete hosted journey, sender use, exact recipient/content and runtime guards."
+  "customer_dispatch_intent": "Owner explicitly wants smaller paced customer batches; real execution still subject to complete hosted journey, sender use, exact recipient/content and runtime guards.",
+  "creative_revision": 2,
+  "content_id": "acquisition-199:beauty_soft_power_generic_d0:v2",
+  "copy_revision_authority": "Owner explicitly requested all10 email templates explain free account/interview, three directions/refinements, staging, payment and launch; conditional same-day target. No repeated copy approval required.",
+  "prior_approval_record": "docs/research/acquisition-199/CREATIVE-APPROVAL-v1.json",
+  "already_accepted_v1_customer_message": 277,
+  "already_accepted_v1_bodies_changed": false
 }

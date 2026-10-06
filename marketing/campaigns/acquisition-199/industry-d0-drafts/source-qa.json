@@ -1,0 +1,14 @@
+{
+    "schema": "famtastic.industry-d0-source-qa.v1",
+    "tested_at": "2026-10-06T19:09:11+00:00",
+    "assertions": 130,
+    "passed": true,
+    "approved_beauty_unchanged": true,
+    "matching_previews_approved": 0,
+    "limitations": [
+        "Source/render integrity only",
+        "New variants not owner approved",
+        "Missing matched assets and destinations",
+        "No new inbox/mobile/browser/provider proof"
+    ]
+}

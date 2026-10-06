@@ -64,7 +64,7 @@ final class AcquisitionSampleService {
 
   /** Internal preparation from stored supplied facts; confers no send eligibility. */
   public function prepareGeneric(string $key, int $prospectId, int $campaignId, array $recipe, int $expires, bool $internalCandidate = FALSE): array {
-    $now = $this->time->getRequestTime();
+    $now = $this->time->getCurrentTime();
     if ($prospectId < 1 || preg_match('/^[a-zA-Z0-9:_-]{8,128}$/D', $key) !== 1 || $expires <= $now || $expires > $now + 30 * 86400) throw new \InvalidArgumentException('invalid_sample_preparation');
     $prospect = $this->database->select('famtastic_prospect', 'p')->fields('p', ['id', 'business_name', 'business_category', 'public_email', 'campaign'])->condition('id', $prospectId)->execute()->fetchAssoc();
     if (!$prospect) throw new \InvalidArgumentException('stored_sample_prospect_required');
@@ -123,17 +123,17 @@ final class AcquisitionSampleService {
     $transaction = $this->database->startTransaction();
     $sample = $this->database->select('famtastic_acquisition_sample', 's')->fields('s')->condition('id', $invitationId)->forUpdate()->execute()->fetchAssoc();
     $context = $sample ? json_decode((string) $sample['bindings'], TRUE) : [];
-    if (!$sample || ($context['_preparation']['classification'] ?? '') !== 'supplied_generic_preparation' || !AcquisitionSampleGuard::live($sample, $this->time->getRequestTime())) throw new \InvalidArgumentException('generic_prepared_invitation_required');
+    if (!$sample || ($context['_preparation']['classification'] ?? '') !== 'supplied_generic_preparation' || !AcquisitionSampleGuard::live($sample, $this->time->getCurrentTime())) throw new \InvalidArgumentException('generic_prepared_invitation_required');
     $prospectEmail = $this->database->select('famtastic_prospect', 'p')->fields('p', ['public_email'])->condition('id', (int) $sample['prospect_id'])->execute()->fetchField();
     if (!filter_var($prospectEmail, FILTER_VALIDATE_EMAIL) || !hash_equals($sample['recipient_hash'], $this->ledger->contactHash((string) $prospectEmail)) || $this->ledger->isSuppressed((string) $prospectEmail)) throw new \InvalidArgumentException('sample_recipient_unavailable');
-    AcquisitionSampleGuard::genericAuthorization($authorization, $sample, AcquisitionSampleGuard::senderAccount($this->configFactory), $this->time->getRequestTime());
+    AcquisitionSampleGuard::genericAuthorization($authorization, $sample, AcquisitionSampleGuard::senderAccount($this->configFactory), $this->time->getCurrentTime());
     $hash = hash('sha256', $json);
     if (!empty($sample['eligible_at'])) {
       if (!hash_equals($sample['qualification_ref'], $hash)) throw new \InvalidArgumentException('generic_authorization_replay_changed');
       return ['invitation_id' => $invitationId, 'authorization_hash' => $hash, 'duplicate' => TRUE, 'staged' => FALSE];
     }
     $this->ledger->recordEvent('acquisition:generic:authorization:' . $invitationId . ':' . $hash, 'acquisition.generic_authorized', ['authorization' => $authorization, 'signature' => $signature], (int) $sample['prospect_id'], (int) $sample['campaign_id']);
-    $this->database->update('famtastic_acquisition_sample')->fields(['qualification_ref' => $hash, 'eligible_at' => $this->time->getRequestTime()])->condition('id', $invitationId)->isNull('eligible_at')->execute();
+    $this->database->update('famtastic_acquisition_sample')->fields(['qualification_ref' => $hash, 'eligible_at' => $this->time->getCurrentTime()])->condition('id', $invitationId)->isNull('eligible_at')->execute();
     unset($transaction);
     return ['invitation_id' => $invitationId, 'authorization_hash' => $hash, 'duplicate' => FALSE, 'staged' => FALSE];
   }

@@ -1,0 +1,39 @@
+# Native acquisition windows
+
+Classification: changed source; local synthetic installed proof. This lane did not deploy, install a production timer, import a recipient cohort or connect to real SMTP. Root owns integration and runtime execution.
+
+The dedicated `famtastic:acquisition-window` command wakes every minute but only starts a new run during minutes 00–04 of 09, 10, 11 or 12 in America/New_York. A claimed run can pace its contacts through that same hour. It never catches up a missed window. The native time-zone calculation handles daylight saving independently of the cron server's zone. There is no Drupal cron, lifecycle worker or unbounded queue consumer.
+
+`famtastic:acquisition-window --input=<private-config.json> --check-config` reads the signed config, exact helper/operator/capacity source hashes, private queue and hosted release checks, and gathers fresh capacity evidence without creating reservations, prospects, invitations or messages. It permits checking tomorrow's configuration today. A halted clock must be reconciled manually. Normal invocation outside a start slot returns `outside_window` before opening the queue.
+
+The 0600 input is a JSON envelope `{config,signature}`. The signature uses existing `FAMTASTIC_ACQUISITION_OWNER_SIGNING_SECRET` over PHP `json_encode(config, JSON_THROW_ON_ERROR)`; the Drush command loads the existing 0600 `owner-signing.key` from `file_private_path/acquisition-199`. The directory must be private, canonical and free of symlink redirection.
+
+Config schema `famtastic.acquisition-window-config.v1` requires:
+
+- `enabled:true`, `timezone:"America/New_York"`, `hours:[9,10,11,12]`, `window_cap:50`, `day_cap:200`.
+- `starts_on`, `ends_on`, native `campaign_id`, exact `sender_account_sha256`, and `pace_seconds` between 1 and 60.
+- `release_commit`, `contact_helper_path`, `contact_helper_sha256`, `operator_sha256`, `capacity_helper_sha256`.
+- `queue_path` and byte-exact `queue_sha256`.
+- `capacity_mode`, `transactional_unobserved_day_reserve`, `transactional_unobserved_hour_reserve`, and `binding_config` containing exact `frontend_sha` and `backend_sha`.
+
+The helper must live under the archived release's `backend-source/scripts/acquisition-window-contact.php`; its enclosing `commit.txt` and release directory must equal `release_commit`. The native source archive includes the three acquisition CLI libraries explicitly. Neither local uncommitted files nor an arbitrary PHP script can become a cron callback.
+
+Queue schema `famtastic.acquisition-window-queue.v1` has `records` with unique `queue_key`, `kind:"customer"`, stored supplied business/category/email context and optional `schedule_date`/`schedule_hour`. Duplicate recipient addresses are rejected before preparation. Scheduled rows for earlier hours/dates are skipped rather than caught up. Actual queue bytes and contact hashes remain private.
+
+The source-bound helper exposes `check(binding)`, `capacity(binding)`, and `prepare(record,binding)`. `check` validates the current hosted frontend/backend markers and active sender. `prepare` performs an actual per-contact history audit, creates the native prospect and fresh row/account-bound authorization, and returns the private exact operator `packet_path`; it never sends. Its history evidence must cover native messages/outbox/events/inbound/consent/customers/Commerce/portal records, duplicate prospects, original Maildir history and the historical-cohort exclusion. Timestamp renewal alone cannot create a clean history receipt.
+
+The capacity callback is evaluated again for every contact, then validated against a newly sampled current clock. Exact reported remaining quota and an independently proved lower bound require verified evidence. The expressly authorized `published_limit_with_reserved_budget` mode instead labels `budget_kind:conservative_budget`, `verified:false`, and `outside_usage_unknown:true`: published 500/day mailbox and 500/hour account ceilings, observed native totals and at least 250/day plus 400/hour transactional/unobserved reserves. It is a model, not a measured provider allowance. Missing inputs, stale evidence or an exhausted budget stop the clock.
+
+Update 8069 adds a durable clock, date mutex, window journal and contact/message reservations. Unique indexes are validated on partial-schema migration. Under the global acquisition mutex, a window reserves all of its permitted slots before any helper or transport call. Native acquisition SMTP sends/dispatch reservations outside the executor count toward the same 200/day and 50/hour limits, including approved followups. A reservation is never refunded after interruption. A wrong contact/campaign cannot be bound to a reserved slot. The exact adapter joins the same reservation transaction before SMTP and checks the current hour again immediately before transport.
+
+The clock uses the existing exact operator and adapter for each message. Existing HMAC cap-one authorization, approved frozen HTML/plain/media, contact binding, consent/unsubscribe/bounce/reply/purchase exits, durable transport reservation and uncertain no-retry behavior remain required. Real-outreach flags exist only around that exact dispatch call and restore in `finally`; preparation and check-config do not enable them. No general worker flags or pilot lock are changed.
+
+A repeated claimed window only returns its journal. It never resumes a partially completed run. Any preparation, capacity or transport failure latches the global acquisition clock to `halted`; an interrupted running window halts subsequent windows. Operators must reconcile retained slots and transport outcomes before an explicit manual restart. Unknown SMTP outcomes are never retried automatically.
+
+The separately approved initial ASAP exception requires an explicit `--asap` invocation and a signed config with `execution_mode:"asap_initial"`, campaign 5 and `starts_on`/`ends_on` equal to today's New York date. `asap_authorization` contains schema `famtastic.acquisition-asap-authorization.v1`, an owner-authorized cap of 50, campaign 5, the same `local_date`, `issued_at`, `expires`, `approval_ref`, and the owner authorization `reference`/SHA256. It expires within one hour of issuance and cannot cross the local date. `--check-config --asap` verifies readiness without preparing or sending.
+
+The ASAP path uses the persistent unique `asap-first-50` journal key, so changing a date, config or approval reference cannot create a second initial run. It selects at most the first 50 unclaimed signed queue records, overriding their future routine schedule only for this explicit initial exception. It consumes the same 200/day allowance and native hourly count. Quota checks permit off-hours transport only for a campaign-5 message bound to that running, unexpired ASAP reservation; an unbound message still fails outside routine hours. Accepted queue keys are retained and skipped by subsequent routine windows. Expired, failed or interrupted ASAP work never resumes. The installed timer has no `--asap` flag and cannot invoke this exception.
+
+`famtastic:acquisition-window-schedule --input=<private-config.json>` inspects the one marker-owned clock after read-only validation. `--install --confirm=FAMTASTIC_ACQUISITION_WINDOWS_V1` preserves other cron entries, saves private before/next backups, compares the current crontab before application and verifies the result. Source tests inspect the generated schedule; this lane did not execute installation.
+
+Proof: [window-executor-proof.json](evidence/window-executor-proof.json). Focused SQLite unit/regression suite: 64 tests, 1,128 assertions, including nine ASAP tests. Installed isolated Drupal against the frozen v2 bundle: 25 checks, real command discovery and actual off-window command execution. Accepted SMTP receipts and customer inbox delivery remain separate from these source tests.

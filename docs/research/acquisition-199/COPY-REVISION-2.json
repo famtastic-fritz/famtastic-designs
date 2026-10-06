@@ -1,0 +1,25 @@
+{
+  "schema": "famtastic.acquisition-copy-revision.v1",
+  "recorded_at": "2026-10-06T19:09:10.841939+00:00",
+  "owner_authorized": true,
+  "scope": "All10 D0emails; matchedotherindustryLabs stillpendingownerreview",
+  "beauty_content_id": "acquisition-199:beauty_soft_power_generic_d0:v2",
+  "prior_accepted_message_277_rewritten": false,
+  "steps": [
+    "freeaccount andwebsiteinterview",
+    "three design directions,chooseandrefine",
+    "stagingreview",
+    "$199paymentandapprovelaunch"
+  ],
+  "same_day_wording": "conditional target; nostatisticorguarantee",
+  "registration_route": "/login?mode=register&sample_continuation=<opaque64token>",
+  "registration_compiler_bound": true,
+  "phone_review": {
+    "viewport": 390,
+    "scroll_width": 375,
+    "registration_target_height": 64,
+    "localplaceholder_intentional": true
+  },
+  "original_beauty_lab_visuals_unchanged": true,
+  "otherindustry_drafts_checks": 130
+}

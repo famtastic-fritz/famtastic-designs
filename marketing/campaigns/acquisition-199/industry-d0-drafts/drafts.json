@@ -1,0 +1,526 @@
+{
+    "schema": "famtastic.acquisition-industry-d0-drafts.v1",
+    "created_at": "2026-10-06T19:09:11+00:00",
+    "status": "nine_draft_content_variants_not_owner_approved",
+    "approved_beauty_source": "docs/research/acquisition-199/CREATIVE-APPROVAL.json",
+    "approved_beauty_unchanged": true,
+    "shared_layout": "BrandedEmail + approved beauty early CTA/commercial/terms/signature/card/QR pattern",
+    "industry_count": 9,
+    "complete_matching_previews": 0,
+    "new_paid_generation_calls": 0,
+    "new_external_provider_calls": 0,
+    "cost_limit": "No provider spend; session subscription/ideation cost unmeasured",
+    "followups": "D3/D7 unapproved, not generated or scheduled",
+    "source_asset_audit": {
+        "confirmed_owned_campaign_scene": "booked-and-branded-pilot: agency-owned fictional barber/beauty imagery, inappropriate for these other segments",
+        "other_owned_assets": "marketing/creative/plates, anchors and cost-is-not-the-reason broll: generic office/shop/phone or salon concept scenes; no matching category proof",
+        "customer_reference_boundary": "Existing customer lawn/DJ/shoe/P.I.T. layouts are references only. Customer media has no cleared cross-customer campaign reuse.",
+        "initial_six": "Rejected; no reuse as new preview fallback"
+    },
+    "drafts": [
+        {
+            "id": "mobile-auto-d0-v1",
+            "version": 1,
+            "day": 0,
+            "status": "draft_not_owner_approved",
+            "industry_source_label": "Mobile Detailing, Auto Care & Tinting",
+            "industry_source": "Supplied workbook segment, unverified; no business or recipient identity claimed",
+            "subject": "A clearer next step for your auto-service website",
+            "preview": "Service details, vehicle inquiries and a practical owner workflow from your phone \u2014 a focused website starting point.",
+            "headline": "The care is in the details.",
+            "greeting": "Hello,",
+            "intro": "Clear service details help a vehicle owner understand the offer and know what to ask before getting in touch.",
+            "phone_proposition": "For mobile detailing, auto care or tinting, picture a website that explains the relevant services and a phone workflow for reviewing vehicle and location details, preparing a reply and keeping the next step clear.",
+            "cta_label": "See what your website could look like",
+            "cta_binding": "approved_industry_matching_invitation_url",
+            "review_cta": "preview-status.html#mobile-auto",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "identity": "FAMtastic Designs assistant",
+            "matching_preview": {
+                "status": "missing_owned_industry_asset_and_unapproved_destination",
+                "image_path": null,
+                "owner_approved": false,
+                "brief": "Vehicle-service photography appropriate to the selected detailing, auto-care or tinting subcategory; approved service details and location/request path.",
+                "scope_boundary": "Mobile detailing, auto care and tinting are different services. A matching example must choose and label its actual scope; a detailing sample does not prove repair or tinting capabilities.",
+                "beauty_fallback_allowed": false,
+                "rejected_six_fallback_allowed": false
+            },
+            "review_layout": "Approved beauty D0 shape: existing BrandedEmail, early primary CTA, compact commercial, one scope disclosure, signature/card/QR; no beauty content copied",
+            "send_policy": {
+                "approved": false,
+                "dispatch_connected": false,
+                "requires": [
+                    "matching industry preview and destination",
+                    "exact owner content approval",
+                    "native industry match binding",
+                    "current provider permission and sender readiness",
+                    "bound invitation and unsubscribe",
+                    "exact recipient/batch authorization"
+                ],
+                "exit_on": [
+                    "human_reply",
+                    "purchase",
+                    "opt_out",
+                    "complaint",
+                    "hard_bounce"
+                ]
+            },
+            "followups": {
+                "d3": "unapproved_not_generated",
+                "d7": "unapproved_not_generated"
+            },
+            "copy_revision": 2,
+            "copy_review": "owner_authorized_next_steps_revision",
+            "registration_binding": "https://famtasticdesigns.com/login?mode=register&sample_continuation=<opaque_invitation_token>"
+        },
+        {
+            "id": "fitness-meal-prep-d0-v1",
+            "version": 1,
+            "day": 0,
+            "status": "draft_not_owner_approved",
+            "industry_source_label": "Fitness, Personal Training & Meal Prep",
+            "industry_source": "Supplied workbook segment, unverified; no business or recipient identity claimed",
+            "subject": "Make the first step into your offer easier",
+            "preview": "Training or meal-prep inquiries, clear offer details and a phone owner workflow \u2014 designed around the work you actually do.",
+            "headline": "A clear start. A personal next step.",
+            "greeting": "Hello,",
+            "intro": "A useful website makes it easier to understand an offer and start the right conversation.",
+            "phone_proposition": "For fitness, personal training or meal prep, picture clear offer details and a phone workflow for reviewing an inquiry, preparing a reply and updating the instructions people need before taking the next step.",
+            "cta_label": "See what your website could look like",
+            "cta_binding": "approved_industry_matching_invitation_url",
+            "review_cta": "preview-status.html#fitness-meal-prep",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "identity": "FAMtastic Designs assistant",
+            "matching_preview": {
+                "status": "missing_owned_industry_asset_and_unapproved_destination",
+                "image_path": null,
+                "owner_approved": false,
+                "brief": "Owned or cleared training/fitness imagery or a separate meal-prep scene, with an explicit subcategory label and verified service boundaries.",
+                "scope_boundary": "Training and meal prep require different intake and service details. No health outcome, medical advice, class calendar, meal subscription or nutrition qualification is implied.",
+                "beauty_fallback_allowed": false,
+                "rejected_six_fallback_allowed": false
+            },
+            "review_layout": "Approved beauty D0 shape: existing BrandedEmail, early primary CTA, compact commercial, one scope disclosure, signature/card/QR; no beauty content copied",
+            "send_policy": {
+                "approved": false,
+                "dispatch_connected": false,
+                "requires": [
+                    "matching industry preview and destination",
+                    "exact owner content approval",
+                    "native industry match binding",
+                    "current provider permission and sender readiness",
+                    "bound invitation and unsubscribe",
+                    "exact recipient/batch authorization"
+                ],
+                "exit_on": [
+                    "human_reply",
+                    "purchase",
+                    "opt_out",
+                    "complaint",
+                    "hard_bounce"
+                ]
+            },
+            "followups": {
+                "d3": "unapproved_not_generated",
+                "d7": "unapproved_not_generated"
+            },
+            "copy_revision": 2,
+            "copy_review": "owner_authorized_next_steps_revision",
+            "registration_binding": "https://famtasticdesigns.com/login?mode=register&sample_continuation=<opaque_invitation_token>"
+        },
+        {
+            "id": "photography-media-d0-v1",
+            "version": 1,
+            "day": 0,
+            "status": "draft_not_owner_approved",
+            "industry_source_label": "Photography, Videography & Media",
+            "industry_source": "Supplied workbook segment, unverified; no business or recipient identity claimed",
+            "subject": "Give your creative work a clearer front door",
+            "preview": "A place for your approved portfolio, useful project inquiries and a phone workflow for keeping the next conversation organized.",
+            "headline": "Let the work start the conversation.",
+            "greeting": "Hello,",
+            "intro": "Creative work deserves a clear place to be seen, with a useful next step for someone planning a project.",
+            "phone_proposition": "For photography, videography or media work, picture an approved portfolio and a phone workflow for reviewing a brief, preparing a reply and keeping the project inquiry organized.",
+            "cta_label": "See what your website could look like",
+            "cta_binding": "approved_industry_matching_invitation_url",
+            "review_cta": "preview-status.html#photography-media",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "identity": "FAMtastic Designs assistant",
+            "matching_preview": {
+                "status": "missing_owned_industry_asset_and_unapproved_destination",
+                "image_path": null,
+                "owner_approved": false,
+                "brief": "Agency-owned or permission-cleared photographic/media portfolio scene; project type, date and brief path without copied customer portfolio media.",
+                "scope_boundary": "Only rights-cleared portfolio work may be shown. A project inquiry is not a confirmed booking, promised production date or included file-delivery platform.",
+                "beauty_fallback_allowed": false,
+                "rejected_six_fallback_allowed": false
+            },
+            "review_layout": "Approved beauty D0 shape: existing BrandedEmail, early primary CTA, compact commercial, one scope disclosure, signature/card/QR; no beauty content copied",
+            "send_policy": {
+                "approved": false,
+                "dispatch_connected": false,
+                "requires": [
+                    "matching industry preview and destination",
+                    "exact owner content approval",
+                    "native industry match binding",
+                    "current provider permission and sender readiness",
+                    "bound invitation and unsubscribe",
+                    "exact recipient/batch authorization"
+                ],
+                "exit_on": [
+                    "human_reply",
+                    "purchase",
+                    "opt_out",
+                    "complaint",
+                    "hard_bounce"
+                ]
+            },
+            "followups": {
+                "d3": "unapproved_not_generated",
+                "d7": "unapproved_not_generated"
+            },
+            "copy_revision": 2,
+            "copy_review": "owner_authorized_next_steps_revision",
+            "registration_binding": "https://famtasticdesigns.com/login?mode=register&sample_continuation=<opaque_invitation_token>"
+        },
+        {
+            "id": "baking-catering-chefs-d0-v1",
+            "version": 1,
+            "day": 0,
+            "status": "draft_not_owner_approved",
+            "industry_source_label": "Custom Baking, Catering & Private Chefs",
+            "industry_source": "Supplied workbook segment, unverified; no business or recipient identity claimed",
+            "subject": "Make the first occasion conversation easier",
+            "preview": "Date and gathering details, a clear offer and a practical phone workflow \u2014 without promising an unconfirmed occasion or menu.",
+            "headline": "The occasion begins with a conversation.",
+            "greeting": "Hello,",
+            "intro": "Before the first cake, menu or gathering takes shape, there is a conversation about the occasion.",
+            "phone_proposition": "For custom baking, catering or private-chef work, picture clear offer details and a phone workflow for reviewing the date and gathering needs, preparing a reply and keeping the next step together.",
+            "cta_label": "See what your website could look like",
+            "cta_binding": "approved_industry_matching_invitation_url",
+            "review_cta": "preview-status.html#baking-catering-chefs",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "identity": "FAMtastic Designs assistant",
+            "matching_preview": {
+                "status": "missing_owned_industry_asset_and_unapproved_destination",
+                "image_path": null,
+                "owner_approved": false,
+                "brief": "Owned or cleared baking, catered table or private-chef craft imagery appropriate to one labeled example; date/guest-count/request path.",
+                "scope_boundary": "Baking, catering and private-chef requirements differ. No date availability, allergy guarantee, menu, checkout or kitchen suitability is invented.",
+                "beauty_fallback_allowed": false,
+                "rejected_six_fallback_allowed": false
+            },
+            "review_layout": "Approved beauty D0 shape: existing BrandedEmail, early primary CTA, compact commercial, one scope disclosure, signature/card/QR; no beauty content copied",
+            "send_policy": {
+                "approved": false,
+                "dispatch_connected": false,
+                "requires": [
+                    "matching industry preview and destination",
+                    "exact owner content approval",
+                    "native industry match binding",
+                    "current provider permission and sender readiness",
+                    "bound invitation and unsubscribe",
+                    "exact recipient/batch authorization"
+                ],
+                "exit_on": [
+                    "human_reply",
+                    "purchase",
+                    "opt_out",
+                    "complaint",
+                    "hard_bounce"
+                ]
+            },
+            "followups": {
+                "d3": "unapproved_not_generated",
+                "d7": "unapproved_not_generated"
+            },
+            "copy_revision": 2,
+            "copy_review": "owner_authorized_next_steps_revision",
+            "registration_binding": "https://famtasticdesigns.com/login?mode=register&sample_continuation=<opaque_invitation_token>"
+        },
+        {
+            "id": "home-services-d0-v1",
+            "version": 1,
+            "day": 0,
+            "status": "draft_not_owner_approved",
+            "industry_source_label": "Home Services, Cleaning & Maintenance",
+            "industry_source": "Supplied workbook segment, unverified; no business or recipient identity claimed",
+            "subject": "A clearer path from service details to job inquiry",
+            "preview": "Help people explain the work they need, then review the inquiry, prepare a reply and keep its status clear from your phone.",
+            "headline": "Clear details. A useful next step.",
+            "greeting": "Hello,",
+            "intro": "A customer should be able to understand the service and explain the job without guessing what information to send.",
+            "phone_proposition": "For home services, cleaning or maintenance, picture clear service boundaries and a phone workflow for reviewing the job and location details, preparing a reply and keeping the inquiry status visible.",
+            "cta_label": "See what your website could look like",
+            "cta_binding": "approved_industry_matching_invitation_url",
+            "review_cta": "preview-status.html#home-services",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "identity": "FAMtastic Designs assistant",
+            "matching_preview": {
+                "status": "missing_owned_industry_asset_and_unapproved_destination",
+                "image_path": null,
+                "owner_approved": false,
+                "brief": "Owned or cleared cleaning/maintenance craft scene matched to the actual service; location/job-detail inquiry without invented credentials.",
+                "scope_boundary": "No trade licence, insurance, travel area, quote acceptance or visit availability is asserted. Cleaning and specialist maintenance need separately verified service details.",
+                "beauty_fallback_allowed": false,
+                "rejected_six_fallback_allowed": false
+            },
+            "review_layout": "Approved beauty D0 shape: existing BrandedEmail, early primary CTA, compact commercial, one scope disclosure, signature/card/QR; no beauty content copied",
+            "send_policy": {
+                "approved": false,
+                "dispatch_connected": false,
+                "requires": [
+                    "matching industry preview and destination",
+                    "exact owner content approval",
+                    "native industry match binding",
+                    "current provider permission and sender readiness",
+                    "bound invitation and unsubscribe",
+                    "exact recipient/batch authorization"
+                ],
+                "exit_on": [
+                    "human_reply",
+                    "purchase",
+                    "opt_out",
+                    "complaint",
+                    "hard_bounce"
+                ]
+            },
+            "followups": {
+                "d3": "unapproved_not_generated",
+                "d7": "unapproved_not_generated"
+            },
+            "copy_revision": 2,
+            "copy_review": "owner_authorized_next_steps_revision",
+            "registration_binding": "https://famtasticdesigns.com/login?mode=register&sample_continuation=<opaque_invitation_token>"
+        },
+        {
+            "id": "events-entertainment-d0-v1",
+            "version": 1,
+            "day": 0,
+            "status": "draft_not_owner_approved",
+            "industry_source_label": "Events, Party Rentals & Entertainment",
+            "industry_source": "Supplied workbook segment, unverified; no business or recipient identity claimed",
+            "subject": "Make the next event inquiry easier to work with",
+            "preview": "Gather the event details that matter, prepare a reply and keep the next step clear from your phone \u2014 before anything is confirmed.",
+            "headline": "A memorable event starts with clear details.",
+            "greeting": "Hello,",
+            "intro": "An event starts with a date, a place and an idea worth bringing together.",
+            "phone_proposition": "For events, party rentals or entertainment, picture a website that explains the offer and a phone workflow for reviewing the occasion details, preparing a reply and keeping the request organized.",
+            "cta_label": "See what your website could look like",
+            "cta_binding": "approved_industry_matching_invitation_url",
+            "review_cta": "preview-status.html#events-entertainment",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "identity": "FAMtastic Designs assistant",
+            "matching_preview": {
+                "status": "missing_owned_industry_asset_and_unapproved_destination",
+                "image_path": null,
+                "owner_approved": false,
+                "brief": "Owned or cleared event, rental or entertainment scene for one clearly labeled offer; event-date/location/request path.",
+                "scope_boundary": "An inquiry reserves no date, venue, performer or rental item. Inventory, deposits, ticketing and event calendars are separate scope.",
+                "beauty_fallback_allowed": false,
+                "rejected_six_fallback_allowed": false
+            },
+            "review_layout": "Approved beauty D0 shape: existing BrandedEmail, early primary CTA, compact commercial, one scope disclosure, signature/card/QR; no beauty content copied",
+            "send_policy": {
+                "approved": false,
+                "dispatch_connected": false,
+                "requires": [
+                    "matching industry preview and destination",
+                    "exact owner content approval",
+                    "native industry match binding",
+                    "current provider permission and sender readiness",
+                    "bound invitation and unsubscribe",
+                    "exact recipient/batch authorization"
+                ],
+                "exit_on": [
+                    "human_reply",
+                    "purchase",
+                    "opt_out",
+                    "complaint",
+                    "hard_bounce"
+                ]
+            },
+            "followups": {
+                "d3": "unapproved_not_generated",
+                "d7": "unapproved_not_generated"
+            },
+            "copy_revision": 2,
+            "copy_review": "owner_authorized_next_steps_revision",
+            "registration_binding": "https://famtasticdesigns.com/login?mode=register&sample_continuation=<opaque_invitation_token>"
+        },
+        {
+            "id": "pet-services-d0-v1",
+            "version": 1,
+            "day": 0,
+            "status": "draft_not_owner_approved",
+            "industry_source_label": "Pet Services, Grooming & Training",
+            "industry_source": "Supplied workbook segment, unverified; no business or recipient identity claimed",
+            "subject": "A clear first conversation for pet-service inquiries",
+            "preview": "Explain the service, collect the useful first questions and work the next reply from your phone, with your real policies in view.",
+            "headline": "Thoughtful care starts with a clear conversation.",
+            "greeting": "Hello,",
+            "intro": "People want to understand the service and ask the right questions before trusting someone with their pet.",
+            "phone_proposition": "For pet services, grooming or training, picture clear service information and a phone workflow for reviewing the inquiry, preparing a reply and keeping the next step and instructions together.",
+            "cta_label": "See what your website could look like",
+            "cta_binding": "approved_industry_matching_invitation_url",
+            "review_cta": "preview-status.html#pet-services",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "identity": "FAMtastic Designs assistant",
+            "matching_preview": {
+                "status": "missing_owned_industry_asset_and_unapproved_destination",
+                "image_path": null,
+                "owner_approved": false,
+                "brief": "Owned or cleared pet grooming/care/training imagery appropriate to one labeled service; species/service/inquiry path with actual policies.",
+                "scope_boundary": "No animal-care credential, vaccination policy, handling assurance, availability or training result is invented. Publish only actual owner-approved policies.",
+                "beauty_fallback_allowed": false,
+                "rejected_six_fallback_allowed": false
+            },
+            "review_layout": "Approved beauty D0 shape: existing BrandedEmail, early primary CTA, compact commercial, one scope disclosure, signature/card/QR; no beauty content copied",
+            "send_policy": {
+                "approved": false,
+                "dispatch_connected": false,
+                "requires": [
+                    "matching industry preview and destination",
+                    "exact owner content approval",
+                    "native industry match binding",
+                    "current provider permission and sender readiness",
+                    "bound invitation and unsubscribe",
+                    "exact recipient/batch authorization"
+                ],
+                "exit_on": [
+                    "human_reply",
+                    "purchase",
+                    "opt_out",
+                    "complaint",
+                    "hard_bounce"
+                ]
+            },
+            "followups": {
+                "d3": "unapproved_not_generated",
+                "d7": "unapproved_not_generated"
+            },
+            "copy_revision": 2,
+            "copy_review": "owner_authorized_next_steps_revision",
+            "registration_binding": "https://famtasticdesigns.com/login?mode=register&sample_continuation=<opaque_invitation_token>"
+        },
+        {
+            "id": "consulting-tutoring-creators-d0-v1",
+            "version": 1,
+            "day": 0,
+            "status": "draft_not_owner_approved",
+            "industry_source_label": "Consulting, Tutoring & Digital Creators",
+            "industry_source": "Supplied workbook segment, unverified; no business or recipient identity claimed",
+            "subject": "Give your expertise a clear next conversation",
+            "preview": "Explain the offer, understand an inquiry and prepare the next reply from your phone \u2014 without adding an unnecessary platform.",
+            "headline": "Make the next conversation count.",
+            "greeting": "Hello,",
+            "intro": "A clear offer helps someone understand what you do and bring a useful question to the first conversation.",
+            "phone_proposition": "For consulting, tutoring or digital-creator work, picture clear offer details and a phone workflow for reviewing the goal or topic, preparing a reply and keeping the next step organized.",
+            "cta_label": "See what your website could look like",
+            "cta_binding": "approved_industry_matching_invitation_url",
+            "review_cta": "preview-status.html#consulting-tutoring-creators",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "identity": "FAMtastic Designs assistant",
+            "matching_preview": {
+                "status": "missing_owned_industry_asset_and_unapproved_destination",
+                "image_path": null,
+                "owner_approved": false,
+                "brief": "Owned or cleared consultation, tutoring or creator-work scene; one explicit offer and topic/goal inquiry without borrowed student/client media.",
+                "scope_boundary": "No learning result, credential, consultation availability, course platform, subscription or digital-product checkout is implied.",
+                "beauty_fallback_allowed": false,
+                "rejected_six_fallback_allowed": false
+            },
+            "review_layout": "Approved beauty D0 shape: existing BrandedEmail, early primary CTA, compact commercial, one scope disclosure, signature/card/QR; no beauty content copied",
+            "send_policy": {
+                "approved": false,
+                "dispatch_connected": false,
+                "requires": [
+                    "matching industry preview and destination",
+                    "exact owner content approval",
+                    "native industry match binding",
+                    "current provider permission and sender readiness",
+                    "bound invitation and unsubscribe",
+                    "exact recipient/batch authorization"
+                ],
+                "exit_on": [
+                    "human_reply",
+                    "purchase",
+                    "opt_out",
+                    "complaint",
+                    "hard_bounce"
+                ]
+            },
+            "followups": {
+                "d3": "unapproved_not_generated",
+                "d7": "unapproved_not_generated"
+            },
+            "copy_revision": 2,
+            "copy_review": "owner_authorized_next_steps_revision",
+            "registration_binding": "https://famtasticdesigns.com/login?mode=register&sample_continuation=<opaque_invitation_token>"
+        },
+        {
+            "id": "handcrafted-fashion-boutiques-d0-v1",
+            "version": 1,
+            "day": 0,
+            "status": "draft_not_owner_approved",
+            "industry_source_label": "Handcrafted Products, Fashion & Boutiques",
+            "industry_source": "Supplied workbook segment, unverified; no business or recipient identity claimed",
+            "subject": "Give the craft a clear place to be discovered",
+            "preview": "Tell the product story, make the next inquiry useful and keep replies organized from your phone \u2014 with commerce scoped separately.",
+            "headline": "Give the details room to tell their story.",
+            "greeting": "Hello,",
+            "intro": "The details behind a piece are part of what makes it worth discovering.",
+            "phone_proposition": "For handcrafted products, fashion or boutiques, picture a clear product story and a phone workflow for reviewing a product or custom-work inquiry, preparing a reply and keeping the next step together.",
+            "cta_label": "See what your website could look like",
+            "cta_binding": "approved_industry_matching_invitation_url",
+            "review_cta": "preview-status.html#handcrafted-fashion-boutiques",
+            "terms": "One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.",
+            "signature": "Shay-Shay",
+            "identity": "FAMtastic Designs assistant",
+            "matching_preview": {
+                "status": "missing_owned_industry_asset_and_unapproved_destination",
+                "image_path": null,
+                "owner_approved": false,
+                "brief": "Owned or cleared product/craft/fashion imagery for one labeled example, with a rights-cleared catalog/story and inquiry path.",
+                "scope_boundary": "No inventory, shipping, checkout, payment, returns or custom-order acceptance is implied by the starter website. Ecommerce receives separate scope.",
+                "beauty_fallback_allowed": false,
+                "rejected_six_fallback_allowed": false
+            },
+            "review_layout": "Approved beauty D0 shape: existing BrandedEmail, early primary CTA, compact commercial, one scope disclosure, signature/card/QR; no beauty content copied",
+            "send_policy": {
+                "approved": false,
+                "dispatch_connected": false,
+                "requires": [
+                    "matching industry preview and destination",
+                    "exact owner content approval",
+                    "native industry match binding",
+                    "current provider permission and sender readiness",
+                    "bound invitation and unsubscribe",
+                    "exact recipient/batch authorization"
+                ],
+                "exit_on": [
+                    "human_reply",
+                    "purchase",
+                    "opt_out",
+                    "complaint",
+                    "hard_bounce"
+                ]
+            },
+            "followups": {
+                "d3": "unapproved_not_generated",
+                "d7": "unapproved_not_generated"
+            },
+            "copy_revision": 2,
+            "copy_review": "owner_authorized_next_steps_revision",
+            "registration_binding": "https://famtasticdesigns.com/login?mode=register&sample_continuation=<opaque_invitation_token>"
+        }
+    ]
+}

@@ -1,3 +1,7 @@
+## 2026-10-06 — Native acquisition window executor
+
+Dedicated campaign-only Drush clock and signed private beauty queue; atomic 50/window and 200/day limits, fresh history/capacity checks, exact existing SMTP transport, and halt/no-retry behavior. Other-industry D0 copy drafts remain held for matching previews and approval. Installation/outcomes: docs/research/acquisition-199/EXECUTOR-BRIEF.md.
+
 ## 2026-10-05 — Acquisition qualification follow-up (source; dispatch held)
 
 Expanded current identity research to30of300 initial candidates and compared all300privatecontact hashes with native contacts/outbox/consent/inbound history, finding0matches. Basic address syntax/domain MX checks pass without proving mailbox deliverability. Removed universal site/booking enrichment rejection; retained exact ownership, provider policy, suppression/history and verified supplied-binding evidence. Existing GoDaddycPanel commercial opt-in requirement is a specific unresolved sender dependency. Details: `docs/research/acquisition-199/cohort-qualification-followup.md`.

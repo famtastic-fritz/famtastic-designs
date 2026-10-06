@@ -318,7 +318,15 @@ services:
 
   famtastic_pipeline.acquisition_sample_exact_sender:
     class: Drupal\famtastic_pipeline\Service\AcquisitionSampleExactAdapter
-    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.acquisition_sample_sequences', '@famtastic_pipeline.mailer']
+    arguments: ['@database', '@datetime.time', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.acquisition_sample_sequences', '@famtastic_pipeline.mailer', '@famtastic_pipeline.acquisition_window_quota']
+
+  famtastic_pipeline.acquisition_window_quota:
+    class: Drupal\famtastic_pipeline\Service\AcquisitionWindowQuota
+    arguments: ['@database', '@datetime.time']
+
+  famtastic_pipeline.acquisition_window_executor:
+    class: Drupal\famtastic_pipeline\Service\AcquisitionWindowExecutor
+    arguments: ['@datetime.time', '@famtastic_pipeline.acquisition_window_quota', '@famtastic_pipeline.acquisition_sample_sequences', '@famtastic_pipeline.operational_ledger']
 
   famtastic_pipeline.campaign_workspace:
     class: Drupal\famtastic_pipeline\Service\CampaignWorkspace

@@ -40,6 +40,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     foreach ([1 => 'owner@example.test', 2 => 'other@example.test'] as $id => $email) $this->db->insert('famtastic_customer')->fields(['id' => $id, 'public_id' => 'fixture-' . $id, 'uid' => $id, 'prospect_id' => $id, 'display_name' => 'Fixture', 'email' => $email, 'created' => 1, 'changed' => 1])->execute();
     $time = $this->createMock(TimeInterface::class);
     $time->method('getRequestTime')->willReturnCallback(fn(): int => $this->now);
+    $time->method('getCurrentTime')->willReturnCallback(fn(): int => $this->now);
     $this->ledger = new OperationalLedger($this->db, $time);
     $config = $this->createMock(\Drupal\Core\Config\ImmutableConfig::class);
     $config->method('get')->willReturn('123 Fictional Test Street, Example City, FL 00000');
@@ -193,7 +194,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $message = $sequence['message_ids'][0];
     $hash = $this->db->select('famtastic_acquisition_message', 'm')->fields('m', ['content_hash'])->condition('message_id', $message)->execute()->fetchField();
     $manifest = ['transport' => 'synthetic_memory_only', 'sequence_id' => $sequence['sequence_id'], 'approval_ref' => 'synthetic-content-review', 'expires' => $this->now + 3600, 'messages' => [(string) $message => ['recipient' => 'owner@example.test', 'content_hash' => $hash]]];
-    $time = $this->createMock(TimeInterface::class); $time->method('getRequestTime')->willReturnCallback(fn(): int => $this->now);
+    $time = $this->createMock(TimeInterface::class); $time->method('getRequestTime')->willReturnCallback(fn(): int => $this->now);$time->method('getCurrentTime')->willReturnCallback(fn(): int => $this->now);
     $adapter = new AcquisitionSampleMemoryAdapter($this->db, $time, $this->ledger, $this->sequences);
     $previous = getenv('FAMTASTIC_ACQUISITION_MEMORY_SECRET');
     $secret = str_repeat('synthetic-local-only-', 3);
@@ -270,7 +271,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $sample = $this->db->select('famtastic_acquisition_sample','s')->fields('s')->condition('id',$invite['id'])->execute()->fetchAssoc();
     $receipt=['status'=>'owner_reviewed','reference'=>'synthetic-only','sha256'=>str_repeat('c',64)];
     $manifest=['schema'=>'famtastic.acquisition-exact-send.v1','transport'=>'native_smtp','cap'=>1,'sequence_id'=>$seq['sequence_id'],'message_id'=>$message,'recipient'=>'owner@example.test','from'=>'sender@example.test','content_id'=>$content['content_id'],'content_hash'=>$content['content_hash'],'qualification_ref'=>$sample['qualification_ref'],'invitation_evidence_hash'=>$sample['evidence_hash'],'approval_ref'=>'synthetic-exact-owner-review','expires'=>$this->now+3600,'provider_permission_receipt'=>$receipt,'history_receipt'=>$receipt,'release_proof'=>$receipt];
-    $time=$this->createMock(TimeInterface::class); $time->method('getRequestTime')->willReturn($this->now);
+    $time=$this->createMock(TimeInterface::class); $time->method('getRequestTime')->willReturn($this->now);$time->method('getCurrentTime')->willReturn($this->now);
     $mailer=$this->createMock(\Drupal\famtastic_pipeline\Service\OutreachMailer::class);
     $mailer->method('fromAddress')->willReturn('sender@example.test');
     $mailer->method('assertAcquisitionTransportAllowed')->willThrowException(new \RuntimeException('acquisition_real_dispatch_disabled'));
@@ -301,7 +302,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
       $this->db->update('famtastic_acquisition_sample')->fields(['expires'=>$this->now+86400])->condition('id',$invite['id'])->execute();
       $follow=$this->db->select('famtastic_acquisition_message','c')->fields('c')->condition('message_id',$seq['message_ids'][1])->execute()->fetchAssoc();
       $followManifest=$manifest;$followManifest['message_id']=$seq['message_ids'][1];$followManifest['content_id']=$follow['content_id'];$followManifest['content_hash']=$follow['content_hash'];$followManifest['expires']=$this->now+3600;
-      $currentTime=$this->createMock(TimeInterface::class);$currentTime->method('getRequestTime')->willReturn($this->now);
+      $currentTime=$this->createMock(TimeInterface::class);$currentTime->method('getRequestTime')->willReturn($this->now);$currentTime->method('getCurrentTime')->willReturn($this->now);
       $failure=$this->createMock(\Drupal\famtastic_pipeline\Service\OutreachMailer::class);$failure->method('fromAddress')->willReturn('sender@example.test');
       $failure->expects($this->once())->method('sendFrozenAcquisition')->willThrowException(new \RuntimeException('synthetic-connection-uncertain'));
       $adapter=new \Drupal\famtastic_pipeline\Service\AcquisitionSampleExactAdapter($this->db,$currentTime,$this->ledger,$this->sequences,$failure);
@@ -493,7 +494,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $account = AcquisitionSampleGuard::senderAccount($this->factory);
     $binding = ['invitation_id'=>(int)$sample['id'],'prospect_id'=>(int)$sample['prospect_id'],'campaign_id'=>(int)$sample['campaign_id'],'recipient_hash'=>$sample['recipient_hash'],'invitation_evidence_hash'=>$sample['evidence_hash'],'account_sha256'=>$account['account_sha256'],'from'=>$account['from']];
     $receipt = ['status'=>'owner_reviewed','reference'=>'synthetic-source-proof-not-real-permission','sha256'=>str_repeat('c',64),'checked_at'=>$this->now,'binding'=>$binding];
-    return ['schema'=>'famtastic.acquisition-generic-authorization.v1','issued_at'=>$this->now,'expires'=>$this->now+3600,'binding'=>$binding,'sender'=>$account,'provider_permission_receipt'=>$receipt+['provider'=>'godaddy_cpanel','policy'=>'opt_in_only','permitted_use'=>TRUE,'written_opt_in_reference'=>'synthetic-only','written_opt_in_sha256'=>str_repeat('d',64)],'history_receipt'=>$receipt+['classification'=>'actual_native_history_reconciled','coverage_complete'=>TRUE,'eligible_for_new_outreach'=>TRUE,'known_stop_reasons'=>[]],'creative_approval'=>['reference'=>'docs/research/acquisition-199/CREATIVE-APPROVAL.json','sha256'=>hash_file('sha256',dirname(__DIR__,8).'/docs/research/acquisition-199/CREATIVE-APPROVAL.json')],'content_id'=>'acquisition-199:beauty_soft_power_generic_d0:v1'];
+    return ['schema'=>'famtastic.acquisition-generic-authorization.v1','issued_at'=>$this->now,'expires'=>$this->now+3600,'binding'=>$binding,'sender'=>$account,'provider_permission_receipt'=>$receipt+['provider'=>'godaddy_cpanel','policy'=>'opt_in_only','permitted_use'=>TRUE,'written_opt_in_reference'=>'synthetic-only','written_opt_in_sha256'=>str_repeat('d',64)],'history_receipt'=>$receipt+['classification'=>'actual_native_history_reconciled','coverage_complete'=>TRUE,'eligible_for_new_outreach'=>TRUE,'known_stop_reasons'=>[]],'creative_approval'=>['reference'=>'docs/research/acquisition-199/CREATIVE-APPROVAL.json','sha256'=>hash_file('sha256',dirname(__DIR__,8).'/docs/research/acquisition-199/CREATIVE-APPROVAL.json')],'content_id'=>'acquisition-199:beauty_soft_power_generic_d0:v2'];
   }
 
   private function genericSignature(array $value): string {
@@ -510,6 +511,13 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $this->assertSame($expected,$snapshot['postal_address']);
     $this->assertStringContainsString($expected,$snapshot['body']);
     $this->assertStringContainsString($expected,$snapshot['html']);
+    $registration='https://famtasticdesigns.com/login?mode=register&sample_continuation='.$invitation['token'];
+    $this->assertSame('acquisition-199:beauty_soft_power_generic_d0:v2',$snapshot['content_id']);
+    $this->assertStringContainsString($registration,$snapshot['body']);
+    $this->assertStringContainsString(htmlspecialchars($registration,ENT_QUOTES | ENT_SUBSTITUTE,'UTF-8'),$snapshot['html']);
+    $this->assertStringNotContainsString('registration-not-bound',$snapshot['html'].$snapshot['body']);
+    $this->assertStringContainsString('Create your free account and complete your website interview.',$snapshot['body']);
+    $this->assertStringContainsString('We aim for same-day launch once your site is approved, payment is complete and the domain is ready.',$snapshot['body']);
     $single=\Drupal\famtastic_pipeline\Service\AcquisitionSampleEmail::compileGeneric($authorization,$invitation['token'],str_repeat('a',48),str_repeat('b',48),$expected);
     $this->assertSame($single,$snapshot);
   }
@@ -623,7 +631,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $this->assertStringContainsString('/web/api/pipeline/email/click/',$snapshot['body']);$this->assertStringContainsString('/web/api/pipeline/email/open/',$snapshot['html']);
     $this->assertSame('supplied_generic_preparation',$this->samples->resolve($invitation['token'])['context_classification']);
     $this->sequences->activate($sequence['sequence_id'],$this->now,'synthetic-generic-schedule');
-    $time=$this->createMock(TimeInterface::class);$time->method('getRequestTime')->willReturn($this->now);
+    $time=$this->createMock(TimeInterface::class);$time->method('getRequestTime')->willReturn($this->now);$time->method('getCurrentTime')->willReturn($this->now);
     $memory=new AcquisitionSampleMemoryAdapter($this->db,$time,$this->ledger,$this->sequences);
     $old=getenv('FAMTASTIC_ACQUISITION_MEMORY_SECRET');$secret=str_repeat('synthetic-memory-key-',3);putenv('FAMTASTIC_ACQUISITION_MEMORY_SECRET='.$secret);
     try {
@@ -674,7 +682,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $manifest[$permissionKey]=$auth[$permissionKey];
     if ($cold) foreach (['authorization_basis','provider_policy_conflict','recipient_opt_in','provider_permission_proved'] as $key) $manifest[$key]=$auth[$key];
     $manifest['from']=$auth['sender']['from'];
-    $time=$this->createMock(TimeInterface::class);$time->method('getRequestTime')->willReturn($this->now);
+    $time=$this->createMock(TimeInterface::class);$time->method('getRequestTime')->willReturn($this->now);$time->method('getCurrentTime')->willReturn($this->now);
     $mailer=$this->createMock(\Drupal\famtastic_pipeline\Service\OutreachMailer::class);$mailer->method('fromAddress')->willReturn($auth['sender']['from']);$mailer->expects($this->once())->method('sendFrozenAcquisition')->willReturn('<synthetic-generic-not-real@example.test>');
     $adapter=new \Drupal\famtastic_pipeline\Service\AcquisitionSampleExactAdapter($this->db,$time,$this->ledger,$this->sequences,$mailer);
     $bad=$manifest;$bad[$permissionKey]['reference']='different-permission';
@@ -713,7 +721,7 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $invitation=$this->prepare();$auth=$this->genericAuthorizationReceipt($invitation);
     $smtp=$this->createMock(\Drupal\Core\Config\ImmutableConfig::class);$smtp->method('get')->willReturnCallback(static fn(string $key):mixed=>['smtp_on'=>FALSE,'smtp_host'=>'smtp.synthetic.invalid','smtp_port'=>587,'smtp_username'=>'sender@example.test','smtp_from'=>'sender@example.test','smtp_protocol'=>'tls'][$key]??NULL);
     $factory=$this->createMock(\Drupal\Core\Config\ConfigFactoryInterface::class);$factory->method('get')->willReturn($smtp);
-    $time=$this->createMock(TimeInterface::class);$time->method('getRequestTime')->willReturn($this->now);
+    $time=$this->createMock(TimeInterface::class);$time->method('getRequestTime')->willReturn($this->now);$time->method('getCurrentTime')->willReturn($this->now);
     $samples=new AcquisitionSampleService($this->db,$time,$this->ledger,$factory);
     $this->expectExceptionMessage('acquisition_native_account_required');
     $samples->authorizeGeneric($invitation['id'],$auth,$this->genericSignature($auth));

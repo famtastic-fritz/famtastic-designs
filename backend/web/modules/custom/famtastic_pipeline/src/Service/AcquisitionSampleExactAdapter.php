@@ -10,14 +10,14 @@ use Drupal\Core\Database\Connection;
 /** One exact owner-approved message through the existing native SMTP boundary. */
 final class AcquisitionSampleExactAdapter {
 
-  public function __construct(private readonly Connection $database, private readonly TimeInterface $time, private readonly OperationalLedger $ledger, private readonly AcquisitionSampleSequenceService $sequences, private readonly OutreachMailer $mailer) {}
+  public function __construct(private readonly Connection $database, private readonly TimeInterface $time, private readonly OperationalLedger $ledger, private readonly AcquisitionSampleSequenceService $sequences, private readonly OutreachMailer $mailer, private readonly ?AcquisitionWindowQuota $quota = NULL) {}
 
-  /** No route/worker calls this. Disabled gates are checked before reservation. */
+  /** Internal operator and bounded campaign clock only; no route/general worker. */
   public function dispatch(array $manifest, string $signature): array {
     $secret = (string) getenv('FAMTASTIC_ACQUISITION_OWNER_SIGNING_SECRET');
     $json = json_encode($manifest, JSON_THROW_ON_ERROR);
     if (strlen($secret) < 32 || !hash_equals(hash_hmac('sha256', $json, $secret), $signature)) throw new \InvalidArgumentException('acquisition_owner_signature_invalid');
-    $now = $this->time->getRequestTime();
+    $now = $this->time->getCurrentTime();
     if (($manifest['schema'] ?? '') !== 'famtastic.acquisition-exact-send.v1' || ($manifest['transport'] ?? '') !== 'native_smtp' || ($manifest['cap'] ?? 0) !== 1 || (int) ($manifest['expires'] ?? 0) <= $now || (int) $manifest['expires'] > $now + 3600 || !preg_match('/^[a-zA-Z0-9:_.-]{8,128}$/D', (string) ($manifest['approval_ref'] ?? ''))) throw new \InvalidArgumentException('acquisition_exact_manifest_invalid');
     $basis = AcquisitionSampleGuard::authorizationBasis($manifest);
     $permissionKey = $basis === 'owner_authorized_cold_outreach' ? 'owner_authorization_receipt' : 'provider_permission_receipt';
@@ -68,20 +68,25 @@ final class AcquisitionSampleExactAdapter {
       }
       if ($this->database->select('famtastic_acquisition_dispatch','d')->condition('approval_ref',$manifest['approval_ref'])->countQuery()->execute()->fetchField()) throw new \RuntimeException('acquisition_approval_cap_exhausted');
       $this->mailer->assertAcquisitionTransportAllowed();
+      $this->quota?->reserveMessage($messageId);
       $this->database->insert('famtastic_acquisition_dispatch')->fields(['message_id' => $messageId, 'content_hash' => $content['content_hash'], 'manifest_hash' => $manifestHash, 'approval_ref' => $manifest['approval_ref'], 'status' => 'reserved', 'created' => $now, 'changed' => $now])->execute();
       if ($this->database->update('famtastic_email_message')->fields(['status' => 'dispatching', 'changed' => $now])->condition('id', $messageId)->condition('status', 'held')->execute() !== 1) throw new \RuntimeException('acquisition_reservation_conflict');
     }
     catch (\Throwable $error) { $transaction->rollBack(); throw $error; }
     unset($transaction); // Durable reservation before any network side effect.
     try {
+      if ((int)$manifest['expires'] <= $this->time->getCurrentTime()) throw new \RuntimeException('acquisition_exact_manifest_expired_before_transport');
+      $this->quota?->assertTransportWindow($messageId);
       if ($this->database->select('famtastic_acquisition_sequence','s')->fields('s',['status'])->condition('id',$sequenceId)->execute()->fetchField() !== 'active' || $this->ledger->isSuppressed((string) $message['recipient_address'])) throw new \RuntimeException('acquisition_suppression_after_reservation');
       $providerId = $this->mailer->sendFrozenAcquisition((string) $message['recipient_address'], $snapshot, 'https://famtasticdesigns.com/web/api/pipeline/email/unsubscribe/confirm/' . $message['unsubscribe_key']);
       $this->database->update('famtastic_acquisition_dispatch')->fields(['status' => 'accepted', 'provider_message_id' => $providerId, 'changed' => $now])->condition('message_id', $messageId)->execute();
       $this->database->update('famtastic_email_message')->fields(['status' => 'sent', 'provider' => 'smtp', 'provider_message_id' => $providerId, 'sent_at' => $now, 'changed' => $now])->condition('id', $messageId)->execute();
       $this->ledger->recordEvent('acquisition:smtp:' . $messageId, 'email.sent', ['message_id' => $messageId, 'content_id' => $content['content_id'], 'content_hash' => $content['content_hash'], 'approval_ref' => $manifest['approval_ref'], 'smtp_accepted' => TRUE, 'inbox_delivery' => FALSE], (int) $message['prospect_id'], (int) $message['campaign_id'], provider: 'smtp');
+      $this->quota?->accepted($messageId);
       return ['message_id' => $messageId, 'provider_message_id' => $providerId, 'duplicate' => FALSE, 'inbox_delivery' => FALSE];
     }
     catch (\Throwable $error) {
+      $this->quota?->halt('', 'acquisition_dispatch_uncertain_manual_review');
       $this->database->update('famtastic_acquisition_dispatch')->fields(['status' => 'uncertain', 'changed' => $now])->condition('message_id', $messageId)->execute();
       $this->ledger->recordEvent('acquisition:uncertain:' . $messageId, 'acquisition.dispatch_uncertain', ['message_id' => $messageId, 'content_hash' => $content['content_hash'], 'approval_ref' => $manifest['approval_ref'], 'retry_allowed' => FALSE], (int) $message['prospect_id'], (int) $message['campaign_id']);
       throw new \RuntimeException('acquisition_dispatch_uncertain_manual_reconciliation_required', 0, $error);

@@ -1,0 +1,46 @@
+<?php
+declare(strict_types=1);
+require __DIR__.'/acquisition-window-capacity.php';
+$now=strtotime('2026-10-06T18:00:00Z');$hash=str_repeat('a',64);
+$config=['capacity_mode'=>AcquisitionWindowCapacity::MODE,'sender_account_sha256'=>$hash,'timezone'=>'America/New_York','day_cap'=>200,'window_cap'=>50,'transactional_unobserved_day_reserve'=>250,'transactional_unobserved_hour_reserve'=>400];
+$empty=['eastern_today'=>0,'rolling_24h'=>0,'rolling_1h'=>0,'pending_or_retry_records'=>0];
+$usage=['checked_at'=>$now,'sender_account_sha256'=>$hash,'sources'=>['famtastic_email_message'=>$empty,'famtastic_notification_outbox'=>$empty],'unresolved_exact_transport'=>0];
+$checks=0;
+$check=static function(bool $ok,string $name)use(&$checks):void{if(!$ok)throw new RuntimeException($name);$checks++;};
+$reject=static function(array $u,array $c,string $name)use($now,$check):void{try{AcquisitionWindowCapacity::budget($u,$c,$now);}catch(RuntimeException){$check(TRUE,$name);return;}$check(FALSE,$name);};
+$value=AcquisitionWindowCapacity::budget($usage,$config,$now);
+$check($value['available_today']===200&&$value['available_hour']===50,'caps_apply_after_reserves');
+$check($value['capacity_mode']==='published_limit_with_reserved_budget'&&$value['budget_kind']==='conservative_budget'&&!$value['verified']&&!$value['provider_remaining_verified']&&!$value['safe_lower_bound_proved']&&$value['outside_usage_unknown'],'budget_never_claims_verified_quota');
+$withoutHash=$value;unset($withoutHash['sha256']);$check(hash('sha256',json_encode($withoutHash,JSON_THROW_ON_ERROR))===$value['sha256'],'aggregate_snapshot_fingerprint');
+$u=$usage;$u['sources']['famtastic_email_message']=array_replace($empty,['eastern_today'=>150,'rolling_24h'=>150,'rolling_1h'=>70]);
+$u['sources']['famtastic_notification_outbox']=array_replace($empty,['eastern_today'=>20,'rolling_24h'=>25,'rolling_1h'=>10]);
+$value=AcquisitionWindowCapacity::budget($u,$config,$now);
+$check($value['observed_today']===175&&$value['observed_hour']===80&&$value['available_today']===75&&$value['available_hour']===20,'all_native_observed_sources_reduce_budget');
+$u['sources']['famtastic_email_message']['eastern_today']=180;
+$check(AcquisitionWindowCapacity::budget($u,$config,$now)['observed_today']===200,'long_eastern_day_counts_not_lost_to_24h_window');
+$u['sources']['famtastic_email_message']['rolling_24h']=300;
+$check(AcquisitionWindowCapacity::budget($u,$config,$now)['available_today']===0,'exhausted_day_clamped_to_zero');
+$u['sources']['famtastic_email_message']['rolling_1h']=100;
+$check(AcquisitionWindowCapacity::budget($u,$config,$now)['available_hour']===0,'exhausted_hour_clamped_to_zero');
+$u=$usage;$u['unresolved_exact_transport']=1;
+$value=AcquisitionWindowCapacity::budget($u,$config,$now);
+$check($value['available_today']===0&&$value['available_hour']===0,'unresolved_actual_transport_halts_budget');
+$u=$usage;$u['sources']['famtastic_notification_outbox']['pending_or_retry_records']=40;
+$value=AcquisitionWindowCapacity::budget($u,$config,$now);
+$check($value['observed_today']===0&&$value['observed_hour']===0,'queued_rows_are_not_actual_provider_usage');
+$c=$config;$c['transactional_unobserved_day_reserve']=490;$c['transactional_unobserved_hour_reserve']=499;
+$value=AcquisitionWindowCapacity::budget($usage,$c,$now);
+$check($value['available_today']===10&&$value['available_hour']===1,'increased_reserves_reduce_caps');
+$c['transactional_unobserved_day_reserve']=600;$c['transactional_unobserved_hour_reserve']=600;
+$value=AcquisitionWindowCapacity::budget($usage,$c,$now);
+$check($value['available_today']===0&&$value['available_hour']===0,'over_limit_reserves_halt');
+foreach(['capacity_mode'=>'provider_reported_remaining','sender_account_sha256'=>str_repeat('b',64),'timezone'=>'UTC','day_cap'=>250,'window_cap'=>60,'transactional_unobserved_day_reserve'=>249,'transactional_unobserved_hour_reserve'=>399]as$key=>$bad){$c=$config;$c[$key]=$bad;$reject($usage,$c,'invalid_bound_policy_'.$key);}
+foreach(['checked_at'=>$now-301,'sender_account_sha256'=>str_repeat('b',64),'unresolved_exact_transport'=>-1]as$key=>$bad){$u=$usage;$u[$key]=$bad;$reject($u,$config,'invalid_fresh_usage_'.$key);}
+$u=$usage;$u['checked_at']=$now+1;$reject($u,$config,'future_usage_rejected');
+$u=$usage;unset($u['sources']['famtastic_notification_outbox']);$reject($u,$config,'missing_transactional_source_rejected');
+$u=$usage;$u['sources']['famtastic_email_message']['rolling_24h']='0';$reject($u,$config,'string_counter_rejected');
+$u=$usage;$u['sources']['famtastic_email_message']['rolling_1h']=1;$reject($u,$config,'inconsistent_window_counts_rejected');
+$check(AcquisitionWindowCapacity::easternStart(strtotime('2026-10-06T02:00:00Z'))===strtotime('2026-10-05T04:00:00Z'),'utc_day_does_not_replace_eastern_day');
+$check(AcquisitionWindowCapacity::easternStart(strtotime('2026-11-01T23:00:00Z'))===strtotime('2026-11-01T04:00:00Z'),'fall_dst_start_uses_actual_eastern_offset');
+$check(AcquisitionWindowCapacity::easternStart(strtotime('2026-11-02T12:00:00Z'))===strtotime('2026-11-02T05:00:00Z'),'post_fall_dst_day_uses_new_offset');
+print 'PASS: '.$checks.' synthetic capacity-budget checks; no provider quota or real mail proved.'.PHP_EOL;

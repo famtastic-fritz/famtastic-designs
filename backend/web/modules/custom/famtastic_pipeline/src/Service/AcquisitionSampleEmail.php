@@ -77,6 +77,7 @@ final class AcquisitionSampleEmail {
     if (!preg_match('/\ASubject: ([^\r\n]+)\r?\nPreview: ([^\r\n]+)\r?\n\r?\n/', $plain, $metadata)) throw new \InvalidArgumentException('generic_approved_plain_required');
     $plain = substr($plain, strlen($metadata[0]));
     $invitation = 'https://famtasticdesigns.com/web/api/pipeline/email/click/' . $tracking;
+    $registration = 'https://famtasticdesigns.com/login?mode=register&sample_continuation=' . $token;
     $stop = 'https://famtasticdesigns.com/web/api/pipeline/email/unsubscribe/confirm/' . $unsubscribe;
     if (substr_count($html, 'href="beauty-lab.html"') !== 2 || substr_count($html, 'https://example.invalid/unsubscribe-not-bound') !== 1 || substr_count($plain, 'beauty-lab.html (local review only)') !== 1) throw new \InvalidArgumentException('generic_approved_binding_slots_required');
     // Only fixed review scaffolding and declared delivery slots change. The
@@ -85,6 +86,11 @@ final class AcquisitionSampleEmail {
     if ($noteCount !== 1) throw new \InvalidArgumentException('generic_review_scaffold_changed');
     $html = str_replace(['href="beauty-lab.html"', 'https://example.invalid/unsubscribe-not-bound', ' (unbound review placeholder)'], ['href="' . $invitation . '"', $stop, ''], $html);
     $plain = str_replace(['beauty-lab.html (local review only)', 'https://example.invalid/unsubscribe-not-bound (unbound review placeholder)', "Owner review candidate. No sending binding issued.\n"], [$invitation, $stop, ''], $plain);
+    if (($creative['content_id'] ?? '') === 'acquisition-199:beauty_soft_power_generic_d0:v2') {
+      if (substr_count($html, 'https://example.invalid/registration-not-bound') !== 1 || substr_count($plain, 'https://example.invalid/registration-not-bound (local review only)') !== 1) throw new \InvalidArgumentException('generic_registration_binding_slot_required');
+      $html = str_replace('https://example.invalid/registration-not-bound', htmlspecialchars($registration, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), $html);
+      $plain = str_replace('https://example.invalid/registration-not-bound (local review only)', $registration, $plain);
+    }
     $attachments = [];
     foreach (['connect-qr.png' => ['connect-qr', 'digital-card', 'image/png'], 'hair-studio.jpg' => ['sample-beauty_soft_power_acquisition', 'illustrative-generic-sample', 'image/jpeg']] as $name => [$cid, $purpose, $type]) {
       $bytes = $read($base . 'assets/' . $name);

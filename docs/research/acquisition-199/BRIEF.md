@@ -1,3 +1,13 @@
+<!-- EXECUTOR-CURRENT -->
+# Native window executor — October 6 operational continuation
+
+Source implementation is being tested for the owner-authorized native timer. Exact provider remaining quota is unavailable after independent shell/API, portal and account-token investigations. The approved conservative execution mode uses published product limits, fresh observed message/outbox traffic, a 250/day mailbox reserve and 400/hour shared reserve. This is a modeled pacing budget with incomplete outside usage, not a verified provider balance or guaranteed lower bound.
+
+The private approved beauty queue has 99 initially eligible contacts: next 50 at October 7 09:00 America/New_York, remaining 49 at 10:00 if fresh eligibility/capacity still passes. Initial coverage checked 325 Maildir originals per contact, all native history sources and the historical 260 exclusion. The first accepted customer and owned probe are excluded. Every window repeats actual history and suppression checks before signed cap-one dispatch. Nine other-industry copy drafts are available; matching imagery/destinations and variant approval remain pending. D3/D7 remain held.
+
+New capability `acq.window-executor`: private signed config, four approved Eastern windows, atomic 50/window and 200/day acquisition limits across new/followup sends, preserved exact-dispatch lock, no catch-up, no interrupted/uncertain retry and global stop on failure. Source/testing evidence is separate from timer installation and next-window SMTP outcomes. Runtime installation proof will be recorded in NATIVE-EXECUTOR-RECEIPT.json. Owner physical UI/task acceptance remains pending.
+<!-- /EXECUTOR-CURRENT -->
+
 Title: Approved beauty campaign production checkpoint
 Purpose: release Fritz's approved outreach and prove one complete live delivery path.
 Goal: publish and deploy reviewed source, verify the received email and hosted journey, and record first customer acceptance truthfully.

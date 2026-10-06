@@ -30,7 +30,7 @@ function famtastic_pipeline_update_8001(&$sandbox) {
  * Implements hook_schema().
  */
 function famtastic_pipeline_schema(): array {
-  $schema = \Drupal\famtastic_pipeline\Service\AcquisitionSampleSchema::tables() + \Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema::tables() + _famtastic_pipeline_automation_schema() + _famtastic_pipeline_customer_invoice_schema() + [
+  $schema = \Drupal\famtastic_pipeline\Service\AcquisitionWindowSchema::tables() + \Drupal\famtastic_pipeline\Service\AcquisitionSampleSchema::tables() + \Drupal\famtastic_pipeline\Service\WorkerCoordinatorSchema::tables() + _famtastic_pipeline_automation_schema() + _famtastic_pipeline_customer_invoice_schema() + [
     'famtastic_proof_version' => _famtastic_pipeline_proof_version_schema(),
     'famtastic_website_proof_research_snapshot' => _famtastic_pipeline_website_proof_research_snapshot_schema(),
     'famtastic_booking_site_owner' => _famtastic_pipeline_booking_site_owner_schema(),
@@ -3512,4 +3512,15 @@ function famtastic_pipeline_update_8068(&$sandbox) {
     if (!$schema->tableExists($table)) $schema->createTable($table, $definitions[$table]);
   }
   return 'Added staff planning and draft persistence; no messages sent or AI enabled.';
+}
+
+/** Durable campaign window reservations; installs no timer and activates no mail. */
+function famtastic_pipeline_update_8069(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+  foreach (\Drupal\famtastic_pipeline\Service\AcquisitionWindowSchema::tables() as $table => $definition) {
+    if (!$schema->tableExists($table)) $schema->createTable($table, $definition);
+    foreach (array_keys($definition['fields']) as $field) if (!$schema->fieldExists($table, $field)) throw new \RuntimeException('Acquisition window schema is partial: ' . $table . '.' . $field);
+    foreach (array_keys(($definition['unique keys'] ?? []) + ($definition['indexes'] ?? [])) as $index) if (!$schema->indexExists($table, $index)) throw new \RuntimeException('Acquisition window index is partial: ' . $table . '.' . $index);
+  }
+  return 'Installed acquisition window reservation journal. No clock or sender was activated.';
 }

@@ -115,7 +115,8 @@ final class AcquisitionSampleGuard {
     $creative = self::creativeApproval((array) ($authorization['creative_approval'] ?? []), $frozenCreative);
     $recipes = json_decode((string) $sample['recipe_snapshot'], TRUE, 32, JSON_THROW_ON_ERROR);
     if (count($recipes) !== 1 || $recipes[0]['id'] !== 'beauty_soft_power_acquisition' || $recipes[0]['sha256'] !== ($creative['artifact_sha256'][$recipes[0]['artifact_path']] ?? '') || !hash_equals($recipes[0]['sha256'], hash('sha256', (string) $recipes[0]['html_snapshot']))) throw new \InvalidArgumentException('generic_approved_recipe_binding_required');
-    if (($authorization['content_id'] ?? '') !== 'acquisition-199:beauty_soft_power_generic_d0:v1') throw new \InvalidArgumentException('generic_approved_content_identity_required');
+    $approvedContent = $creative['content_id'] ?? 'acquisition-199:beauty_soft_power_generic_d0:v1';
+    if (!in_array($approvedContent, ['acquisition-199:beauty_soft_power_generic_d0:v1', 'acquisition-199:beauty_soft_power_generic_d0:v2'], TRUE) || ($authorization['content_id'] ?? '') !== $approvedContent) throw new \InvalidArgumentException('generic_approved_content_identity_required');
   }
 
   /** Owner intent is distinct from recipient consent and provider permission. */
