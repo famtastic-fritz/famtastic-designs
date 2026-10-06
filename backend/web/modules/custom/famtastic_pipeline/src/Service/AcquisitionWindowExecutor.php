@@ -80,7 +80,7 @@ final class AcquisitionWindowExecutor {
       $this->quota->assertNoInterruptedRun($key);
       $read=$capacity($binding);$available=$this->capacity($read,$this->time->getCurrentTime(),$account['account_sha256']);
       $records=array_slice($records,0,min(count($records),$available['available_today'],$available['available_hour']));
-      if(!$records)throw new \RuntimeException('acquisition_provider_capacity_unavailable');
+      if(!$records)return ['status'=>'capacity_exhausted','reason'=>'provider_capacity_unavailable','window_key'=>$key,'inbox_delivery_proved'=>FALSE];
       $reservation=$this->quota->reserveWindow($date,$hour,hash('sha256',json_encode($config,JSON_THROW_ON_ERROR)),$records,(int)$config['campaign_id'],$asapExpires,($config['execution_mode']??'')==='asap_industry'?$key:NULL);
       if($reservation['duplicate'])return $this->quota->result($key)+['duplicate'=>TRUE];
       foreach($records as $i=>$record){

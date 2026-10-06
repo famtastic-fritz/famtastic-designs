@@ -20,7 +20,7 @@ Execution: Existing codex/acquisition-199-20261005 worktree; normal agency main 
 Research: Existing source/approved54hashes/private cohort and fresh actual native history, not optional competitor research.
 Review: Source and hosted capability matrix plus separate physical owner-task acceptance record.
 Skills: agency-agents engineering/engineering-backend-architect at pinned765be42358100bf89d2faa567668a94c602f9a26; famtastic-build-review/client-owner-training existing release guidance.
-Blocked By: first live industry window held by13charproductionkey schema; zeroindustryslots/messages/packets/dispatch uncertainties. Narrow32char migration tested; actualmigration and manualzero-attemptreview pending.
+Blocked By: clockheldpendingfinalcapacity-deferrelease andexplicit zero-attemptmanualreview. ActualMySQL8070migrationpassed32char bothcolumns,50beautyslots/51acceptancespreserved;0industryattempts/uncertainty.
 
 Proof:
 - SAME-DAY-INDUSTRY-AUTHORIZATION-20261006.json records actual originating-chat human instruction, not an invented confirmation here.
@@ -33,3 +33,4 @@ Proof:
 - PRIVATE-900-UPLOAD-AUTHORIZATION-20261006.json records the exact new human Yes and accepted transfer. Approval controls remain managed; no bypass or other destination authorized.
 - Real signed operator preparation/replay:18installed checks across9industries; heldnative rows and0dispatch. Combinedfocusedunit78tests1861assertions;70existing deprecation notices.
 - Scoped3b2a5010 was FFpushed/deployed front/back; native9bundlebindings,999queue finiteclock andcampaign5revision4 verified. First18window stopped before reservation insertion: actualMySQLcolumns13chars vs27bytekey. 0industryslots/messages/contactpackets/unresolved;51customeracceptances/50beautyslots preserved. Migration29tests1098assertions passed; nativefix/resume pending.
+- ActualMySQL migration deployedf25cf94c andverified22:11:53Z. Predictablefreshzeroallowance nowdefers instead oflatchingfailure:29windowtests1244assertions. Finishingroutinehorizon extendsOct7–16 underunchanged50/window200TOTAL/day and250/day400/hour reserves;200/dayis maximum, not guaranteedthroughrolling24hmodel.

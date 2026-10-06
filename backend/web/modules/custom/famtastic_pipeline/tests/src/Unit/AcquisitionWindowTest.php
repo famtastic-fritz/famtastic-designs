@@ -130,6 +130,35 @@ final class AcquisitionWindowTest extends UnitTestCase {
   public function testInventedBudgetAndUnknownRemainingDoNotBecomeVerified():void {
     $r=$this->executeWindow($this->queue(1),NULL,fn(array $b):array=>array_replace($this->capacity(),['transactional_unobserved_day_reserve'=>249]));$this->assertSame('halted',$r['status']);$this->assertSame(0,$this->sent);
   }
+  public function testZeroFreshProviderBudgetDefersWithoutLatchAndLaterWindowUsesRemainingDailyCapacity():void {
+    $this->at('2026-10-07 08:00:00');
+    for($i=0;$i<150;$i++)$this->message('already-sent-'.$i.'@example.test',0,TRUE);
+    $this->at('2026-10-07 09:00:00');
+    $this->db->insert('famtastic_acquisition_clock')->fields(['id'=>1,'status'=>'active','reason'=>'','changed'=>$this->now])->execute();
+    $queue=$this->queue(50);
+    $zero=fn(array $binding):array=>array_replace($this->capacity(),['available_today'=>0,'available_hour'=>0]);
+
+    $deferred=$this->executeWindow($queue,NULL,$zero);
+    $this->assertSame('capacity_exhausted',$deferred['status']);
+    $this->assertSame('provider_capacity_unavailable',$deferred['reason']);
+    $this->assertSame('active',$this->quota->clockStatus());
+    $this->assertSame(0,(int)$this->db->select('famtastic_acquisition_window','w')->countQuery()->execute()->fetchField());
+    $this->assertSame(0,(int)$this->db->select('famtastic_acquisition_slot','s')->countQuery()->execute()->fetchField());
+    $this->assertSame(0,$this->prepared);$this->assertSame(0,$this->sent);
+    foreach($queue as $record)$this->assertFalse($this->quota->usedQueue($record['queue_key']));
+
+    // A fresh approved hour with 50 of the campaign's 200 daily slots left can
+    // consume the unchanged queue; the zero-budget check did not latch failure.
+    $this->at('2026-10-07 10:00:00');
+    $laterCapacity=fn(array $binding):array=>array_replace($this->capacity(),['available_today'=>50,'available_hour'=>50]);
+    $later=$this->executeWindow($queue,NULL,$laterCapacity);
+    $this->assertSame('complete',$later['status']);
+    $this->assertSame(50,$later['counts']['accepted']);
+    $this->assertSame('active',$this->quota->clockStatus());
+    $this->assertSame(50,$this->prepared);$this->assertSame(50,$this->sent);
+    $this->assertSame(200,$this->quota->usage('2026-10-07',10)['day']);
+    $this->assertSame(50,$this->quota->usage('2026-10-07',10)['window']);
+  }
   public function testFreshCapacityCallbackCanCrossASecondWithoutFalseFutureRejection():void {
     $r=$this->executeWindow($this->queue(1),NULL,function(array $binding):array{$this->now++;return $this->capacity();});$this->assertSame('complete',$r['status']);$this->assertSame(1,$this->sent);
   }
