@@ -136,7 +136,7 @@ final class AcquisitionWindowTest extends UnitTestCase {
     $this->at('2026-10-07 09:00:00');
     $this->db->insert('famtastic_acquisition_clock')->fields(['id'=>1,'status'=>'active','reason'=>'','changed'=>$this->now])->execute();
     $queue=$this->queue(50);
-    $zero=fn(array $binding):array=>array_replace($this->capacity(),['available_today'=>0,'available_hour'=>0]);
+    $zero=fn(array $binding):array=>array_replace($this->capacity(),['available_today'=>0,'available_hour'=>0,'observed_today'=>251,'observed_hour'=>101]);
 
     $deferred=$this->executeWindow($queue,NULL,$zero);
     $this->assertSame('capacity_exhausted',$deferred['status']);

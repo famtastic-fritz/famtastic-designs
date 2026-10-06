@@ -56,6 +56,7 @@
     "finite_routine_ends_on": "2026-10-16",
     "reason": "Publishedlimit/reserves/rolling24h mean200/dayis ceiling; allowdeferredwindowswithoutnewprovider/reservechange.",
     "window_and_schema_tests": 30,
-    "combined_assertions": 1262
+    "combined_assertions": 1262,
+    "zero_budget_over_observed_reserve": "Observed251/day101/hour produces validclamped0 allowance, defersbefore reservation and later resumes unchangedqueue;30tests1262assertions passed"
   }
 }
