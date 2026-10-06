@@ -711,3 +711,10 @@ All six prior visuals were declined and excluded from the proposed send package.
 - Campaign packaging now reads exact commit blobs from the canonical bare mirror while the deployment archive remains backend-only. No mutable campaign schedules are overwritten.
 - Current validation:396unit tests/2470assertions;14 installed-Drupal checks; real stored-schema8067→8068 migration with new staff tables absent, existing campaign/thread counts and invoice/acquisition tables preserved, second updater empty;34packaging checks including archive/bare mirror;3cached-form checks; snapshot and safe database-error checks.
 - Production before this release:main044c1010, dispatch locktrue and broad schedulers0. Deployment must preserve exact-dispatch mode. No release activation, paid inference, customer email, or social publication is asserted by this candidate record. See `docs/implementation/RELEASE_RECONCILIATION_2026-10-06.md` and the October6 owner handoff.
+
+## 2026-10-06 — Command-center release deployed
+
+- Deployed exact mergedmain `7810aa9e786cb0dab01dcad0e67a6a258daea72e` through canonical backend lane after current-source reconciliation/review/tests. PR59 and inheritedPR49 merged normally.
+- Hosted core11.4.8, Webform6.3.1, ProjectBrowser2.1.5; locked audit0; schema8068/no pending updates; all17snapshot hashes and7backupfiles verified. Existing dispatch locktrue/zeroschedulers preserved; no customer sends or AI activation.
+- Cleared stale update-status metadata using the bounded Drupal updater only, which now reports patched projects current. Do not run broad cron to refresh a security notice under the exact-dispatch lock.
+- Classification **deployed**, owner acceptance pending; authenticated route/phone evidence and unproven persistence/provider boundaries are in October6 owner handoff. See `docs/implementation/PRODUCTION_RELEASE_2026-10-06.md`.

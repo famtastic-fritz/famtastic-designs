@@ -1,0 +1,48 @@
+{
+  "release": "7810aa9e786cb0dab01dcad0e67a6a258daea72e",
+  "capture_date": "2026-10-06",
+  "environment": "production",
+  "role": "authenticated owner staff",
+  "screenshots": [
+    {
+      "file": "new-campaign-mobile.jpg",
+      "route": "https://famtasticdesigns.com/web/admin/famtastic/campaign/add",
+      "expected_heading": "New campaign",
+      "capability_id": "famtastic.campaign-draft-planning",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "decoded_image": {
+        "width": 375,
+        "height": 812,
+        "mime": "image/jpeg"
+      },
+      "document_client_width": 375,
+      "document_scroll_width": 375,
+      "sha256": "156270e72038abd8182190555b82e0a7e17c162f42c12ba525ecd5425a04f81e",
+      "visual_review": "Blank form ready; mobile navigation unobscured; no customer data or owner email visible. Lower fields and Save action require scrolling and are not shown.",
+      "proof_limit": "Rendering only; no campaign saved."
+    },
+    {
+      "file": "ai-assistance-mobile.jpg",
+      "route": "https://famtasticdesigns.com/web/admin/famtastic/ai-assistance",
+      "expected_heading": "Staff AI assistance",
+      "capability_id": "famtastic.staff-ai-tasks",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "decoded_image": {
+        "width": 375,
+        "height": 812,
+        "mime": "image/jpeg"
+      },
+      "document_client_width": 375,
+      "document_scroll_width": 375,
+      "sha256": "371708e26d74fdd562e218943b1b223e205ce29ca307dff028701bcf2dcef087",
+      "visual_review": "Ready settings page; four unchecked task controls visible; no customer data or owner email. Hourly limit and Save configuration are below this viewport.",
+      "proof_limit": "Rendering/readiness only; no configuration change or provider call."
+    }
+  ]
+}
