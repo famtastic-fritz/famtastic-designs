@@ -14,6 +14,7 @@ Tasks:
 - [x] Reconcile first customer native history/suppression and business-bound preview.
 - [x] Send one signed cap-one approved D0 customer message; record SMTP acceptance separately from inbox delivery.
 - [x] Update capability/owner-task records and canonical post-evaluation; audit plans.
+- [x] Save/reload owner-approved four50 windows at9/10/11/noon Eastern,200 total inclfollowups; remove1pm and replace calendar projection.
 - [ ] Obtain current remaining GoDaddy allowance before larger paced batches.
 - [ ] Prepare/review remaining industries and generic followups before their sends.
 - [ ] Observe uncoached physical owner continuation and practice tasks on this release.

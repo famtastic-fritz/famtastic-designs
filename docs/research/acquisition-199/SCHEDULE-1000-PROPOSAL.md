@@ -1,20 +1,23 @@
-Current checkpoint: one customer beauty D0 accepted by GoDaddy. Larger batches held because current remaining allowance is unavailable. This single-message check does not activate the timetable.
+# Approved pacing; held execution
 
-Proposed Eastern windows:9am50,10am50,11am50,noon50 (200 total);1pm50 (250 total). New messages and followups share this total; capacity can reduce each window. No catch-up burst or unattended automation.
+Fritz approved four batches of up to50 at **9 a.m.,10 a.m.,11 a.m. and noon America/New_York**: **200 total campaign messages/day, including followups**. The previous250 target and1pm window are superseded. Current allowance and reserved transactional usage can reduce the total. Start at the next available approved window after readiness/capacity checks; no catch-up burst. Native campaign plan is held; saving this timetable does not create a timed sender. See SCHEDULE-APPROVED-200.json and NATIVE-SCHEDULE-200-RECEIPT.json.
 
-# Capacity-limited schedule through1,000
+One customer D0 already accepted;999 remain. First-batch inspection and reply/purchase/optout/complaint/bounce stops control later work. Only beauty/hair D0 is approved/implemented; other industries and genericD3/D7 are not send-ready. Current remaining provider allowance is unavailable.
 
-This is a held planning projection. Start day0 only after the shipped journey and controlled owner email pass. Target250TOTAL campaign messages/day includes follow-ups and other campaign use; lower it to verified shared/permailbox allowance remaining after transactional traffic. Up to50 per batch, roughly hourly across5 reviewed windows. No unattended recurring automation or native follow-up queue is created.
+For comparison,1,000 initial messages without followups require at least5 full200-message sending days. With all1,000 receiving both D3 and D7, up to3,000 messages require at least15 full200-message sending days. This illustrative oldest-due-first queue spans19 calendar days, with the last initial group on calendar day12 (relative11). Lower capacity, review pauses, weekends, content holds and recipient stops change the calendar. The earlier roughly-one-week estimate is superseded; no finish date is promised.
 
-| Relative day | Projected work at full250 capacity |
-| --- | --- |
-|0–2|250 new invitations each day (750 total)|
-|3–5|D3 follow-ups for those three cohorts, fewer when replies/stops apply|
-|6|Remaining250 new invitations (all1,000 first touches by day6)|
-|7–9|D7 follow-ups for first three cohorts; competing day9 follow-ups carry over|
-|10|Overdue D3 follow-ups for the fourth cohort, within the same total cap|
-|13|D7 follow-ups for fourth cohort, within remaining capacity|
+| Calendar day | Work at full200 capacity | Initial invitations cumulative |
+| --- | --- | --- |
+|1–3|200new/day|600|
+|4–6|D3 followups for groups1–3|600|
+|7|200new, group4|800|
+|8–10|D7 followups for groups1–3|800|
+|11|Group4 D3, one day overdue|800|
+|12|Final200new, group5|1,000|
+|13|No due work in this projection|1,000|
+|14|Group4 D7|1,000|
+|15|Group5 D3|1,000|
+|16–18|No due work in this projection|1,000|
+|19|Group5 D7|1,000|
 
-Up to3,000 messages is12 full250 sending days minimum. This illustrative queue spans14 calendar days; lower capacity or held review extends it. Stops/replies reduce counts. Provider acceptance is reported separately from inbox delivery. First-batch acceptance/rejection, available bounce/complaint/reply evidence and suppression must be reviewed before each next window.
-
-Current source supports one approved beauty/hair D0 slice. The nine other industry adaptations and generic D3/D7 content are not approved/implemented; the schedule does not manufacture them or make the declined originals send-ready. Initial sending can begin with the shipped approved slice once actual technical gates pass. Optional enrichment is not required.
+The full calculated rows, tie rule and totals are in SCHEDULE-1000-PROPOSAL.json. These are planning rows, not imported recipient messages or dispatched followups.

@@ -1,107 +1,323 @@
 {
-  "schema": "famtastic.acquisition-reviewable-schedule.v1",
-  "status": "held_projection_after_first_cap_one_acceptance",
+  "schema": "famtastic.acquisition-reviewable-schedule.v2",
+  "status": "owner_approved_200_rate_execution_held",
+  "approval_record": "SCHEDULE-APPROVED-200.json",
   "native_queue_created": false,
-  "recurring_unattended_automation_authorized": false,
+  "automatic_timed_dispatcher_created": false,
   "contacts": 1000,
-  "target_total_campaign_messages_per_day": 250,
+  "customer_already_accepted": 1,
+  "actual_remaining_contacts": 999,
+  "target_total_campaign_messages_per_day": 200,
   "verified_account_daily_allowance": null,
-  "actual_daily_budget": "min(target250, verified shared/permailbox remaining allowance after transactional traffic)",
+  "actual_daily_budget": "min(200, verified remaining shared/permailbox allowance after reserved transactional traffic)",
   "target_max_batch_size": 50,
-  "sending_windows_target": 5,
-  "new_cohort_schedule": [
-    {
-      "relative_day": 0,
-      "new": 250
-    },
-    {
-      "relative_day": 1,
-      "new": 250
-    },
-    {
-      "relative_day": 2,
-      "new": 250
-    },
-    {
-      "relative_day": 3,
-      "projected_d3": 250
-    },
-    {
-      "relative_day": 4,
-      "projected_d3": 250
-    },
-    {
-      "relative_day": 5,
-      "projected_d3": 250
-    },
-    {
-      "relative_day": 6,
-      "new": 250
-    },
-    {
-      "relative_day": 7,
-      "projected_d7": 250
-    },
-    {
-      "relative_day": 8,
-      "projected_d7": 250
-    },
-    {
-      "relative_day": 9,
-      "projected_d7": 250,
-      "d3_cohort4_held_overdue": 250
-    },
-    {
-      "relative_day": 10,
-      "projected_overdue_d3": 250
-    },
-    {
-      "relative_day": 13,
-      "projected_d7": 250
-    }
-  ],
-  "initial_invites_finish_relative_day": 6,
-  "maximum_messages_with_full_two_followups": 3000,
-  "minimum_full250_sending_days": 12,
-  "illustrative_calendar_days": 14,
-  "followup_content_and_native_generic_support": "unapproved/unimplemented; projected only; do not create due messages",
-  "current_approved_generic_slice": "beauty/hair D0 only; additional industries need matching approved content",
-  "outcome_controls": [
-    "Inspect firstbatch provider acceptance/rejection and available bounces/complaints/replies before continuing",
-    "Immediate native suppression and reply/purchase exits",
-    "All followups count against same total daily allowance; oldest due queue carries over",
-    "Uncertain sends never automatically retry",
-    "No inbox delivery claim from SMTP acceptance"
-  ],
-  "start_gate": "Live beauty D0 journey passed; one customer accepted. Larger windows require current allowance; remaining industries/followups require matching approved content.",
-  "customer_provider_accepted": 1,
-  "larger_batches_activated": false,
+  "sending_windows_target": 4,
   "timezone": "America/New_York",
   "daily_windows": [
     {
-      "time": "09:00",
-      "max_messages": 50,
-      "activated": false
+      "local_time": "09:00",
+      "max_messages": 50
     },
     {
-      "time": "10:00",
-      "max_messages": 50,
-      "activated": false
+      "local_time": "10:00",
+      "max_messages": 50
     },
     {
-      "time": "11:00",
-      "max_messages": 50,
-      "activated": false
+      "local_time": "11:00",
+      "max_messages": 50
     },
     {
-      "time": "12:00",
-      "max_messages": 50,
-      "activated": false
-    },
-    {
-      "time": "13:00",
-      "max_messages": 50,
-      "activated": false
+      "local_time": "12:00",
+      "max_messages": 50
     }
+  ],
+  "projection_assumptions": [
+    "Nominal1000, 200 newly enrolled per cohort",
+    "Full D3 and D7 followups at original enrollment+3/+7 days",
+    "Oldest due before new, ties oldest cohort first",
+    "No stops, no weekends/review pauses, full200 allowance, all required content approved",
+    "Existing1accepted and actual current allowance must be reconciled before real scheduling"
+  ],
+  "new_cohort_schedule": [
+    {
+      "relative_day": 0,
+      "new": 200,
+      "followups": 0,
+      "total": 200,
+      "enrolled_cumulative": 200,
+      "messages": [
+        {
+          "cohort": 1,
+          "touch": "D0",
+          "messages": 200
+        }
+      ]
+    },
+    {
+      "relative_day": 1,
+      "new": 200,
+      "followups": 0,
+      "total": 200,
+      "enrolled_cumulative": 400,
+      "messages": [
+        {
+          "cohort": 2,
+          "touch": "D0",
+          "messages": 200
+        }
+      ]
+    },
+    {
+      "relative_day": 2,
+      "new": 200,
+      "followups": 0,
+      "total": 200,
+      "enrolled_cumulative": 600,
+      "messages": [
+        {
+          "cohort": 3,
+          "touch": "D0",
+          "messages": 200
+        }
+      ]
+    },
+    {
+      "relative_day": 3,
+      "new": 0,
+      "followups": 200,
+      "total": 200,
+      "enrolled_cumulative": 600,
+      "messages": [
+        {
+          "cohort": 1,
+          "touch": "D3",
+          "messages": 200,
+          "due_relative_day": 3,
+          "overdue_days": 0
+        }
+      ]
+    },
+    {
+      "relative_day": 4,
+      "new": 0,
+      "followups": 200,
+      "total": 200,
+      "enrolled_cumulative": 600,
+      "messages": [
+        {
+          "cohort": 2,
+          "touch": "D3",
+          "messages": 200,
+          "due_relative_day": 4,
+          "overdue_days": 0
+        }
+      ]
+    },
+    {
+      "relative_day": 5,
+      "new": 0,
+      "followups": 200,
+      "total": 200,
+      "enrolled_cumulative": 600,
+      "messages": [
+        {
+          "cohort": 3,
+          "touch": "D3",
+          "messages": 200,
+          "due_relative_day": 5,
+          "overdue_days": 0
+        }
+      ]
+    },
+    {
+      "relative_day": 6,
+      "new": 200,
+      "followups": 0,
+      "total": 200,
+      "enrolled_cumulative": 800,
+      "messages": [
+        {
+          "cohort": 4,
+          "touch": "D0",
+          "messages": 200
+        }
+      ]
+    },
+    {
+      "relative_day": 7,
+      "new": 0,
+      "followups": 200,
+      "total": 200,
+      "enrolled_cumulative": 800,
+      "messages": [
+        {
+          "cohort": 1,
+          "touch": "D7",
+          "messages": 200,
+          "due_relative_day": 7,
+          "overdue_days": 0
+        }
+      ]
+    },
+    {
+      "relative_day": 8,
+      "new": 0,
+      "followups": 200,
+      "total": 200,
+      "enrolled_cumulative": 800,
+      "messages": [
+        {
+          "cohort": 2,
+          "touch": "D7",
+          "messages": 200,
+          "due_relative_day": 8,
+          "overdue_days": 0
+        }
+      ]
+    },
+    {
+      "relative_day": 9,
+      "new": 0,
+      "followups": 200,
+      "total": 200,
+      "enrolled_cumulative": 800,
+      "messages": [
+        {
+          "cohort": 3,
+          "touch": "D7",
+          "messages": 200,
+          "due_relative_day": 9,
+          "overdue_days": 0
+        }
+      ]
+    },
+    {
+      "relative_day": 10,
+      "new": 0,
+      "followups": 200,
+      "total": 200,
+      "enrolled_cumulative": 800,
+      "messages": [
+        {
+          "cohort": 4,
+          "touch": "D3",
+          "messages": 200,
+          "due_relative_day": 9,
+          "overdue_days": 1
+        }
+      ]
+    },
+    {
+      "relative_day": 11,
+      "new": 200,
+      "followups": 0,
+      "total": 200,
+      "enrolled_cumulative": 1000,
+      "messages": [
+        {
+          "cohort": 5,
+          "touch": "D0",
+          "messages": 200
+        }
+      ]
+    },
+    {
+      "relative_day": 12,
+      "new": 0,
+      "followups": 0,
+      "total": 0,
+      "enrolled_cumulative": 1000,
+      "messages": []
+    },
+    {
+      "relative_day": 13,
+      "new": 0,
+      "followups": 200,
+      "total": 200,
+      "enrolled_cumulative": 1000,
+      "messages": [
+        {
+          "cohort": 4,
+          "touch": "D7",
+          "messages": 200,
+          "due_relative_day": 13,
+          "overdue_days": 0
+        }
+      ]
+    },
+    {
+      "relative_day": 14,
+      "new": 0,
+      "followups": 200,
+      "total": 200,
+      "enrolled_cumulative": 1000,
+      "messages": [
+        {
+          "cohort": 5,
+          "touch": "D3",
+          "messages": 200,
+          "due_relative_day": 14,
+          "overdue_days": 0
+        }
+      ]
+    },
+    {
+      "relative_day": 15,
+      "new": 0,
+      "followups": 0,
+      "total": 0,
+      "enrolled_cumulative": 1000,
+      "messages": []
+    },
+    {
+      "relative_day": 16,
+      "new": 0,
+      "followups": 0,
+      "total": 0,
+      "enrolled_cumulative": 1000,
+      "messages": []
+    },
+    {
+      "relative_day": 17,
+      "new": 0,
+      "followups": 0,
+      "total": 0,
+      "enrolled_cumulative": 1000,
+      "messages": []
+    },
+    {
+      "relative_day": 18,
+      "new": 0,
+      "followups": 200,
+      "total": 200,
+      "enrolled_cumulative": 1000,
+      "messages": [
+        {
+          "cohort": 5,
+          "touch": "D7",
+          "messages": 200,
+          "due_relative_day": 18,
+          "overdue_days": 0
+        }
+      ]
+    }
+  ],
+  "initial_invites_finish_relative_day": 11,
+  "illustrative_initial_calendar_day": 12,
+  "maximum_messages_with_full_two_followups": 3000,
+  "minimum_full200_sending_days": 15,
+  "illustrative_calendar_days": 19,
+  "no_followups_initial_minimum_send_days": 5,
+  "full_followup_minimum_vs_projection": "15 full200 send days minimum; this particular queue occupies19 calendar days. All initial invites by relative11/calendar12. No guarantee.",
+  "followup_content_and_native_generic_support": "unapproved/unimplemented; projected only",
+  "current_approved_generic_slice": "beauty/hair D0 only",
+  "customer_provider_accepted": 1,
+  "larger_batches_activated": false,
+  "outcome_controls": [
+    "inspect first batch before later windows",
+    "stop on reply/purchase/optout/complaint/hardbounce",
+    "carry overdue due queue under shared200 cap",
+    "no catch-up burst or uncertain retry",
+    "provider acceptance separate from inbox delivery"
   ]
 }

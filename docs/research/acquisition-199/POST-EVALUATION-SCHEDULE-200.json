@@ -1,0 +1,17 @@
+{
+  "evaluation_id": "posteval_124767b35779adf0",
+  "record_path": "/Users/famtastic-fritz/Development/FAMtastic/data-center/post-eval/posteval_124767b35779adf0.json",
+  "report_path": "/Users/famtastic-fritz/Development/FAMtastic/data-center/reports/post-eval/posteval_124767b35779adf0.md",
+  "report_sha256": "3fed8971a693d4a69780c74b6eb9b147f5279ec7a9bec092e771e86a68cd3f67",
+  "classification": "deployed",
+  "scope": "native held campaign-plan update only",
+  "backend_runtime": "7810aa9e786cb0dab01dcad0e67a6a258daea72e",
+  "daily_total": 200,
+  "windows": 4,
+  "native_revision": 1,
+  "customer_sends_by_update": 0,
+  "customer_sends_cumulative": 1,
+  "timed_dispatcher_activated": false,
+  "owner_pacing_approved": true,
+  "physical_owner_acceptance": false
+}

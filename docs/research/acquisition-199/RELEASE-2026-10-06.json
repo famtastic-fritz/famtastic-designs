@@ -143,5 +143,17 @@
   },
   "source_main_reanchor": "7810aa9e786cb0dab01dcad0e67a6a258daea72e",
   "independent_source_change": "Command Center PR59 landed after campaign deployment; preserved in source merge. This campaign closeout does not deploy that separate release.",
-  "production_markers_rechecked_after_main_change": true
+  "production_markers_rechecked_after_main_change": true,
+  "historical_scope": "First production campaign send/inbox/journey checkpoint. Preserve its actual frontendcb8/backend044 proof revision; later runtime schedule receipt uses backend781.",
+  "approved_schedule_followup": {
+    "record": "SCHEDULE-APPROVED-200.json",
+    "native_receipt": "NATIVE-SCHEDULE-200-RECEIPT.json",
+    "daily_total": 200,
+    "windows": 4,
+    "one_pm": false,
+    "saved_native_revision": 1,
+    "latest_schedule_runtime_backend": "7810aa9e786cb0dab01dcad0e67a6a258daea72e",
+    "execution_held": true,
+    "messages_sent_by_schedule_update": 0
+  }
 }

@@ -26,6 +26,10 @@
   "source_application": "044c1010353710481564d30b7c8ca13ddf4bebc8",
   "controlled_owner_sends": 1,
   "production_frontend": "cb8f5b07ac46dcb791e921f5e6a434b60d480382",
-  "production_backend": "044c1010353710481564d30b7c8ca13ddf4bebc8",
-  "closeout_source_revision": "Resolve current file Git commit; documentation-only source can be newer than production component markers."
+  "production_backend": "7810aa9e786cb0dab01dcad0e67a6a258daea72e",
+  "closeout_source_revision": "Resolve current file Git commit; documentation-only source can be newer than production component markers.",
+  "campaign_first_send_backend": "044c1010353710481564d30b7c8ca13ddf4bebc8",
+  "approved_schedule_daily_total": 200,
+  "approved_schedule_native_revision": 1,
+  "schedule_execution": "held, explicit dispatcher only; no timer"
 }

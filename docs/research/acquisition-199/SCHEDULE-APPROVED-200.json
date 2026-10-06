@@ -1,0 +1,55 @@
+{
+  "schema": "famtastic.acquisition-approved-schedule.v1",
+  "approved_at": "2026-10-06T12:31:02.285720+00:00",
+  "approved_by": "Fritz Medine",
+  "owner_words": [
+    "I like the four batches",
+    "I definitely like that schedule... let\u2019s keep that"
+  ],
+  "status": "owner_approved_execution_held",
+  "timezone": "America/New_York",
+  "daily_campaign_message_cap": 200,
+  "max_batch_size": 50,
+  "windows": [
+    {
+      "local_time": "09:00",
+      "max_messages": 50
+    },
+    {
+      "local_time": "10:00",
+      "max_messages": 50
+    },
+    {
+      "local_time": "11:00",
+      "max_messages": 50
+    },
+    {
+      "local_time": "12:00",
+      "max_messages": 50
+    }
+  ],
+  "includes_new_and_followups": true,
+  "one_pm_window": false,
+  "capacity_rule": "min(200, verified remaining shared/permailbox allowance after reserved transactional traffic)",
+  "start_rule": "next available approved window after readiness and remaining-capacity proof; no catch-up burst",
+  "followup_order": "oldest due first, tie by cohort enrollment then touch; never exceed daily total",
+  "first_batch_review_required": true,
+  "stop_reasons": [
+    "reply",
+    "purchase",
+    "opt_out",
+    "complaint",
+    "hard_bounce"
+  ],
+  "uncertain_send_retry": false,
+  "scheduler": "existing native campaign plan and held sequence due projection; no automatic timed dispatcher created",
+  "dispatch_activation": false,
+  "remaining_allowance": null,
+  "customer_messages_already_accepted": 1,
+  "customer_messages_remaining": 999,
+  "current_approved_content": "beauty/hair D0 only",
+  "generic_followups": "unapproved/unimplemented; do not create due messages",
+  "additional_industries": "matching content review pending",
+  "new_paid_provider_or_codex_automation": false,
+  "supersedes": "Previous proposed 250 total/day and 1pm fifth batch"
+}
