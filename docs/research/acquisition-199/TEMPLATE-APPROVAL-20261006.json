@@ -1,0 +1,122 @@
+{
+  "schema": "famtastic.acquisition-industry-creative-approval.v1",
+  "recorded_at": "2026-10-06T20:38:22.093201+00:00",
+  "owner": "Fritz Medine",
+  "source": "Direct human message in this chat",
+  "owner_statement": "I approve all the temdplates  and yes you may install the remaiing timers",
+  "creative_source_commit": "67d7e6563b705d132f92fda0e0fcb05c57453c9d",
+  "scope": "All nine remaining industry email and Lab templates; existing approved beauty unchanged",
+  "templates": [
+    {
+      "industry": "mobile-detailing",
+      "approved": true,
+      "source_hashes": {
+        "email.html": "2f67138627e6d6abced0de9ed27008fb9bab802e20105d9bf4f6f75b208edc49",
+        "email.txt": "7839490b43ee3745595389fa953a2aca3c82a327982ac46ed2ba942ccd7744b3",
+        "email-images-blocked.html": "f277d8ed94cb08526f84c22ca126f85801308ed4f7b609f2a2887539ed71d141",
+        "lab.html": "572d5053e3b4a972cc775c0759759783dfdac41f4ac2c60de850f0dc72a02e52",
+        "lab.css": "48ca40d621c3f79aae241c5235c4ea457243d02b994edfc44d2660d1c31c1318",
+        "lab.js": "b7de7f5134d99e7742d615d38e025ec783b93338f0606079651f66626e16edaa"
+      }
+    },
+    {
+      "industry": "fitness-meal-prep",
+      "approved": true,
+      "source_hashes": {
+        "email.html": "d7cb194ef021d7b113bc671944ae6babbcb9d729bba358a35d461bfca4c677da",
+        "email.txt": "f0685480114b745ae11cbe2a06fb522dad8b9d018dd29bc06925f07de9191653",
+        "email-images-blocked.html": "a1c8840ea0c57366f5a29e56b2f6e085961c3ff666e426a5338e32d750c4acb9",
+        "lab.html": "e49f4dd53ce986899cded44337d1edebf0217c9f1d273c28891b04f779129c2d",
+        "lab.css": "9ee1aa3eadc7d66d92aff073de6a6268edd5048bbef713a31e0213461461b831",
+        "lab.js": "47e397b66fa1395e192a8a0f6d581da51a4b72544397f5b9a4373a3f82b09209"
+      }
+    },
+    {
+      "industry": "photography-media",
+      "approved": true,
+      "source_hashes": {
+        "email.html": "c92ec555b64677785d6b6660d7895743f6be0387387359f4f7ce235325a8477e",
+        "email.txt": "83e6190e641de4cdd06d63e682733d5923108290d14ef9a71bc95cab7667b654",
+        "email-images-blocked.html": "b7ae019854978c66317a27cc7d98c5ff6d6bb4faa8d322ad2b682fc93c742bd6",
+        "lab.html": "a17590417d54071f5ab359053dcd454aa5317bfb79ce670000cca183d6872e2f",
+        "lab.css": "12b22d79134ae52ee54a007497c924e9a2c2f9fb005177b343e530b6a0fb3962",
+        "lab.js": "055f135fdba32ee638a44b15c153ec5650932478d3190e3a52165f2eee197b8a"
+      }
+    },
+    {
+      "industry": "baking-catering",
+      "approved": true,
+      "source_hashes": {
+        "email.html": "19a467c671ffa39dd5a5e3a134242e21ecea53d1b0916b6ce2d040ce1f3deab1",
+        "email.txt": "77844961ebd657aabb4f81876a1a89b9b40b738d33614b489f81f7104c1f46f1",
+        "email-images-blocked.html": "13d6f3268e52bcc3626a0d09b6f30fda5b11a3c4f8e99878bc2ac167b53132d7",
+        "lab.html": "b4a38017455b4c5f3cb029c879154d92da95342e7ccdc09b22a5ca3ed87b56d1",
+        "lab.css": "74529bee1eea6c68c588d0ce98e4a9266f41e63e1d1eeddf98fa3417896e273e",
+        "lab.js": "fbed5522dd1dbd07e4b97553bac5d713f12cec93ce938d6ce3b593afca1efbc8"
+      }
+    },
+    {
+      "industry": "home-services",
+      "approved": true,
+      "source_hashes": {
+        "email.html": "bc7213ccb4318e7c1afc0ded8f970d644d7607478751703ffdf30e179cc41f38",
+        "email.txt": "2e686608a058b1eff532060cd32395e15859b4287df1442882b64415b0f00e3a",
+        "email-images-blocked.html": "6b96944cfa577e86fbfc219ad64c391629da45eb30920cb0e5d6893c741eb316",
+        "lab.html": "2248c00607182e7215873ea5610e206aca583ec20acd7a1d37b09ca179f47126",
+        "lab.css": "ecb8ecdd09944aba41ab3011e83f947024f59da7aaf30f6bda73abd56dca4b81",
+        "lab.js": "2750b9ad0d2cc541ebca65416bf106ac834bc17a512890e535a4f953759ee83c"
+      }
+    },
+    {
+      "industry": "events-rentals",
+      "approved": true,
+      "source_hashes": {
+        "email.html": "077699ed7246bba25171c38a3f25e0be042901425ac9c49a0f2fe7813d94e1f5",
+        "email.txt": "dfb4a0f6adc00b0c80fbfe82eefb5941ed45c14e59d8143cfb3b262a6a06d845",
+        "email-images-blocked.html": "9f527df6c33067517c3df1126e439b275e398f8930a67feac85655a48ecfcc6c",
+        "lab.html": "de77664e0cd62a7176854a33ccaa802ba6188e994138434a4c99b327462eee35",
+        "lab.css": "4a00ed5e3c35723eb9dd844198d4ad6fb70ff6941a09d63db0f1d795deff2369",
+        "lab.js": "b92c0e96401c653ed0f15cd9e9bf4ea93bb4de4046ce53e50242ed5929a1025b"
+      }
+    },
+    {
+      "industry": "pet-services",
+      "approved": true,
+      "source_hashes": {
+        "email.html": "41cfaa1bbf88d288de1837b1d23db0cc01064c15f3daac957dbccb090405bd60",
+        "email.txt": "18917f651cae4fcf760e7e2ae43e5010bc1184b063ffb760fbbe60b7fbf9401d",
+        "email-images-blocked.html": "c5c34036e192ebad158ae79efddf97f8613a04f5f0c6bc42e482a1de4a916d06",
+        "lab.html": "3e186dd7203abc9c339d5347702426390b4cc686223dc701b3609963505ea5cb",
+        "lab.css": "a660811a82c21029eec985900ef4c3cf89acc92f0e6574a6f66347a48d220c78",
+        "lab.js": "5a9dc0b856dfb606197dcdc940f513ed2bb93cb7bceff03f3f1502970132ea05"
+      }
+    },
+    {
+      "industry": "consulting-tutoring",
+      "approved": true,
+      "source_hashes": {
+        "email.html": "27d2d204cd910a3a32ed0885f560b0444e92aa7d23dc81e309a1e0d1afe8194b",
+        "email.txt": "d5bdef15d3be44a27a0b848d76778760f0f73911ab4c1e31c130bd68df285eb2",
+        "email-images-blocked.html": "e9e43c88a5e92bd624aa6e5dadb0ab92e20adb2813e25f66cc290fa58e7a3188",
+        "lab.html": "0d148d348a1ed568f2ae7136b9b8089e59f3add5037d909f2f7d5a335377a6f2",
+        "lab.css": "963e660378c5f580688e816d8efa8d89f4328b14734d94864b5267cff63bfd54",
+        "lab.js": "9afba6959a57d1fcff369786fbda4d01be034e94568fd4cb15aef84cd23e2ea2"
+      }
+    },
+    {
+      "industry": "handcrafted-boutiques",
+      "approved": true,
+      "source_hashes": {
+        "email.html": "1ac6eea5c05d895cb16c2d6643e6953fe952fbd7e2bce4b989c9f7ba5b3c5020",
+        "email.txt": "f42c53c6e777a8b2b277cb91a2159fde2bdc46cfbd6b4ac1a6a2c6ea5ea93d76",
+        "email-images-blocked.html": "d5fe71544f8cc91f28e64ca606e2406a76b1d17cb5a921a92c5686737add5ff6",
+        "lab.html": "124fd08bc5166e5f622f7681147b30c705a571fe5fef25af2616728d65da809c",
+        "lab.css": "1ad99bd4a1ef10a3f25dfbe1e03f56aa704f2bc63a0a5832b022b5ce9b16ce7d",
+        "lab.js": "5e2e90cc45b219e75342ebbf63d230518ac43667d8c770771494dffdb0c6a9a1"
+      }
+    }
+  ],
+  "physical_uncoached_owner_task": "pending",
+  "new_industry_provider_sends_activated": false,
+  "native_materialization_and_recipient_binding": "pending; separate from creative approval"
+}
