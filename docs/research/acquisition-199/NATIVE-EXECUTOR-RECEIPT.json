@@ -1,6 +1,6 @@
 {
   "schema": "famtastic.acquisition-native-executor-receipt.v1",
-  "checked_at": "2026-10-06T19:20:14Z",
+  "checked_at": "2026-10-06T20:37:58Z",
   "review_classification": "deployed",
   "backend_release": "2c1d908d656b6ca1841ad5255b1f99a376a1b4e4",
   "frontend_release": "cb8f5b07ac46dcb791e921f5e6a434b60d480382",
@@ -35,8 +35,8 @@
   "customer_inbox_proved": false,
   "customer_conversion_or_revenue_proved": false,
   "remaining_beauty_contacts": 49,
-  "routine_timer_installed": false,
-  "timer_blocker": "Automaticapprovalreview requires directhereapproval forfuture49; questionpending. No rejectedcommand applied.",
+  "routine_timer_installed": true,
+  "timer_blocker": null,
   "private_bundle_manifest_sha256": "a89009599928dfe90c99faa746f5d2897049cac909d58523b2241d9b95c2012e",
   "private_queue_sha256": "50e975b358a0101ccd43f0717485fcaccc0ff2e30535ca83ee9643aeb63a515e",
   "private_cohort_or_tokens_published": false,
@@ -47,19 +47,53 @@
   "other_industry_or_generic_followups_activated": false,
   "native_campaign_plan": {
     "campaign_id": 5,
-    "revision": 2,
-    "saved_and_reloaded_at": "2026-10-06T19:30:36Z",
+    "revision": 3,
+    "saved_and_reloaded_at": "2026-10-06T20:36:53Z",
     "records_asap_accepted": 50,
-    "records_timer_installed": false,
+    "records_timer_installed": true,
     "messages_sent_by_plan_update": 0,
     "channel_status_preserved": true
   },
-  "latest_aggregate_readback_at": "2026-10-06T19:40:24Z",
+  "latest_aggregate_readback_at": "2026-10-06T20:36:53Z",
   "latest_aggregate_readback": {
     "asap_accepted": 50,
     "customer_total_accepted": 51,
     "v2_content_count": 50,
     "unresolved_dispatches": 0,
     "pilot_lock": true
+  },
+  "timer_direct_owner_approval": {
+    "source": "Direct human message in this chat",
+    "statement": "I approve all the temdplates  and yes you may install the remaiing timers",
+    "scope": "Remaining49beauty_D0_Oct7"
+  },
+  "routine_timer": {
+    "verified_at": "2026-10-06T20:37:58Z",
+    "starts_on": "2026-10-07",
+    "ends_on": "2026-10-07",
+    "timezone": "America/New_York",
+    "hours": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "window_cap": 50,
+    "day_cap": 200,
+    "config_hash": "b92f0037bd95ee923aca0f1a57c470871d877a26a8520a79bd8f5232d0c2c7c4",
+    "dedicated_clock": true,
+    "existing_cron_preserved": true,
+    "before_after_backup_saved": true,
+    "cron_php_and_drush_paths_verified": true,
+    "automatic_cron_last_status": "outside_window",
+    "automatic_cron_log_modified_at": "2026-10-06T20:37:02Z",
+    "sends_during_install_or_plan_update": 0
+  },
+  "nine_industry_creative_approval": {
+    "approved": true,
+    "source_commit": "67d7e656",
+    "templates": 9,
+    "native_materialization_and_binding": "pending",
+    "provider_sending_activated": false
   }
 }

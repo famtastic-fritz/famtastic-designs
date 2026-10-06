@@ -1,0 +1,10 @@
+{
+  "schema": "famtastic.posteval-pointer.v1",
+  "evaluation_id": "posteval_843315a144a2ed8c",
+  "canonical_root": "/Users/famtastic-fritz/Development/FAMtastic/data-center",
+  "result": {
+    "file": "/Users/famtastic-fritz/Development/FAMtastic/data-center/post-eval/posteval_843315a144a2ed8c.json",
+    "reportFile": "/Users/famtastic-fritz/Development/FAMtastic/data-center/reports/post-eval/posteval_843315a144a2ed8c.md",
+    "ledgerFile": "/Users/famtastic-fritz/Development/FAMtastic/data-center/ledgers/post-eval.jsonl"
+  }
+}
