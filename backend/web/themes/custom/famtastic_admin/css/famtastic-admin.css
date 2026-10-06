@@ -2025,15 +2025,15 @@ body.path-user .views-exposed-form .form-actions { margin: 0; }
   .famtastic-admin-shell__header { position: sticky; top: 0; grid-row: 1 / span 2; flex-direction: column; align-items: stretch; min-height: 100vh; padding: 1.1rem .75rem; border-right: 1px solid var(--fam-ops-line); border-bottom: 0; }
   .famtastic-admin-shell__brand { padding: .35rem .5rem 1.2rem; border-bottom: 1px solid var(--fam-ops-line); }
   .famtastic-admin-nav { display: grid; flex: 0 1 auto; gap: .25rem; margin-top: 1rem; overflow: visible; }
-  .famtastic-admin-nav__link { min-height: 40px; padding-inline: .75rem; }
+  .famtastic-admin-nav__link { min-height: 44px; padding-inline: .75rem; }
   .famtastic-admin-shell__body { grid-column: 2; width: 100%; margin: 0; }
 }
 
 @media (max-width: 782px) {
   .famtastic-admin-shell__header { align-items: stretch; flex-wrap: wrap; padding: .75rem 1rem; }
   .famtastic-admin-shell__brand { width: 100%; }
-  .famtastic-admin-nav { position: fixed; z-index: 100; right: .5rem; bottom: max(.5rem, env(safe-area-inset-bottom)); left: .5rem; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .15rem; padding: .35rem; overflow: hidden; background: rgba(16, 19, 16, .96); border: 1px solid var(--fam-ops-line); border-radius: 16px; box-shadow: 0 12px 35px rgba(0, 0, 0, .42); }
-  .famtastic-admin-nav__link { min-width: 0; min-height: 44px; padding: .25rem .15rem; justify-content: center; font-size: clamp(.56rem, 2.5vw, .68rem); line-height: 1.08; text-align: center; white-space: normal; }
+  .famtastic-admin-nav { position: fixed; z-index: 100; right: .5rem; bottom: max(.5rem, env(safe-area-inset-bottom)); left: .5rem; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .15rem; padding: .35rem; overflow: visible; background: rgba(16, 19, 16, .96); border: 1px solid var(--fam-ops-line); border-radius: 16px; box-shadow: 0 12px 35px rgba(0, 0, 0, .42); }
+  .famtastic-admin-nav__link { min-width: 0; min-height: 44px; padding: .25rem .15rem; justify-content: center; font-size: .8rem; line-height: 1.08; text-align: center; white-space: normal; }
   .famtastic-admin-shell__body { padding: 1rem 1rem calc(5.5rem + env(safe-area-inset-bottom)); }
   body.path-admin .tabs__link,
   body.path-user .tabs__link,
@@ -2042,3 +2042,29 @@ body.path-user .views-exposed-form .form-actions { margin: 0; }
   body.path-admin .views-exposed-form,
   body.path-user .views-exposed-form { display: grid; grid-template-columns: 1fr; }
 }
+
+/* Native details remains keyboard-operable without JavaScript. */
+body.path-admin .famtastic-admin-nav__more, body.path-user .famtastic-admin-nav__more { position: relative; margin: 0; padding: 0; border: 0; min-width: 0; }
+.famtastic-admin-nav__more > summary { min-height: 44px; display: flex; align-items: center; justify-content: center; padding: .5rem; cursor: pointer; color: var(--fam-ops-ink, #fff); font-size: .875rem; }
+.famtastic-admin-nav__secondary { display: grid; gap: .25rem; padding: .5rem; }
+.famtastic-admin-nav :is(a, summary):focus-visible { outline: 3px solid #7cfc00; outline-offset: 2px; }
+.famtastic-admin-shell__main { min-width: 0; }
+@media (max-width: 782px) {
+  .famtastic-admin-nav__more[open] > .details-wrapper { position: absolute; right: 0; bottom: calc(100% + .8rem); width: min(18rem, calc(100vw - 2rem)); max-height: 60vh; overflow-y: auto; background: #101310; border: 1px solid #485048; border-radius: .75rem; }
+  .famtastic-admin-nav__secondary .famtastic-admin-nav__link { justify-content: start; padding: .75rem; font-size: 1rem; }
+  .famtastic-admin-shell__brand > span { font-size: .75rem; }
+  .famtastic-admin-shell__breadcrumb { font-size: .8rem; margin-bottom: .25rem; }
+  .famtastic-admin-shell__main h1 { font-size: 1.5rem; margin-block: .5rem; }
+  /* Preserve complete urgent/error content; reduce decoration, not information. */
+  .famtastic-admin-shell__body .messages { padding: .75rem 1rem; margin-block: .5rem; }
+  .famtastic-admin-shell__body .messages__title { font-size: 1rem; }
+  .famtastic-admin-shell__body .messages__content { overflow-wrap: anywhere; }
+  body.path-admin :is(input, textarea, select) { font-size: 16px; }
+}
+/* Staff breadcrumb navigation remains reachable on touch screens. */
+.breadcrumb ol { display: flex; flex-wrap: wrap; align-items: center; }
+.breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 6px; overflow-wrap: anywhere; }
+/* Real Drupal pages include border/padding beyond fixture content boxes. */
+body.path-admin .famtastic-admin-nav__more > summary { min-height: 44px; box-sizing: border-box; }
+body.path-admin :is(.famtastic-ops, .famtastic-inbox) :is(a.button, button, input, select, textarea),
+body.path-admin .famtastic-ops__actions > a { box-sizing: border-box; max-width: 100%; }

@@ -15,6 +15,14 @@ namespace Drupal\famtastic_pipeline\Utility;
  */
 final class CampaignFileLocator {
 
+  /** The marker travels atomically with module code and its rollback. */
+  public static function releaseSource(): ?array {
+    $marker = dirname(__DIR__, 2) . '/campaign-source.json';
+    $record = is_file($marker) ? json_decode((string) file_get_contents($marker), TRUE) : NULL;
+    if (!is_array($record) || !preg_match('/^[a-f0-9]{40}$/D', $record['source_commit'] ?? '')) return NULL;
+    return ['root' => dirname(\Drupal::root()) . '/campaign-releases/' . $record['source_commit'], 'sha' => $record['source_commit'], 'synced_at' => $record['synced_at'] ?? 'unknown'];
+  }
+
   /**
    * @return string[]
    *   Absolute candidate paths for marketing/campaigns/<slug>/<filename>, in
@@ -28,6 +36,8 @@ final class CampaignFileLocator {
       return [];
     }
     $rel = 'marketing/campaigns/' . $campaignSlug . '/' . $filename;
+    $release = self::releaseSource();
+    if ($release) return [$release['root'] . '/' . $rel];
     return [
       dirname(\Drupal::root(), 2) . '/' . $rel,
       dirname(\Drupal::root()) . '/' . $rel,
@@ -77,11 +87,12 @@ final class CampaignFileLocator {
       dirname(\Drupal::root()) . '/marketing/campaigns',
       \Drupal::root() . '/../marketing/campaigns',
     ];
-    foreach ($roots as $dir) {
+    if ($release = self::releaseSource()) $roots = [$release['root'] . '/marketing/campaigns'];
+    $slugs = [];
+    foreach (array_unique($roots) as $dir) {
       if (!is_dir($dir)) {
         continue;
       }
-      $slugs = [];
       foreach (scandir($dir) ?: [] as $entry) {
         if ($entry === '.' || $entry === '..') {
           continue;
@@ -90,10 +101,10 @@ final class CampaignFileLocator {
           $slugs[] = $entry;
         }
       }
-      sort($slugs);
-      return $slugs;
     }
-    return [];
+    $slugs = array_values(array_unique($slugs));
+    sort($slugs);
+    return $slugs;
   }
 
   /**

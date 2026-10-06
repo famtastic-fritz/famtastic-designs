@@ -319,3 +319,14 @@ services:
   famtastic_pipeline.acquisition_sample_exact_sender:
     class: Drupal\famtastic_pipeline\Service\AcquisitionSampleExactAdapter
     arguments: ['@database', '@datetime.time', '@famtastic_pipeline.operational_ledger', '@famtastic_pipeline.acquisition_sample_sequences', '@famtastic_pipeline.mailer']
+
+  famtastic_pipeline.campaign_workspace:
+    class: Drupal\famtastic_pipeline\Service\CampaignWorkspace
+    arguments: ['@database', '@datetime.time']
+
+  famtastic_pipeline.communication_drafts:
+    class: Drupal\famtastic_pipeline\Service\CommunicationDraftService
+    arguments: ['@database', '@famtastic_pipeline.client_messages']
+  famtastic_pipeline.staff_ai_tasks:
+    class: Drupal\famtastic_pipeline\Service\StaffAiTaskService
+    arguments: ['@config.factory', '@database', '@flood', '@lock', '@?ai.provider']
