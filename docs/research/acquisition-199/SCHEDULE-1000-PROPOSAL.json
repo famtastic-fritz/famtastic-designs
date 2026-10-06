@@ -1,6 +1,6 @@
 {
   "schema": "famtastic.acquisition-reviewable-schedule.v1",
-  "status": "held_projection",
+  "status": "held_projection_after_first_cap_one_acceptance",
   "native_queue_created": false,
   "recurring_unattended_automation_authorized": false,
   "contacts": 1000,
@@ -73,5 +73,35 @@
     "Uncertain sends never automatically retry",
     "No inbox delivery claim from SMTP acceptance"
   ],
-  "start_gate": "Exact main/production marker/live personalized Lab/signup/interview/card/QR/unsubscribe and controlled owner received-email verification."
+  "start_gate": "Live beauty D0 journey passed; one customer accepted. Larger windows require current allowance; remaining industries/followups require matching approved content.",
+  "customer_provider_accepted": 1,
+  "larger_batches_activated": false,
+  "timezone": "America/New_York",
+  "daily_windows": [
+    {
+      "time": "09:00",
+      "max_messages": 50,
+      "activated": false
+    },
+    {
+      "time": "10:00",
+      "max_messages": 50,
+      "activated": false
+    },
+    {
+      "time": "11:00",
+      "max_messages": 50,
+      "activated": false
+    },
+    {
+      "time": "12:00",
+      "max_messages": 50,
+      "activated": false
+    },
+    {
+      "time": "13:00",
+      "max_messages": 50,
+      "activated": false
+    }
+  ]
 }

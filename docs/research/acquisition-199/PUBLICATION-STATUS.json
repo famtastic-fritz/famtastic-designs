@@ -5,21 +5,27 @@
   "repository": "famtastic-fritz/famtastic-designs",
   "repository_private_verified": false,
   "repository_visibility_check": "gh repo view --json isPrivate,url,nameWithOwner returned isPrivate=false",
-  "push_status": "authorized_pending_execution",
-  "push_reason": "Public external destination; explicit trusted authorization for this source/readiness export absent.",
-  "pr58_update": "pending_source_publication",
-  "drive_export": "separately_rejected; local report retained",
+  "push_status": "published_current_main",
+  "push_reason": "Scoped owner source/main authority executed by normal fast-forward pushes.",
+  "pr58_update": "merged at2a7bff47; later materialization/postal fixes fast-forwarded main",
+  "drive_export": "not performed; separate rejection unretired",
   "private_contact_scan": {
-    "addresses_checked": 1000,
-    "staged_matches": 0
+    "addresses_checked": 1260,
+    "candidate_matches": 0,
+    "earlier_receipt": "evidence/cold-release-source-privacy.json"
   },
   "user_permission": "Explicit Oct6 owner scoped public source/main/deploy authorization; see RELEASE-OWNER-AUTHORIZATION.json",
-  "dispatch": "authorized_pending_technical_readiness",
-  "latest_application_source": "326266f46d2bb00101dc18d938eae4b373396bc4",
-  "latest_application_local_only": true,
+  "dispatch": "first_customer_smtp_accepted_larger_batches_held",
+  "latest_application_source": "044c1010353710481564d30b7c8ca13ddf4bebc8",
+  "latest_application_local_only": false,
   "creative_approved": true,
   "paced_send_intent_approved": true,
-  "customer_sends": 0,
+  "customer_sends": 1,
   "export_rejections_retried": false,
-  "prior_rejection_superseded_by_new_authority": true
+  "prior_rejection_superseded_by_new_authority": true,
+  "source_application": "044c1010353710481564d30b7c8ca13ddf4bebc8",
+  "controlled_owner_sends": 1,
+  "production_frontend": "cb8f5b07ac46dcb791e921f5e6a434b60d480382",
+  "production_backend": "044c1010353710481564d30b7c8ca13ddf4bebc8",
+  "closeout_source_revision": "Resolve current file Git commit; documentation-only source can be newer than production component markers."
 }

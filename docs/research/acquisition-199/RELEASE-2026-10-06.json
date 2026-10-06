@@ -1,0 +1,147 @@
+{
+  "schema": "famtastic.acquisition-deployed-checkpoint.v1",
+  "recorded_at": "2026-10-06T11:27:33.107018+00:00",
+  "classification": "deployed",
+  "source_application": "044c1010353710481564d30b7c8ca13ddf4bebc8",
+  "frontend_production_marker": "cb8f5b07ac46dcb791e921f5e6a434b60d480382",
+  "backend_production_marker": "044c1010353710481564d30b7c8ca13ddf4bebc8",
+  "frontend_tree_equal_at_both_revisions": true,
+  "frontend_tree": "b02206e7f4a87e750d967065559ae9ba49ea02d3",
+  "normal_checked_in_deployment": true,
+  "rollback_backups_recorded": true,
+  "approved_private_bundle": {
+    "revision": "cb8f5b07ac46dcb791e921f5e6a434b60d480382",
+    "files": 10,
+    "manifest_sha256": "eeada64b92cfea4fde01b44489613e684daccff35491ecdeb5cb72e8b38bb0ba",
+    "server_hashes_verified": true,
+    "private_key_installed": true
+  },
+  "runtime": {
+    "frontend_node": "22.23.3",
+    "backend_php": "8.3.33",
+    "pending_updates": 0,
+    "pilot_exact_dispatch_lock": 1,
+    "broad_scheduler_entries": 0,
+    "broad_worker_processes": 0,
+    "claimable_historical260": 0
+  },
+  "live_proof": {
+    "apex_www_mobile": {
+      "width": 390,
+      "height": 844,
+      "http": 200,
+      "rendered": true,
+      "overflow": false
+    },
+    "controlled_lab": {
+      "hosted": true,
+      "hair_image_loaded": true,
+      "sandboxed": true,
+      "phone_practice_visible_saved_unsent": true,
+      "registration_business_prefill": true
+    },
+    "owner_inbox": {
+      "campaign_messages_received": 1,
+      "labels": [
+        "INBOX",
+        "CATEGORY_PROMOTIONS"
+      ],
+      "spf": "pass",
+      "dkim": "pass",
+      "dmarc": "pass",
+      "actual_mime_read": true,
+      "received_html_rerendered_at_390": true,
+      "images_loaded": true,
+      "overflow": false,
+      "gmail_pixel_render_proved": false
+    },
+    "verification_inbox": {
+      "messages_received": 1,
+      "labels": [
+        "INBOX",
+        "CATEGORY_PERSONAL"
+      ]
+    },
+    "account_journey": {
+      "register_http": 201,
+      "verify_http": 200,
+      "login_http": 200,
+      "received_one_time_token_used": true,
+      "saved_business_industry_continuation": true,
+      "interview_draft_create_http": 201,
+      "draft_reload_http": 200,
+      "draft_persisted": true,
+      "submitted": false,
+      "generation_requested": false,
+      "payment_tested": false
+    },
+    "card_video_qr": {
+      "card_rendered": true,
+      "commercial_duration_seconds": 30.041667,
+      "playback_current_time_seconds": 4.187325,
+      "playing": true,
+      "video_error": false,
+      "actual_received_qr_decoded": "https://famtasticdesigns.com/connect",
+      "received_qr_sha256": "ed569de9c97e0b6c960c957552a43ed41fa7b1843e0e61a3216d462286516e84"
+    },
+    "unsubscribe": {
+      "confirm_get": 200,
+      "confirmation_post": 200,
+      "native_owner_alias_suppressed": true,
+      "owned_sequence_status": "stopped",
+      "reason": "unsubscribed"
+    },
+    "first_customer": {
+      "fresh_native_history_complete": true,
+      "history_stop_reasons": [],
+      "historical260_excluded": true,
+      "maildir_originals_checked": 324,
+      "native_invitation_http": 200,
+      "matching_supplied_business": true,
+      "recipe_title": "Soft Power",
+      "preview_http": 200
+    }
+  },
+  "dispatch": {
+    "customer_provider_accepted": 1,
+    "owned_campaign_probe_provider_accepted": 1,
+    "owned_verification_transactional_received": 1,
+    "customer_message_id": 277,
+    "customer_sequence_id": 2,
+    "customer_invitation_id": 3,
+    "customer_status": "sent",
+    "customer_inbox_delivery_proved": false,
+    "customer_delivery_bounce_complaint_recorded": false,
+    "outcome_snapshot_at": "2026-10-06T11:25:15Z",
+    "uncertain_retries": 0,
+    "larger_batches_activated": false,
+    "generic_followups_staged": 0,
+    "provider_remaining_allowance": null,
+    "outside_native_usage_unknown": true
+  },
+  "owner_acceptance": {
+    "visual_approved": true,
+    "physical_owner_journey": "pending",
+    "developer_controlled_success_is_owner_acceptance": false
+  },
+  "limits": [
+    "Actual Gmail pixel rendering and physical owner acceptance remain pending.",
+    "Received MIME HTML was re-rendered in a browser using actual received attachments.",
+    "Initial controlled Lab outer recipe title used fallback identifier; first customer title verified Soft Power.",
+    "Provider remaining account allowance is unknown; larger batches remain held.",
+    "Only beauty/hair D0 is approved and implemented; nine other industries and generic followups are pending.",
+    "No customer inbox, conversion, sale or revenue proof."
+  ],
+  "new_purchases": 0,
+  "private_contact_export": "one authorized customer runtime packet only; no bulk/hash export",
+  "drive_export": "not performed",
+  "plan_audit": {
+    "active": 14,
+    "drift": 0,
+    "conflicts": 0,
+    "orphans": 0
+  },
+  "source_main_reanchor": "7810aa9e786cb0dab01dcad0e67a6a258daea72e",
+  "independent_source_change": "Command Center PR59 landed after campaign deployment; preserved in source merge. This campaign closeout does not deploy that separate release.",
+  "production_markers_rechecked_after_main_change": true
+}

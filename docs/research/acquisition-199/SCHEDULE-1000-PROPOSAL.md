@@ -1,3 +1,7 @@
+Current checkpoint: one customer beauty D0 accepted by GoDaddy. Larger batches held because current remaining allowance is unavailable. This single-message check does not activate the timetable.
+
+Proposed Eastern windows:9am50,10am50,11am50,noon50 (200 total);1pm50 (250 total). New messages and followups share this total; capacity can reduce each window. No catch-up burst or unattended automation.
+
 # Capacity-limited schedule through1,000
 
 This is a held planning projection. Start day0 only after the shipped journey and controlled owner email pass. Target250TOTAL campaign messages/day includes follow-ups and other campaign use; lower it to verified shared/permailbox allowance remaining after transactional traffic. Up to50 per batch, roughly hourly across5 reviewed windows. No unattended recurring automation or native follow-up queue is created.

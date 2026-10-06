@@ -1,3 +1,34 @@
+# Deployed release and first customer send — 2026-10-06
+
+The approved beauty D0 is published on main and deployed through the checked-in GoDaddy scripts. Production frontend is cb8f5b07; backend is 044c1010. The frontend tree is identical across those revisions; documentation-only closeout commits do not change deployed component markers. Exact proof: [RELEASE-2026-10-06.json](RELEASE-2026-10-06.json).
+
+**Actual customer sends: 1 SMTP-accepted; customer inbox delivery unproved.** The separate owned campaign probe arrived in Gmail Inbox/Promotions with SPF, DKIM and DMARC passing. Its verification email arrived in Inbox/Personal. The native register → received-token verification → login → business/industry continuation → saved/reloaded interview draft passed on production. No interview submission, generation or payment was performed. Actual received MIME HTML and attachments rendered at 390px without overflow; this is browser re-rendering, not Gmail client pixel proof.
+
+The delivered QR decodes to the live card; the 30-second commercial played. Owned unsubscribe confirmation persisted native suppression and stopped its sequence. The first customer's fresh native history/suppression and live business-bound hair preview passed; the readable recipe title is Soft Power. Contacts, credentials and bearer links remain private. No broad historical queue tick, additional bill, purchase or recurring automation.
+
+Remaining account allowance is unavailable, so larger batches remain held. Proposed Eastern windows are 9/10/11 a.m., noon and 1 p.m., up to 50 each, targeting 250 total campaign messages/day including followups and reduced by verified remaining capacity. These windows are not activated. Only beauty/hair D0 is approved/implemented; other industries and generic D3/D7 are projections. Physical owner continuation acceptance remains pending. Classification: **deployed**, not owner_accepted.
+
+Fritz's explicit source/deploy/cold-send authority is recorded separately from recipient consent/provider permission. No repeat risk or sender-selection question is pending. Prior missing-source-authorization rejection was superseded by fresh scoped owner authority; separate Drive/bulk-hash export rejections remain unretired.
+
+## Current deployed capability matrix
+
+Revision for every row: frontend cb8f5b07/backend044c1010, production 2026-10-06. Proof: RELEASE-2026-10-06.json. Scope: approved beauty/hair D0 only.
+
+| Capability ID / customer job and role | Entry/action/input | Saved result | Visibility and reversal | Evidence | Provider state | Owner acceptance / consumption | Gap / next owner |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| acq.polished-lab / prospect / inspect illustrative preview | Email tracked CTA → private samples route, supplied business/industry | Immutable native invitation/approved recipe snapshot | Bearer invitation; revocable/expiring; advisory context | hosted_verified: correct business, hair image, sandbox; first customer Soft Power title | not_applicable | NEW visual approved; physical journey pending / Component Studio source_captured | Fritz physical device; Studio import unverified |
+| acq.phone / prospect / try inquiry work | Open inquiry, select Reviewing, save fictional reply at 390×844 | Page-local unsent reply/status | Practice only; reload resets | hosted_verified + simulated: actual visible saved notice/no overflow | not_applicable | pending / not_applicable | Uncoached Fritz practice tasks |
+| acq.continuation / verified customer / resume interview | Native register, received one-time verify, login, save draft | Durable account context and exact associated draft; reload preserves business/industry | Authenticated account; editable draft; no submission/generation/payment | hosted_verified: 201/200/200 and draft201/reload200 | verified: owned verification email actually received | pending / not_applicable | Fritz uncoached two-device continuation |
+| acq.generic-d0 / operator / deliver approved invitation | Private signed cap-one exact native dispatch after actual history/suppression audit | Message277 status sent; frozen media/content; no automatic retry | Private operator; SMTP acceptance irreversible; unsubscribe stops future mail | hosted_verified: 1 customer accepted; customer inbox unverified | verified for SMTP acceptance only; allowance unknown | dispatch authorized; inbox acceptance pending / production_consumed by private exact operator | Current allowance before next batch; outcome inspection |
+| acq.unsubscribe / recipient / stop commercial mail | Delivered confirmation GET then explicit one-click POST | Native suppression true; controlled sequence stopped/unsubscribed | Exact address stopped; staff-led correction only | hosted_verified: owned alias GET200/POST200/native readback | verified for owned suppression | pending / not_applicable | Customer/device acceptance remains unobserved |
+| acq.card-media / prospect / view agency contact/video | Digital card, video modal, delivered QR | Card rendered; commercial playing; QR target decoded | Public card/media; no contact/booking/payment action | hosted_verified: readyState4, duration30.041667, playback4.187325; received QR decode | not_applicable | pending / not_applicable | Physical QR scan unobserved |
+| acq.inbox / recipient / read outreach | Actual owned Gmail MIME/header receipt | Inbox/Promotions received; SPF/DKIM/DMARC pass; actual image attachments | Owned mailbox; customer inbox state unavailable | hosted_verified receipt; local_tested received MIME HTML at390 without overflow; Gmail pixel unverified | verified for owned Gmail receipt only | pending / not_applicable | Customer delivery and physical reader acceptance |
+| acq.schedule / operator / pace campaign | Proposed five Eastern windows, ≤50 each, target250 total incl followups | No larger batch/native generic followup/recurring schedule activated | Held projection; revise after capacity/content proof | blocked: remaining allowance unknown; proposed nine industries and generic followups | connected_unverified for quota | not_requested / not_applicable | Account allowance and matching approved content |
+
+## Historical checkpoints retained below
+
+The dated records below describe earlier scopes and proofs. The deployed receipt and current resumable brief above control current execution.
+
 # Current owner-authorized release — 2026-10-06
 
 Fritz explicitly authorized cold customer outreach through existing GoDaddy hello@famtasticdesigns.com and scoped public source/main integration plus normal checked-in production deployment. RELEASE-OWNER-AUTHORIZATION.json supersedes earlier missing export/apply authority. OWNER-COLD-SEND-AUTHORIZATION.json records account-risk acceptance truthfully: no recipient opt-in or provider exception is inferred. No repeated risk decision is pending.

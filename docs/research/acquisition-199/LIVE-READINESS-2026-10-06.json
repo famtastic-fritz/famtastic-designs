@@ -28,5 +28,6 @@
   },
   "broad_scheduler_entries": 0,
   "bounded_worker_present": true,
-  "inbound_clock_present": true
+  "inbound_clock_present": true,
+  "historical_scope": "Pre-deployment baseline; superseded for runtime by RELEASE-2026-10-06.json"
 }

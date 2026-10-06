@@ -1,0 +1,14 @@
+{
+  "evaluation_id": "posteval_40239978fcc6d058",
+  "report_path": "/Users/famtastic-fritz/Development/FAMtastic/data-center/reports/post-eval/posteval_40239978fcc6d058.md",
+  "report_sha256": "853b64165112b412291f177192d6e35d7e84c1aa9618a1be7597ab2dbf7b38d9",
+  "record_path": "/Users/famtastic-fritz/Development/FAMtastic/data-center/post-eval/posteval_40239978fcc6d058.json",
+  "source_application": "044c1010353710481564d30b7c8ca13ddf4bebc8",
+  "classification": "deployed",
+  "customer_sends": 1,
+  "controlled_owner_sends": 1,
+  "owner_journey_accepted": false,
+  "customer_inbox_proved": false,
+  "larger_batches_activated": false,
+  "new_purchases": 0
+}

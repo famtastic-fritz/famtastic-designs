@@ -1,3 +1,33 @@
+# Deployed release and first customer send — 2026-10-06
+
+The approved beauty D0 is published on main and deployed through the checked-in GoDaddy scripts. Production frontend is cb8f5b07; backend is 044c1010. The frontend tree is identical across those revisions; documentation-only closeout commits do not change deployed component markers. Exact proof: [RELEASE-2026-10-06.json](RELEASE-2026-10-06.json).
+
+**Actual customer sends: 1 SMTP-accepted; customer inbox delivery unproved.** The separate owned campaign probe arrived in Gmail Inbox/Promotions with SPF, DKIM and DMARC passing. Its verification email arrived in Inbox/Personal. The native register → received-token verification → login → business/industry continuation → saved/reloaded interview draft passed on production. No interview submission, generation or payment was performed. Actual received MIME HTML and attachments rendered at 390px without overflow; this is browser re-rendering, not Gmail client pixel proof.
+
+The delivered QR decodes to the live card; the 30-second commercial played. Owned unsubscribe confirmation persisted native suppression and stopped its sequence. The first customer's fresh native history/suppression and live business-bound hair preview passed; the readable recipe title is Soft Power. Contacts, credentials and bearer links remain private. No broad historical queue tick, additional bill, purchase or recurring automation.
+
+Remaining account allowance is unavailable, so larger batches remain held. Proposed Eastern windows are 9/10/11 a.m., noon and 1 p.m., up to 50 each, targeting 250 total campaign messages/day including followups and reduced by verified remaining capacity. These windows are not activated. Only beauty/hair D0 is approved/implemented; other industries and generic D3/D7 are projections. Physical owner continuation acceptance remains pending. Classification: **deployed**, not owner_accepted.
+
+Fritz's explicit source/deploy/cold-send authority is recorded separately from recipient consent/provider permission. No repeat risk or sender-selection question is pending. Prior missing-source-authorization rejection was superseded by fresh scoped owner authority; separate Drive/bulk-hash export rejections remain unretired.
+
+## Release-matched owner tasks — pending
+
+Release: production frontend cb8f5b07/backend044c1010, 2026-10-06. Fritz approved the exact NEW visual in CREATIVE-APPROVAL.json; controlled developer checks below do not replace his independent use.
+
+| Task / capability | Intended owner / device / route | Preconditions and visible steps | Expected saved result / reversal | Developer evidence | Uncoached owner observation / blocker |
+| --- | --- | --- | --- | --- | --- |
+| generic-review-01 / acq.polished-lab | Fritz / desktop or phone / received beauty email and private Lab | Inspect approved email and finished hair example | Visual judgment; immutable reviewed content | Exact visual approved earlier; actual received MIME assets and current hosted example checked | Visual approved; physical release inspection pending |
+| phone-practice-01 / acq.phone | Fritz / physical phone / private Lab | Open inquiry, change status, save reply; describe notice; reload | Local unsent draft; reload resets | Actual developer390 practice saved visible notice | pending; no uncoached physical observation |
+| generic-continue-01 / acq.continuation | Invited owner / two devices / signup then verified portal | Use invitation email, verify from actual receipt, sign in, save interview draft, reopen | Private account draft retains business/industry; editable; no payment/submission | Controlled production201→200→200 plus draft201/reload200 | pending; owner unavailable for independent exercise |
+| deliver-01 / acq.generic-d0 and acq.inbox | Fritz/operator and invited recipient / sender ledger and mail client | Inspect exact approved delivery and message results | Native accepted send; reply/optout stops later outreach | Customer277 SMTP-accepted; owned276 actually received | customer inbox and owner reader acceptance pending; quota blocks larger batches |
+| stop-01 / acq.unsubscribe | Recipient / delivered unsubscribe link | Review confirmation, choose confirm | Suppression persists and sequence stops; staff-led correction | Owned GET200/POST200 and native suppressed/stopped | pending for physical owner/customer |
+
+The initial controlled owner's outer heading used the fallback recipe ID. Its immutable sent invitation is preserved. The first customer's prepared/hosted title is verified as Soft Power. No physical owner acceptance or connected prospect business workflow is claimed. Classification: deployed.
+
+## Historical checkpoints retained below
+
+The dated records below describe earlier scopes and proofs. The deployed receipt and current resumable brief above control current execution.
+
 # Current owner-authorized release — 2026-10-06
 
 Fritz explicitly authorized cold customer outreach through existing GoDaddy hello@famtasticdesigns.com and scoped public source/main integration plus normal checked-in production deployment. RELEASE-OWNER-AUTHORIZATION.json supersedes earlier missing export/apply authority. OWNER-COLD-SEND-AUTHORIZATION.json records account-risk acceptance truthfully: no recipient opt-in or provider exception is inferred. No repeated risk decision is pending.

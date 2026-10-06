@@ -1,0 +1,10 @@
+{
+  "schema": "famtastic.acquisition-docs-closeout-privacy.v1",
+  "addresses_checked": 1260,
+  "address_hashes_checked": 1260,
+  "owned_alias_and_credential_scan": true,
+  "candidate_files_checked": 13,
+  "matches": 0,
+  "private_live_directory_ignored": true,
+  "application_code_changed": false
+}
