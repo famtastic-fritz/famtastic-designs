@@ -2841,3 +2841,16 @@ Historical migration receipts retain their original paths as evidence; this curr
 ## 2026-10-04 — Inbound mailbox repair
 
 Observation: August 24 support import cron was absent in an August 27 backup and on October 4; exact removal cause unknown. Rule: keep ingress marker-owned, back up cron, gate activated schedules at deployment, and prove Maildir receipt separately from ingestion. Historical hello backlog is excluded at first activation. See docs/plans/inbound-mail-repair/OPERATIONS.md.
+
+## 2026-09-30 — Backend command center local integration
+
+- Observation: matching source lock is insufficient unless installed package versions also match; admin fixture role must include administration-theme access for valid mobile QA. Guidance: compare installed versions to lock, copy dependency allowlist, block outbound transports and use synthetic SQLite before browser proof.
+
+- Final local evidence: patched-lock unit333/1960 and28 integrated checks pass; real mobile campaign and message preview/send fixture completed. Module-coupled immutable campaign snapshots preserve CLI files. Cached Form API services use protected injectable properties. Production/provider connection remains separate.
+
+## 2026-10-06 — Command-center release reconciliation (candidate)
+
+- Reconciled reviewed PR49 onto refreshed main `044c1010353710481564d30b7c8ca13ddf4bebc8`, preserving acquisition reply-stop/frozen-message safeguards and invoice/Sample Lab schemas. Command-center migration is now **8068**; historical September30 references to8066 describe the superseded candidate only.
+- Campaign packaging now reads exact commit blobs from the canonical bare mirror while the deployment archive remains backend-only. No mutable campaign schedules are overwritten.
+- Current validation:396unit tests/2470assertions;14 installed-Drupal checks; real stored-schema8067→8068 migration with new staff tables absent, existing campaign/thread counts and invoice/acquisition tables preserved, second updater empty;34packaging checks including archive/bare mirror;3cached-form checks; snapshot and safe database-error checks.
+- Production before this release:main044c1010, dispatch locktrue and broad schedulers0. Deployment must preserve exact-dispatch mode. No release activation, paid inference, customer email, or social publication is asserted by this candidate record. See `docs/implementation/RELEASE_RECONCILIATION_2026-10-06.md` and the October6 owner handoff.

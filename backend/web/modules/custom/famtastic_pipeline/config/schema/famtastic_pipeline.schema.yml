@@ -117,3 +117,27 @@ famtastic_pipeline.proof_cohorts:
           sequence:
             type: string
             label: 'Observation status'
+
+famtastic_pipeline.staff_ai:
+  type: config_object
+  label: 'Staff AI assistance'
+  mapping:
+    enabled:
+      type: mapping
+      label: 'Explicitly enabled tasks'
+      mapping:
+        reply:
+          type: boolean
+          label: 'Draft reply'
+        summarize:
+          type: boolean
+          label: 'Summarize conversation'
+        campaign:
+          type: boolean
+          label: 'Draft campaign plan'
+        needs_me:
+          type: boolean
+          label: 'Summarize work'
+    hourly_limit:
+      type: integer
+      label: 'Requests per staff member per hour'

@@ -1232,7 +1232,26 @@ test -s "$database_backup" || {
 rm -rf "$stage_root"
 mkdir -p "$stage_module" "$stage_admin_theme" "$stage_customer_theme"
 test -d "$stage_module" || { echo "Could not create backend module staging directory: $stage_module" >&2; exit 1; }
+# Immutable source snapshots never overwrite the CLI's mutable campaign files.
+# The marker is promoted/rolled back with module code; snapshots stay outside web/.
+campaign_snapshot="$production_dir/campaign-releases/$commit_sha"
+campaign_package="$deploy_dir/tmp/campaign-package-$timestamp-$commit_sha"
+# Read the packaging code and blobs from the same verified bare mirror commit.
+# backend-source intentionally has no Git metadata or marketing working tree.
+mkdir -p "$source_dir/scripts"
+git --git-dir="$mirror_dir" show "$commit_sha:scripts/stage-campaign-release.php" > "$source_dir/scripts/stage-campaign-release.php"
+php "$source_dir/scripts/stage-campaign-release.php" --repo "$mirror_dir" --commit "$commit_sha" --output "$campaign_package"
+mkdir -p "$production_dir/campaign-releases"
+if [[ -d "$campaign_snapshot" ]]; then
+  diff -qr "$campaign_package" "$campaign_snapshot" >/dev/null || { echo "Immutable campaign snapshot differs; refusing replacement." >&2; exit 1; }
+  rm -rf "$campaign_package"
+else
+  mv "$campaign_package" "$campaign_snapshot"
+fi
+
 rsync -a "$source_module/" "$stage_module/"
+php -r 'file_put_contents($argv[1], json_encode(["source_commit" => $argv[2], "synced_at" => gmdate("c")], JSON_THROW_ON_ERROR));' "$stage_module/campaign-source.json" "$commit_sha"
+
 test -d "$stage_admin_theme" || { echo "Could not create admin-theme staging directory: $stage_admin_theme" >&2; exit 1; }
 rsync -a "$source_admin_theme/" "$stage_admin_theme/"
 test -d "$stage_customer_theme" || { echo "Could not create customer-theme staging directory: $stage_customer_theme" >&2; exit 1; }

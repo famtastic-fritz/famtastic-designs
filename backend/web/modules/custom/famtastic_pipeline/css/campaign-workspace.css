@@ -1,0 +1,16 @@
+.famtastic-mkt .button, .famtastic-mkt__tab, .famtastic-campaign-selector a { min-height:44px; display:inline-flex; align-items:center; }
+.famtastic-campaign-selector { display:flex; flex-wrap:wrap; gap:.5rem; margin-block:1rem; }
+.famtastic-mkt input, .famtastic-mkt textarea, .famtastic-mkt select { max-width:100%; }
+.famtastic-mkt__truth { margin-block:1rem; }
+@media(max-width:480px) { .famtastic-mkt { min-width:0; overflow-wrap:anywhere; } .famtastic-campaign-selector a { flex:1 1 44%; } }
+.famtastic-campaign-form input, .famtastic-campaign-form textarea, .famtastic-campaign-form select { max-width:100%; min-height:44px; }
+.famtastic-campaign-form .form-checkbox { min-height:24px; }
+.famtastic-campaign-form .form-type-checkbox { min-height:44px; display:flex; align-items:center; gap:.5rem; }
+@media(max-width:600px) {
+  .famtastic-campaign-form table, .famtastic-campaign-form tbody, .famtastic-campaign-form tr, .famtastic-campaign-form td { display:block; width:100%; box-sizing:border-box; }
+  .famtastic-campaign-form thead { display:none; }
+  .famtastic-campaign-form tr { border-bottom:1px solid currentColor; padding-block:.5rem; }
+  .famtastic-campaign-form td:nth-child(1)::before { content:'Planned date'; }
+  .famtastic-campaign-form td:nth-child(2)::before { content:'Channel'; }
+  .famtastic-campaign-form td:nth-child(3)::before { content:'Draft content'; }
+}

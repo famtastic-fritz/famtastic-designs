@@ -25,3 +25,8 @@ user_page_clean:
   css:
     theme:
       css/user-page-clean.css: {}
+
+campaign_workspace:
+  css:
+    theme:
+      css/campaign-workspace.css: {}
