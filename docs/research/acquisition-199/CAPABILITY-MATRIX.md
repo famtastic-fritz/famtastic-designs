@@ -1,3 +1,5 @@
+Today250candidate: local87786a99 passed32tests1813assertions forOct6-only250CUSTOMER/251sharedceiling inclownedprobe; normaltomorrow200 unchanged. Automaticapprovalreview rejectedmainpushpendingdirectauthorizationhere; livebackend07da2fa6 stillenforces200. Fresh22:49:46Z actual101customer/1probe/107observedaccountusage allows143moreunderunchangedreserves (currentmodeledcustomerceiling244). Candidateproof: TODAY-250-SOURCE-PROOF-20261006.json; no newcapdeployed.
+
 <!-- INDUSTRY-ACTIVATION-CURRENT -->
 The approved nine-industry email/Lab release is **deployed** at backend `07da2fa6` / frontend `3b2a5010`. The first industry window completed with **50 new customer SMTP acceptances, zero failed or uncertain dispatches**, across all nine industries. Customer campaign total: **101**; the separate owned probe counts against the shared daily allowance (102 used). All 50 native recipe/content/account links matched; 18 hosted desktop/phone interaction checks passed. Inbox delivery and physical owner acceptance remain unproved.
 
