@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-10-06T20:02:04.640773+00:00",
+  "classification": "candidate",
+  "industries": 9,
+  "source_checks": 99,
+  "copy_lineage": "Current approved D0 opening and phone proposition in all3 email variants",
+  "placeholders": 0,
+  "css_braces_balanced": 9,
+  "js_syntax_passed": 9,
+  "route_unit_tests": 3,
+  "route_unit_assertions": 189,
+  "route_unit_basis": "coordinator reported executed final source check",
+  "provider_or_customer_calls": 0
+}

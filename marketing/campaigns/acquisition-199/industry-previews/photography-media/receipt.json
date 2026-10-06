@@ -1,0 +1,132 @@
+{
+  "title": "Photography, Videography & Media local preview candidate",
+  "status": {
+    "session": "candidate",
+    "environment": "local-only",
+    "lab_review": "pending",
+    "owner_approval": "pending",
+    "route_binding": "candidate only; native invitation unbound",
+    "send_or_publish_authorization": false
+  },
+  "completed_utc": "2026-10-06T19:14:37Z",
+  "source_authority": {
+    "copy_revision": "D0 copy-v2",
+    "files": {
+      "marketing/campaigns/acquisition-199/industry-d0-drafts/photography-media.html": {
+        "sha256": "4fc6481265ff8bdb3d5a5c28fde58fbcafa5f80d6499b6175ac65d9816447a23"
+      },
+      "marketing/campaigns/acquisition-199/industry-d0-drafts/photography-media.txt": {
+        "sha256": "059b85b69cb36d3a26bd335888f825d6f460d4ea1263dc177b9b071681f27207"
+      },
+      "marketing/campaigns/acquisition-199/industry-d0-drafts/photography-media-images-blocked.html": {
+        "sha256": "ae546daec052793a139fcd525600da9d36fb0ca48b190588a11fce25c0e5a7e0"
+      },
+      "marketing/campaigns/acquisition-199/industry-d0-drafts/drafts.json": {
+        "sha256": "df14161ec8c116d648fcf2e27d83d8f26dece3f270fb4e9f44b38c8161de5a79"
+      }
+    },
+    "owner_copy_review": "Preserved; no renewed approval requested"
+  },
+  "foundational_definition": {
+    "version": "1.0.0",
+    "principle": "Fearless purposeful deviation; craft demonstrated in results; manifesting the extraordinary from the ordinary."
+  },
+  "agency_agents": {
+    "catalog_revision": "765be42358100bf89d2faa567668a94c602f9a26",
+    "profiles": [
+      "design/design-ui-designer",
+      "design/design-ux-architect"
+    ],
+    "use": "reference guidance only"
+  },
+  "artwork": {
+    "path": "inline SVG in lab.html",
+    "rights_basis": "Drawn as original source code for this local candidate; no customer portfolio, stock, imported illustration or paid generation used. Content visibly labeled illustrative; fictional project concepts do not claim completed work."
+  },
+  "reused_approved_assets": {
+    "marketing/campaigns/acquisition-199/generic-review/assets/famtastic-designs-logo-v1.png": {
+      "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+      "use": "Referenced unchanged from read-only approved campaign asset"
+    },
+    "marketing/campaigns/acquisition-199/generic-review/assets/connect-qr.png": {
+      "sha256": "ed569de9c97e0b6c960c957552a43ed41fa7b1843e0e61a3216d462286516e84",
+      "use": "Referenced unchanged from read-only approved campaign asset"
+    },
+    "marketing/campaigns/acquisition-199/generic-review/assets/metropolis-regular.woff2": {
+      "sha256": "896b709d9b0be31603a9a7a686c1be0bf6bc95f0b771b8d880200b12914a7bef",
+      "use": "Referenced unchanged from read-only approved campaign asset"
+    },
+    "marketing/campaigns/acquisition-199/generic-review/assets/metropolis-bold.woff2": {
+      "sha256": "b2dd63db47efae6ed399cac4ae15cc012a77a02e72cb3274b599531152032a3c",
+      "use": "Referenced unchanged from read-only approved campaign asset"
+    },
+    "marketing/campaigns/acquisition-199/generic-review/assets/lora-bold.woff2": {
+      "sha256": "3de92dc557a7dc56e65a281f5d38c4a63eecd6faca350d4a5d1c5a8d89fbfc6c",
+      "use": "Referenced unchanged from read-only approved campaign asset"
+    },
+    "marketing/campaigns/acquisition-199/generic-review/assets/lora-italic.woff2": {
+      "sha256": "46829f84ae79ebb1e2806849ad8959e8d8b7351407223b22a798f59ca92d47b6",
+      "use": "Referenced unchanged from read-only approved campaign asset"
+    }
+  },
+  "deliverables": {
+    "email.html": {
+      "sha256": "c92ec555b64677785d6b6660d7895743f6be0387387359f4f7ce235325a8477e"
+    },
+    "email.txt": {
+      "sha256": "83e6190e641de4cdd06d63e682733d5923108290d14ef9a71bc95cab7667b654"
+    },
+    "email-images-blocked.html": {
+      "sha256": "b7ae019854978c66317a27cc7d98c5ff6d6bb4faa8d322ad2b682fc93c742bd6"
+    },
+    "lab.html": {
+      "sha256": "a17590417d54071f5ab359053dcd454aa5317bfb79ce670000cca183d6872e2f"
+    },
+    "lab.css": {
+      "sha256": "12b22d79134ae52ee54a007497c924e9a2c2f9fb005177b343e530b6a0fb3962"
+    },
+    "lab.js": {
+      "sha256": "055f135fdba32ee638a44b15c153ec5650932478d3190e3a52165f2eee197b8a"
+    }
+  },
+  "interaction_contract": {
+    "project_brief": "Local in-page summary only; requests project type, broad date/location, intended output or delivery constraints, and contact preference; no contact details or sensitive material requested.",
+    "inquiry_open_close": "Toggles fictional static details and aria-expanded.",
+    "reply": "Editable and saved in page memory only; unsent; resets on reload.",
+    "status": "Updates visible sample status only.",
+    "instructions": "Editable and saved in page memory only; unpublished.",
+    "reset": "Reloads original example.",
+    "interview_continuation": "Native registration continuation is documented in the shared gallery and receipt only; no customer-facing Lab route or status-check control is shown.",
+    "network_persistence": "No fetch/XHR, external network calls from interactions, storage, cookies, account creation, sending, publishing, booking, payment, or provider connection."
+  },
+  "checks": {
+    "node_check": "PASS: node --check lab.js",
+    "static_contract": "PASS: required copy and terms; email primary and bottom CTA link to lab.html; all referenced interaction IDs resolve; no network or persistence API in practice JS; inline SVG parses as XML.",
+    "git_diff_check": "PASS for exclusive directory",
+    "visual_qa": "Pending coordinator browser review at desktop and 390px viewport"
+  },
+  "limitations": [
+    "Local candidate only; no production route, native invitation binding, send, deployment, owner acceptance or real portfolio proof.",
+    "No fictional content should be interpreted as credentials, copyright ownership, rights/releases, delivery commitments, pricing, availability or promised outcomes."
+  ],
+  "paid_generation_calls": 0,
+  "provider_calls": 0,
+  "final_root_review": {
+    "classification": "candidate",
+    "proof": "docs/research/acquisition-199/evidence/industry-root-browser-20261006.json",
+    "final_source_hashes": {
+      "email.html": "c92ec555b64677785d6b6660d7895743f6be0387387359f4f7ce235325a8477e",
+      "email.txt": "83e6190e641de4cdd06d63e682733d5923108290d14ef9a71bc95cab7667b654",
+      "email-images-blocked.html": "b7ae019854978c66317a27cc7d98c5ff6d6bb4faa8d322ad2b682fc93c742bd6",
+      "lab.html": "a17590417d54071f5ab359053dcd454aa5317bfb79ce670000cca183d6872e2f",
+      "lab.css": "12b22d79134ae52ee54a007497c924e9a2c2f9fb005177b343e530b6a0fb3962",
+      "lab.js": "055f135fdba32ee638a44b15c153ec5650932478d3190e3a52165f2eee197b8a"
+    },
+    "desktop_1280_passed": true,
+    "mobile_390_passed": true,
+    "primary_email_lab_pair_passed": true,
+    "owner_acceptance": "pending",
+    "hosted": false,
+    "earlier_worker_hashes": "Historical initial snapshot; final hashes in this final_root_review govern the reviewed candidate."
+  }
+}

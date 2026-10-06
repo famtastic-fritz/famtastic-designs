@@ -1,0 +1,10 @@
+{
+  "schema": "famtastic.posteval-pointer.v1",
+  "evaluation_id": "posteval_d064315557fb3430",
+  "classification": "candidate",
+  "file": "/Users/famtastic-fritz/Development/FAMtastic/data-center/post-eval/posteval_d064315557fb3430.json",
+  "reportFile": "/Users/famtastic-fritz/Development/FAMtastic/data-center/reports/post-eval/posteval_d064315557fb3430.md",
+  "ledgerFile": "/Users/famtastic-fritz/Development/FAMtastic/data-center/ledgers/post-eval.jsonl",
+  "hosted": false,
+  "owner_accepted": false
+}

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="light">
+  <title>Form &amp; Field — a FAMtastic website possibility</title>
+  <link rel="stylesheet" href="lab.css">
+</head>
+<body>
+  <div class="candidate-banner" role="note"><span>LOCAL REVIEW CANDIDATE</span><span>Fictional example · no live business or service</span></div>
+  <nav class="nav" aria-label="Sample site navigation">
+    <a class="wordmark" href="#top">FORM <span>&amp;</span> FIELD<small>TRAINING · OPTIONAL MEAL PREP</small></a>
+    <div class="nav-links"><a href="#offers">Explore the example</a><a class="nav-practice" href="#owner-practice">Phone owner view <span aria-hidden="true">↘</span></a></div>
+  </nav>
+  <main id="top">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">A thoughtful place to begin</p>
+        <h1 id="hero-title">Make room<br>for your <em>next move.</em></h1>
+        <p class="hero-intro" id="hero-copy">A fictional movement studio example, with a clear path to ask about personal training and a separate, optional meal-prep offering.</p>
+        <a class="button button-lime" href="#offers">See the example offerings <span aria-hidden="true">↘</span></a>
+        <p class="hero-caption"><span class="dot"></span> A SAMPLE EXPERIENCE · NO BOOKING OR SERVICE CLAIM</p>
+      </div>
+      <figure class="hero-art"><img src="studio-workflow.svg" alt="Original illustration of a training mat, dumbbell and covered meal container" width="960" height="720"><figcaption>TRAINING FIRST · MEAL PREP IS A SEPARATE OPTIONAL SCOPE</figcaption></figure>
+    </section>
+
+    <section class="offer-section" id="offers" aria-labelledby="offer-title">
+      <div class="wrap">
+        <div class="section-heading"><p class="eyebrow">One clear conversation at a time</p><h2 id="offer-title">Two distinct paths.</h2><p class="section-intro">This made-up example keeps personal training and optional meal prep separate, so each offering can be described on its own terms.</p></div>
+        <div class="offer-grid">
+          <article class="offer-card training-card"><p class="offer-index">01 <span>PERSONAL TRAINING</span></p><h3>Ask about a training session.</h3><p>A simple inquiry can help someone learn what the service includes and what to ask next.</p><a href="#owner-practice">See a sample inquiry <span aria-hidden="true">→</span></a></article>
+          <article class="offer-card prep-card"><p class="offer-index">02 <span>OPTIONAL · MEAL PREP</span></p><h3>Give the separate offer its own space.</h3><p>Menu, ordering and pickup details belong in a separately agreed scope. No food, nutrition, allergy or health claims are shown here.</p><a href="#scope-note">Read the scope note <span aria-hidden="true">→</span></a></article>
+        </div>
+        <p class="scope-note" id="scope-note"><span aria-hidden="true">↳</span> Training and meal prep are different service scopes in this example. The page collects no health, body, dietary or allergy details.</p>
+      </div>
+    </section>
+
+    <section class="practice-section" id="owner-practice" aria-labelledby="practice-title">
+      <div class="wrap practice-layout">
+        <div class="practice-intro"><p class="eyebrow">The owner side · phone practice</p><h2 id="practice-title">Keep the next step<br><em>in your hands.</em></h2><p>Try a fictional inquiry, shape a reply and keep the service instructions clear. Every change stays in this browser page until reload.</p><div class="proof-note"><span class="proof-mark" aria-hidden="true">↗</span><p>Nothing here contacts a person or provider. No inquiry is sent, appointment booked, account created, payment taken or page published.</p></div></div>
+        <div class="owner-card" aria-label="Local owner practice controls">
+          <div class="owner-top"><div><span class="owner-kicker">FORM &amp; FIELD</span><h3>Owner practice</h3></div><div class="owner-orb" aria-hidden="true">F<span>&amp;</span>F</div></div>
+          <div class="inquiry-summary"><div class="summary-line"><span class="sample-chip">EXAMPLE INQUIRY</span><span class="state-dot" aria-hidden="true"></span><span class="state-label" id="status-label">Needs reply</span></div><p class="inquiry-title">Personal training · first question</p><p class="quote">“I’d like to understand what a first conversation covers. What should I ask?”</p><button class="text-button" id="open-inquiry" type="button" aria-expanded="false" aria-controls="inquiry-detail">Open inquiry details <span aria-hidden="true">＋</span></button><div id="inquiry-detail" class="inquiry-detail" hidden><p><strong>Service:</strong> Personal training (fictional sample)</p><p><strong>Example follow-up:</strong> Clarify the service format and next conversation step.</p><p><strong>Contact:</strong> Fictional inquiry. No name, address or contact method is represented.</p></div></div>
+          <div class="control-group"><label for="reply">Reply draft <span>UNSENT</span></label><textarea id="reply" rows="3">Thanks for reaching out. I can share how this example service is structured and what a first conversation could cover.</textarea><button class="button button-dark" id="save-reply" type="button">Save reply draft <span aria-hidden="true">↗</span></button><p class="notice" id="reply-notice" role="status" aria-live="polite"></p></div>
+          <div class="control-group status-control"><label for="request-status">Inquiry status</label><select id="request-status"><option>Needs reply</option><option>Reviewing details</option><option>Ready for follow-up</option></select><p class="notice" id="status-notice" role="status" aria-live="polite">Status is shown in this practice only.</p></div>
+          <div class="control-group"><label for="instructions">Training inquiry instructions <span>EDITABLE</span></label><textarea id="instructions" rows="3">Ask about the training format, what a first conversation covers and any practical next steps.</textarea><button class="button button-outline" id="save-instructions" type="button">Save instructions <span aria-hidden="true">↗</span></button><p class="notice" id="instructions-notice" role="status" aria-live="polite"></p></div>
+          <div class="control-group content-control"><label for="page-content">Public page introduction <span>EDITABLE</span></label><textarea id="page-content" rows="3">A fictional movement studio example, with a clear path to ask about personal training and a separate, optional meal-prep offering.</textarea><button class="button button-outline" id="save-content" type="button">Save page copy <span aria-hidden="true">↗</span></button><p class="notice" id="content-notice" role="status" aria-live="polite"></p></div>
+          <div class="owner-actions"><button class="reset-button" id="reset-practice" type="button">Reset this practice</button><span>Reload also clears all edits.</span></div>
+          <p class="practice-limit">Browser-only review state · unsent · unpublished · no storage</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap footer-layout"><p><strong>FORM &amp; FIELD</strong> · Fictional fitness and meal-prep example<br>Illustrative only. No real business, service, customer, availability, booking or transaction is represented.</p><a class="footer-credit" href="https://famtasticdesigns.com/?utm_source=famtastic-designs&amp;utm_medium=creator_credit&amp;utm_campaign=created_by_famtastic" aria-label="Created by FAMtastic Designs"><img src="../../generic-review/assets/famtastic-designs-logo-v1.png" alt="Created by FAMtastic Designs" width="140"></a><a href="email.html">Return to the introduction ↑</a></div></footer>
+  <script src="lab.js"></script>
+</body>
+</html>

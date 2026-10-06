@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" role="img" aria-labelledby="title desc">
+  <title id="title">Clearwork Studio, a fictional expert-services illustration</title>
+  <desc id="desc">A warm desk scene with a notebook, pencil, abstract conversation bubbles and a bright lime window.</desc>
+  <rect width="960" height="720" rx="32" fill="#e9e6da"/>
+  <circle cx="734" cy="185" r="182" fill="#d7e7b7"/>
+  <path d="M574 75h316v224H574z" fill="#182116" rx="10"/>
+  <path d="M732 75v224M574 187h316" stroke="#e9e6da" stroke-width="12"/>
+  <path d="M0 530h960v190H0z" fill="#a57955"/>
+  <path d="M0 563h960" stroke="#6c4b37" stroke-width="8" opacity=".42"/>
+  <rect x="112" y="265" width="376" height="268" rx="16" fill="#fffdf7" transform="rotate(-7 112 265)"/>
+  <path d="M153 330l251-31M161 379l276-35M168 429l191-24" stroke="#9ca58d" stroke-width="9" stroke-linecap="round"/>
+  <path d="M170 481l84-11" stroke="#7cfc00" stroke-width="11" stroke-linecap="round"/>
+  <path d="M449 516l188-215 35 31-188 215-47 17z" fill="#d29b45"/>
+  <path d="M637 301l24-27 35 31-24 27z" fill="#292d25"/>
+  <rect x="618" y="391" width="244" height="122" rx="26" fill="#7cfc00"/>
+  <path d="M671 451h139" stroke="#182116" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="650" cy="451" r="7" fill="#182116"/><circle cx="831" cy="451" r="7" fill="#182116"/>
+  <path d="M557 352h-86c-22 0-40-18-40-40v-37c0-22 18-40 40-40h91c22 0 40 18 40 40v37c0 22-18 40-40 40l-30 31z" fill="#fffdf7" stroke="#182116" stroke-width="8"/>
+  <circle cx="484" cy="294" r="8" fill="#182116"/><circle cx="518" cy="294" r="8" fill="#182116"/><circle cx="552" cy="294" r="8" fill="#182116"/>
+  <text x="64" y="648" fill="#182116" font-family="Arial,sans-serif" font-size="20" font-weight="700" letter-spacing="4">A CLEAR PLACE FOR YOUR NEXT CONVERSATION</text>
+</svg>

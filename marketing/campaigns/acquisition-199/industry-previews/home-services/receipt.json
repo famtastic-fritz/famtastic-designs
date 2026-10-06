@@ -1,0 +1,59 @@
+{
+  "schema": "famtastic.acquisition-industry-preview-receipt.v1",
+  "industry": "Home Services, Cleaning & Maintenance",
+  "status": "candidate",
+  "environment": "local source candidate; no hosting, provider, owner acceptance or dispatch proof",
+  "branch": "codex/acquisition-industry-previews-20261006",
+  "source_revision": "8c7487914367aa45a18862c2bfd905eb068e418d",
+  "copy_provenance": {
+    "d0_owner_review": "Fritz reviewed and approved the nine D0 email drafts for content direction, as recorded in docs/research/acquisition-199/INDUSTRY-PREVIEW-BUILD-20261006.md.",
+    "exact_sources": {
+      "marketing/campaigns/acquisition-199/industry-d0-drafts/home-services.html": "d8c740e3143da0ea847444ecfcbfd4aca979b6afbf29b4654bf57a14483bfb6e",
+      "marketing/campaigns/acquisition-199/industry-d0-drafts/home-services.txt": "1729e2730b8da3510b58b7b2d592cc6bedebbb75e40d043428814d4641231b0b",
+      "marketing/campaigns/acquisition-199/industry-d0-drafts/home-services-images-blocked.html": "587b6b2e98b0b53e447db8736c2c0a9b66a15f09dbd8219aece6c0ad0850441a",
+      "docs/research/acquisition-199/CREATIVE-APPROVAL.json": "57670052c7e8d1c7183b960ecd4fe7c3dde0543d1c33bdf401a80682eaeed15d"
+    },
+    "preservation": "Preserved supplied Home Services subject, preheader, introduction, offer, terms, Shay-Shay signature, digital card, and exact next-step copy. Candidate-specific primary preview link opens this matching local Lab.",
+    "owner_authorized_next_steps": "Your next steps are simple: 1. Create your free account and complete your website interview. 2. Review three design directions, choose your favorite and request any adjustments. 3. Review your staged website. 4. Pay $199 and approve launch\u2014we connect your domain and get your website online. We aim for same-day launch once your site is approved, payment is complete and the domain is ready. Domain and email setup options are agreed in scope. Mailbox subscriptions are separate."
+  },
+  "visual_provenance": {
+    "scene": "scene.svg is an original hand-authored illustrative SVG for this candidate; no customer image, stock, paid generation, or provider credit used.",
+    "brand_assets": "Logo and QR are exact assets from the owner-approved beauty creative record; provided locally in assets/. Font files are copied unchanged from the same approved creative package.",
+    "excluded": "No rejected initial-six creative or imagery was reused."
+  },
+  "behavior_boundary": "The Lab inquiry practice uses only in-page state; changes clear on reset or reload. No network requests, server writes, persistent browser storage, account registration, message sending, booking, payment, or publishing. The native continuation boundary is documented here and in the shared review gallery, with no continuation/status UI in the Lab.",
+  "sha256": {
+    "email.html": "bc7213ccb4318e7c1afc0ded8f970d644d7607478751703ffdf30e179cc41f38",
+    "email.txt": "2e686608a058b1eff532060cd32395e15859b4287df1442882b64415b0f00e3a",
+    "email-images-blocked.html": "6b96944cfa577e86fbfc219ad64c391629da45eb30920cb0e5d6893c741eb316",
+    "lab.html": "2248c00607182e7215873ea5610e206aca583ec20acd7a1d37b09ca179f47126",
+    "lab.css": "ecb8ecdd09944aba41ab3011e83f947024f59da7aaf30f6bda73abd56dca4b81",
+    "lab.js": "2750b9ad0d2cc541ebca65416bf106ac834bc17a512890e535a4f953759ee83c",
+    "scene.svg": "95258f1ee4dca1793c4aa8ee0828171264b93745cde2007b8c8e1f11983f756a",
+    "assets/famtastic-designs-logo-v1.png": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+    "assets/connect-qr.png": "ed569de9c97e0b6c960c957552a43ed41fa7b1843e0e61a3216d462286516e84",
+    "assets/metropolis-regular.woff2": "896b709d9b0be31603a9a7a686c1be0bf6bc95f0b771b8d880200b12914a7bef",
+    "assets/metropolis-bold.woff2": "b2dd63db47efae6ed399cac4ae15cc012a77a02e72cb3274b599531152032a3c",
+    "assets/lora-bold.woff2": "3de92dc557a7dc56e65a281f5d38c4a63eecd6faca350d4a5d1c5a8d89fbfc6c",
+    "assets/lora-italic.woff2": "46829f84ae79ebb1e2806849ad8959e8d8b7351407223b22a798f59ca92d47b6"
+  },
+  "review_cleanup": "After the 390px review, removed the Lab interview/account continuation section and excess disclaimers. Kept one concise local-practice note beside the controls and retained the main matching email CTA, approved copy/terms, signature and QR.",
+  "final_root_review": {
+    "classification": "candidate",
+    "proof": "docs/research/acquisition-199/evidence/industry-root-browser-20261006.json",
+    "final_source_hashes": {
+      "email.html": "bc7213ccb4318e7c1afc0ded8f970d644d7607478751703ffdf30e179cc41f38",
+      "email.txt": "2e686608a058b1eff532060cd32395e15859b4287df1442882b64415b0f00e3a",
+      "email-images-blocked.html": "6b96944cfa577e86fbfc219ad64c391629da45eb30920cb0e5d6893c741eb316",
+      "lab.html": "2248c00607182e7215873ea5610e206aca583ec20acd7a1d37b09ca179f47126",
+      "lab.css": "ecb8ecdd09944aba41ab3011e83f947024f59da7aaf30f6bda73abd56dca4b81",
+      "lab.js": "2750b9ad0d2cc541ebca65416bf106ac834bc17a512890e535a4f953759ee83c"
+    },
+    "desktop_1280_passed": true,
+    "mobile_390_passed": true,
+    "primary_email_lab_pair_passed": true,
+    "owner_acceptance": "pending",
+    "hosted": false,
+    "earlier_worker_hashes": "Historical initial snapshot; final hashes in this final_root_review govern the reviewed candidate."
+  }
+}

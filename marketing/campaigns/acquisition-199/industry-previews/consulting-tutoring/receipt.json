@@ -1,0 +1,182 @@
+{
+  "schema": "famtastic.acquisition-industry-preview.v1",
+  "industry": "consulting-tutoring-creators",
+  "display_name": "Consulting, Tutoring & Digital Creators",
+  "completed_at_utc": "2026-10-06T19:41:20Z",
+  "status": "local_review_candidate",
+  "preflight": {
+    "worktree_root": "/Users/famtastic-fritz/Development/FAMtastic/worktrees/acquisition-industry-previews-20261006",
+    "branch": "codex/acquisition-industry-previews-20261006",
+    "head": "8c7487914367aa45a18862c2bfd905eb068e418d",
+    "identity_check": "matched requested root, branch and HEAD before writing.",
+    "initial_dirty_state_preserved": [
+      "M backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.routing.yml",
+      "?? backend/web/modules/custom/famtastic_pipeline/src/Controller/AcquisitionIndustryPreviewController.php",
+      "?? backend/web/modules/custom/famtastic_pipeline/tests/src/Unit/AcquisitionIndustryPreviewControllerTest.php",
+      "?? docs/research/acquisition-199/INDUSTRY-D0-DRAFTS.md",
+      "?? docs/research/acquisition-199/INDUSTRY-PREVIEW-BUILD-20261006.md",
+      "?? marketing/campaigns/acquisition-199/industry-d0-drafts/",
+      "?? marketing/campaigns/acquisition-199/industry-previews/",
+      "?? scripts/acquisition-industry-d0-drafts.php"
+    ],
+    "assigned_write_scope": "marketing/campaigns/acquisition-199/industry-previews/consulting-tutoring/"
+  },
+  "review_state": {
+    "email": "D0 copy retained with approved next-step, commercial, scope, digital-card/QR and Shay-Shay signature pattern. Primary CTA opens the sibling local Lab.",
+    "lab": "Fictional multi-path expert-services website example and local phone practice.",
+    "invitation_binding": "No native account invitation is bound or exposed.",
+    "provider_or_deployment": "No provider, sending, account, hosting or deployment proof."
+  },
+  "source_sha256": [
+    {
+      "path": "marketing/campaigns/acquisition-199/industry-d0-drafts/consulting-tutoring-creators.html",
+      "sha256": "324bab307a00e99dbd98f3ae1ad531ada60ce77728ed27a9562b7ca7b91fe775",
+      "use": "D0 campaign source HTML"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/industry-d0-drafts/consulting-tutoring-creators.txt",
+      "sha256": "7bdd091819048df8e72dcdac04c290f84ec05d61b5fdc9760bb959f76c38ab4d",
+      "use": "D0 campaign source text"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/industry-d0-drafts/consulting-tutoring-creators-images-blocked.html",
+      "sha256": "91fa904e30436e581f358a6075372938de805c637e887b8f5850533b619b60c9",
+      "use": "D0 image-blocked reference"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/industry-d0-drafts/drafts.json",
+      "sha256": "f35302c0ef341b67b55c3d60dd4f9b682201625a61efef8dc41e26ec71646d9c",
+      "use": "Segment facts, status, approved-copy record and scope boundary"
+    },
+    {
+      "path": "/Users/famtastic-fritz/.codex/skills/famtastic-build-review/references/FAMTASTIC-DEFINITION.md",
+      "sha256": "c7f33a2c19b970dbb0121db0024a7d35f3be8a48bfb580dd3d5db63c374681e2",
+      "use": "Authoritative foundational brand definition"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/assets/famtastic-designs-logo-v1.png",
+      "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+      "use": "Approved FAMtastic logo"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/assets/connect-qr.png",
+      "sha256": "ed569de9c97e0b6c960c957552a43ed41fa7b1843e0e61a3216d462286516e84",
+      "use": "Approved digital-card QR"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/generic-review/assets/metropolis-regular.woff2",
+      "sha256": "896b709d9b0be31603a9a7a686c1be0bf6bc95f0b771b8d880200b12914a7bef",
+      "use": "Approved body font"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/generic-review/assets/metropolis-bold.woff2",
+      "sha256": "b2dd63db47efae6ed399cac4ae15cc012a77a02e72cb3274b599531152032a3c",
+      "use": "Approved bold font"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/generic-review/assets/lora-bold.woff2",
+      "sha256": "3de92dc557a7dc56e65a281f5d38c4a63eecd6faca350d4a5d1c5a8d89fbfc6c",
+      "use": "Approved display font"
+    }
+  ],
+  "output_sha256": [
+    {
+      "path": "email.html",
+      "sha256": "27d2d204cd910a3a32ed0885f560b0444e92aa7d23dc81e309a1e0d1afe8194b"
+    },
+    {
+      "path": "email.txt",
+      "sha256": "d5bdef15d3be44a27a0b848d76778760f0f73911ab4c1e31c130bd68df285eb2"
+    },
+    {
+      "path": "email-images-blocked.html",
+      "sha256": "e9e43c88a5e92bd624aa6e5dadb0ab92e20adb2813e25f66cc290fa58e7a3188"
+    },
+    {
+      "path": "lab.html",
+      "sha256": "0d148d348a1ed568f2ae7136b9b8089e59f3add5037d909f2f7d5a335377a6f2"
+    },
+    {
+      "path": "lab.css",
+      "sha256": "963e660378c5f580688e816d8efa8d89f4328b14734d94864b5267cff63bfd54"
+    },
+    {
+      "path": "lab.js",
+      "sha256": "9afba6959a57d1fcff369786fbda4d01be034e94568fd4cb15aef84cd23e2ea2"
+    },
+    {
+      "path": "clearwork-illustration.svg",
+      "sha256": "0139d557058dc550bba4492526c4ba3db28577ae800957a444284e4be411f74c"
+    }
+  ],
+  "original_artwork": {
+    "path": "clearwork-illustration.svg",
+    "provenance": "Original code-drawn SVG authored for this candidate. No stock asset or image generation used."
+  },
+  "interaction_contract": [
+    "Open and close fictional consulting inquiry details.",
+    "Edit and save an unsent reply draft.",
+    "Change visible inquiry status.",
+    "Edit first-contact guidance and update its sample page block.",
+    "Edit website introduction and update the Lab hero locally.",
+    "Show a fictional request summary reflecting current status, reply, guidance and website introduction.",
+    "Reset edits and close details; reload also resets."
+  ],
+  "interaction_boundary": {
+    "state": "Page-only JavaScript state; no persistence, clears on reload.",
+    "network_storage_account_send_payment_publish": "None.",
+    "content_security_policy": "default-src self; inline scripts/styles blocked; connect-src none; form-action none; object-src none.",
+    "static_scan": "No fetch, XMLHttpRequest, WebSocket, sendBeacon, cookies, localStorage, sessionStorage, forms, or external Lab resources."
+  },
+  "scope_safeguards": [
+    "Fictional Clearwork Studio and fictional inquiry/person; no customer claims or media.",
+    "No learning outcomes, credentials, availability, subscription, course platform, digital checkout, booking or payment action is implied.",
+    "Business segments are workbook-derived and unverified; no recipient or business identity asserted."
+  ],
+  "specialist_guidance": {
+    "profiles": [
+      "design/design-ui-designer",
+      "design/design-ux-architect"
+    ],
+    "catalog_revision": "765be42358100bf89d2faa567668a94c602f9a26",
+    "note": "Read only for visual clarity, responsive use and practical workflow guidance; applied within the assigned scope."
+  },
+  "checks": {
+    "performed": [
+      "Verified assigned worktree root, branch and HEAD; recorded preexisting dirty state.",
+      "Inspected D0 HTML, text, image-blocked reference, segment record and sibling candidate patterns.",
+      "Created local-review email, plain text email, simulated image-blocked view, Lab and original SVG.",
+      "Parsed HTML for duplicate IDs, dangling local links, exact approved next-step text, CTA target and forbidden placeholders.",
+      "Checked JavaScript syntax and scanned for network/storage/submission APIs.",
+      "Parsed SVG as XML; checked local CSP and external-only JavaScript.",
+      "Ran git diff --check scoped to the assigned folder; verified output hashes."
+    ],
+    "not_performed": [
+      "Browser visual/interaction review.",
+      "Hosted, email-send, account, provider, owner-acceptance or deployment verification."
+    ]
+  },
+  "limitations": [
+    "This remains a local review candidate. Email approval for sending and native invitation binding are separate.",
+    "Browser visual and interaction proof remain pending.",
+    "Receipt does not self-hash."
+  ],
+  "final_root_review": {
+    "classification": "candidate",
+    "proof": "docs/research/acquisition-199/evidence/industry-root-browser-20261006.json",
+    "final_source_hashes": {
+      "email.html": "27d2d204cd910a3a32ed0885f560b0444e92aa7d23dc81e309a1e0d1afe8194b",
+      "email.txt": "d5bdef15d3be44a27a0b848d76778760f0f73911ab4c1e31c130bd68df285eb2",
+      "email-images-blocked.html": "e9e43c88a5e92bd624aa6e5dadb0ab92e20adb2813e25f66cc290fa58e7a3188",
+      "lab.html": "0d148d348a1ed568f2ae7136b9b8089e59f3add5037d909f2f7d5a335377a6f2",
+      "lab.css": "963e660378c5f580688e816d8efa8d89f4328b14734d94864b5267cff63bfd54",
+      "lab.js": "9afba6959a57d1fcff369786fbda4d01be034e94568fd4cb15aef84cd23e2ea2"
+    },
+    "desktop_1280_passed": true,
+    "mobile_390_passed": true,
+    "primary_email_lab_pair_passed": true,
+    "owner_acceptance": "pending",
+    "hosted": false,
+    "earlier_worker_hashes": "Historical initial snapshot; final hashes in this final_root_review govern the reviewed candidate."
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "schema": "famtastic.acquisition-industry-preview.v1",
+  "industry": "events-rentals",
+  "completed_at_utc": "2026-10-06T19:31:57Z",
+  "status": "local_review_candidate",
+  "preflight": {
+    "worktree": "/Users/famtastic-fritz/Development/FAMtastic/worktrees/acquisition-industry-previews-20261006",
+    "branch": "codex/acquisition-industry-previews-20261006",
+    "head": "8c7487914367aa45a18862c2bfd905eb068e418d",
+    "status_before_write": "Expected checkout matched. Pre-existing unrelated modifications and untracked files were preserved."
+  },
+  "review_state": {
+    "email_copy": "Supplied Events D0 subject, preview line, greeting, offer introduction, four-step sequence, same-day aim, domain/email setup wording, commercial terms, signature and card language retained; CTA points to the matching local Lab.",
+    "email_layout": "Uses approved black/lime/green hierarchy, commercial link, digital card and QR, Shay-Shay signature, commercial terms block, tap-sized links and transparent creator credit. Main and footer Lab links target sibling lab.html.",
+    "lab": "Original code-authored illustrative SVG and phone-first practice workflow; pending coordinator visual QA and owner review.",
+    "account_interview_continuation": "Unbound continuation/account diagnostic is recorded here and in the shared gallery only; no route or registration CTA is presented in email or Lab.",
+    "provider_or_deployment": "No provider, send, account, hosted or deployment proof."
+  },
+  "copy_provenance": {
+    "d0_source": {
+      "path": "marketing/campaigns/acquisition-199/industry-d0-drafts/events-entertainment.txt",
+      "sha256": "29de337639a74e337544ba0910d9db021144f18309b27656eabdb67a6f3b9d9c",
+      "note": "D0 approved source copy"
+    },
+    "approved_d0_layout_source": {
+      "path": "marketing/campaigns/acquisition-199/industry-d0-drafts/events-entertainment.html",
+      "sha256": "f2f082068d97adcd493893764f1fb220605d5880c55cb02e27242527b232b1bc",
+      "note": "D0 approved HTML/layout source"
+    },
+    "approved_layout_reference": {
+      "path": "marketing/campaigns/acquisition-199/generic-review/beauty-email.html",
+      "sha256": "03588c3c4b4d323a8bc9965aee1a9c6a8905db190d6332d31eaab49b69e218f5",
+      "note": "Approved brand/email layout reference"
+    },
+    "commercial_terms": "Retained from Events D0 draft without new price, renewal or service term.",
+    "owner_authorized_additions": [
+      "Exact approved four-step sequence provided in assignment.",
+      "Same-day aim and domain/email setup language provided in assignment."
+    ]
+  },
+  "source_assets": [
+    {
+      "path": "marketing/campaigns/acquisition-199/industry-previews/assets/famtastic-designs-logo-v1.png",
+      "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+      "note": "Approved logo used by local gallery bundle"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/industry-previews/assets/connect-qr.png",
+      "sha256": "ed569de9c97e0b6c960c957552a43ed41fa7b1843e0e61a3216d462286516e84",
+      "note": "Approved digital card QR used by email"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/industry-previews/generic-review/assets/metropolis-regular.woff2",
+      "sha256": "896b709d9b0be31603a9a7a686c1be0bf6bc95f0b771b8d880200b12914a7bef",
+      "note": "Approved typography used by Lab"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/industry-previews/generic-review/assets/metropolis-bold.woff2",
+      "sha256": "b2dd63db47efae6ed399cac4ae15cc012a77a02e72cb3274b599531152032a3c",
+      "note": "Approved typography used by Lab"
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/industry-previews/generic-review/assets/lora-bold.woff2",
+      "sha256": "3de92dc557a7dc56e65a281f5d38c4a63eecd6faca350d4a5d1c5a8d89fbfc6c",
+      "note": "Approved typography used by Lab"
+    },
+    {
+      "path": "/Users/famtastic-fritz/.codex/skills/famtastic-build-review/references/FAMTASTIC-DEFINITION.md",
+      "sha256": "c7f33a2c19b970dbb0121db0024a7d35f3be8a48bfb580dd3d5db63c374681e2",
+      "note": "Authoritative FAMtastic foundational definition revisited"
+    }
+  ],
+  "assets_created": [
+    {
+      "path": "scene.svg",
+      "sha256": "574276dfddf7c326a341a4206097408ffe72b7f70855d04ec929697b8b9ea1c8",
+      "provenance": "Original code-drawn vector artwork authored for this event concept; no real event, venue, customer image, stock media or paid generation."
+    }
+  ],
+  "outputs": [
+    {
+      "path": "email.html",
+      "sha256": "077699ed7246bba25171c38a3f25e0be042901425ac9c49a0f2fe7813d94e1f5"
+    },
+    {
+      "path": "email-images-blocked.html",
+      "sha256": "9f527df6c33067517c3df1126e439b275e398f8930a67feac85655a48ecfcc6c"
+    },
+    {
+      "path": "email.txt",
+      "sha256": "dfb4a0f6adc00b0c80fbfe82eefb5941ed45c14e59d8143cfb3b262a6a06d845"
+    },
+    {
+      "path": "lab.html",
+      "sha256": "de77664e0cd62a7176854a33ccaa802ba6188e994138434a4c99b327462eee35"
+    },
+    {
+      "path": "lab.css",
+      "sha256": "4a00ed5e3c35723eb9dd844198d4ad6fb70ff6941a09d63db0f1d795deff2369"
+    },
+    {
+      "path": "lab.js",
+      "sha256": "b92c0e96401c653ed0f15cd9e9bf4ea93bb4de4046ce53e50242ed5929a1025b"
+    },
+    {
+      "path": "scene.svg",
+      "sha256": "574276dfddf7c326a341a4206097408ffe72b7f70855d04ec929697b8b9ea1c8"
+    }
+  ],
+  "lab_interactions": [
+    "Expand/collapse fictional request details.",
+    "Change sample request status and synchronize visible badge and local request summary.",
+    "Edit reply and mark it held unsent in page state.",
+    "Edit sample page introduction and customer instructions; render updated local content and request summary.",
+    "Reset practice controls to initial values."
+  ],
+  "interaction_boundary": {
+    "state": "Transient in-memory browser page state; reload resets edits.",
+    "static_scan": "Lab HTML/CSS/JS contains no fetch, XMLHttpRequest, WebSocket, sendBeacon, cookie, localStorage, sessionStorage, form action, account flow, or opaque route token.",
+    "practice_notice": "One concise disclosure immediately above practice controls: edits stay on page and reset on reload; nothing is sent or published."
+  },
+  "scope_safeguards": [
+    "Fictional event and request details only; no real business, customer, venue, date availability, rental inventory, service availability, price, licensing/safety guarantee or outcome claim.",
+    "No booking, checkout, payment, account creation, send, publish, server action, persistent storage or live service connection.",
+    "No account/interview continuation link or status checker is shown in Lab/email."
+  ],
+  "checks": {
+    "performed": [
+      "Exact requested checkout root, branch and HEAD verified before writing.",
+      "Primary email CTA and footer email CTA both point to sibling lab.html in HTML and images-blocked HTML.",
+      "Images-blocked email has no img tags and retains primary/footer local Lab links.",
+      "Required four-step sequence, same-day aim, domain/email setup line, commercial terms and signature present in HTML, images-blocked HTML and plain-text copy.",
+      "Static Lab scan found no networking, browser persistence, form action, registration/login route or status-check UI.",
+      "Lab contains inquiry detail toggle, status selector, unsent reply control, editable instructions/content, local request summary and reset.",
+      "Directory-scoped git diff --check passed.",
+      "All seven deliverable files and eight source assets listed with SHA-256 values."
+    ],
+    "not_performed": [
+      "Desktop or 390px browser visual/interaction QA; coordinator-owned per assignment.",
+      "Hosted/provider/account/send/deployment validation."
+    ]
+  },
+  "limitations": [
+    "Candidate remains pending visual QA and owner review; it does not authorize campaign sending.",
+    "Account registration/interview submission, unsubscribe binding and sender/recipient authorization are not connected.",
+    "Source and local page interactions do not prove hosting, provider behavior, customer acceptance or deployment."
+  ],
+  "receipt_hash_note": "Output hashes cover the seven listed deliverables. Receipt intentionally has no self-hash.",
+  "final_root_review": {
+    "classification": "candidate",
+    "proof": "docs/research/acquisition-199/evidence/industry-root-browser-20261006.json",
+    "final_source_hashes": {
+      "email.html": "077699ed7246bba25171c38a3f25e0be042901425ac9c49a0f2fe7813d94e1f5",
+      "email.txt": "dfb4a0f6adc00b0c80fbfe82eefb5941ed45c14e59d8143cfb3b262a6a06d845",
+      "email-images-blocked.html": "9f527df6c33067517c3df1126e439b275e398f8930a67feac85655a48ecfcc6c",
+      "lab.html": "de77664e0cd62a7176854a33ccaa802ba6188e994138434a4c99b327462eee35",
+      "lab.css": "4a00ed5e3c35723eb9dd844198d4ad6fb70ff6941a09d63db0f1d795deff2369",
+      "lab.js": "b92c0e96401c653ed0f15cd9e9bf4ea93bb4de4046ce53e50242ed5929a1025b"
+    },
+    "desktop_1280_passed": true,
+    "mobile_390_passed": true,
+    "primary_email_lab_pair_passed": true,
+    "owner_acceptance": "pending",
+    "hosted": false,
+    "earlier_worker_hashes": "Historical initial snapshot; final hashes in this final_root_review govern the reviewed candidate."
+  }
+}

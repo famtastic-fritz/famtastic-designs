@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="light">
+  <title>Kindred Paw — a FAMtastic website possibility</title>
+  <link rel="stylesheet" href="lab.css">
+</head>
+<body>
+  <div class="candidate-banner" role="note"><span>LOCAL REVIEW CANDIDATE</span><span>Fictional pet-care example · no live business or service</span></div>
+  <nav class="nav" aria-label="Sample site navigation">
+    <a class="wordmark" href="#top">KINDRED <span>PAW</span><small>PET CARE · GROOMING · TRAINING</small></a>
+    <div class="nav-links"><a href="#services">Explore the example</a><a class="nav-practice" href="#owner-practice">Phone owner view <span aria-hidden="true">↘</span></a></div>
+  </nav>
+  <main id="top">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Room for a good first hello</p>
+        <h1 id="hero-title">Care begins<br>with <em>listening.</em></h1>
+        <p class="hero-intro" id="hero-copy">A fictional pet-care example with clear service paths and thoughtful first questions for grooming and training inquiries.</p>
+        <a class="button button-lime" href="#services">Explore the sample <span aria-hidden="true">↘</span></a>
+        <p class="hero-caption"><span class="dot"></span> ILLUSTRATIVE EXAMPLE · NO BOOKING OR SERVICE CLAIM</p>
+      </div>
+      <figure class="hero-art"><img src="pet-care-illustration.svg" alt="Original illustration of a dog, a lead and a grooming brush" width="960" height="720"><figcaption>A CLEAR INTRODUCTION · ROOM FOR EACH PET’S PREFERENCES</figcaption></figure>
+    </section>
+
+    <section class="service-section" id="services" aria-labelledby="service-title">
+      <div class="wrap">
+        <div class="section-heading"><p class="eyebrow">A clear path to ask</p><h2 id="service-title">Start with what matters.</h2><p class="section-intro">This made-up example helps someone describe the service they have in mind and share the preferences that could make a first conversation more useful.</p></div>
+        <div class="service-grid">
+          <article class="service-card grooming-card"><p class="service-index">01 <span>GROOMING</span></p><h3>Share the kind of care you’re looking for.</h3><p>Note the service you have in mind, your dog’s coat or handling preferences, and a good way to discuss details.</p><a href="#owner-practice">See a sample inquiry <span aria-hidden="true">→</span></a></article>
+          <article class="service-card training-card"><p class="service-index">02 <span>TRAINING</span></p><h3>Describe the skill you want to work on.</h3><p>A first question can name a goal, what you have already tried and what you would like to learn about the approach.</p><a href="#scope-note">Read the scope note <span aria-hidden="true">→</span></a></article>
+        </div>
+        <p class="scope-note" id="scope-note"><span aria-hidden="true">↳</span> Grooming and training are separate service conversations here. Share handling preferences only; this example does not ask for health or medication details.</p>
+        <aside class="instruction-preview" aria-label="Customer instructions"><span>BEFORE YOU ASK</span><p id="customer-instructions">To help start the conversation, share the service you have in mind and any handling preferences you would like us to know. Please leave health and medication details out of this form.</p></aside>
+      </div>
+    </section>
+
+    <section class="practice-section" id="owner-practice" aria-labelledby="practice-title">
+      <div class="wrap practice-layout">
+        <div class="practice-intro"><p class="eyebrow">The owner side · phone practice</p><h2 id="practice-title">Keep each next step<br><em>thoughtful.</em></h2><p>Open an inquiry, prepare a reply and shape customer instructions or page copy from your phone.</p></div>
+        <div class="owner-card" aria-label="Local owner practice controls">
+          <div class="owner-top"><div><span class="owner-kicker">KINDRED PAW</span><h3>Owner practice</h3></div><div class="owner-orb" aria-hidden="true">K<span>P</span></div></div>
+          <p class="practice-disclosure">Local practice only. Changes stay in this page until reload; nothing sends or publishes.</p>
+          <div class="inquiry-summary">
+            <div class="summary-line"><span class="sample-chip">FICTIONAL INQUIRY</span><span class="state-dot" aria-hidden="true"></span><span class="state-label" id="status-label">New inquiry</span></div>
+            <p class="inquiry-title">Grooming · first question</p>
+            <p class="quote">“I’m looking for a bath and brush for my dog. They do best with a little time to settle in. What should I share before we talk?”</p>
+            <button class="text-button" id="open-inquiry" type="button" aria-expanded="false" aria-controls="inquiry-detail">Open inquiry details <span aria-hidden="true">＋</span></button>
+            <div id="inquiry-detail" class="inquiry-detail" hidden><p><strong>Pet:</strong> Juniper, a fictional dog</p><p><strong>Service:</strong> Bath and brush inquiry</p><p><strong>Handling preference:</strong> A calm introduction and time to settle</p><p><strong>Next question:</strong> Ask what coat care the person has in mind; explain that details are discussed directly.</p></div>
+          </div>
+          <div class="control-group"><label for="reply">Reply draft <span>UNSENT</span></label><textarea id="reply" rows="3">Thanks for reaching out. It helps to know what kind of coat care you have in mind and what makes an introduction comfortable for Juniper. We can talk through the service details together.</textarea><button class="button button-dark" id="save-reply" type="button">Save reply draft <span aria-hidden="true">↗</span></button><p class="notice" id="reply-notice" role="status" aria-live="polite"></p></div>
+          <div class="control-group status-control"><label for="request-status">Inquiry status</label><select id="request-status"><option>New inquiry</option><option>Reviewing details</option><option>Reply drafted</option><option>Follow up</option></select><p class="notice" id="status-notice" role="status" aria-live="polite">Status is shown in this practice only.</p></div>
+          <div class="control-group"><label for="instructions">Customer instructions <span>EDITABLE</span></label><textarea id="instructions" rows="3">To help start the conversation, share the service you have in mind and any handling preferences you would like us to know. Please leave health and medication details out of this form.</textarea><button class="button button-outline" id="save-instructions" type="button">Save instructions <span aria-hidden="true">↗</span></button><p class="notice" id="instructions-notice" role="status" aria-live="polite"></p></div>
+          <div class="control-group content-control"><label for="page-content">Public page introduction <span>EDITABLE</span></label><textarea id="page-content" rows="3">A fictional pet-care example with clear service paths and thoughtful first questions for grooming and training inquiries.</textarea><button class="button button-outline" id="save-content" type="button">Save page copy <span aria-hidden="true">↗</span></button><p class="notice" id="content-notice" role="status" aria-live="polite"></p></div>
+          <div class="summary-box" aria-labelledby="summary-title"><div class="summary-heading"><span class="owner-kicker">LOCAL VIEW</span><h4 id="summary-title">Request summary</h4></div><p id="local-summary">Grooming inquiry · New inquiry. Reply draft ready to shape. Instructions are visible above.</p></div>
+          <div class="owner-actions"><button class="reset-button" id="reset-practice" type="button">Reset this practice</button><span>Reload also clears edits.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="continuation-section" id="next-steps" aria-labelledby="continuation-title">
+      <div class="wrap continuation-layout"><div><p class="eyebrow">A possible next step</p><h2 id="continuation-title">Your business.<br>Your way of working.</h2></div><div class="continuation-copy"><p>The approved process begins with a free account and a website interview. This preview does not create an account or submit interview information.</p><div class="steps"><span>01</span><p>Create your free account and complete your website interview.</p><span>02</span><p>Review three design directions, choose your favorite and request any adjustments.</p><span>03</span><p>Review your staged website.</p><span>04</span><p>Pay $199 and approve launch—we connect your domain and get your website online.</p></div><p class="launch-aim">We aim for same-day launch once your site is approved, payment is complete and the domain is ready.</p><p class="scope-detail">Domain and email setup options are agreed in scope. Mailbox subscriptions are separate.</p><p class="commercial">The eligible focused starter is <strong>$199 upfront</strong>, including the first year of managed hosting.</p><p class="terms">One focused starter website with one year of basic managed hosting, plus a first-year standard available domain when needed or connection of your existing domain. After year one, hosting is $9.99/month only with separate recurring authorization; domain renewal is separate at the disclosed registrar price. Mailbox subscriptions, ecommerce, live calendar sync and advanced features are separate scope.</p></div></div>
+    </section>
+  </main>
+  <footer><div class="wrap footer-layout"><p><strong>KINDRED PAW</strong> · Fictional pet-care example<br>Illustrative sample · not a real pet-care business.</p><a class="footer-credit" href="https://famtasticdesigns.com/?utm_source=famtastic-designs&amp;utm_medium=creator_credit&amp;utm_campaign=created_by_famtastic" aria-label="Created by FAMtastic Designs"><img src="../../assets/famtastic-designs-logo-v1.png" alt="Created by FAMtastic Designs" width="140"></a><a href="email.html">Return to the introduction ↑</a></div></footer>
+  <script src="lab.js"></script>
+</body>
+</html>

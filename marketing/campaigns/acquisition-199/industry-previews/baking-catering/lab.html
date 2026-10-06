@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>The Occasion Table — illustrative website Lab</title><link rel="stylesheet" href="lab.css"></head>
+<body>
+<header class="topbar"><a class="brand" href="#home" aria-label="FAMtastic Designs home"><img src="../../assets/famtastic-designs-logo-v1.png" alt="FAMtastic Designs"></a><span class="candidate-tag">ILLUSTRATIVE LAB · LOCAL REVIEW CANDIDATE</span><a href="#owner" class="top-link">Owner view <span aria-hidden="true">↘</span></a></header>
+<main id="home">
+  <section class="hero">
+    <div class="hero-copy"><p class="eyebrow">A CONCEPT FOR BAKING · CATERING · PRIVATE CHEFS</p><h1>Make room<br>for the moment.</h1><p class="hero-lede">A warm, thoughtful first look at the details behind a gathering.</p><a class="button button-dark" href="#owner">Explore the owner view <span aria-hidden="true">↓</span></a></div>
+    <div class="hero-art"><img src="studio-table.svg" alt="Original illustration of a hand-finished cream cake, citrus branches, linen and candlelight on a gathering table"><span class="art-caption">THE OCCASION TABLE <span>·</span> CONCEPT STUDY</span></div>
+  </section>
+  <section class="intro-band" aria-label="Illustrative concept introduction"><div class="intro-mark">A good gathering<br><em>begins with a detail.</em></div><p>This concept shows one possible way to organize a first conversation: the occasion, the date, the gathering size and what kind of help is being explored. </p></section>
+  <section class="concept-grid" aria-label="Illustrative service directions"><article class="concept-card"><span class="number">01 / THE SIGNATURE BAKE</span><h2>A centerpiece for a moment.</h2><p>A visual direction for custom baking inquiries, with room to describe the occasion and shape the conversation.</p><span class="concept-stamp">DIRECTION STUDY</span></article><article class="concept-card concept-card-table"><span class="number">02 / THE TABLE STORY</span><h2>Gather around the details.</h2><p>A second direction for a hosted gathering, framed around guest count, place and what needs discussing.</p><span class="concept-stamp">DIRECTION STUDY</span></article></section>
+  <section class="owner-section" id="owner">
+    <div class="section-heading"><div><p class="eyebrow">THE PHONE OWNER VIEW</p><h2>One inquiry, clearly laid out.</h2></div><p class="section-aside">A practice workspace for seeing how a small owner desk might feel on a phone.</p></div>
+    <div class="practice-notice" role="note"><strong>Practice in this sample only.</strong> Reply, status, instructions and page-copy edits stay in this page and reset when it reloads. Nothing is sent or published.</div>
+    <div class="desk-grid">
+      <article class="inbox-card">
+        <div class="inbox-head"><div><span class="micro-label">SAMPLE INQUIRY</span><h3>Gathering details to discuss</h3></div><span class="status-pill" id="statusBadge">New</span></div>
+        <div class="inquiry-summary"><div class="avatar" aria-hidden="true">OT</div><div><strong>Illustrative guest</strong><span>Sample concept inquiry · fictional</span></div></div>
+        <dl class="detail-list"><div><dt>Occasion</dt><dd>Small family gathering</dd></div><div><dt>Preferred date</dt><dd>To be discussed</dd></div><div><dt>Gathering size</dt><dd>About 12 people · example only</dd></div><div><dt>Exploring</dt><dd>Custom bake or hosted meal</dd></div><div><dt>Location</dt><dd>Not supplied</dd></div></dl>
+        <button class="text-button" id="detailsToggle" type="button" aria-expanded="false" aria-controls="moreDetails">View inquiry details <span aria-hidden="true">+</span></button>
+        <div class="more-details" id="moreDetails" hidden><p><strong>What would help next</strong><br>Ask which direction they have in mind, confirm the date and place they want to discuss, and invite any other useful context. Keep any service, menu, date and availability questions open for direct discussion.</p></div>
+        <label class="field-label" for="inquiryStatus">Inquiry status <span>sample display</span></label><select id="inquiryStatus"><option>New</option><option>Needs details</option><option>Reply drafted</option><option>Conversation started</option></select>
+      </article>
+      <div class="work-column">
+        <article class="work-card"><div class="card-title"><div><span class="micro-label">REPLY WORKSPACE</span><h3>Prepare a response</h3></div><span class="unsent-mark">UNSENT</span></div><label class="field-label" for="replyDraft">Reply draft</label><textarea id="replyDraft" rows="5">Thanks for sharing a little about the gathering. Which option would you like to explore, and what date and location should we discuss?</textarea><div class="button-row"><button type="button" class="button button-green" id="saveReply">Save reply draft</button><span class="save-state" id="replyState" aria-live="polite">Not saved</span></div></article>
+        <article class="work-card instructions-card"><div class="card-title"><div><span class="micro-label">PRACTICAL NOTES</span><h3>Keep the next question useful.</h3></div><span aria-hidden="true" class="sun-mark">✳</span></div><ul class="prompt-list"><li>Ask which kind of gathering support they want to discuss.</li><li>Clarify date, location and approximate guest count.</li><li>Leave policies, menu details and commitments for direct confirmation.</li></ul><label class="field-label" for="pageIntro">Sample page introduction <span>editable content</span></label><input id="pageIntro" type="text" value="Make room for the moment." maxlength="90"><label class="field-label" for="ownerInstructions">Owner inquiry reminder <span>editable instruction</span></label><textarea id="ownerInstructions" rows="3">Confirm the occasion, preferred date, location and approximate guest count before agreeing on a next step.</textarea><div class="content-preview"><span class="micro-label">SAMPLE CONTENT PREVIEW</span><p id="pageIntroRender">Make room for the moment.</p><small id="instructionRender">Confirm the occasion, preferred date, location and approximate guest count before agreeing on a next step.</small></div><div class="button-row"><button type="button" class="button button-outline" id="saveContent">Save page notes</button><span class="save-state" id="contentState" aria-live="polite">Not saved</span></div></article>
+      </div>
+    </div>
+<div class="reset-row"><button type="button" id="resetLab" class="reset-button">Reset this practice</button></div>
+  </section>
+</main>
+<footer class="footer"><div class="footer-line"><img src="../../assets/famtastic-designs-logo-v1.png" alt="FAMtastic Designs"><span>Fearless deviation · Applying mastery · Manifesting extraordinary</span></div><p>The Occasion Table · a concept by FAMtastic Designs.</p><a href="#owner">Return to the phone Owner view ↑</a></footer>
+<script src="lab.js"></script>
+</body></html>

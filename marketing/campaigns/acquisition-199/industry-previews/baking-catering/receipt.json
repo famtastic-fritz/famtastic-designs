@@ -1,0 +1,189 @@
+{
+  "schema": "famtastic.acquisition-industry-preview.v1",
+  "industry": "baking-catering",
+  "completed_at_utc": "2026-10-06T19:20:35Z",
+  "status": "local_review_candidate",
+  "review_state": {
+    "email_copy": "Exact current D0 subject, preview, greeting, intro, phone proposition and owner-authorized four-step/same-day/scope copy retained; stale two-direction story and identity placeholders removed.",
+    "email_layout": "Uses approved FAMtastic email hierarchy, brand logo, digital-card QR, commercial, Shay-Shay signature, renewal terms and 44px+ tap targets. Both main and footer CTA link to sibling lab.html.",
+    "lab": "Original illustrative scene and phone-first local practice Lab; one practice note by the controls. No continuation/status-check UI.",
+    "provider_or_deployment": "No provider, send, account, hosted, or deployment proof."
+  },
+  "copy_provenance": {
+    "d0_source": {
+      "path": "marketing/campaigns/acquisition-199/industry-d0-drafts/baking-catering-chefs.html",
+      "sha256": "7a4e34323b8e9d404e88ed011c5f787d7fe9cf85b8e6598535236a01d8014e91",
+      "note": "Exact current D0 subject, preview, intro, phone proposition, approved steps and terms; stale two-direction placeholder story removed."
+    },
+    "approved_layout_reference": {
+      "path": "marketing/campaigns/acquisition-199/generic-review/beauty-email.html",
+      "sha256": "03588c3c4b4d323a8bc9965aee1a9c6a8905db190d6332d31eaab49b69e218f5",
+      "note": "Reference for email hierarchy, commercial/card/QR and signature pattern."
+    },
+    "owner_authorized_additions": [
+      "Exact four-step next-step copy supplied in the assigned task.",
+      "Same-day launch aim and domain/email setup text supplied in the assigned task."
+    ],
+    "commercial_terms": "Copied from the baking_catering_d0.txt source; no new price, renewal, or service term added."
+  },
+  "source_assets": [
+    {
+      "path": "marketing/campaigns/acquisition-199/assets/famtastic-designs-logo-v1.png",
+      "sha256": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+      "use": "Email and Lab brand credit."
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/assets/connect-qr.png",
+      "sha256": "ed569de9c97e0b6c960c957552a43ed41fa7b1843e0e61a3216d462286516e84",
+      "use": "Existing approved digital-card QR in email."
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/generic-review/assets/metropolis-regular.woff2",
+      "sha256": "896b709d9b0be31603a9a7a686c1be0bf6bc95f0b771b8d880200b12914a7bef",
+      "use": "Lab typography."
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/generic-review/assets/metropolis-bold.woff2",
+      "sha256": "b2dd63db47efae6ed399cac4ae15cc012a77a02e72cb3274b599531152032a3c",
+      "use": "Lab typography."
+    },
+    {
+      "path": "marketing/campaigns/acquisition-199/generic-review/assets/lora-bold.woff2",
+      "sha256": "3de92dc557a7dc56e65a281f5d38c4a63eecd6faca350d4a5d1c5a8d89fbfc6c",
+      "use": "Lab typography."
+    }
+  ],
+  "assets_created": [
+    {
+      "path": "studio-table.svg",
+      "sha256": "614d2ac2bacebc5f0e3146d0d4083fd743d1516ca3d8148922fa6c32d0e0c3cd",
+      "provenance": "Original code-authored vector illustration; no stock/customer imagery, rejected initial-six asset, paid generation, or provider credit."
+    }
+  ],
+  "outputs": [
+    {
+      "path": "email.html",
+      "sha256": "19a467c671ffa39dd5a5e3a134242e21ecea53d1b0916b6ce2d040ce1f3deab1"
+    },
+    {
+      "path": "email-images-blocked.html",
+      "sha256": "13d6f3268e52bcc3626a0d09b6f30fda5b11a3c4f8e99878bc2ac167b53132d7"
+    },
+    {
+      "path": "email.txt",
+      "sha256": "77844961ebd657aabb4f81876a1a89b9b40b738d33614b489f81f7104c1f46f1"
+    },
+    {
+      "path": "lab.html",
+      "sha256": "b4a38017455b4c5f3cb029c879154d92da95342e7ccdc09b22a5ca3ed87b56d1"
+    },
+    {
+      "path": "lab.css",
+      "sha256": "74529bee1eea6c68c588d0ce98e4a9266f41e63e1d1eeddf98fa3417896e273e"
+    },
+    {
+      "path": "lab.js",
+      "sha256": "fbed5522dd1dbd07e4b97553bac5d713f12cec93ce938d6ce3b593afca1efbc8"
+    },
+    {
+      "path": "studio-table.svg",
+      "sha256": "614d2ac2bacebc5f0e3146d0d4083fd743d1516ca3d8148922fa6c32d0e0c3cd"
+    }
+  ],
+  "lab_interactions": [
+    "Expand/collapse the fictional inquiry details.",
+    "Change sample inquiry status and its visible badge.",
+    "Edit and mark a reply draft held unsent in page state.",
+    "Edit sample page introduction and owner instructions, then render saved text in the page/content preview.",
+    "Reset practice controls to their initial state.",
+    "Present a disabled native interview-continuation candidate with registration explicitly unbound."
+  ],
+  "interaction_boundary": {
+    "state": "Transient browser page state only; no cookies, local/session storage, or persistent mutation. Reload resets the edits.",
+    "static_scan": "Lab HTML/CSS/JS contains no fetch, XMLHttpRequest, WebSocket, sendBeacon, cookie, localStorage, sessionStorage, form action, or opaque route token.",
+    "candidate_continuation": "Visible as an unbound/no-registration candidate; no account, invitation token, or interview submission is wired.",
+    "practice_notice": "One notice sits immediately before the owner controls: edits remain in the page and reset on reload; nothing is sent or published."
+  },
+  "scope_safeguards": [
+    "Fictional sample concept; no real business identity or completed customer order is asserted.",
+    "No menu, food-safety/allergy guarantee, licensing/certification, price, date availability, customer proof, booking, checkout, or transaction claim.",
+    "Example date and location are explicitly not supplied; service and gathering details are illustrative only.",
+    "No paid generation, stock/customer photos, rejected first-six assets, or provider credits used."
+  ],
+  "checks": {
+    "performed": [
+      "Exact required preflight matched the expected path, branch, and HEAD before writes.",
+      "Both HTML email variants have two local lab.html links: main preview CTA and footer Lab link.",
+      "Image-blocked variant contains no img tags and retains both local Lab links.",
+      "Owner-authorized next steps and same-day/domain/mailbox copy are present in email HTML and plain text.",
+      "Static Lab scan found no network APIs, browser persistence, form action, opaque continuation token, or fake status-check route.",
+      "Lab control inventory includes inquiry details, status, reply draft, editable page content/instructions, reset and unbound continuation.",
+      "Directory-scoped git diff --check invoked; coordinator browser QA remains pending."
+    ],
+    "not_performed": [
+      "Browser/CUA visual review and interaction capture at desktop and 390px; coordinator-owned.",
+      "Hosted/provider/account/send/deployment validation."
+    ]
+  },
+  "limitations": [
+    "Candidate is local source review only; new Lab creative needs owner review.",
+    "No invitation, contact, account, booking, transaction, provider, sender or hosted acceptance is bound.",
+    "Scene is original illustration; menu, dietary/allergen, credential, price, availability and customer claims are not asserted."
+  ],
+  "receipt_hash_note": "Output hashes cover the seven listed deliverable files. This receipt omits a self-hash.",
+  "qa_receipt": {
+    "source_copy_lineage": "PASS: all three email variants align to the current local D0 subject, preview, intro, phone proposition and owner-authorized next steps; previous two-direction story, recipient/business placeholders, continuation placeholder and stale preview-status CTA removed.",
+    "email_variants": "PASS: main/footer CTAs match lab.html; image-blocked variant replaces inline image nodes with useful accessible descriptions; plaintext has Subject and Preview metadata and same current D0 copy.",
+    "lab_static": "PASS: browser-local inquiry/detail, saved-unsent reply, status, instructions/content preview and reset; no external/network/persistent storage behavior; no inline event handlers; original SVG scene; no visible continuation/status UI.",
+    "route": "local sibling-file candidate; the Drupal route remains a separately feature-gated read-only integration.",
+    "browser": "Pending coordinator CUA visual and desktop/390 interaction QA."
+  },
+  "files": [
+    {
+      "path": "email.html",
+      "sha256": "19a467c671ffa39dd5a5e3a134242e21ecea53d1b0916b6ce2d040ce1f3deab1"
+    },
+    {
+      "path": "email-images-blocked.html",
+      "sha256": "13d6f3268e52bcc3626a0d09b6f30fda5b11a3c4f8e99878bc2ac167b53132d7"
+    },
+    {
+      "path": "email.txt",
+      "sha256": "77844961ebd657aabb4f81876a1a89b9b40b738d33614b489f81f7104c1f46f1"
+    },
+    {
+      "path": "lab.html",
+      "sha256": "b4a38017455b4c5f3cb029c879154d92da95342e7ccdc09b22a5ca3ed87b56d1"
+    },
+    {
+      "path": "lab.css",
+      "sha256": "74529bee1eea6c68c588d0ce98e4a9266f41e63e1d1eeddf98fa3417896e273e"
+    },
+    {
+      "path": "lab.js",
+      "sha256": "fbed5522dd1dbd07e4b97553bac5d713f12cec93ce938d6ce3b593afca1efbc8"
+    },
+    {
+      "path": "studio-table.svg",
+      "sha256": "614d2ac2bacebc5f0e3146d0d4083fd743d1516ca3d8148922fa6c32d0e0c3cd"
+    }
+  ],
+  "final_root_review": {
+    "classification": "candidate",
+    "proof": "docs/research/acquisition-199/evidence/industry-root-browser-20261006.json",
+    "final_source_hashes": {
+      "email.html": "19a467c671ffa39dd5a5e3a134242e21ecea53d1b0916b6ce2d040ce1f3deab1",
+      "email.txt": "77844961ebd657aabb4f81876a1a89b9b40b738d33614b489f81f7104c1f46f1",
+      "email-images-blocked.html": "13d6f3268e52bcc3626a0d09b6f30fda5b11a3c4f8e99878bc2ac167b53132d7",
+      "lab.html": "b4a38017455b4c5f3cb029c879154d92da95342e7ccdc09b22a5ca3ed87b56d1",
+      "lab.css": "74529bee1eea6c68c588d0ce98e4a9266f41e63e1d1eeddf98fa3417896e273e",
+      "lab.js": "fbed5522dd1dbd07e4b97553bac5d713f12cec93ce938d6ce3b593afca1efbc8"
+    },
+    "desktop_1280_passed": true,
+    "mobile_390_passed": true,
+    "primary_email_lab_pair_passed": true,
+    "owner_acceptance": "pending",
+    "hosted": false,
+    "earlier_worker_hashes": "Historical initial snapshot; final hashes in this final_root_review govern the reviewed candidate."
+  }
+}

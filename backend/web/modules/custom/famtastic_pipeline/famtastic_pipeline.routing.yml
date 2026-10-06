@@ -1549,6 +1549,41 @@ famtastic_pipeline.worker_coordinator:
     no_cache: 'TRUE'
 
 # Sample Lab capabilities are separate from signed owner-reviewed public proofs.
+famtastic_pipeline.acquisition_industry_preview:
+  path: '/samples/industry/{industry}/{view}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\AcquisitionIndustryPreviewController::preview'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    industry: 'mobile-detailing|fitness-meal-prep|photography-media|baking-catering|home-services|events-rentals|pet-services|consulting-tutoring|handcrafted-boutiques'
+    view: 'email|lab'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.acquisition_industry_preview_asset:
+  path: '/samples/industry/{industry}/assets/{asset}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\AcquisitionIndustryPreviewController::asset'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    industry: 'mobile-detailing|fitness-meal-prep|photography-media|baking-catering|home-services|events-rentals|pet-services|consulting-tutoring|handcrafted-boutiques'
+    asset: '[a-z0-9_-]+\.(?:css|js|svg|png|jpe?g|webp|woff2)'
+  options:
+    no_cache: 'TRUE'
+
+famtastic_pipeline.acquisition_industry_preview_common_asset:
+  path: '/samples/industry-assets/{asset}'
+  defaults:
+    _controller: 'Drupal\famtastic_pipeline\Controller\AcquisitionIndustryPreviewController::commonAsset'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    asset: 'famtastic-designs-logo-v1\.png|connect-qr\.png|metropolis-(?:regular|bold)\.woff2|lora-(?:bold|italic)\.woff2'
+  options:
+    no_cache: 'TRUE'
+
 famtastic_pipeline.acquisition_sample:
   path: '/api/acquisition/samples/{token}'
   defaults:
