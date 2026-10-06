@@ -58,52 +58,64 @@ final class OperationsController extends ControllerBase {
    * Renders the staff operating home without mixing campaign and GA reports.
    */
   public function hub(): array {
-    $analytics = $this->googleAnalytics->dashboardReport();
-    $published = (int) $this->database->select('node_field_data', 'n')
-      ->condition('status', 1)->countQuery()->execute()->fetchField();
-    $openSupport = $this->count('famtastic_portal_thread', ['status' => 'open']);
-    $attentionItems = $this->openConversationRecords(3);
-    $fulfillmentQueue = $this->fulfillmentQueueCount();
-    $liveCounts = [
-      'campaigns' => ['label' => 'Campaigns', 'value' => $this->count('famtastic_campaign')],
-      'prospects' => ['label' => 'Prospects', 'value' => $this->count('famtastic_prospect')],
-      'customers' => ['label' => 'Customers', 'value' => $this->count('famtastic_customer')],
-      'website-requests' => ['label' => 'Website Requests', 'value' => $this->countIn('famtastic_project_request', 'status', ['draft', 'submitted', 'checkout_started'])],
-      'proofs-ready' => ['label' => 'Proofs Ready', 'value' => $this->count('proof_campaign', ['generation_status' => 'ready'])],
-      'emails-sent' => ['label' => 'Emails Sent', 'value' => $this->count('famtastic_event', ['event_type' => 'email.sent'])],
-      'clicks' => ['label' => 'Clicks', 'value' => $this->count('famtastic_event', ['event_type' => 'email.clicked'])],
-      'paid-orders' => ['label' => 'Paid Orders', 'value' => $this->count('famtastic_order', ['payment_status' => 'paid'])],
-      'fulfillment' => ['label' => 'Fulfillment', 'value' => $fulfillmentQueue],
-      'open-jobs' => ['label' => 'Open Jobs', 'value' => $this->countIn('famtastic_job', 'status', ['queued', 'retry', 'running'])],
-      'open-exceptions' => ['label' => 'Open Exceptions', 'value' => $this->countIn('famtastic_exception', 'status', ['open', 'retry'])],
-      'support' => ['label' => 'Support', 'value' => $openSupport],
-      'referrals' => ['label' => 'Referrals', 'value' => $this->count('famtastic_referral')],
-      'social-records' => ['label' => 'Social Records', 'value' => $this->count('famtastic_social_record')],
+    // This landing page reads Drupal records only; loading home never invokes
+    // an analytics, publishing or model provider.
+    $inbox = \Drupal::service('famtastic_pipeline.client_messages')->inbox($this->currentUser(), ['status' => 'needs_reply']);
+    $threads = $inbox['threads'];
+    usort($threads, static fn(array $a, array $b): int => $a['last_message_at'] <=> $b['last_message_at']);
+    $review = $this->count('famtastic_support_draft', ['status' => 'pending']);
+    $failed = $this->countIn('famtastic_notification_outbox', 'status', ['retry', 'dead_letter']);
+    $now = \Drupal::time()->getRequestTime();
+    $dueQuery = $this->database->select('famtastic_job', 'j')->condition('status', ['queued', 'retry'], 'IN')->condition('available_at', $now, '<=');
+    $due = (int) (clone $dueQuery)->countQuery()->execute()->fetchField();
+    $queues = [
+      ['Needs reply', count($threads), 'The latest message is from the customer.', Url::fromRoute('famtastic_pipeline.client_messages_admin', [], ['query' => ['status' => 'needs_reply']])],
+      ['Needs review', $review, 'All pending support suggestions, including labeled test records.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'support-drafts'])],
+      ['Failed delivery', $failed, 'Email attempts needing a retry or investigation.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'notifications'])],
+      ['Due next', $due, 'Queued or retrying jobs whose scheduled time has arrived.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'open-jobs'])],
     ];
-    $cards = [
-      ['Website Delivery', $this->countIn('famtastic_project_request', 'status', ['draft', 'submitted', 'checkout_started']) . ' active requests', 'Briefs, proof review, staging, checkout, and fulfillment.', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'website-requests']), 'prospects'],
-      ['Messages', $openSupport . ' open conversations', 'Contact inquiries, unread messages, customer replies, and delivery status.', Url::fromRoute('famtastic_pipeline.client_messages_admin'), 'support'],
-      ['Marketing Command Center', $this->count('famtastic_social_record') . ' records under gates', 'Queue, calendar, channel health, attribution, creative, and Build DNA.', Url::fromRoute('famtastic_pipeline.marketing'), 'campaigns'],
-      ['Content & Offers', $published . ' published items', 'Pages, articles, FAQs, services, offers, and reusable guidance.', Url::fromRoute('system.admin_content'), 'content'],
-      ['Business Control', '$' . number_format($this->revenueLast30Days() / 100, 2) . ' revenue in 30 days', 'Launch approval, grants, notifications, workers, renewals, and service records.', Url::fromRoute('famtastic_pipeline.launch_approval'), 'commerce'],
-      ['Website Analytics', !empty($analytics['available']) ? 'Connected · 30-day reporting ready' : 'Connection needs attention', 'Traffic, engagement, top pages, and acquisition channels.', Url::fromRoute('famtastic_pipeline.analytics'), 'analytics'],
-    ];
-    $cardBuild = [];
-    foreach ($cards as [$title, $status, $description, $url, $icon]) {
-      $cardBuild[] = [
-        '#type' => 'link', '#title' => [
-          '#markup' => '<span class="famtastic-hub__icon famtastic-hub__icon--' . Html::escape($icon) . '" aria-hidden="true"></span><span class="famtastic-hub__copy"><strong>' . Html::escape($title) . '</strong><em>' . Html::escape($status) . '</em><span>' . Html::escape($description) . '</span><b>Open →</b></span>',
-        ], '#url' => $url, '#attributes' => ['class' => ['famtastic-hub__card']],
-      ];
+    $queueCards = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-owner__queues']]];
+    foreach ($queues as $index => [$label, $count, $reason, $url]) {
+      $queueCards['queue_' . $index] = ['#type' => 'link', '#url' => $url, '#attributes' => ['class' => ['famtastic-owner__queue']], '#title' => ['#markup' => '<strong>' . $count . '</strong><span>' . Html::escape($label) . '</span><small>' . Html::escape($reason) . '</small>']];
     }
+    $items = [];
+    foreach (array_slice($threads, 0, 5) as $thread) {
+      $items[] = [(string) $thread['subject'], 'Customer is waiting · ' . $this->workAge((int) $thread['last_message_at'], $now), 'Prepare reply', Url::fromRoute('famtastic_pipeline.client_messages_admin_thread', ['thread' => $thread['public_id']])];
+    }
+    $ai = ['#type' => 'details', '#title' => $this->t('How AI helps with daily work'), '#open' => FALSE,
+      'explanation' => ['#markup' => '<p>AI can help summarize work waiting for you, draft a customer reply, or suggest campaign copy. You review and edit the result. Saving a draft does not send or publish it.</p><p>Choosing a default model selects the service used for enabled tasks. Each task must also be enabled; an available model is not proof that a draft has run.</p>'],
+      'setup' => ['#type' => 'link', '#title' => $this->t('Review AI setup'), '#url' => Url::fromRoute('famtastic_pipeline.staff_ai_settings'), '#attributes' => ['class' => ['button']]],
+    ];
     return $this->page([
-      'hero' => ['#markup' => '<section class="famtastic-hub__hero"><span>FAMtastic Designs · internal</span><h2>Operations Hub</h2><p>Live counts open the exact records behind them. Workspaces keep delivery, care, marketing, content, and results focused.</p></section>'],
-      'attention' => $this->attentionCard($openSupport, $attentionItems),
-      'counts_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>At a glance</span><h2>Live counts</h2></div><p>Every count opens its permission-checked record list.</p></div>'],
-      'counts' => $this->metricCards($liveCounts),
-      'heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Command center</span><h2>Workspaces</h2></div><p>Open the focused area for the job you need to do.</p></div>'],
-      'cards' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-hub__grid']], 'items' => $cardBuild],
-    ], 'Operations Home');
+      'hero' => ['#markup' => '<section class="famtastic-owner__heading"><span>FAMtastic Designs</span><h2>What needs me?</h2><p>Start with a reply, review a draft, or plan your next campaign.</p></section>'],
+      'queues' => $queueCards,
+      'reply_heading' => ['#markup' => '<h2>Oldest replies waiting</h2>'],
+      'replies' => $items ? $this->attentionList($items) : ['#markup' => '<p>No conversations currently need your reply. Delivery issues and pending reviews are shown separately above.</p>'],
+      'actions' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__actions']],
+        'campaign' => ['#type' => 'link', '#title' => $this->t('Plan a campaign'), '#url' => Url::fromRoute('famtastic_pipeline.campaign_add'), '#attributes' => ['class' => ['button', 'button--primary']]],
+        'messages' => ['#type' => 'link', '#title' => $this->t('Open communication desk'), '#url' => Url::fromRoute('famtastic_pipeline.client_messages_admin'), '#attributes' => ['class' => ['button']]],
+      ],
+      'ai_summary' => ['#type' => 'link', '#title' => $this->t('Ask AI where to start'), '#url' => Url::fromRoute('famtastic_pipeline.owner_work_summary'), '#attributes' => ['class' => ['button']]],
+      'ai' => $ai,
+      'records' => ['#type' => 'details', '#title' => $this->t('More workspaces and records'),
+        'counts' => $this->metricCards([
+          'website-requests' => ['label' => 'Active website requests', 'value' => $this->countIn('famtastic_project_request', 'status', ['draft', 'submitted', 'checkout_started'])],
+          'campaigns' => ['label' => 'Campaign records', 'value' => $this->count('famtastic_campaign')],
+          'open-exceptions' => ['label' => 'Open exceptions', 'value' => $this->countIn('famtastic_exception', 'status', ['open', 'retry'])],
+          'customers' => ['label' => 'Customers', 'value' => $this->count('famtastic_customer')],
+        ]),
+      ],
+    ], 'My command center');
+  }
+
+  /** Human age from a recorded timestamp, never an invented due date. */
+  private function workAge(int $timestamp, int $now): string {
+    if ($timestamp <= 0) return 'time not recorded';
+    $minutes = (int) floor(max(0, $now - $timestamp) / 60);
+    if ($minutes < 1) return 'less than a minute ago';
+    if ($minutes < 60) return $minutes . ' minutes ago';
+    if ($minutes < 1440) return (int) floor($minutes / 60) . ' hours ago';
+    return (int) floor($minutes / 1440) . ' days ago';
   }
 
   /**
@@ -118,79 +130,6 @@ final class OperationsController extends ControllerBase {
       ->limit(25)
       ->execute()
       ->fetchAll(\PDO::FETCH_ASSOC);
-
-    $summary = [
-      'campaigns' => ['label' => 'Campaigns', 'value' => $campaignTotal],
-      'prospects' => ['label' => 'Prospects', 'value' => $this->count('famtastic_prospect')],
-      'customers' => ['label' => 'Customers', 'value' => $this->count('famtastic_customer')],
-      'proofs-ready' => [
-        'label' => 'Proofs Ready',
-        'value' => $this->count('proof_campaign', ['generation_status' => 'ready']),
-      ],
-      'emails-sent' => [
-        'label' => 'Emails Sent',
-        'value' => $this->count('famtastic_event', ['event_type' => 'email.sent']),
-      ],
-      'clicks' => ['label' => 'Clicks', 'value' => $this->count('famtastic_event', ['event_type' => 'email.clicked'])],
-      'paid-orders' => [
-        'label' => 'Paid Orders',
-        'value' => $this->count('famtastic_order', ['payment_status' => 'paid']),
-      ],
-      'open-jobs' => [
-        'label' => 'Open Jobs',
-        'value' => $this->countIn('famtastic_job', 'status', ['queued', 'retry', 'running']),
-      ],
-      'open-exceptions' => [
-        'label' => 'Open Exceptions',
-        'value' => $this->countIn('famtastic_exception', 'status', ['open', 'retry']),
-      ],
-      'support' => [
-        'label' => 'Open Support',
-        'value' => $this->countIn('famtastic_support_case', 'status', ['new', 'assigned', 'waiting_on_customer', 'waiting_on_famtastic']),
-      ],
-      'services' => ['label' => 'Active Services', 'value' => $this->count('famtastic_entitlement', ['status' => 'active'])],
-      'notifications' => ['label' => 'Notification Issues', 'value' => $this->countIn('famtastic_notification_outbox', 'status', ['retry', 'dead_letter'])],
-      'workers' => ['label' => 'Monitored Workers', 'value' => $this->count('famtastic_worker_heartbeat')],
-    ];
-
-    $socialEvents = $this->socialCampaignEventCounts();
-    $planned = 68;
-    $approved = $socialEvents['approved'];
-    $scheduled = $socialEvents['scheduled'];
-    $publishedSocial = $socialEvents['published'];
-    $failedSocial = $socialEvents['failed'];
-    $socialVisits = $socialEvents['visits'];
-    $socialLeads = $socialEvents['leads'];
-    $socialSales = $socialEvents['sales'];
-    $conversionRate = $socialVisits > 0 ? round(($socialLeads / $socialVisits) * 100, 1) . '%' : '—';
-    $campaignDays = $this->fiftyFiveCentCampaignDays();
-    $channelCards = $this->channelHealthCards();
-
-    $todayCards = [
-      ['Planned moments', (string) $planned, '17 days × four distinct content moments', 'neutral'],
-      ['Awaiting approval', (string) max(0, $planned - $approved), 'Content, media, and publish approval remain separate', $approved < $planned ? 'attention' : 'good'],
-      ['Scheduled', (string) $scheduled, 'Provider-confirmed jobs in the publishing queue', 'neutral'],
-      ['Published', (string) $publishedSocial, 'Verified provider deliveries—not attempted sends', 'good'],
-      ['Needs attention', (string) $failedSocial, 'Failed, rejected, or unverified social deliveries', $failedSocial > 0 ? 'danger' : 'good'],
-      ['Website visits', (string) $socialVisits, 'Social-attributed sessions joined by stable content ID', 'neutral'],
-      ['Leads', (string) $socialLeads, 'Quote, contact, registration, and intake conversions', 'good'],
-      ['Lead conversion', $conversionRate, 'Attributed leads divided by social visits', 'neutral'],
-      ['Purchases', (string) $socialSales, 'Paid orders attributed to campaign content', 'good'],
-    ];
-
-    $attentionItems = [];
-    if ($approved === 0) {
-      $attentionItems[] = ['Approve the first batch', 'Days 1–3 sit as queued Postiz drafts. Review content/media/publish gates per record.', 'Open approval queue', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'social-records'])];
-    }
-    if ($scheduled === 0) {
-      $attentionItems[] = ['Queue and verify a provider event', 'Facebook is connected in Postiz; days 1–3 sit as drafts awaiting your queued-week review before any scheduling.', 'Open Postiz scheduler', Url::fromUri($this->postizChannels->baseUrl())];
-    }
-    if ($failedSocial > 0) {
-      $attentionItems[] = ['Resolve delivery failures', $failedSocial . ' social item(s) failed or remain unverified.', 'Open failures', Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'open-exceptions'])];
-    }
-    if ($socialVisits === 0) {
-      $attentionItems[] = ['Prove attribution', 'Publish one private or controlled post and verify its UTM content ID reaches GA4 and Drupal.', 'Open analytics', Url::fromRoute('famtastic_pipeline.analytics')];
-    }
 
     $rows = [];
     foreach ($campaigns as $campaign) {
@@ -212,26 +151,21 @@ final class OperationsController extends ControllerBase {
       ];
     }
 
+    $workspaceCards = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-owner__queues']]];
+    foreach (\Drupal::service('famtastic_pipeline.campaign_workspace')->all() as $key => $campaign) {
+      $plan = $campaign['plan'] ?? [];
+      $dates = !empty($plan['start_date']) ? $plan['start_date'] . (!empty($plan['end_date']) ? ' — ' . $plan['end_date'] : '') : 'Dates not set';
+      $workspaceCards['campaign_' . $key] = ['#type' => 'link', '#url' => Url::fromRoute('famtastic_pipeline.marketing', [], ['query' => ['campaign' => $key]]), '#attributes' => ['class' => ['famtastic-owner__queue']], '#title' => ['#markup' => '<span>' . Html::escape((string) $campaign['name']) . '</span><small>' . Html::escape((string) $campaign['status']) . ' · ' . Html::escape($dates) . '</small><small>Open plan and content →</small>']];
+    }
     return $this->page([
-      'hero' => ['#markup' => '<section class="famtastic-command__hero"><div><span>FAMtastic Marketing Command Center</span><h2>Know what is ready, what needs you, and what makes money.</h2><p>Review the 17-day campaign, approve creative, monitor publishing, respond to engagement, and connect every post to visits, leads, and sales.</p></div><div class="famtastic-command__hero-status"><b>Draft-first safety</b><strong>PUBLIC PUBLISHING OFF</strong><small>Nothing goes live without explicit publish approval.</small></div></section>'],
-      'actions' => [
-        '#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__actions', 'famtastic-command__actions']],
-        'campaign-add' => ['#type' => 'link', '#title' => $this->t('＋ New campaign'), '#url' => Url::fromRoute('famtastic_pipeline.campaign_add'), '#attributes' => ['class' => ['button', 'button--primary']]],
-        'scheduler' => ['#type' => 'link', '#title' => $this->t('Open Postiz Scheduler ↗'), '#url' => Url::fromUri($this->postizChannels->baseUrl()), '#attributes' => ['class' => ['button', 'button--primary'], 'target' => '_blank', 'rel' => 'noopener noreferrer']],
-        'analytics' => ['#type' => 'link', '#title' => $this->t('Website Analytics'), '#url' => Url::fromRoute('famtastic_pipeline.analytics'), '#attributes' => ['class' => ['button']]],
-        'content' => ['#type' => 'link', '#title' => $this->t('Content Library'), '#url' => Url::fromRoute('system.admin_content'), '#attributes' => ['class' => ['button']]],
+      'hero' => ['#markup' => '<section class="famtastic-owner__heading"><h2>Your campaigns</h2><p>Choose a campaign to see its plan, content, dates and results. Each campaign keeps its own history.</p></section>'],
+      'actions' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__actions']],
+        'create' => ['#type' => 'link', '#title' => $this->t('Plan a new campaign'), '#url' => Url::fromRoute('famtastic_pipeline.campaign_add'), '#attributes' => ['class' => ['button', 'button--primary']]],
+        'workspace' => ['#type' => 'link', '#title' => $this->t('Open campaign workspace'), '#url' => Url::fromRoute('famtastic_pipeline.marketing'), '#attributes' => ['class' => ['button']]],
       ],
-      'today_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Owner view</span><h2>Campaign pulse</h2></div><p>Provider and business outcomes update as verified events arrive.</p></div>'],
-      'today' => $this->commandCards($todayCards),
-      'channels_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Publishing</span><h2>Channel health</h2></div><p>Live connection state per platform, read from the Postiz API.</p></div>'],
-      'channels' => $this->commandCards($channelCards),
-      'attention_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Next actions</span><h2>Needs your attention</h2></div></div>'],
-      'attention' => $this->attentionList($attentionItems),
-      'calendar_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>17-day launch</span><h2>Content calendar</h2></div><p>Teach · Challenge · Prove · Invite every day, adapted per channel.</p></div>'],
-      'calendar' => $this->campaignCalendar($campaignDays),
-      'operations_heading' => ['#markup' => '<div class="famtastic-command__section-heading"><div><span>Lifecycle evidence</span><h2>Campaign operations</h2></div></div>'],
-      'summary' => $this->metricCards($summary),
-      'campaign_heading' => ['#markup' => '<h2 id="campaigns">Campaigns</h2>'],
+      'workspaces' => $workspaceCards,
+      'channels' => ['#type' => 'details', '#title' => $this->t('Publishing connection status'), 'cards' => $this->commandCards($this->channelHealthCards())],
+      'campaign_heading' => ['#markup' => '<h2 id="campaigns">Recorded campaign history</h2>'],
       'campaigns' => [
         '#type' => 'container',
         '#attributes' => ['class' => ['famtastic-ops__table-scroll']],
@@ -358,7 +292,7 @@ final class OperationsController extends ControllerBase {
   }
 
   /**
-   * Live per-record command surface for the 17-day campaign: every record,
+   * Live per-record command surface for imported campaign history: every record,
    * its gates, and one-click approve/revoke per gate.
    */
   private function socialRecordsMetric(): array {
@@ -389,7 +323,7 @@ final class OperationsController extends ControllerBase {
     }
     $page = $this->recordsPage(
       'Campaign Record Gates',
-      'Per-record approval state for the 17-day campaign, stored in your operations database. Approving content/media here is the owner decision the pipeline reads; publishing remains a separate bounded-batch decision.',
+      'Per-record approval state for imported campaign records, stored in your operations database. Approving content/media here is the owner decision the pipeline reads; publishing remains a separate bounded-batch decision.',
       ['Day', 'Moment', 'Promise', 'ET', 'State', 'Content', 'Media', 'Publish', 'Postiz'],
       $rows,
       'No campaign records are imported yet.',
@@ -406,66 +340,6 @@ final class OperationsController extends ControllerBase {
     ];
     $page['actions']['#weight'] = -20;
     return $page;
-  }
-
-  /** Renders the canonical 17-day campaign spine. */
-  private function campaignCalendar(array $days): array {
-    $build = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-command__calendar']]];
-    // Live per-record state; days with no imported records show an honest
-    // unknown instead of invented numbers. Missing table = not yet updatedb'd.
-    if (!$this->database->schema()->tableExists('famtastic_social_record')) {
-      $build = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-command__calendar']]];
-      foreach ($days as $day => [$theme, $promise]) {
-        $build['day_' . $day] = ['#markup' => '<article class="famtastic-command__calendar-day is-unknown"><div class="famtastic-command__day"><span>Day</span><strong>' . $day . '</strong></div><div><span>' . Html::escape((string) $theme) . '</span><h3>' . Html::escape((string) $promise) . '</h3><p>Record table pending module update.</p></div></article>'];
-      }
-      return $build;
-    }
-    $records = $this->database->select('famtastic_social_record', 'r')
-      ->fields('r', ['content_id', 'day', 'moment', 'scheduled_time_et', 'state',
-                     'approval_content', 'approval_media', 'approval_publish'])
-      ->execute()->fetchAll(\PDO::FETCH_ASSOC);
-    $byDay = [];
-    foreach ($records as $record) {
-      $byDay[(int) $record['day']][] = $record;
-    }
-    $queueUrl = Url::fromRoute('famtastic_pipeline.operations_metric', ['metric' => 'social-records']);
-    foreach ($days as $day => [$theme, $promise]) {
-      if (!isset($byDay[$day])) {
-        $build['day_' . $day] = ['#markup' => '<article class="famtastic-command__calendar-day is-unknown"><div class="famtastic-command__day"><span>Day</span><strong>' . $day . '</strong></div><div><span>' . Html::escape((string) $theme) . '</span><h3>' . Html::escape((string) $promise) . '</h3><p>Record state not imported yet — no invented numbers.</p></div><em>' . Link::fromTextAndUrl('Import records', $queueUrl)->toString() . '</em></article>'];
-        continue;
-      }
-      $lines = [];
-      $gatesOn = 0;
-      $gatesTotal = 0;
-      foreach ($byDay[$day] as $record) {
-        $on = ((int) $record['approval_content']) + ((int) $record['approval_media']) + ((int) $record['approval_publish']);
-        $gatesOn += $on;
-        $gatesTotal += 3;
-        $lines[] = sprintf('%s %s · %s', $record['scheduled_time_et'] ?: '—', ucfirst((string) $record['moment']),
-          '<span class="famtastic-ops__badge famtastic-ops__badge--' . ($on === 3 ? 'good' : ($on ? 'partial' : 'off')) . '">' . $on . '/3</span>');
-      }
-      $build['day_' . $day] = [
-        '#type' => 'container',
-        '#attributes' => ['class' => ['famtastic-command__calendar-day']],
-        'body' => ['#markup' => '<article><div class="famtastic-command__day"><span>Day</span><strong>' . $day . '</strong></div><div><span>' . Html::escape((string) $theme) . '</span><h3>' . Html::escape((string) $promise) . '</h3><p>' . implode('<br>', $lines) . '</p></div><em>' . \Drupal::service('renderer')->renderRoot($this->linkCell(Link::fromTextAndUrl('Review gates →', $queueUrl))) . '</em></article>'],
-      ];
-    }
-    return $build;
-  }
-
-  /** Canonical themes mirror the stable campaign manifest. */
-  private function fiftyFiveCentCampaignDays(): array {
-    return [
-      1 => ['Declaration', 'What 55 cents a day means'], 2 => ['Excuses', 'Why owners delay getting a website'],
-      3 => ['Trust', 'What customers see when a business has no website'], 4 => ['Ownership', 'A website is a business home—not another rented profile'],
-      5 => ['Discovery', 'How customers decide who to trust'], 6 => ['Domain', 'What a domain is and why your business needs one'],
-      7 => ['Hosting', 'What hosting does and what the first year includes'], 8 => ['Offer', 'What the $199 Web Basics Bundle includes'],
-      9 => ['Scope', 'Who the Web Basics Bundle is—and is not—for'], 10 => ['Mobile', 'Why the customer experience starts on a phone'],
-      11 => ['Proof', 'From business idea to a useful online presence'], 12 => ['Action', 'Make it easy for customers to contact you'],
-      13 => ['Objections', 'Your business is doing fine—until the customer cannot verify it'], 14 => ['Growth', 'A basic website can be the beginning, not the ceiling'],
-      15 => ['Investment', 'FAMtastic invests in the first year with you'], 16 => ['Urgency', 'The cost objection has been removed'],
-      17 => ['Invitation', 'Cost is not one of them. Period.'],
-    ];
   }
 
   /**

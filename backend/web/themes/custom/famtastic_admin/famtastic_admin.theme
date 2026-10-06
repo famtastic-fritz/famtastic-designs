@@ -37,9 +37,6 @@ function famtastic_admin_preprocess_page(array &$variables): void {
 
   // Keep the navigation native: these are existing, permission-protected
   // Drupal routes, not JavaScript destinations or implied operational actions.
-  if (!str_starts_with($route_name, 'famtastic_pipeline.')) {
-    return;
-  }
   $message_label = 'Messages';
   if (\Drupal::currentUser()->hasPermission('administer famtastic pipeline')
     && \Drupal::hasService('famtastic_pipeline.client_messages')
@@ -50,7 +47,7 @@ function famtastic_admin_preprocess_page(array &$variables): void {
     }
   }
   $links = [
-    'operations' => ['Operations', 'famtastic_pipeline.operations'],
+    'operations' => ['Home', 'famtastic_pipeline.operations'],
     'messages' => [$message_label, 'famtastic_pipeline.client_messages_admin'],
     'attention' => ['Attention', 'famtastic_pipeline.operations_attention'],
     'campaigns' => ['Campaigns', 'famtastic_pipeline.campaign_operations'],
@@ -60,21 +57,28 @@ function famtastic_admin_preprocess_page(array &$variables): void {
   ];
   $items = [];
   foreach ($links as $key => [$label, $destination]) {
+    $url = \Drupal\Core\Url::fromRoute($destination);
+    if (!$url->access(\Drupal::currentUser())) continue;
     $items[$key] = [
       '#type' => 'link',
       '#title' => $label,
-      '#url' => \Drupal\Core\Url::fromRoute($destination),
+      '#url' => $url,
       '#attributes' => [
         'class' => ['famtastic-admin-nav__link'],
         'aria-current' => $route_name === $destination ? 'page' : NULL,
       ],
     ];
   }
+  $primary = array_intersect_key($items, array_flip(['operations', 'messages', 'campaigns']));
+  $secondary = array_diff_key($items, $primary);
+  $more = ['#type' => 'details', '#title' => t('More'), '#attributes' => ['class' => ['famtastic-admin-nav__more']],
+    'links' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-admin-nav__secondary']]] + $secondary];
   $variables['famtastic_admin_navigation'] = [
     '#type' => 'container',
     '#cache' => ['max-age' => 0, 'contexts' => ['user']],
-    '#attributes' => ['class' => ['famtastic-admin-nav'], 'aria-label' => 'FAMtastic staff navigation'],
-  ] + $items;
+    '#attributes' => ['class' => ['famtastic-admin-nav'], 'role' => 'navigation', 'aria-label' => 'FAMtastic staff navigation'],
+  ] + $primary + ($secondary ? ['more' => $more] : []);
+
 }
 
 /**

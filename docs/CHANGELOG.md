@@ -3926,3 +3926,16 @@ Added Drupal-owned inbound mail discovery and exact sent-receipt correlation for
 Fritz corrected the critical path: supplied workbook Industry drives generic draft preparation; identity/contact enrichment is optional. All1,000 rows prepared; syntax1,000,duplicates0,known suppression0,enrichment known0,sender-ready0,history unknown700. This does not prove mailbox, ownership, opt-in, website absence or delivery.
 
 All six prior visuals were declined and excluded from the proposed send package. One new owned-asset beauty email/Lab candidate is complete. Existing opaque Drupal invitation and same-email verified continuation now carry supplied business/industry into registration/interview, with unknown facts absent and preparation barred from sequences. Local static/native browser1440/390,27 backend tests/211 assertions,32 existing regressions/211 assertions,16 installed checks and Node22 build passed; hosted and physical owner acceptance remain pending. See docs/research/acquisition-199/FOLLOWUP-VERIFICATION.md. Dispatch HOLD; no sends, purchases, merge or deployment.
+
+## 2026-09-30 — Backend command center local integration
+
+- Local backend command-center implementation: durable campaign plans and communication drafts, task-scoped AI adapter, mobile operations navigation and truthful delivery filters. Local persistence/unit evidence recorded in implementation/INTEGRATION_EVIDENCE_2026-09-30.md; independent browser/release checks ongoing. Not deployed.
+
+- Final local evidence: patched-lock unit333/1960 and28 integrated checks pass; real mobile campaign and message preview/send fixture completed. Module-coupled immutable campaign snapshots preserve CLI files. Cached Form API services use protected injectable properties. Production/provider connection remains separate.
+
+## 2026-10-06 — Command-center release reconciliation (candidate)
+
+- Reconciled reviewed PR49 onto refreshed main `044c1010353710481564d30b7c8ca13ddf4bebc8`, preserving acquisition reply-stop/frozen-message safeguards and invoice/Sample Lab schemas. Command-center migration is now **8068**; historical September30 references to8066 describe the superseded candidate only.
+- Campaign packaging now reads exact commit blobs from the canonical bare mirror while the deployment archive remains backend-only. No mutable campaign schedules are overwritten.
+- Current validation:396unit tests/2470assertions;14 installed-Drupal checks; real stored-schema8067→8068 migration with new staff tables absent, existing campaign/thread counts and invoice/acquisition tables preserved, second updater empty;34packaging checks including archive/bare mirror;3cached-form checks; snapshot and safe database-error checks.
+- Production before this release:main044c1010, dispatch locktrue and broad schedulers0. Deployment must preserve exact-dispatch mode. No release activation, paid inference, customer email, or social publication is asserted by this candidate record. See `docs/implementation/RELEASE_RECONCILIATION_2026-10-06.md` and the October6 owner handoff.

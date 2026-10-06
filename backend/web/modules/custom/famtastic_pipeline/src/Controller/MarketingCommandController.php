@@ -16,6 +16,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\famtastic_pipeline\Service\PostizChannelsService;
+use Drupal\famtastic_pipeline\Service\CampaignWorkspace;
 use Drupal\famtastic_pipeline\Utility\CampaignFileLocator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,6 +56,7 @@ final class MarketingCommandController extends ControllerBase {
     private readonly DateFormatterInterface $dateFormatter,
     private readonly TimeInterface $time,
     private readonly PostizChannelsService $postizChannels,
+    private readonly CampaignWorkspace $workspace,
   ) {}
 
   public static function create(ContainerInterface $container): static {
@@ -64,6 +66,7 @@ final class MarketingCommandController extends ControllerBase {
       $container->get('date.formatter'),
       $container->get('datetime.time'),
       $container->get('famtastic_pipeline.postiz_channels'),
+      $container->get('famtastic_pipeline.campaign_workspace'),
     );
   }
 
@@ -86,7 +89,7 @@ final class MarketingCommandController extends ControllerBase {
     }
     $rows = [
       ['Message-ID', $row['provider_message_id'] ?: '— (not yet accepted by provider)'],
-      ['Status', $this->badge((string) $row['status'])],
+      ['Status', ['data' => ['#markup' => $this->badge((string) $row['status'])]]],
       ['Recipient', Html::escape((string) $row['recipient'])],
       ['Category', Html::escape((string) $row['category'])],
       ['Attempts', (int) $row['attempts'] . ' / ' . (int) $row['max_attempts']],
@@ -96,8 +99,9 @@ final class MarketingCommandController extends ControllerBase {
     ];
     return [
       '#title' => 'Email message #' . $id,
-      'truth' => ['#markup' => $this->executionTruth()],
-      'back' => Link::fromTextAndUrl('← Back to Email Center', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'email']))->toRenderable(),
+      'selector' => $this->campaignSelector('email'),
+      'truth' => ['#type' => 'details', '#title' => 'How saving and publishing differ', 'body' => ['#markup' => $this->executionTruth()]],
+      'back' => Link::fromTextAndUrl('← Back to Email Center', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'email'], ['query' => ['campaign' => $this->selectedCampaign(), 'email_view' => \Drupal::request()->query->get('email_view', 'customer')]]))->toRenderable(),
       'facts' => ['#type' => 'table', '#header' => ['Field', 'Value'], '#rows' => $rows, '#attributes' => ['class' => ['famtastic-ops__table']]],
       'body' => [
         '#type' => 'details',
@@ -110,7 +114,7 @@ final class MarketingCommandController extends ControllerBase {
         'retry' => in_array($row['status'], ['dead_letter', 'retry', 'failed'], TRUE)
           ? ['#type' => 'link', '#title' => $this->t('Retry this message'), '#url' => Url::fromRoute('famtastic_pipeline.notification_retry', ['id' => (int) $row['id']]), '#attributes' => ['class' => ['button', 'button--primary']]]
           : [],
-        'back2' => ['#type' => 'link', '#title' => $this->t('Back'), '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'email']), '#attributes' => ['class' => ['button']]],
+        'back2' => ['#type' => 'link', '#title' => $this->t('Back'), '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'email'], ['query' => ['campaign' => $this->selectedCampaign(), 'email_view' => \Drupal::request()->query->get('email_view', 'customer')]]), '#attributes' => ['class' => ['button']]],
       ],
     ];
   }
@@ -127,7 +131,7 @@ final class MarketingCommandController extends ControllerBase {
       ['Flow / task', Html::escape((string) $run['flow_key']) . ' / ' . Html::escape((string) $run['task_key'])],
       ['Provider (receipt basis)', Html::escape((string) $run['provider'])],
       ['Agent', Html::escape((string) $run['agent_name'])],
-      ['Status', $this->badge((string) $run['status'])],
+      ['Status', ['data' => ['#markup' => $this->badge((string) $run['status'])]]],
       ['Source SHA-256', Html::escape((string) $run['source_sha'])],
       ['Created', $this->date((int) $run['created'])],
     ];
@@ -143,8 +147,9 @@ final class MarketingCommandController extends ControllerBase {
     }
     return [
       '#title' => 'Build DNA #' . $id . ' — ' . $run['build_key'],
-      'truth' => ['#markup' => $this->executionTruth()],
-      'back' => Link::fromTextAndUrl('← Back to Build DNA Registry', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'builddna']))->toRenderable(),
+      'selector' => $this->campaignSelector('builddna'),
+      'truth' => ['#type' => 'details', '#title' => 'How saving and publishing differ', 'body' => ['#markup' => $this->executionTruth()]],
+      'back' => Link::fromTextAndUrl('← Back to Build DNA Registry', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'builddna'], ['query' => ['campaign' => $this->selectedCampaign(), 'email_view' => \Drupal::request()->query->get('email_view', 'customer')]]))->toRenderable(),
       'facts' => ['#type' => 'table', '#header' => ['Field', 'Value'], '#rows' => $rows, '#attributes' => ['class' => ['famtastic-ops__table']]],
       'snapshots' => $snapshots,
     ];
@@ -208,8 +213,9 @@ final class MarketingCommandController extends ControllerBase {
 
     return [
       '#title' => 'Scorecard — ' . $campaign_slug,
-      '#attached' => ['library' => ['famtastic_pipeline/operations']],
-      'truth' => ['#markup' => $this->executionTruth()],
+      '#attached' => ['library' => ['famtastic_pipeline/operations', 'famtastic_pipeline/campaign_workspace']],
+      'selector' => $this->campaignSelector('drops'),
+      'truth' => ['#type' => 'details', '#title' => 'How saving and publishing differ', 'body' => ['#markup' => $this->executionTruth()]],
       'back' => Link::fromTextAndUrl('← Back to Postiz drops', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'drops'], ['query' => ['campaign' => $campaign_slug]]))->toRenderable(),
       'facts' => ['#type' => 'table', '#header' => ['Field', 'Value'], '#rows' => $rows, '#attributes' => ['class' => ['famtastic-ops__table']]],
       'per_drop' => $this->table(
@@ -234,17 +240,19 @@ final class MarketingCommandController extends ControllerBase {
   }
 
   private function page(string $tab): array {
+    $selected = $this->selectedCampaign();
     $tabs = [];
     foreach (self::TABS as $id => $label) {
       $tabs['t_' . $id] = [
         '#type' => 'link',
         '#title' => $label,
-        '#url' => $id === 'command' ? Url::fromRoute('famtastic_pipeline.marketing') : Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => $id]),
+        '#url' => $id === 'command' ? Url::fromRoute('famtastic_pipeline.marketing', [], ['query' => ['campaign' => $selected]]) : Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => $id], ['query' => ['campaign' => $selected]]),
         '#attributes' => ['class' => ['famtastic-mkt__tab', $tab === $id ? 'active' : '']],
       ];
     }
     $content = [
-      'truth' => ['#markup' => $this->executionTruth()],
+      'selector' => $this->campaignSelector($tab),
+      'truth' => ['#type' => 'details', '#title' => 'How saving and publishing differ', 'body' => ['#markup' => $this->executionTruth()]],
       'tabs' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-mkt__tabs']], 'items' => $tabs],
     ] + match ($tab) {
       'command' => $this->tabCommand(),
@@ -273,9 +281,11 @@ final class MarketingCommandController extends ControllerBase {
   }
 
   private function shell(array $content, string $title): array {
+    if ($source = CampaignFileLocator::releaseSource()) $content['release_source'] = ['#weight' => -50, '#plain_text' => 'Read-only source snapshot ' . substr($source['sha'], 0, 12) . ' · synced ' . $source['synced_at'] . '. Recorded schedules are source metadata; check provider receipts for live state.'];
     return [
       '#title' => 'Marketing Command Center — ' . $title,
-      '#attached' => ['library' => ['famtastic_pipeline/operations']],
+      '#attached' => ['library' => ['famtastic_pipeline/operations', 'famtastic_pipeline/campaign_workspace']],
+      '#cache' => ['max-age' => 0],
       'content' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-ops famtastic-mkt']]] + $content,
     ];
   }
@@ -302,80 +312,24 @@ final class MarketingCommandController extends ControllerBase {
   }
 
   private function tabCommand(): array {
-    $k = $this->kpis();
-    $nextGate = $this->database->select('famtastic_social_record', 'r')
-      ->fields('r', ['content_id', 'day', 'moment'])
-      ->condition('approval_content', 0)
-      ->orderBy('r.day')->orderBy('r.id')->range(0, 1)->execute()->fetchAssoc();
-    $cards = [
-      ['Campaign records', (string) $k['records'], 'Canonical manifest records under gate control', 'neutral'],
-      ['Content gates open', (string) $k['gates_open'], 'Content review decisions waiting on you', $k['gates_open'] > 0 ? 'attention' : 'good'],
-      ['Support drafts', (string) $k['drafts'], 'L0 replies awaiting approve/reject', $k['drafts'] > 0 ? 'attention' : 'good'],
-      ['Dead letters', (string) $k['dead'], 'Must always be zero', $k['dead'] > 0 ? 'danger' : 'good'],
-      ['Revenue 30d', '$' . number_format($k['revenue_minor'] / 100, 2), 'Paid Commerce totals, last 30 days', 'good'],
-    ];
-    $build = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-command__pulse']]];
-    foreach ($cards as $index => [$label, $value, $detail, $tone]) {
-      $build['c_' . $index] = ['#markup' => '<article class="famtastic-command__pulse-card famtastic-command__pulse-card--' . Html::getClass($tone) . '"><span>' . Html::escape($label) . '</span><strong>' . Html::escape($value) . '</strong><p>' . Html::escape($detail) . '</p></article>'];
-    }
-    $actions = [
-      '#type' => 'container',
-      '#attributes' => ['class' => ['famtastic-ops__actions', 'famtastic-command__actions']],
-      'sync' => [
-        '#type' => 'link',
-        '#title' => $this->t('⚡ Sync Manifest Records'),
-        '#url' => Url::fromRoute('famtastic_pipeline.social_records_sync'),
-        '#attributes' => ['class' => ['button', 'button--primary']],
-      ],
-      'queue' => [
-        '#type' => 'link',
-        '#title' => $this->t('Open Content Queue →'),
-        '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'queue']),
-        '#attributes' => ['class' => ['button']],
-      ],
-    ];
-    $oneGate = ['#markup' => '<div class="famtastic-mkt__onegate"><strong>One gate needs you</strong><p>' . ($nextGate
-      ? 'Content review is open for <code>' . Html::escape($nextGate['content_id']) . '</code> (day ' . (int) $nextGate['day'] . ', ' . Html::escape((string) $nextGate['moment']) . '). Message, media, and public release remain separate decisions.'
-      : 'No content gates are open. Clean.') . '</p>' . Link::fromTextAndUrl('Review content record →', Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'queue']))->toRenderable() . '</div>'];
-    return ['actions' => $actions, 'onegate' => $oneGate, 'cards' => $build];
-  }
-
-  private function tabQueue(): array {
+    $key = $this->selectedCampaign();
+    $campaign = $this->workspace->get($key);
+    if (!$campaign) throw new NotFoundHttpException('Campaign not found.');
     $rows = [];
-    foreach ($this->database->select('famtastic_social_record', 'r')->fields('r')
-      ->orderBy('r.day')->orderBy('r.id')->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
-      $cells = [];
-      foreach (['content' => 'approval_content', 'media' => 'approval_media', 'publish' => 'approval_publish'] as $gate => $col) {
-        $on = (int) $record[$col] === 1;
-        $cells[] = ['data' => [
-          '#markup' => '<span class="famtastic-ops__badge famtastic-ops__badge--' . ($on ? 'good' : 'off') . '">' . ($on ? '✓' : '—') . '</span> ',
-          'link' => ['data' => $this->linkCell(Link::fromTextAndUrl($on ? 'revoke' : 'approve', Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $record['content_id'], 'gate' => $gate, 'direction' => $on ? 'revoke' : 'approve'])))],
-        ]];
-      }
-      $batchLink = Link::fromTextAndUrl('Approve Day ' . $record['day'], Url::fromRoute('famtastic_pipeline.social_record_batch_gate', ['day' => (int) $record['day'], 'gate' => 'all', 'direction' => 'approve']));
-      $rows[] = [
-        (int) $record['day'], (string) $record['moment'], Html::escape((string) $record['content_id']),
-        (string) $record['scheduled_time_et'], Html::escape((string) $record['promise']),
-        ['data' => ['#markup' => $this->badge((string) $record['state'])]],
-        $cells[0], $cells[1], $cells[2],
-        (string) ($record['postiz_draft_id'] ?: '—'),
-        ['data' => $this->linkCell($batchLink)],
-      ];
-    }
-    $page = $this->table('Content queue — first day of the actual campaign spine', 'Each row is the one content ID that must travel through copy, media, channel, UTM, evidence, and results. Draft-first: publishing stays off until the exact item is approved.', ['Day', 'Moment', 'Content ID', 'ET', 'Promise', 'State', 'Content', 'Media', 'Publish', 'Draft ID', 'Batch Day'], $rows, 'No records imported yet.');
-    $page['actions'] = [
-      '#type' => 'container',
-      '#attributes' => ['class' => ['famtastic-ops__actions']],
-      'sync' => [
-        '#type' => 'link',
-        '#title' => $this->t('⚡ Sync Manifest Records'),
-        '#url' => Url::fromRoute('famtastic_pipeline.social_records_sync'),
-        '#attributes' => ['class' => ['button', 'button--primary']],
-      ],
-    ];
-    $page['actions']['#weight'] = -20;
+    foreach (['goal' => 'Goal', 'audience' => 'Audience', 'offer' => 'Offer', 'evidence' => 'Evidence', 'cta' => 'Next customer action', 'start_date' => 'Starts', 'end_date' => 'Ends'] as $field => $label) $rows[] = [$label, $campaign['plan'][$field] ?? 'Not planned yet'];
+    $page = $this->table('Campaign plan — ' . $campaign['name'], 'Status: ' . $campaign['status'] . '. Plan records are drafts; provider approvals and delivery receipts remain separate.', ['Planning detail', 'Value'], $rows, 'Create a draft plan to begin.');
+    $items = $this->workspace->items($key);
+    $counts = array_count_values(array_map(static fn(array $item): string => (string) ($item['state'] ?? 'draft'), $items));
+    $page['counts'] = ['#plain_text' => count($items) . ' content items. ' . implode(' · ', array_map(static fn(string $state, int $count): string => $state . ': ' . $count, array_keys($counts), array_values($counts)))];
+    $page['next'] = ['#type' => 'link', '#title' => 'Review content plan', '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'queue'], ['query' => ['campaign' => $key]]), '#attributes' => ['class' => ['button']]];
     return $page;
   }
+
+
+  private function tabQueue(): array {
+    return $this->campaignItems('Content queue');
+  }
+
 
   /**
    * Postiz drops: per-drop live-record control, read directly from each
@@ -389,31 +343,11 @@ final class MarketingCommandController extends ControllerBase {
    * touched; posting-schedule.json itself stays the CLI's job.
    */
   private function tabDrops(): array {
-    $request = \Drupal::request();
-    $campaigns = CampaignFileLocator::listCampaignSlugs();
-    $selected = (string) $request->query->get('campaign', '');
-    if ($selected === '' || !in_array($selected, $campaigns, TRUE)) {
-      $selected = $campaigns[0] ?? '';
+    $selected = $this->selectedCampaign();
+    $pillsBuild = [];
+    if (CampaignFileLocator::readJson($selected, 'posting-schedule.json') === NULL) {
+      return ['heading' => ['#markup' => '<h2>Provider schedule unavailable</h2><p>The selected campaign has no readable deployed posting-schedule.json. Its Drupal plan remains available in Content queue. This does not mean Postiz is empty or disconnected. Check Channel health separately.</p>']];
     }
-
-    $pills = [];
-    foreach ($campaigns as $slug) {
-      $pills[] = [
-        '#type' => 'link',
-        '#title' => $slug,
-        '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'drops'], ['query' => ['campaign' => $slug]]),
-        '#attributes' => ['class' => ['button', $slug === $selected ? 'button--primary' : 'button--secondary']],
-      ];
-    }
-    $pillsBuild = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-ops__actions']], 'items' => $pills];
-
-    if ($selected === '') {
-      return [
-        'campaigns' => $pillsBuild,
-        'heading' => ['#markup' => '<h2>Postiz drops</h2><p class="famtastic-ops__lede">' . $this->t('No campaign with a posting-schedule.json was found under marketing/campaigns/.') . '</p>'],
-      ];
-    }
-
     $schedule = CampaignFileLocator::readJson($selected, 'posting-schedule.json') ?? [];
     $rows = [];
     foreach ((array) ($schedule['drops'] ?? []) as $drop) {
@@ -483,35 +417,9 @@ final class MarketingCommandController extends ControllerBase {
   }
 
   private function tabCalendar(): array {
-    $rows = [];
-    foreach ($this->database->select('famtastic_social_record', 'r')->fields('r')
-      ->orderBy('r.day')->orderBy('r.id')->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
-      $on = (int) $record['approval_content'] + (int) $record['approval_media'] + (int) $record['approval_publish'];
-      $batchLink = Link::fromTextAndUrl('Approve Day ' . $record['day'] . ' →', Url::fromRoute('famtastic_pipeline.social_record_batch_gate', ['day' => (int) $record['day'], 'gate' => 'all', 'direction' => 'approve']));
-      $rows[] = [
-        (int) $record['day'],
-        ucfirst((string) $record['moment']),
-        Html::escape((string) $record['content_id']),
-        (string) $record['scheduled_time_et'],
-        $on . '/3',
-        ['data' => ['#markup' => $this->badge((string) $record['state'])]],
-        ['data' => $this->linkCell($batchLink)],
-      ];
-    }
-    $page = $this->table('Calendar — live gate state', 'Gate counts per record. Days with no imported records show nothing rather than invented numbers.', ['Day', 'Moment', 'Content ID', 'ET', 'Gates', 'State', 'Batch Approval'], $rows, 'No records imported yet.');
-    $page['actions'] = [
-      '#type' => 'container',
-      '#attributes' => ['class' => ['famtastic-ops__actions']],
-      'sync' => [
-        '#type' => 'link',
-        '#title' => $this->t('⚡ Sync Manifest Records'),
-        '#url' => Url::fromRoute('famtastic_pipeline.social_records_sync'),
-        '#attributes' => ['class' => ['button', 'button--primary']],
-      ],
-    ];
-    $page['actions']['#weight'] = -20;
-    return $page;
+    return $this->campaignItems('Campaign calendar');
   }
+
 
   private function tabChannels(): array {
     $snapshot = $this->postizChannels->channels();
@@ -544,6 +452,7 @@ final class MarketingCommandController extends ControllerBase {
     $query->leftJoin('famtastic_project_request', 'r', 'r.prospect_id = p.id');
     $query->leftJoin('famtastic_commerce_fulfillment', 'f', 'f.prospect_id = p.id AND f.status = \'fulfilled\'');
     $query->fields('p', ['campaign', 'source', 'created']);
+    $query->condition('p.campaign', $this->selectedCampaign());
     $query->addExpression('COUNT(DISTINCT p.id)', 'leads');
     $query->addExpression('COUNT(DISTINCT r.id)', 'requests');
     $query->addExpression('SUM(f.amount_minor)', 'revenue');
@@ -627,6 +536,7 @@ final class MarketingCommandController extends ControllerBase {
     $rows = [];
     $campaigns = $this->database->select('famtastic_campaign', 'c')
       ->fields('c', ['id', 'campaign_key', 'status', 'changed'])
+      ->condition('campaign_key', $this->selectedCampaign())
       ->orderBy('changed', 'DESC')
       ->range(0, 50)
       ->execute()
@@ -704,6 +614,7 @@ final class MarketingCommandController extends ControllerBase {
    * (no JSON_EXTRACT / CONCAT dependence).
    */
   private function contentGrainRows(): array {
+    if ($this->selectedCampaign() !== CampaignWorkspace::LEGACY) return [];
     $leadsByContent = [];
     $snapshots = $this->database->select('famtastic_prospect', 'p')
       ->fields('p', ['id', 'utm_json'])
@@ -750,113 +661,42 @@ final class MarketingCommandController extends ControllerBase {
   }
 
   private function tabEmail(): array {
-    $queuedCount = (int) $this->database->select('famtastic_notification_outbox', 'n')->condition('status', 'queued')->countQuery()->execute()->fetchField();
-    $sentCount = (int) $this->database->select('famtastic_notification_outbox', 'n')->condition('status', 'sent')->countQuery()->execute()->fetchField();
-    $retryCount = (int) $this->database->select('famtastic_notification_outbox', 'n')->condition('status', ['retry', 'dead_letter', 'failed'], 'IN')->countQuery()->execute()->fetchField();
-
-    $rows = [];
-    foreach ($this->database->select('famtastic_notification_outbox', 'n')->extend(\Drupal\Core\Database\Query\PagerSelectExtender::class)
-      ->fields('n', ['id', 'category', 'recipient', 'subject', 'status', 'attempts', 'provider_message_id', 'changed'])
-      ->orderBy('changed', 'DESC')->limit(25)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $record) {
-      $rows[] = [
-        (int) $record['id'],
-        Html::escape((string) $record['recipient']),
-        Html::escape((string) $record['subject']),
-        ['data' => ['#markup' => $this->badge((string) $record['status'])]],
-        Html::escape((string) ($record['provider_message_id'] ?: '—')),
-        ['data' => $this->linkCell(Link::fromTextAndUrl('Inspect', Url::fromRoute('famtastic_pipeline.marketing.email_inspect', ['id' => (int) $record['id']])))],
-      ];
+    $view = (string) \Drupal::request()->query->get('email_view', 'customer');
+    if (!in_array($view, ['customer', 'operational', 'failed'], TRUE)) $view = 'customer';
+    $failed = (int) $this->database->select('famtastic_notification_outbox', 'n')->condition('status', ['retry', 'dead_letter', 'failed'], 'IN')->countQuery()->execute()->fetchField();
+    $page = ['compose' => ['#type' => 'link', '#title' => 'Open messages and draft a reply', '#url' => Url::fromRoute('famtastic_pipeline.client_messages_admin'), '#attributes' => ['class' => ['button', 'button--primary']]]];
+    foreach (['customer' => 'Customer communications', 'operational' => 'Operational alerts', 'failed' => 'Failed deliveries (' . $failed . ')'] as $key => $label) {
+      $page['filter_' . $key] = ['#type' => 'link', '#title' => $label, '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'email'], ['query' => ['campaign' => $this->selectedCampaign(), 'email_view' => $key]]), '#attributes' => ['class' => ['button', $view === $key ? 'button--primary' : 'button--secondary']]];
     }
-    $page = $this->table('Email center — inspectable, triageable', 'Every queued message with its body, provider message-ID, and state. Retry is one click. Status counts: ' . $sentCount . ' sent · ' . $queuedCount . ' queued · ' . $retryCount . ' needing attention.', ['ID', 'Recipient', 'Subject', 'Status', 'Provider message-ID', ''], $rows, 'No notifications queued.');
-    $page['test'] = ['#markup' => '<p class="famtastic-ops__lede">Owner-test flow: use <code>drush php:script backend/scripts/send-owner-test-email.php</code> (memory-safe, owner address only) or retry any failed row above.</p>'];
+    $query = $this->database->select('famtastic_notification_outbox', 'n');
+    if ($view === 'failed') $query->condition('status', ['retry', 'dead_letter', 'failed'], 'IN');
+    else $query->condition('category', 'operational', $view === 'operational' ? '=' : '<>');
+    $records = $query->extend(\Drupal\Core\Database\Query\PagerSelectExtender::class)->fields('n', ['id', 'category', 'recipient', 'subject', 'status', 'provider_message_id', 'changed'])->orderBy('changed', 'DESC')->limit(25)->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $rows = []; $groups = [];
+    foreach ($records as $record) {
+      $link = $this->linkCell(Link::fromTextAndUrl('Inspect #' . $record['id'], Url::fromRoute('famtastic_pipeline.marketing.email_inspect', ['id' => (int) $record['id']], ['query' => ['campaign' => $this->selectedCampaign(), 'email_view' => $view]])));
+      if ($view === 'operational') {
+        $key = hash('sha256', $record['subject'] . ':' . $record['status']);
+        $groups[$key] ??= ['#type' => 'details', '#title' => $record['subject'] . ' — ' . $record['status']];
+        $groups[$key]['record_' . $record['id']] = $link;
+      }
+      else $rows[] = [(int) $record['id'], Html::escape((string) $record['recipient']), Html::escape((string) $record['subject']), ['data' => ['#markup' => $this->badge((string) $record['status'])]], Html::escape((string) ($record['provider_message_id'] ?: '—')), ['data' => $link]];
+    }
+    $page['records'] = $this->table($view === 'operational' ? 'Operational alerts' : ($view === 'failed' ? 'Failed deliveries' : 'Customer communications'), 'Delivery history across all campaigns. Draft and preview messages from the conversation desk. Failed deliveries remain available in their own view.', ['ID', 'Recipient', 'Subject', 'Status', 'Provider message-ID', ''], $rows, $view === 'operational' ? 'Grouped alerts appear below.' : 'No messages in this view.');
+    $page['groups'] = $groups;
     return $page;
   }
 
   private function tabCreative(): array {
-    $request = \Drupal::request();
-    $filterDay = $request->query->get('day', 'all');
-
-    $query = $this->database->select('famtastic_social_record', 'r')->fields('r');
-    if ($filterDay !== 'all' && is_numeric($filterDay)) {
-      $query->condition('r.day', (int) $filterDay);
-    }
-    $records = $query->orderBy('r.day')->orderBy('r.scheduled_time_et')->execute()->fetchAll(\PDO::FETCH_ASSOC);
-
-    // Day filter pills
-    $dayFilters = [];
-    $dayFilters[] = [
-      '#type' => 'link',
-      '#title' => 'All Days (' . count($records) . ')',
-      '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'creative'], ['query' => ['day' => 'all']]),
-      '#attributes' => [
-        'class' => ['button', $filterDay === 'all' ? 'button--primary' : 'button--secondary'],
-        'style' => 'margin-right: 6px; font-size: 0.85rem;' . ($filterDay === 'all' ? ' background: #7cfc00; color: #000; font-weight: bold;' : ''),
-      ],
-    ];
-    for ($d = 1; $d <= 17; $d++) {
-      $isCurrent = (string) $d === (string) $filterDay;
-      $dayFilters[] = [
-        '#type' => 'link',
-        '#title' => 'Day ' . $d,
-        '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'creative'], ['query' => ['day' => $d]]),
-        '#attributes' => [
-          'class' => ['button', $isCurrent ? 'button--primary' : 'button--secondary'],
-          'style' => 'margin: 0 4px 6px 0; font-size: 0.85rem;' . ($isCurrent ? ' background: #7cfc00; color: #000; font-weight: bold;' : ''),
-        ],
-      ];
-    }
-
-    $galleryHtml = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">';
-
-    foreach ($records as $rec) {
-      $cid = Html::escape((string) $rec['content_id']);
-      $day = (int) $rec['day'];
-      $moment = ucfirst(Html::escape((string) $rec['moment']));
-      $promise = Html::escape((string) $rec['promise']);
-      $state = Html::escape((string) $rec['state']);
-
-      $img4x5 = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.4x5.png'])->toString();
-      $img9x16 = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.9x16.png'])->toString();
-
-      $galleryHtml .= '
-        <div style="background: #101510; border: 1px solid #222c22; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 14px rgba(0,0,0,0.35);">
-          <div style="position: relative; background: #050805; height: 210px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid #1c241c;">
-            <img src="' . $img4x5 . '" alt="' . $cid . '" style="width: 100%; height: 100%; object-fit: contain; background: #000;" onerror="this.src=\'' . $img9x16 . '\';" />
-            <span style="position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.85); color: #7cfc00; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; border: 1px solid #7cfc00;">Day ' . $day . ' · ' . $moment . '</span>
-            <span style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.85); font-size: 0.7rem; padding: 2px 6px; border-radius: 4px;" class="famtastic-ops__badge famtastic-ops__badge--' . mb_strtolower($state) . '">' . $state . '</span>
-          </div>
-          <div style="padding: 1rem; display: flex; flex-direction: column; flex-grow: 1;">
-            <strong style="color: #fff; font-size: 0.95rem; line-height: 1.3; margin-bottom: 0.35rem;">' . $promise . '</strong>
-            <code style="font-size: 0.72rem; color: #8e988e; margin-bottom: 0.85rem; display: block;">' . $cid . '</code>
-            <div style="margin-top: auto; display: flex; gap: 0.5rem; font-size: 0.75rem;">
-              <a href="' . $img4x5 . '" target="_blank" style="flex: 1; text-align: center; background: rgba(124,252,0,0.15); color: #7cfc00; padding: 6px 0; border-radius: 6px; text-decoration: none; font-weight: 700; border: 1px solid #7cfc00;">🔍 4x5 Feed</a>
-              <a href="' . $img9x16 . '" target="_blank" style="flex: 1; text-align: center; background: rgba(255,255,255,0.06); color: #c4d0c4; padding: 6px 0; border-radius: 6px; text-decoration: none; font-weight: 700; border: 1px solid #444;">📱 9x16 Story</a>
-            </div>
-          </div>
-        </div>
-      ';
-    }
-    $galleryHtml .= '</div>';
-
-    return [
-      'heading' => [
-        '#markup' => '<h2>Creative &amp; Media Visual Asset Library</h2><p class="famtastic-ops__lede">Interactive visual catalog of all 136 campaign artwork cards and short-form video reels across all 17 campaign days.</p>',
-      ],
-      'filters' => [
-        '#type' => 'container',
-        '#attributes' => ['class' => ['famtastic-creative__filters'], 'style' => 'margin: 1rem 0;'],
-        'items' => $dayFilters,
-      ],
-      'gallery' => [
-        '#markup' => Markup::create($galleryHtml),
-      ],
-    ];
+    return $this->campaignItems('Creative and media');
   }
+
 
   private function tabBuildDna(): array {
     $rows = [];
     foreach ($this->database->select('famtastic_build_run', 'b')->extend(\Drupal\Core\Database\Query\PagerSelectExtender::class)
       ->fields('b', ['id', 'build_key', 'campaign_key', 'provider', 'agent_name', 'status', 'source_sha', 'created'])
+      ->condition('campaign_key', $this->selectedCampaign())
       ->orderBy('b.created', 'DESC')->limit(25)->execute()->fetchAll(\PDO::FETCH_ASSOC) as $run) {
       $rows[] = [
         (int) $run['id'],
@@ -866,7 +706,7 @@ final class MarketingCommandController extends ControllerBase {
         Html::escape((string) $run['agent_name']),
         ['data' => ['#markup' => $this->badge((string) $run['status'])]],
         Html::escape(substr((string) $run['source_sha'], 0, 12) ?: '—'),
-        ['data' => $this->linkCell(Link::fromTextAndUrl('Inspect DNA', Url::fromRoute('famtastic_pipeline.marketing.build_dna', ['id' => (int) $run['id']])))],
+        ['data' => $this->linkCell(Link::fromTextAndUrl('Inspect DNA', Url::fromRoute('famtastic_pipeline.marketing.build_dna', ['id' => (int) $run['id']], ['query' => ['campaign' => $this->selectedCampaign()]])))],
       ];
     }
     return $this->table('Build DNA & recipes', 'Every build run with its brief basis, inputs, provider/model receipt, prompt artifact, hashes, outputs, and status. Execution truth applies: a receipt-less Gemini Lite output is not valid evidence, and no build output is launch approval.', ['#', 'Build key', 'Campaign', 'Provider', 'Agent', 'Status', 'Source SHA', ''], $rows, 'No build runs recorded.');
@@ -937,253 +777,84 @@ final class MarketingCommandController extends ControllerBase {
    * Daily Social Dispatch tab: One unified multi-channel day-by-day screen.
    */
   private function tabDispatch(): array {
-    $request = \Drupal::request();
-    $selectedDay = max(1, min(17, (int) $request->query->get('day', 1)));
+    return $this->campaignItems('Dispatch review');
+  }
 
-    $totalRecords = $this->count('famtastic_social_record');
-    if ($totalRecords === 0) {
-      return [
-        'heading' => ['#markup' => '<h2>Daily Social Dispatch</h2><p class="famtastic-ops__lede">No campaign records imported yet into database.</p>'],
-        'sync' => [
-          '#type' => 'link',
-          '#title' => $this->t('⚡ Sync 17-Day Manifest Records'),
-          '#url' => Url::fromRoute('famtastic_pipeline.social_records_sync'),
-          '#attributes' => ['class' => ['button', 'button--primary']],
-        ],
-      ];
+
+  /** Serve only a selected schedule's recorded media from approved roots. */
+  public function campaignMedia(string $campaign_key, string $content_id, string $variant = 'primary_media'): Response {
+    $schedule = CampaignFileLocator::readJson($campaign_key, 'posting-schedule.json');
+    if (!$schedule) throw new NotFoundHttpException('Campaign schedule unavailable.');
+    $drop = CampaignFileLocator::findDrop($schedule, $content_id);
+    $path = in_array($variant, ['primary_media', 'supporting_media'], TRUE) ? ($drop[$variant] ?? '') : ($drop['surface_assets'][$variant] ?? '');
+    if (!is_string($path) || !preg_match('#^marketing/(?:campaigns/|creative/campaign-assets/)[a-zA-Z0-9/_.-]+\.(png|jpe?g|webp|mp4)$#D', $path) || str_contains($path, '..')) throw new NotFoundHttpException('No approved media path recorded.');
+    foreach ([dirname(\Drupal::root(), 2), dirname(\Drupal::root())] as $root) {
+      $allowed = realpath($root . '/marketing');
+      $file = realpath($root . '/' . $path);
+      if (!$allowed || !$file || !str_starts_with($file, $allowed . DIRECTORY_SEPARATOR) || !is_file($file)) continue;
+      $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($file);
+      $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+      $response->headers->set('Content-Type', match ($extension) { 'png' => 'image/png', 'jpg', 'jpeg' => 'image/jpeg', 'webp' => 'image/webp', 'mp4' => 'video/mp4' });
+      $response->headers->set('X-Content-Type-Options', 'nosniff');
+      $response->headers->set('Cache-Control', 'private, no-store');
+      return $response;
     }
+    throw new NotFoundHttpException('Recorded media is not deployed on this server.');
+  }
 
-    // Day navigation pills (Days 1 to 17)
-    $dayButtons = [];
-    for ($d = 1; $d <= 17; $d++) {
-      $dayPublishApproved = (int) $this->database->select('famtastic_social_record', 'r')
-        ->condition('day', $d)
-        ->condition('approval_publish', 1)
-        ->countQuery()->execute()->fetchField();
-      $isCurrent = $d === $selectedDay;
-      $dayButtons[] = [
-        '#type' => 'link',
-        '#title' => 'Day ' . $d . ($dayPublishApproved === 4 ? ' ✓' : ($dayPublishApproved > 0 ? ' (' . $dayPublishApproved . '/4)' : '')),
-        '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'dispatch'], ['query' => ['day' => $d]]),
-        '#attributes' => [
-          'class' => ['button', $isCurrent ? 'button--primary' : 'button--secondary'],
-          'style' => 'margin: 0 4px 6px 0; font-size: 0.85rem;' . ($isCurrent ? ' background: #7cfc00; color: #000; font-weight: bold;' : ''),
-        ],
-      ];
+  private function selectedCampaign(): string {
+    $all = $this->workspace->all();
+    $key = (string) \Drupal::request()->query->get('campaign', '');
+    if ($key !== '' && !isset($all[$key])) throw new NotFoundHttpException('Campaign not found.');
+    return $key !== '' ? $key : (string) array_key_first($all);
+  }
+
+  private function campaignSelector(string $tab): array {
+    $selected = $this->selectedCampaign();
+    $build = ['#type' => 'container', '#attributes' => ['class' => ['famtastic-campaign-selector'], 'aria-label' => 'Campaign workspace']];
+    foreach ($this->workspace->all() as $key => $campaign) {
+      $build['campaign_' . $key] = ['#type' => 'link', '#title' => $campaign['name'] . ' · ' . $campaign['status'], '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => $tab], ['query' => ['campaign' => $key]]), '#attributes' => ['class' => ['button', $selected === $key ? 'button--primary' : 'button--secondary'], 'aria-current' => $selected === $key ? 'page' : 'false']];
     }
-
-    $records = $this->database->select('famtastic_social_record', 'r')
-      ->fields('r')
-      ->condition('day', $selectedDay)
-      ->orderBy('scheduled_time_et', 'ASC')
-      ->execute()->fetchAll(\PDO::FETCH_ASSOC);
-
-    $cardsHtml = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">';
-
-    $momentIcons = [
-      'teach' => '🌅',
-      'challenge' => '☀️',
-      'prove' => '🌆',
-      'invite' => '🌙',
-    ];
-
-    $cardsHtml = '
-    <style>
-      .famtastic-dispatch-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-        gap: 1.5rem;
-        margin: 1.5rem 0;
-      }
-      .famtastic-dispatch-card {
-        border: 1px solid #2d382d;
-        border-radius: 14px;
-        background: #101510;
-        padding: 1.25rem;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-      }
-      .famtastic-media-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
-        background: #050805;
-        border-radius: 10px;
-        padding: 0.75rem;
-        border: 1px solid #1c241c;
-        margin-bottom: 0.75rem;
-      }
-      .famtastic-media-box {
-        text-align: center;
-      }
-      .famtastic-media-box img {
-        width: 100% !important;
-        height: 180px !important;
-        object-fit: contain !important;
-        border-radius: 6px;
-        background: #000;
-        border: 1px solid #222;
-        display: block;
-      }
-      .famtastic-media-box video {
-        width: 100% !important;
-        height: 180px !important;
-        object-fit: cover !important;
-        border-radius: 6px;
-        background: #000;
-        border: 1px solid #222;
-        display: block;
-      }
-      .famtastic-channel-pill {
-        display: inline-block;
-        padding: 2px 7px;
-        border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: 700;
-        margin: 0 4px 4px 0;
-      }
-      .famtastic-pill-fb { background: #1877F2; color: #fff; }
-      .famtastic-pill-ig { background: #E4405F; color: #fff; }
-      .famtastic-pill-x { background: #111; border: 1px solid #555; color: #fff; }
-      .famtastic-pill-yt { background: #FF0000; color: #fff; }
-      .famtastic-pill-tt { background: #00f2fe; color: #000; }
-    </style>
-    <div class="famtastic-dispatch-grid">';
-
-    $momentIcons = [
-      'teach' => '🌅',
-      'challenge' => '☀️',
-      'prove' => '🌆',
-      'invite' => '🌙',
-    ];
-
-    foreach ($records as $rec) {
-      $cid = Html::escape((string) $rec['content_id']);
-      $moment = (string) $rec['moment'];
-      $icon = $momentIcons[$moment] ?? '📌';
-      $time = (string) $rec['scheduled_time_et'];
-      $promise = Html::escape((string) $rec['promise']);
-      $theme = ucfirst(Html::escape((string) $rec['theme']));
-      $state = Html::escape((string) $rec['state']);
-
-      $contentGate = (int) $rec['approval_content'] === 1;
-      $mediaGate = (int) $rec['approval_media'] === 1;
-      $publishGate = (int) $rec['approval_publish'] === 1;
-
-      $cLink = Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $rec['content_id'], 'gate' => 'content', 'direction' => $contentGate ? 'revoke' : 'approve'])->toString();
-      $mLink = Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $rec['content_id'], 'gate' => 'media', 'direction' => $mediaGate ? 'revoke' : 'approve'])->toString();
-      $pLink = Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $rec['content_id'], 'gate' => 'publish', 'direction' => $publishGate ? 'revoke' : 'approve'])->toString();
-
-      $imgSrc4x5 = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.4x5.png'])->toString();
-      $imgSrc9x16 = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $rec['content_id'] . '.9x16.png'])->toString();
-
-      $videoMap = [
-        'teach' => 'offer-launch-55-cents-proof.mp4',
-        'challenge' => 'service-education-ai-agent-proof.mp4',
-        'prove' => 'customer-retention-growth-review-proof.mp4',
-        'invite' => 'famtastic-55-cents-remotion.mp4',
-      ];
-      $videoFile = $videoMap[$moment] ?? 'offer-launch-55-cents-proof.mp4';
-      $videoSrc = Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $videoFile])->toString();
-
-      $intakeUrl = "https://famtasticdesigns.com/intake/hosting-domain/?utm_source=facebook&utm_medium=organic_social&utm_campaign=web_basics_55_cents_17d&utm_content=" . $cid;
-
-      $momentCaptions = [
-        'teach' => "Stop renting your website. Start owning your digital front door. ⚡\n\nFor less than 55 cents a day ($199/year), you get:\n✅ Fast SSD Cloud Hosting & SSL included\n✅ Custom Domain Registration (.com/.org/.net)\n✅ Client Portal & Dedicated Project Hub\n✅ 100% Code Ownership — zero monthly SaaS traps.\n\n👉 Complete our 60-second hosting & domain setup intake: " . $intakeUrl,
-        'challenge' => "The hidden cost of generic website builders: Paying $30–$70/mo forever with zero code ownership and locked-in templates.\n\nCompare that to owning your custom digital engine with 1-year hosting included for $199 flat (~55¢/day).\n\n👉 Start your setup intake in 60 seconds: " . $intakeUrl,
-        'prove' => "Proof in action: How local businesses eliminate SaaS recurring taxes and get a custom, lightning-fast digital engine built to their exact workflow.\n\n👉 Lock in your Web Basics package: " . $intakeUrl,
-        'invite' => "Ready for a website that actually works for your business?\n\nLock in our $199 Web Basics package with a 30-day price hold. Includes 1-year cloud hosting, custom domain, and dedicated client command center.\n\n👉 Direct intake setup: " . $intakeUrl,
-      ];
-      $captionText = $momentCaptions[$moment] ?? (string) $rec['promise'];
-
-      $cardsHtml .= '
-        <article class="famtastic-dispatch-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-            <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #7cfc00; font-weight: 800;">' . $icon . ' ' . $time . ' ET · ' . ucfirst($moment) . '</span>
-            <span class="famtastic-ops__badge famtastic-ops__badge--' . mb_strtolower($state) . '">' . $state . '</span>
-          </div>
-          <h3 style="margin: 0.2rem 0 0.5rem; font-size: 1.15rem; color: #fff; line-height: 1.3;">' . $promise . '</h3>
-          <small style="color: #8e988e; margin-bottom: 0.75rem; display: block;">ID: <code>' . $cid . '</code> · Theme: ' . $theme . '</small>
-          
-          <!-- Channel Matrix Badges -->
-          <div style="display: flex; flex-wrap: wrap; margin-bottom: 0.75rem;">
-            <span class="famtastic-channel-pill famtastic-pill-fb">Facebook</span>
-            <span class="famtastic-channel-pill famtastic-pill-ig">Instagram</span>
-            <span class="famtastic-channel-pill famtastic-pill-x">X</span>
-            <span class="famtastic-channel-pill famtastic-pill-yt">YouTube Shorts</span>
-            <span class="famtastic-channel-pill famtastic-pill-tt">TikTok</span>
-          </div>
-
-          <!-- Dual Media Preview (Feed Image + Shorts Video) -->
-          <div class="famtastic-media-grid">
-            <!-- 4x5 Image Preview -->
-            <div class="famtastic-media-box">
-              <div style="font-size: 0.7rem; color: #7cfc00; font-weight: 700; margin-bottom: 4px;">📷 Feed Image (FB / IG / X)</div>
-              <img src="' . $imgSrc4x5 . '" alt="' . $cid . '" onerror="this.src=\'' . $imgSrc9x16 . '\';" />
-              <div style="margin-top: 4px; font-size: 0.68rem;">
-                <a href="' . $imgSrc4x5 . '" target="_blank" style="color: #7cfc00; text-decoration: underline;">4x5 Full</a> · 
-                <a href="' . $imgSrc9x16 . '" target="_blank" style="color: #8e988e; text-decoration: underline;">9x16 Full</a>
-              </div>
-            </div>
-            <!-- 9x16 Video Preview -->
-            <div class="famtastic-media-box">
-              <div style="font-size: 0.7rem; color: #ff4d4d; font-weight: 700; margin-bottom: 4px;">🎬 Video (Shorts / TikTok)</div>
-              <video controls preload="metadata" playsinline poster="' . $imgSrc9x16 . '">
-                <source src="' . $videoSrc . '" type="video/mp4">
-                Your browser does not support HTML5 video.
-              </video>
-              <div style="margin-top: 4px; font-size: 0.68rem;">
-                <a href="' . $videoSrc . '" target="_blank" style="color: #ff4d4d; text-decoration: underline; font-weight: 700;">▶ Open Raw MP4 ↗</a>
-              </div>
-            </div>
-          </div>
-
-          <details style="margin: 0.25rem 0 0.75rem; background: #080c08; border: 1px solid #1e261e; border-radius: 8px; padding: 0.5rem;" open>
-            <summary style="font-size: 0.78rem; font-weight: 700; color: #aab2aa; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">📝 Multi-Channel Copy (Webform Intake CTA)</summary>
-            <pre style="margin-top: 0.5rem; font-family: inherit; font-size: 0.8rem; color: #c4d0c4; white-space: pre-wrap; word-break: break-word; line-height: 1.45;">' . Html::escape($captionText) . '</pre>
-          </details>
-
-          <div style="margin-top: auto; padding-top: 0.75rem; border-top: 1px solid #222b22;">
-            <div style="font-size: 0.75rem; font-weight: 700; color: #aab2aa; margin-bottom: 0.4rem; text-transform: uppercase;">Operator Approvals</div>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; text-align: center;">
-              <a href="' . $cLink . '" style="padding: 0.45rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($contentGate ? 'rgba(124,252,0,0.18); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
-                ' . ($contentGate ? '✓ Copy' : '○ Copy') . '
-              </a>
-              <a href="' . $mLink . '" style="padding: 0.45rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($mediaGate ? 'rgba(124,252,0,0.18); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
-                ' . ($mediaGate ? '✓ Media' : '○ Media') . '
-              </a>
-              <a href="' . $pLink . '" style="padding: 0.45rem 0.2rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 700; background: ' . ($publishGate ? 'rgba(124,252,0,0.18); color: #7cfc00; border: 1px solid #7cfc00;' : 'rgba(255,255,255,0.05); color: #888; border: 1px solid #333;') . '">
-                ' . ($publishGate ? '✓ Publish' : '○ Publish') . '
-              </a>
-            </div>
-          </div>
-        </article>
-      ';
+    $build['create'] = ['#type' => 'link', '#title' => 'New campaign draft', '#url' => Url::fromRoute('famtastic_pipeline.campaign_add'), '#attributes' => ['class' => ['button']]];
+    $campaign = $this->workspace->get($selected);
+    foreach (['edit' => 'Edit plan', 'duplicate' => 'Duplicate as draft', ($campaign['status'] === 'archived' ? 'restore' : 'archive') => ($campaign['status'] === 'archived' ? 'Restore draft' : 'Archive')] as $action => $label) {
+      if (empty($campaign['id']) && in_array($action, ['archive', 'restore'], TRUE)) continue;
+      if ($campaign['status'] === 'archived' && $action === 'edit') continue;
+      $build[$action] = ['#type' => 'link', '#title' => $label, '#url' => Url::fromRoute('famtastic_pipeline.campaign_manage', ['campaign_key' => $selected, 'action' => $action]), '#attributes' => ['class' => ['button']]];
     }
-    $cardsHtml .= '</div>';
+    return $build;
+  }
 
-    $batchApproveUrl = Url::fromRoute('famtastic_pipeline.social_record_batch_gate', ['day' => $selectedDay, 'gate' => 'all', 'direction' => 'approve'])->toString();
-    $batchRevokeUrl = Url::fromRoute('famtastic_pipeline.social_record_batch_gate', ['day' => $selectedDay, 'gate' => 'all', 'direction' => 'revoke'])->toString();
+  /** The same projection powers every campaign screen, without invented assets. */
+  private function campaignItems(string $title): array {
+    $key = $this->selectedCampaign();
+    $rows = [];
+    foreach ($this->workspace->items($key) as $item) {
+      $review = ['#type' => 'container'];
+      if ($item['source'] === 'Imported legacy manifest') {
+        foreach (['content', 'media', 'publish'] as $gate) {
+          $approved = !empty($item['approval_' . $gate]);
+          $review[$gate] = ['#type' => 'link', '#title' => ($approved ? 'Revoke ' : 'Review ') . $gate, '#url' => Url::fromRoute('famtastic_pipeline.social_record_gate', ['content_id' => $item['content_id'], 'gate' => $gate, 'direction' => $approved ? 'revoke' : 'approve']), '#attributes' => ['class' => ['button']]];
+        }
+        foreach (['4x5', '9x16'] as $format) $review[$format] = ['#type' => 'link', '#title' => 'View ' . $format . ' asset', '#url' => Url::fromRoute('famtastic_pipeline.marketing.asset', ['filename' => $item['content_id'] . '.' . $format . '.png']), '#attributes' => ['class' => ['button']]];
+      }
+      elseif ($item['source'] === 'CLI schedule') {
+        $variants = array_keys((array) ($item['surface_assets'] ?? []));
+        foreach (['primary_media', 'supporting_media'] as $variant) if (!empty($item[$variant])) $variants[] = $variant;
+        foreach ($variants as $variant) $review['media_' . $variant] = ['#type' => 'link', '#title' => 'View ' . str_replace('_', ' ', $variant), '#url' => Url::fromRoute('famtastic_pipeline.campaign_media', ['campaign_key' => $key, 'content_id' => $item['content_id'], 'variant' => $variant]), '#attributes' => ['class' => ['button']]];
 
-    $headerHtml = '
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-        <div>
-          <h2 style="margin: 0; font-size: 1.5rem;">Daily Social Dispatch — Day ' . $selectedDay . ' of 17</h2>
-          <p class="famtastic-ops__lede" style="margin: 0.25rem 0 0;">All scheduled multi-channel content moments, creative visual assets, and gate decisions for Day ' . $selectedDay . '.</p>
-        </div>
-        <div style="display: flex; gap: 0.5rem;">
-          <a href="' . $batchApproveUrl . '" class="button button--primary" style="background: #7cfc00; color: #000; font-weight: 800;">⚡ Approve Entire Day ' . $selectedDay . '</a>
-          <a href="' . $batchRevokeUrl . '" class="button">Revoke Day ' . $selectedDay . '</a>
-        </div>
-      </div>
-    ';
-
-    return [
-      'day_nav' => ['#type' => 'container', '#attributes' => ['class' => ['famtastic-dispatch__days'], 'style' => 'margin-bottom: 1.25rem;'], 'items' => $dayButtons],
-      'header' => ['#markup' => Markup::create($headerHtml)],
-      'cards' => ['#markup' => Markup::create($cardsHtml)],
-    ];
+        $review['provider'] = ['#type' => 'link', '#title' => 'Review provider record', '#url' => Url::fromRoute('famtastic_pipeline.marketing.tab', ['tab' => 'drops'], ['query' => ['campaign' => $key]]), '#attributes' => ['class' => ['button']]];
+      }
+      else $review['plan'] = ['#type' => 'link', '#title' => 'Edit draft plan', '#url' => Url::fromRoute('famtastic_pipeline.campaign_manage', ['campaign_key' => $key, 'action' => 'edit']), '#attributes' => ['class' => ['button']]];
+      $content = ['#type' => 'container', 'theme' => ['#plain_text' => (string) ($item['theme'] ?? '')]];
+      if (!empty($item['copy'])) {
+        $content['copy'] = ['#type' => 'details', '#title' => 'Read prepared copy'];
+        foreach ((array) $item['copy'] as $channel => $copy) if (is_scalar($copy)) $content['copy']['channel_' . $channel] = ['#type' => 'html_tag', '#tag' => 'p', '#value' => Html::escape((string) $copy)];
+      }
+      if (!empty($item['primary_media'])) $content['media'] = ['#type' => 'details', '#title' => 'Media source', 'path' => ['#plain_text' => (string) $item['primary_media']]];
+      $rows[] = [(string) ($item['content_id'] ?? ''), (string) ($item['scheduled_time'] ?: 'Not scheduled'), ['data' => $content], implode(', ', (array) ($item['channels'] ?? [])), (string) ($item['state'] ?? 'draft'), $item['source'], ['data' => $review]];
+    }
+    return $this->table($title . ' — ' . $key, 'Planning notes are editable Drupal drafts. CLI schedules and imported manifest records retain their original IDs and review controls. A recorded schedule or provider ID is not delivery proof.', ['Content ID', 'Date / time', 'Content', 'Channels', 'State', 'Source', 'Next action'], $rows, 'No content yet. Use Edit plan to add ideas and dates.');
   }
 
   private function date(int $stamp): string {
