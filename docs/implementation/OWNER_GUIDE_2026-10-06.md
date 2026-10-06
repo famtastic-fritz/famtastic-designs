@@ -1,10 +1,10 @@
 # Fritz’s command center: everyday tasks
 
-Review date: October 6, 2026. Release identity and live checks are recorded in [the release evidence](OWNER_HANDOFF_2026-10-06.md). This guide describes the reconciled release candidate. Deployment verification is pending; Fritz’s independent use is also pending. The September 30 guide remains a historical receipt.
+Review date: October 6, 2026. Release identity and live checks are recorded in [the release evidence](OWNER_HANDOFF_2026-10-06.md). This guide matches deployed release `7810aa9e786cb0dab01dcad0e67a6a258daea72e`. Authenticated task verification is recorded separately; Fritz’s independent use remains pending. The September 30 guide remains a historical receipt.
 
 ## Start on your phone
 
-Sign in at [FAMtastic Designs](https://famtasticdesigns.com/web/user/login), then open **FAMtastic Operations** (`/web/admin/famtastic`). Use your existing private credentials. Home shows stored work that needs attention. **Messages** takes you to customer conversations; **Campaigns** takes you to campaign work. **More** opens the remaining navigation. Missing controls can mean your account lacks the required staff permission.
+Sign in at [FAMtastic Designs](https://famtasticdesigns.com/web/user/login), then open **My command center** (`/web/admin/famtastic`). Use your existing private credentials. The **What needs me** section shows stored work that needs attention. **Messages** takes you to customer conversations; **Campaigns** takes you to campaign work. **More** opens the remaining navigation. Missing controls can mean your account lacks the required staff permission.
 
 Capability: `famtastic.mobile-command-home`. Opening a queue changes no customer record. Follow the relevant action to handle the work; reading an AI summary does not complete it.
 
@@ -21,6 +21,10 @@ Capability: `famtastic.campaign-draft-planning`.
 5. Duplicate an existing plan when you want a separate campaign. Use **Archive campaign** to remove it from current planning and **Restore as draft** to bring it back.
 
 The saved result is an internal draft plan. Choosing channels does not connect accounts or publish posts. Archiving does not cancel anything already scheduled with a publishing provider. Keep the existing public publishing workflow separate and check **Channel health** before scheduling. The previous Postiz connection was offline on September 30; this guide does not establish recovery today.
+
+![New campaign on the live mobile command center](evidence/2026-10-06-owner-command-center/new-campaign-mobile.jpg)
+
+Live production, October 6, release `7810aa9`: the blank **New campaign** form on a 390 × 844 viewport. The image shows the opening fields and bottom navigation. Scroll for later fields and **Save draft plan**. This picture proves the form renders; it does not prove a saved campaign.
 
 ## Save and preview a customer reply
 
@@ -42,10 +46,14 @@ Capability: `famtastic.staff-ai-tasks`.
 
 Open **Staff AI assistance** (`/web/admin/famtastic/ai-assistance`). A default chat model chooses the engine to ask; it does not automatically run any task. **Open AI provider settings** leads to provider configuration. The current task adapter supports configured OpenAI chat models. Enable the desired tasks under **Allow these staff tasks** and set **Maximum AI requests per staff member per hour**.
 
-Once configured, enabled and proven with a live test, AI can draft replies, summarize conversations, suggest campaign ideas from a saved brief, and summarize the Home workload. You still review and save the result. AI does not send, publish, approve projects or collect payments. Provider calls may cost money. A disabled button with setup guidance means the task is not ready; manual drafting remains available. Configuration alone is not evidence that a real model call works.
+At this release check, all four task checkboxes were off and the hourly limit was 5; no setting was changed. Once configured, enabled and proven with a live test, AI can draft replies, summarize conversations, suggest campaign ideas from a saved brief, and summarize the Home workload. You still review and save the result. AI does not send, publish, approve projects or collect payments. Provider calls may cost money. A disabled button with setup guidance means the task is not ready; manual drafting remains available. Configuration alone is not evidence that a real model call works.
+
+![AI assistance on the live mobile command center](evidence/2026-10-06-owner-command-center/ai-assistance-mobile.jpg)
+
+Live production, October 6, release `7810aa9`: **Staff AI assistance** on a 390 × 844 viewport. All four task checkboxes are off. Scroll to reach the hourly limit and **Save configuration**, which are below this image. The screenshot does not establish a connected model or a completed AI call.
 
 ## First practice session
 
 On your phone, create a clearly labeled practice campaign, save it, reopen it, change one dated idea, save again, archive and restore it. Then use an explicitly designated training conversation to save a reply and preview it without sending. Finally, use **More** to find **Staff AI assistance** and read its readiness message. The expected results and acceptance record are in [the handoff](OWNER_HANDOFF_2026-10-06.md).
 
-These are instructions for your first independent walkthrough, not a claim that you have already completed it. Live screenshots have not yet been captured for this release; no historical screenshot is presented as current proof.
+These are instructions for your first independent walkthrough, not a claim that you have already completed it. The current hosted Home and blank campaign form were inspected at a 390 × 844 browser viewport. The campaign save was not exercised: browser navigation interrupted form entry before submission. No training conversation was designated, so current hosted message save/preview remains unverified. No historical screenshot is presented as current proof.
