@@ -1,12 +1,26 @@
 <!-- EXECUTOR-CURRENT -->
-# Native window executor — October 6 operational continuation
+# Fifty beauty emails accepted — October 6
 
-Source implementation is being tested for the owner-authorized native timer. Exact provider remaining quota is unavailable after independent shell/API, portal and account-token investigations. The approved conservative execution mode uses published product limits, fresh observed message/outbox traffic, a 250/day mailbox reserve and 400/hour shared reserve. This is a modeled pacing budget with incomplete outside usage, not a verified provider balance or guaranteed lower bound.
+The backend fix is published and deployed at `2c1d908d`; frontend `cb8f5b07` is unchanged. The old launcher's missing frontend-source operator caused the earlier zero-send failure. The normal backend archive now includes the exact operator and its contact/capacity libraries. Source proof: 64 tests / 1,128 assertions; 25 installed frozen-v2 checks.
 
-The private approved beauty queue has 99 initially eligible contacts: next 50 at October 7 09:00 America/New_York, remaining 49 at 10:00 if fresh eligibility/capacity still passes. Initial coverage checked 325 Maildir originals per contact, all native history sources and the historical 260 exclusion. The first accepted customer and owned probe are excluded. Every window repeats actual history and suppression checks before signed cap-one dispatch. Nine other-industry copy drafts are available; matching imagery/destinations and variant approval remain pending. D3/D7 remain held.
+The ONE owner-authorized ASAP batch completed with **50 new customer emails SMTP-accepted, zero failures and zero uncertain dispatches**. Customer campaign total is **51**; the owned probe is separate. All 50 use immutable D0 v2 and all 50 native account links match their opaque invitation and business/industry context. Earlier accepted message 277 was not rewritten or resent. Customer inbox delivery, conversion and revenue remain unproved.
 
-New capability `acq.window-executor`: private signed config, four approved Eastern windows, atomic 50/window and 200/day acquisition limits across new/followup sends, preserved exact-dispatch lock, no catch-up, no interrupted/uncertain retry and global stop on failure. Source/testing evidence is separate from timer installation and next-window SMTP outcomes. Runtime installation proof will be recorded in NATIVE-EXECUTOR-RECEIPT.json. Owner physical UI/task acceptance remains pending.
+Exact provider quota remains unavailable. The approved modeled budget uses published limits, fresh native traffic and reserves of 250/day and 400/hour; outside usage is unknown. Every contact received fresh native history/suppression checks before exact cap-one dispatch. The durable pilot lock is retained and broad/legacy queues remain closed.
+
+Remaining beauty queue: **49**. The routine 9/10/11/noon Eastern timer is prepared but **not installed**: automatic approval review requires direct approval here for future dispatch; the question is pending. The rejected command changed nothing. No timer outcome or future SMTP acceptance is claimed. Nine other-industry candidates are being built separately; their Labs and generic D3/D7 are held. Physical owner acceptance remains pending.
+
+Exact runtime evidence: [NATIVE-EXECUTOR-RECEIPT.json](NATIVE-EXECUTOR-RECEIPT.json). Records below retain dated historical states.
 <!-- /EXECUTOR-CURRENT -->
+
+## Current release capability evidence — backend 2c1d908d / frontend cb8f5b07
+
+| Capability / actor / useful task | Entry and inputs | Storage, visibility and recovery | Source/runtime evidence | Provider evidence | Owner acceptance / remaining gate |
+| --- | --- | --- | --- | --- | --- |
+| acq.window-executor / authorized operator / execute a bounded batch | CLI, private signed config and queue; one explicit ASAP exception | Native atomic window/slot journal; private contacts; unique replay journal; uncertain outcomes never automatically retried | deployed; 64 tests / 1,128 assertions, 25 installed v2 checks, real complete 50-slot journal | 50 new SMTP acceptances; zero unresolved dispatches; exact quota unavailable | pending physical operator task; routine timer remains uninstalled pending direct tool approval |
+| acq.generic-d0-v2 / invited beauty owner / see clear next steps | Approved D0 email, preview primary and contextual free-account secondary link | Immutable native message snapshots; earlier v1 message277 preserved | production_consumed; all 50 accepted snapshots have v2 content and correct invitation token; 390px email layout checked | Actual native SMTP transport accepted 50; customer inbox rendering unproved | owner authorized copy; recipient reader and physical device acceptance pending |
+| acq.registration-context-v2 / invited owner / continue the website interview | /login?mode=register&sample_continuation=opaque64; exact invited account | Native same-email account verification and server-side invitation context; private interview draft | 50 production snapshots resolved the correct beauty invitation; historical owned full signup/verify/save/reload proof retains its earlier release | Verification inbox proof is historical owned-account evidence; no new customer completion claimed | pending uncoached owner/recipient journey on v2 release |
+| acq.routine-clock / operator / send remaining eligible beauty contacts | Prepared dedicated 9/10/11/noon Eastern command | Config limits Oct7 and same queue; durable accepted keys excluded; daily200/window50 | local_tested; prepared but NOT installed | no future send outcome | direct approval pending after automatic-review rejection; no claim that stored schedule is an active timer |
+
 
 # Deployed release and first customer send — 2026-10-06
 
