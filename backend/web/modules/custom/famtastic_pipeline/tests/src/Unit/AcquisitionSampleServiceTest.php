@@ -503,6 +503,25 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     return hash_hmac('sha256',json_encode($value,JSON_THROW_ON_ERROR),$secret);
   }
 
+  public function testGenericPostalMultilineNormalizesBeforeFreezing(): void {
+    $invitation=$this->prepare();$authorization=$this->genericAuthorizationReceipt($invitation);
+    $snapshot=\Drupal\famtastic_pipeline\Service\AcquisitionSampleEmail::compileGeneric($authorization,$invitation['token'],str_repeat('a',48),str_repeat('b',48),"  123 Fictional Test Street\r\nSuite\t42\nExample City, FL 00000  ");
+    $expected='123 Fictional Test Street Suite 42 Example City, FL 00000';
+    $this->assertSame($expected,$snapshot['postal_address']);
+    $this->assertStringContainsString($expected,$snapshot['body']);
+    $this->assertStringContainsString($expected,$snapshot['html']);
+    $single=\Drupal\famtastic_pipeline\Service\AcquisitionSampleEmail::compileGeneric($authorization,$invitation['token'],str_repeat('a',48),str_repeat('b',48),$expected);
+    $this->assertSame($single,$snapshot);
+  }
+
+  public function testGenericPostalRejectsOtherControlsAndMarkup(): void {
+    $invitation=$this->prepare();$authorization=$this->genericAuthorizationReceipt($invitation);
+    foreach (["123 Fictional\x00Street","123 Fictional\x01Street","123 Fictional\x0bStreet","123 Fictional\x0cStreet","123 Fictional\x1fStreet","123 Fictional\x7fStreet","\x00Street","Street\x0b",'<script>Street</script>',"\r\n\t "] as $postal) {
+      try { \Drupal\famtastic_pipeline\Service\AcquisitionSampleEmail::compileGeneric($authorization,$invitation['token'],str_repeat('a',48),str_repeat('b',48),$postal);$this->fail('Unsafe or empty postal address admitted.'); }
+      catch (\InvalidArgumentException $error) { $this->assertSame('generic_native_bindings_required',$error->getMessage()); }
+    }
+  }
+
   private function coldAuthorizationReceipt(array $invitation): array {
     $this->smtpFrom = 'hello@famtasticdesigns.com';
     $authorization = $this->genericAuthorizationReceipt($invitation);

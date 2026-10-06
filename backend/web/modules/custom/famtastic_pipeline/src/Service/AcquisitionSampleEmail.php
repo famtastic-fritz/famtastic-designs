@@ -62,7 +62,8 @@ final class AcquisitionSampleEmail {
   /** Freeze only the approved NEW D0 source; no old draft/recipe fallback. */
   public static function compileGeneric(array $authorization, string $token, string $unsubscribe, string $tracking, string $postal): array {
     AcquisitionSampleGuard::tokenHash($token);
-    if (!preg_match('/^[a-f0-9]{48}$/D', $unsubscribe) || !preg_match('/^[a-f0-9]{48}$/D', $tracking) || trim($postal) === '' || strlen($postal) > 1000 || preg_match('/[<>\x00-\x1f]/', $postal)) throw new \InvalidArgumentException('generic_native_bindings_required');
+    $postal = trim((string) preg_replace('/ +/', ' ', str_replace(["\r", "\n", "\t"], ' ', $postal)), ' ');
+    if (!preg_match('/^[a-f0-9]{48}$/D', $unsubscribe) || !preg_match('/^[a-f0-9]{48}$/D', $tracking) || $postal === '' || strlen($postal) > 1000 || preg_match('/[<>\x00-\x1f\x7f]/', $postal)) throw new \InvalidArgumentException('generic_native_bindings_required');
     $recordBytes = (string) file_get_contents(AcquisitionSampleArtifacts::path($authorization['creative_approval']['reference']));
     $creative = AcquisitionSampleGuard::creativeApproval($authorization['creative_approval'], $recordBytes);
     $read = static function (string $relative) use ($creative): string {
