@@ -44,5 +44,22 @@
   "source_assertions": 1128,
   "installed_v2_checks": 25,
   "physical_owner_acceptance": "pending",
-  "other_industry_or_generic_followups_activated": false
+  "other_industry_or_generic_followups_activated": false,
+  "native_campaign_plan": {
+    "campaign_id": 5,
+    "revision": 2,
+    "saved_and_reloaded_at": "2026-10-06T19:30:36Z",
+    "records_asap_accepted": 50,
+    "records_timer_installed": false,
+    "messages_sent_by_plan_update": 0,
+    "channel_status_preserved": true
+  },
+  "latest_aggregate_readback_at": "2026-10-06T19:40:24Z",
+  "latest_aggregate_readback": {
+    "asap_accepted": 50,
+    "customer_total_accepted": 51,
+    "v2_content_count": 50,
+    "unresolved_dispatches": 0,
+    "pilot_lock": true
+  }
 }
