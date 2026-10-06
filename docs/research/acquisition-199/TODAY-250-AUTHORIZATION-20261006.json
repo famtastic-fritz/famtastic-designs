@@ -1,0 +1,31 @@
+{
+  "schema": "famtastic.acquisition-today-customer-target.v1",
+  "approved_by": "Fritz Medine",
+  "local_date": "2026-10-06",
+  "timezone": "America/New_York",
+  "customer_target": 250,
+  "shared_acquisition_cap": 251,
+  "existing_owned_probe_count": 1,
+  "window_cap": 50,
+  "normal_day_cap_after_today": 200,
+  "owner_authorized": true,
+  "sender": "hello@famtasticdesigns.com",
+  "reference": "docs/research/acquisition-199/TODAY-250-AUTHORIZATION-20261006.json",
+  "human_source": {
+    "thread_id": "01a10d13-9d03-74c3-9ab4-15e8045e7688",
+    "thread_title": "Find latest brief",
+    "turn_id": "01a11364-ed17-7510-b5ab-51f85bcef254",
+    "user_message_id": "01a11364-f240-7630-a5a4-c7a606b77fa6",
+    "source": "realtime_delegation transcript_tail_flush; actual user transcript read from originating chat",
+    "quote": "I want at least two hundred and fifty to go out today. And then tomorrow you can resume the normal schedule. That's if we have two hundred and fifty ready ... stuff that's ready in the lab ... prioritize those first ... Two fifty for the day."
+  },
+  "conditions": [
+    "Only unsent eligible contacts with tested matching live Lab destinations.",
+    "Keep max50 per execution, fresh actual history/suppression/account usage, exact duplicate and uncertain-stop guards.",
+    "Target250 is customer emails, not a claim of250 completed or250 total account transports; the existing owned probe is separate and still counts against account usage.",
+    "Existing conservative published-limit budget and250day/400hour reserves are unchanged; do not send beyond fresh allowance.",
+    "Normal200 total acquisition/day and9/10/11/noon Eastern windows resume October7.",
+    "No provider purchase/switch, additional spend, unlimited sending or accepted/uncertain message retry."
+  ],
+  "customer_inbox_delivery_proved": false
+}

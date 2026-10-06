@@ -49,7 +49,9 @@ final class AcquisitionWindowQuota {
     $old=$this->db->select('famtastic_acquisition_window','w')->fields('w',['window_key'])->condition('status','running')->condition('window_key',$current,'<>')->execute()->fetchField();
     if($old){$this->halt((string)$old,'acquisition_interrupted_window_manual_review');throw new \RuntimeException('acquisition_interrupted_window_manual_review');}
   }
-  public function reserveWindow(string $date,int $hour,string $configHash,array $records,int $campaign,?int $asapExpires=NULL,?string $immediateKey=NULL): array {
+  public function reserveWindow(string $date,int $hour,string $configHash,array $records,int $campaign,?int $asapExpires=NULL,?string $immediateKey=NULL,int $sharedDayCap=self::DAY_CAP): array {
+    $todayException=$sharedDayCap===251&&$campaign===5&&$date==='2026-10-06'&&$asapExpires!==NULL&&$immediateKey==='asap-industry-'.$date.'-'.sprintf('%02d',$hour);
+    if($sharedDayCap!==self::DAY_CAP&&!$todayException)throw new \RuntimeException('acquisition_shared_day_cap_invalid');
     $tx=$this->db->startTransaction();
     try {
       $this->lock($date);$key=$asapExpires===NULL?$date.'-'.sprintf('%02d',$hour):($immediateKey??self::ASAP_KEY);
@@ -58,7 +60,7 @@ final class AcquisitionWindowQuota {
       $old=$this->db->select('famtastic_acquisition_window','w')->fields('w')->condition('window_key',$key)->execute()->fetchAssoc();
       if($old){if(!hash_equals($old['config_hash'],$configHash))throw new \RuntimeException('acquisition_window_config_changed');return ['duplicate'=>TRUE,'window_key'=>$key,'status'=>$old['status'],'slots'=>[]];}
       $usage=$this->usage($date,$hour);$count=count($records);
-      if(!$count||$count>self::WINDOW_CAP||$usage['day']+$count>self::DAY_CAP||$usage['window']+$count>self::WINDOW_CAP)throw new \RuntimeException('acquisition_window_capacity_exhausted');
+      if(!$count||$count>self::WINDOW_CAP||$usage['day']+$count>$sharedDayCap||$usage['window']+$count>self::WINDOW_CAP)throw new \RuntimeException('acquisition_window_capacity_exhausted');
       $this->db->insert('famtastic_acquisition_window')->fields(['window_key'=>$key,'config_hash'=>$configHash,'status'=>'running','reason'=>'','expires'=>$asapExpires,'created'=>$this->now(),'changed'=>$this->now()])->execute();
       $slots=[];
       foreach($records as $record){$slot=hash('sha256',$key.':'.$record['queue_key']);$this->db->insert('famtastic_acquisition_slot')->fields(['slot_key'=>$slot,'queue_hash'=>hash('sha256',$record['queue_key']),'local_date'=>$date,'window_key'=>$key,'campaign_id'=>$campaign,'recipient_hash'=>$record['recipient_hash'],'status'=>'reserved','created'=>$this->now(),'changed'=>$this->now()])->execute();$slots[]=$slot;}

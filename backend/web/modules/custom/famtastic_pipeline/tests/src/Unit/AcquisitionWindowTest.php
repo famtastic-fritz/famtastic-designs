@@ -49,6 +49,12 @@ final class AcquisitionWindowTest extends UnitTestCase {
     $this->config['campaign_id']=5;$this->config['execution_mode']='asap_industry';$this->config['starts_on']=$this->config['ends_on']=$date;
     $this->config['asap_authorization']=['schema'=>'famtastic.acquisition-asap-authorization.v1','approval_ref'=>'owner_industry_today','issued_at'=>$this->now,'expires'=>min($this->now+3300,AcquisitionWindowQuota::local($this->now)->setTime((int)$hour,59,59)->getTimestamp()),'local_date'=>$date,'campaign_id'=>5,'cap'=>50,'owner_authorized'=>TRUE,'reference'=>'docs/research/acquisition-199/SAME-DAY-INDUSTRY-AUTHORIZATION-20261006.json','sha256'=>str_repeat('e',64),'window_key'=>'asap-industry-'.$date.'-'.$hour];
   }
+  private function todayIndustryAsap(string $clock):void {
+    $this->industryAsap($clock);
+    $reference='docs/research/acquisition-199/TODAY-250-AUTHORIZATION-20261006.json';$sha='09fd8bdd36350d24bc6c9d354816e448573ce11c91bbb4b538550649293ee9a5';
+    $this->config['today_exception']=['schema'=>'famtastic.acquisition-today-customer-target.v1','local_date'=>'2026-10-06','timezone'=>AcquisitionWindowQuota::ZONE,'customer_target'=>250,'shared_acquisition_cap'=>251,'existing_owned_probe_count'=>1,'window_cap'=>50,'normal_day_cap_after_today'=>200,'owner_authorized'=>TRUE,'approved_by'=>'Fritz Medine','sender'=>'hello@famtasticdesigns.com','reference'=>$reference,'sha256'=>$sha];
+    $this->config['asap_authorization']['reference']=$reference;$this->config['asap_authorization']['sha256']=$sha;
+  }
   public function testIndustryImmediateHoursShareDailyCapAndExcludePriorAcceptances():void {
     $this->config['campaign_id']=5;$this->at('2026-10-07 10:00:00');for($i=0;$i<51;$i++)$this->message('prior-'.$i.'@example.test',0,TRUE);
     $queue=$this->queue(900);
@@ -61,6 +67,47 @@ final class AcquisitionWindowTest extends UnitTestCase {
     try{$this->executeAsap($this->queue(1));$this->fail('Wrong-hour window accepted');}catch(\RuntimeException $e){$this->assertSame('acquisition_industry_asap_binding_required',$e->getMessage());}
     $this->config['asap_authorization']['window_key']='asap-industry-2026-10-07-17';$this->config['asap_authorization']['expires']=$this->now+3300;
     try{$this->executeAsap($this->queue(1));$this->fail('Cross-hour window accepted');}catch(\RuntimeException $e){$this->assertSame('acquisition_industry_asap_binding_required',$e->getMessage());}$this->assertSame(0,$this->sent);
+  }
+  public function testSignedTodayCustomerTargetReaches251ThenTomorrowReturnsTo200():void {
+    $this->at('2026-10-06 09:00:00');$this->config['campaign_id']=5;
+    for($i=0;$i<199;$i++)$this->message('customer-before-today-'.$i.'@example.test',0,TRUE);
+    $this->message('owned-probe-before-today@example.test',0,TRUE);
+    $this->todayIndustryAsap('2026-10-06 17:15:00');$first=$this->executeAsap($this->queue(50));
+    $this->assertSame('complete',$first['status']);$this->assertSame(50,$first['counts']['accepted']);$this->assertSame(250,$this->quota->usage('2026-10-06',17)['day']);$this->assertSame(50,$this->quota->usage('2026-10-06',17)['window']);
+    $this->todayIndustryAsap('2026-10-06 18:00:00');$remainder=[['queue_key'=>'today-final-customer','kind'=>'customer','email'=>'today-final-customer@example.test']];$second=$this->executeAsap($remainder);
+    $this->assertSame('complete',$second['status']);$this->assertSame(1,$second['counts']['accepted']);$this->assertSame(251,$this->quota->usage('2026-10-06',18)['day']);$this->assertSame(51,$this->sent);
+    $this->todayIndustryAsap('2026-10-06 19:00:00');$blocked=$this->executeAsap([['queue_key'=>'today-over-target','kind'=>'customer','email'=>'today-over-target@example.test']]);
+    $this->assertSame('capacity_exhausted',$blocked['status']);$this->assertSame(51,$this->sent);$this->assertSame(251,$this->quota->usage('2026-10-06',19)['day']);$this->assertSame('active',$this->quota->clockStatus());
+
+    $this->at('2026-10-07 09:00:00');$this->config['execution_mode']='scheduled';$this->config['starts_on']=$this->config['ends_on']='2026-10-07';unset($this->config['asap_authorization'],$this->config['today_exception']);
+    $tomorrow=array_map(static fn(int $i):array=>['queue_key'=>'tomorrow-customer-'.$i,'kind'=>'customer','email'=>'tomorrow-customer-'.$i.'@example.test'],range(1,200));
+    foreach([9,10,11,12] as $hour){$this->at('2026-10-07 '.sprintf('%02d',$hour).':00:00');$result=$this->executeWindow($tomorrow);$this->assertSame('complete',$result['status']);$this->assertSame(50,$result['counts']['accepted']);}
+    $this->assertSame(251,$this->sent);$this->assertSame(200,$this->quota->usage('2026-10-07',12)['day']);
+  }
+  public function testTodayCustomerTargetExceptionRejectsRoutineOtherDateAndTampering():void {
+    $this->todayIndustryAsap('2026-10-06 17:15:00');$base=$this->config['today_exception'];
+    foreach([
+      'wrong_schema'=>static function(array &$x):void{$x['schema']='other';},
+      'wrong_target'=>static function(array &$x):void{$x['customer_target']=251;},
+      'wrong_shared_cap'=>static function(array &$x):void{$x['shared_acquisition_cap']=252;},
+      'wrong_probe_count'=>static function(array &$x):void{$x['existing_owned_probe_count']=0;},
+      'wrong_owner'=>static function(array &$x):void{$x['owner_authorized']=FALSE;},
+      'wrong_proof_hash'=>static function(array &$x):void{$x['sha256']=str_repeat('f',64);},
+    ] as $case=>$mutate){$this->todayIndustryAsap('2026-10-06 17:15:00');$mutate($this->config['today_exception']);try{$this->executeAsap($this->queue(1));$this->fail('Tampered today exception accepted: '.$case);}catch(\RuntimeException $error){$this->assertSame('acquisition_today_exception_invalid',$error->getMessage(),$case);}$this->assertSame(0,$this->prepared);$this->assertSame(0,$this->sent);}
+
+    $this->todayIndustryAsap('2026-10-06 17:15:00');$this->config['asap_authorization']['sha256']=str_repeat('f',64);
+    try{$this->executeAsap($this->queue(1));$this->fail('Different ASAP proof accepted');}catch(\RuntimeException $error){$this->assertSame('acquisition_industry_asap_binding_required',$error->getMessage());}
+    $this->todayIndustryAsap('2026-10-07 17:15:00');
+    try{$this->executeAsap($this->queue(1));$this->fail('Previous-date exception accepted');}catch(\RuntimeException $error){$this->assertSame('acquisition_today_exception_invalid',$error->getMessage());}
+    $this->todayIndustryAsap('2026-10-06 09:00:00');$this->config['execution_mode']='scheduled';unset($this->config['asap_authorization']);
+    try{$this->executeWindow($this->queue(1));$this->fail('Routine exception accepted');}catch(\RuntimeException $error){$this->assertSame('acquisition_today_exception_invalid',$error->getMessage());}
+    foreach([
+      ['2026-10-07',5,'asap-industry-2026-10-07-17',251],
+      ['2026-10-06',1,'asap-industry-2026-10-06-17',251],
+      ['2026-10-06',5,'asap-industry-2026-10-06-17',252],
+      ['2026-10-06',5,NULL,251],
+    ] as [$date,$campaign,$key,$cap]){try{$this->quota->reserveWindow($date,17,str_repeat('a',64),[],(int)$campaign,$this->now+600,$key,(int)$cap);$this->fail('Quota accepted an unauthorized shared cap');}catch(\RuntimeException $error){$this->assertSame('acquisition_shared_day_cap_invalid',$error->getMessage());}}
+    $this->assertSame(0,$this->prepared);$this->assertSame(0,$this->sent);
   }
   public function testIndustryImmediateFailureHaltsNextHourAndKeepsReservedSlots():void {
     $this->industryAsap('2026-10-07 17:15:00');$r=$this->executeAsap($this->queue(3),function(string $m,string $p):array{if($m==='dispatch')throw new \RuntimeException('synthetic_uncertain');return $this->operator($m,$p);});$this->assertSame('halted',$r['status']);$this->assertSame(3,$this->quota->usage('2026-10-07',17)['day']);

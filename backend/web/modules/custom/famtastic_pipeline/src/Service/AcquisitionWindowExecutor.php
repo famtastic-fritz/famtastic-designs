@@ -48,14 +48,14 @@ final class AcquisitionWindowExecutor {
     $release=\AcquisitionWindowContact::check($binding);
     if(($release['release_verified']??FALSE)!==TRUE||($release['sender_account_sha256']??'')!==$account['account_sha256']||($release['release_commit']??'')!==$config['release_commit'])throw new \RuntimeException('acquisition_window_hosted_release_unproved');
     if($checkConfig&&$this->quota->clockStatus()==='halted')throw new \RuntimeException('acquisition_clock_halted_manual_review');
-    if($checkConfig){$read=\AcquisitionWindowContact::capacity($binding);$budget=$this->capacity($read,$this->time->getCurrentTime(),$account['account_sha256']);return ['status'=>'checked','config_hash'=>hash('sha256',json_encode($config,JSON_THROW_ON_ERROR)),'queue_rows'=>count($queue['records']),'queue_sha256'=>hash('sha256',$queueBytes),'capacity_mode'=>$budget['capacity_mode'],'available_today'=>$budget['available_today'],'available_hour'=>$budget['available_hour'],'release_commit'=>$config['release_commit'],'reservations_created'=>0,'prepared'=>0,'sent'=>0,'inbox_delivery_proved'=>FALSE];}
+    if($checkConfig){$read=\AcquisitionWindowContact::capacity($binding);$budget=$this->capacity($read,$this->time->getCurrentTime(),$account['account_sha256']);return ['status'=>'checked','config_hash'=>hash('sha256',json_encode($config,JSON_THROW_ON_ERROR)),'queue_rows'=>count($queue['records']),'queue_sha256'=>hash('sha256',$queueBytes),'capacity_mode'=>$budget['capacity_mode'],'available_today'=>$budget['available_today'],'available_hour'=>$budget['available_hour'],'effective_shared_day_cap'=>$this->todayExceptionCap($config,$this->time->getCurrentTime(),$asap),'release_commit'=>$config['release_commit'],'reservations_created'=>0,'prepared'=>0,'sent'=>0,'inbox_delivery_proved'=>FALSE];}
     return $this->execute($config,$queue['records'],static fn(array $record,array $binding):array=>\AcquisitionWindowContact::prepare($record,$binding),self::exactOperator(...),static fn(array $binding):array=>\AcquisitionWindowContact::capacity($binding),static fn(int $seconds)=>sleep($seconds),$asap);
   }
   /** Injected callables exist for focused no-network proof; production run binds exact files. */
   public function execute(array $config,array $queue,callable $prepare,callable $operator,callable $capacity,?callable $pace=NULL,bool $asap=FALSE): array {
     $now=$this->time->getCurrentTime();$local=AcquisitionWindowQuota::local($now);$date=$local->format('Y-m-d');$hour=(int)$local->format('G');$key=$date.'-'.sprintf('%02d',$hour);
     if(!$asap&&(!in_array($hour,AcquisitionWindowQuota::HOURS,TRUE)||(int)$local->format('i')>=5))return ['status'=>'outside_window','inbox_delivery_proved'=>FALSE];
-    $asapExpires=$this->validateMode($config,$now,$asap);if($asap)$key=($config['execution_mode']??'')==='asap_industry'?$config['asap_authorization']['window_key']:AcquisitionWindowQuota::ASAP_KEY;
+    $asapExpires=$this->validateMode($config,$now,$asap);$dayLimit=$this->todayExceptionCap($config,$now,$asap);if($asap)$key=($config['execution_mode']??'')==='asap_industry'?$config['asap_authorization']['window_key']:AcquisitionWindowQuota::ASAP_KEY;
     $account=$this->validateConfig($config,$date);
     $existing=$this->quota->result($key);
     if($existing['status']!=='absent')return $existing+['duplicate'=>TRUE]; // Never resume a running/interrupted window.
@@ -69,7 +69,7 @@ final class AcquisitionWindowExecutor {
       $row['recipient_hash']=$this->ledger->contactHash($email);$records[]=$row;
     }
     if(!$records)return ['status'=>'empty','window_key'=>$key,'inbox_delivery_proved'=>FALSE];
-    $usage=$this->quota->usage($date,$hour);$limit=min(50-$usage['window'],200-$usage['day']);
+    $usage=$this->quota->usage($date,$hour);$limit=min(50-$usage['window'],$dayLimit-$usage['day']);
     if($limit<=0)return ['status'=>'capacity_exhausted','window_key'=>$key,'inbox_delivery_proved'=>FALSE];
     $records=array_slice($records,0,$limit);
     // This is a freshly derived window binding, not a renewed historical receipt.
@@ -81,7 +81,7 @@ final class AcquisitionWindowExecutor {
       $read=$capacity($binding);$available=$this->capacity($read,$this->time->getCurrentTime(),$account['account_sha256']);
       $records=array_slice($records,0,min(count($records),$available['available_today'],$available['available_hour']));
       if(!$records)return ['status'=>'capacity_exhausted','reason'=>'provider_capacity_unavailable','window_key'=>$key,'inbox_delivery_proved'=>FALSE];
-      $reservation=$this->quota->reserveWindow($date,$hour,hash('sha256',json_encode($config,JSON_THROW_ON_ERROR)),$records,(int)$config['campaign_id'],$asapExpires,($config['execution_mode']??'')==='asap_industry'?$key:NULL);
+      $reservation=$this->quota->reserveWindow($date,$hour,hash('sha256',json_encode($config,JSON_THROW_ON_ERROR)),$records,(int)$config['campaign_id'],$asapExpires,($config['execution_mode']??'')==='asap_industry'?$key:NULL,$dayLimit);
       if($reservation['duplicate'])return $this->quota->result($key)+['duplicate'=>TRUE];
       foreach($records as $i=>$record){
         $current=$this->time->getCurrentTime();$clock=AcquisitionWindowQuota::local($current);
@@ -120,12 +120,24 @@ final class AcquisitionWindowExecutor {
     return array_replace((array)($config['binding_config']??[]),$fields,['campaign_id'=>(int)$config['campaign_id'],'release_commit'=>$config['release_commit']??'','sender_account_sha256'=>$account]);
   }
   private function validateMode(array $config,int $now,bool $asap): ?int {
-    $mode=$config['execution_mode']??'scheduled';
+    $mode=$config['execution_mode']??'scheduled';$todayLimit=$this->todayExceptionCap($config,$now,$asap);
     if(!$asap){if($mode!=='scheduled'||isset($config['asap_authorization']))throw new \RuntimeException('acquisition_asap_explicit_mode_required');return NULL;}
     $a=$config['asap_authorization']??[];$date=AcquisitionWindowQuota::local($now)->format('Y-m-d');
     if(!in_array($mode,['asap_initial','asap_industry'],TRUE)||($config['campaign_id']??0)!==5||($config['starts_on']??'')!==$date||($config['ends_on']??'')!==$date||($a['schema']??'')!=='famtastic.acquisition-asap-authorization.v1'||($a['campaign_id']??0)!==5||($a['cap']??0)!==50||($a['owner_authorized']??FALSE)!==TRUE||($a['local_date']??'')!==$date||!is_int($a['issued_at']??NULL)||!is_int($a['expires']??NULL)||$a['issued_at']>$now||$a['issued_at']<$now-3600||$a['expires']<=$now||$a['expires']>$a['issued_at']+3600||AcquisitionWindowQuota::local($a['expires'])->format('Y-m-d')!==$date||!preg_match('/^[a-zA-Z0-9:_.-]{8,128}$/D',(string)($a['approval_ref']??''))||empty($a['reference'])||!preg_match('/^[a-f0-9]{64}$/D',(string)($a['sha256']??'')))throw new \RuntimeException('acquisition_asap_authorization_invalid');
-    if($mode==='asap_industry'&&(($a['window_key']??'')!=='asap-industry-'.AcquisitionWindowQuota::local($now)->format('Y-m-d-H')||AcquisitionWindowQuota::local($a['expires']-1)->format('Y-m-d-H')!==AcquisitionWindowQuota::local($now)->format('Y-m-d-H')||($a['reference']??'')!=='docs/research/acquisition-199/SAME-DAY-INDUSTRY-AUTHORIZATION-20261006.json'))throw new \RuntimeException('acquisition_industry_asap_binding_required');
+    if($mode==='asap_industry'){
+      $today=$todayLimit>AcquisitionWindowQuota::DAY_CAP;
+      $expectedReference=$today?'docs/research/acquisition-199/TODAY-250-AUTHORIZATION-20261006.json':'docs/research/acquisition-199/SAME-DAY-INDUSTRY-AUTHORIZATION-20261006.json';
+      if(($a['window_key']??'')!=='asap-industry-'.AcquisitionWindowQuota::local($now)->format('Y-m-d-H')||AcquisitionWindowQuota::local($a['expires']-1)->format('Y-m-d-H')!==AcquisitionWindowQuota::local($now)->format('Y-m-d-H')||($a['reference']??'')!==$expectedReference||($today&&($a['sha256']??'')!=='09fd8bdd36350d24bc6c9d354816e448573ce11c91bbb4b538550649293ee9a5'))throw new \RuntimeException('acquisition_industry_asap_binding_required');
+    }
     return $a['expires'];
+  }
+  /** The signed one-day customer target; ordinary windows remain capped at 200. */
+  private function todayExceptionCap(array $config,int $now,bool $asap): int {
+    if(!array_key_exists('today_exception',$config))return AcquisitionWindowQuota::DAY_CAP;
+    $exception=$config['today_exception'];
+    $today='2026-10-06';$reference='docs/research/acquisition-199/TODAY-250-AUTHORIZATION-20261006.json';$sha='09fd8bdd36350d24bc6c9d354816e448573ce11c91bbb4b538550649293ee9a5';
+    if(!is_array($exception)||!$asap||($config['execution_mode']??'')!=='asap_industry'||AcquisitionWindowQuota::local($now)->format('Y-m-d')!==$today||($config['starts_on']??'')!==$today||($config['ends_on']??'')!==$today||($exception['schema']??'')!=='famtastic.acquisition-today-customer-target.v1'||($exception['local_date']??'')!==$today||($exception['timezone']??'')!==AcquisitionWindowQuota::ZONE||($exception['customer_target']??NULL)!==250||($exception['shared_acquisition_cap']??NULL)!==251||($exception['existing_owned_probe_count']??NULL)!==1||($exception['window_cap']??NULL)!==50||($exception['normal_day_cap_after_today']??NULL)!==200||($exception['owner_authorized']??NULL)!==TRUE||($exception['approved_by']??'')!=='Fritz Medine'||($exception['sender']??'')!=='hello@famtasticdesigns.com'||($exception['reference']??'')!==$reference||($exception['sha256']??'')!==$sha)throw new \RuntimeException('acquisition_today_exception_invalid');
+    return 251;
   }
   private function validateQueue(array $queue): void {
     $seen=[];$contacts=[];

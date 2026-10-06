@@ -1,0 +1,23 @@
+{
+  "schema": "famtastic.acquisition-today250-source-proof.v1",
+  "classification": "changed",
+  "owner_authority_reference": "docs/research/acquisition-199/TODAY-250-AUTHORIZATION-20261006.json",
+  "owner_authority_sha256": "09fd8bdd36350d24bc6c9d354816e448573ce11c91bbb4b538550649293ee9a5",
+  "window_unit_tests": 31,
+  "window_assertions": 1795,
+  "combined_window_schema_tests": 32,
+  "combined_assertions": 1813,
+  "today_customer_target": 250,
+  "today_shared_acquisition_cap": 251,
+  "owned_probe_count": 1,
+  "normal_day_cap_after_today": 200,
+  "window_cap": 50,
+  "reserved_budget_unchanged": true,
+  "current_customer_accepted": 101,
+  "current_observed_native_account_usage": 107,
+  "current_conservative_available_today": 143,
+  "current_possible_customer_ceiling": 244,
+  "new_customer_sends_by_source_work": 0,
+  "hosted_exception": "pending_normal_deploy_and_actual_signed_preflight",
+  "physical_owner_acceptance": "pending"
+}
