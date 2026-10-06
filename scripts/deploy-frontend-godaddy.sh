@@ -64,7 +64,7 @@ if [[ "$COMMIT_SHA" != "$REMOTE_MAIN_SHA" ]]; then
 fi
 
 echo "Deployment candidate: $COMMIT_SHA"
-echo "Build location:       ~/$REMOTE_DEPLOY_BASE/releases/$COMMIT_SHA/source"
+echo "Build location:       ~/$REMOTE_DEPLOY_BASE/releases/$COMMIT_SHA/frontend-source"
 echo "Document root:        ~/$REMOTE_ROOT"
 
 if [[ "$APPLY" != true ]]; then
@@ -106,7 +106,7 @@ else
   echo "unrecorded"
 fi
 echo "Preflight passed. No production files changed."
-echo "Apply plan: private Git worktree -> pinned Node build -> backup -> assets and route shells first -> root index.html last."
+echo "Apply plan: private exact-SHA archive -> pinned Node build -> backup -> assets and route shells first -> root index.html last."
 REMOTE_PREFLIGHT
   exit 0
 fi
@@ -131,7 +131,7 @@ prebuilt_dist_manifest_sha256="$7"
 deploy_dir="$HOME/$deploy_base"
 mirror_dir="$deploy_dir/repository.git"
 release_dir="$deploy_dir/releases/$commit_sha"
-source_dir="$release_dir/source"
+source_dir="$release_dir/frontend-source"
 frontend_dir="$source_dir/frontend"
 dist_dir="$frontend_dir/dist"
 production_dir="$HOME/$remote_root"
@@ -145,7 +145,7 @@ backup_path="$backup_dir/famtastic-frontend-$timestamp-$commit_sha.tgz"
 # node_modules tree for every commit deployed.
 cleanup_build_dependencies() {
   dependencies_dir="$frontend_dir/node_modules"
-  expected_dependencies_dir="$HOME/$deploy_base/releases/$commit_sha/source/frontend/node_modules"
+  expected_dependencies_dir="$HOME/$deploy_base/releases/$commit_sha/frontend-source/frontend/node_modules"
   [[ "$dependencies_dir" == "$expected_dependencies_dir" ]] || {
     echo "Refusing unexpected dependency cleanup target: $dependencies_dir" >&2
     return 1
@@ -169,19 +169,21 @@ resolved_main="$(git --git-dir="$mirror_dir" rev-parse refs/heads/main)"
   exit 1
 }
 
-if [[ ! -d "$source_dir/.git" && ! -f "$source_dir/.git" ]]; then
-  rm -rf "$release_dir"
-  mkdir -p "$release_dir"
-  # Use the same exact worktree as the backend deployer. Each release lane sets
-  # its own bounded sparse paths immediately below.
-  git --git-dir="$mirror_dir" worktree prune
-  git --git-dir="$mirror_dir" worktree add --detach --no-checkout "$source_dir" "$commit_sha"
+if [[ ! -f "$source_dir/commit.txt" ]] || ! grep -qx "$commit_sha" "$source_dir/commit.txt" || [[ ! -f "$source_dir/.nvmrc" ]] || [[ "$creator_credit_only" == 1 && ! -f "$source_dir/backend/web/modules/custom/famtastic_pipeline/famtastic_pipeline.info.yml" ]]; then
+  rm -rf -- "$source_dir"
+  mkdir -p "$source_dir"
+  # GoDaddy may clear sparse worktrees between commands. Materialize only the
+  # exact committed frontend inputs in this lane's normal private directory.
+  # The checked mirror SHA remains authoritative; never copy working-tree or
+  # generated content, or remove the backend source/other release artifacts.
+  source_paths=(.nvmrc frontend scripts marketing/brands/famtastic/video-studio/whats-the-catch)
+  [[ "$creator_credit_only" != 1 ]] || source_paths+=(backend/web/modules/custom/famtastic_pipeline)
+  git --git-dir="$mirror_dir" archive "$commit_sha" "${source_paths[@]}" | tar -x -C "$source_dir"
+  printf '%s\n' "$commit_sha" > "$source_dir/commit.txt"
 fi
-if [[ "$creator_credit_only" == 1 ]]; then
-  git -C "$source_dir" sparse-checkout set frontend scripts backend/web/modules/custom/famtastic_pipeline marketing/brands/famtastic/video-studio/whats-the-catch
-else
-  git -C "$source_dir" sparse-checkout set frontend scripts marketing/brands/famtastic/video-studio/whats-the-catch
-fi
+grep -qx "$commit_sha" "$source_dir/commit.txt"
+test -f "$frontend_dir/package-lock.json"
+test -f "$source_dir/scripts/creator-credit.mjs"
 
 cd "$source_dir"
 [[ -f .nvmrc ]] || {
