@@ -5,6 +5,17 @@ declare(strict_types=1);
  * CLI library only. No sending, route, global worker, or contact data in source.
  */
 final class AcquisitionWindowContact {
+  public const INDUSTRIES = [
+    'mobile-detailing' => 'Mobile Detailing, Auto Care & Tinting',
+    'fitness-meal-prep' => 'Fitness, Personal Training & Meal Prep',
+    'photography-media' => 'Photography, Videography & Media',
+    'baking-catering' => 'Custom Baking, Catering & Private Chefs',
+    'home-services' => 'Home Services, Cleaning & Maintenance',
+    'events-rentals' => 'Events, Party Rentals & Entertainment',
+    'pet-services' => 'Pet Services, Grooming & Training',
+    'consulting-tutoring' => 'Consulting, Tutoring & Digital Creators',
+    'handcrafted-boutiques' => 'Handcrafted Products, Fashion & Boutiques',
+  ];
   public static function capacity(array $binding): array {
     require_once __DIR__.'/acquisition-window-capacity.php';
     return AcquisitionWindowCapacity::read($binding);
@@ -28,7 +39,11 @@ final class AcquisitionWindowContact {
     return ['release_verified'=>TRUE,'sender_account_sha256'=>$account['account_sha256'],'release_commit'=>$binding['backend_sha']];
   }
   public static function audit(array $record): array {
-    if (PHP_SAPI !== 'cli' || ($record['kind'] ?? '') !== 'customer' || ($record['business_category'] ?? '') !== 'Beauty, Hair Styling & Braiding' || ($record['historical260_overlap'] ?? NULL) !== FALSE || !preg_match('/^beauty-[a-z0-9-]{3,60}$/D', (string)($record['queue_key'] ?? ''))) throw new RuntimeException('window_private_beauty_record_required');
+    $slug=(string)($record['template_slug']??'');
+    $industry=$slug!=='';
+    $category=$industry?(self::INDUSTRIES[$slug]??NULL):'Beauty, Hair Styling & Braiding';
+    $keyPattern=$industry?'/^industry-[a-z0-9-]{3,65}$/D':'/^beauty-[a-z0-9-]{3,60}$/D';
+    if (PHP_SAPI !== 'cli' || ($record['kind'] ?? '') !== 'customer' || $category===NULL || ($record['business_category'] ?? '') !== $category || ($record['historical260_overlap'] ?? NULL) !== FALSE || !preg_match($keyPattern, (string)($record['queue_key'] ?? ''))) throw new RuntimeException('window_private_matched_record_required');
 $email=mb_strtolower(trim($record['email']??''));
 if(!filter_var($email,FILTER_VALIDATE_EMAIL))throw new RuntimeException('selected_contact_required');
 $db=\Drupal::database();$ledger=\Drupal::service('famtastic_pipeline.operational_ledger');$hash=$ledger->contactHash($email);
@@ -105,6 +120,11 @@ $report['native_usage']=['email_messages_last_hour'=>$count('famtastic_email_mes
       $bundle=\Drupal\Core\Site\Settings::get('famtastic_acquisition_bundle_root');
       $creative=['reference'=>'docs/research/acquisition-199/CREATIVE-APPROVAL.json','sha256'=>hash_file('sha256',$bundle.'/docs/research/acquisition-199/CREATIVE-APPROVAL.json')];
       $artifact='marketing/campaigns/acquisition-199/generic-review/beauty-template.html';
+      $industryRecipe=NULL;
+      if(isset($record['template_slug'])){
+        $industryRecipe=\Drupal\famtastic_pipeline\Service\AcquisitionIndustryTemplate::nativeRecipe($record['template_slug']);
+        $creative=$industryRecipe['review']['approval_record'];
+      }
       $account=\Drupal::service('famtastic_pipeline.acquisition_sample_sequences')->senderAccount();
       if($account['from']!=='hello@famtasticdesigns.com') throw new RuntimeException('window_exact_sender_required');
       if(!hash_equals($audit['recipient_hash'],$ledger->contactHash($email))||$ledger->isSuppressed($email)) throw new RuntimeException('window_contact_changed_or_stopped');
@@ -115,6 +135,7 @@ $report['native_usage']=['email_messages_last_hour'=>$count('famtastic_email_mes
       'recipe'=>['id'=>'beauty_soft_power_acquisition','version'=>1,'niche'=>'beauty_hair','title'=>'Soft Power','summary'=>'An illustrative beauty direction','artifact_path'=>$artifact,'sha256'=>hash_file('sha256',$bundle.'/'.$artifact),'review'=>['status'=>'approved_campaign_artifact','approval_record'=>$creative],'recipe_ref'=>['owner'=>'component-studio','id'=>'beauty_soft_power_acquisition','version'=>1,'status'=>'import_request_pending']],
       'creative_approval'=>$creative,'history_receipt'=>$receipt+['classification'=>'actual_native_history_reconciled','coverage_complete'=>TRUE,'eligible_for_new_outreach'=>TRUE,'known_stop_reasons'=>[]],
       'release_proof'=>['status'=>'owner_reviewed','reference'=>$releasePath,'sha256'=>hash_file('sha256',$releasePath)],'authorization_basis'=>'owner_authorized_cold_outreach','provider_policy_conflict'=>TRUE,'recipient_opt_in'=>FALSE,'provider_permission_proved'=>FALSE,'owner_authorization_receipt'=>array_replace($receipt,['reference'=>'docs/research/acquisition-199/OWNER-COLD-SEND-AUTHORIZATION.json','sha256'=>hash('sha256',$ownerBytes),'approved_by'=>'Fritz Medine']),'owner_authorization_record'=>$ownerBytes];
+      if($industryRecipe!==NULL){$packet['recipe']=$industryRecipe;$packet['creative_approval']=$creative;}
       $key=$dir.'/owner-signing.key';if(is_link($key)||(fileperms($key)&0777)!==0600) throw new RuntimeException('window_private_signing_key_required');
       $secret=trim(file_get_contents($key));if(strlen($secret)<32) throw new RuntimeException('window_signing_key_required');
       putenv('FAMTASTIC_ACQUISITION_OWNER_SIGNING_SECRET='.$secret);

@@ -7,6 +7,8 @@
 # ACQUISITION_GENERIC_PROOF=1 also exports the supplied-context candidate journey.
 # ACQUISITION_GENERIC_D0_PROOF=1 + ACQUISITION_GENERIC_D0_BUNDLE=/private/candidate/bundle
 # proves D0 source against private bundle only (synthetic data, no cohort export).
+# ACQUISITION_INDUSTRY_D0_BUNDLE=/private/candidate/bundle tests all nine
+# immutable industry templates with synthetic recipients and disabled transport.
 set -euo pipefail
 
 
@@ -35,7 +37,7 @@ cleanup() {
   trap - EXIT
   if [[ "$result" != 0 ]]; then
     echo "FAIL: retained diagnostics: $evidence" >&2
-    tail -n 35 "$evidence/install.log" "$evidence/test.log" "$evidence/canonical.log" 2>/dev/null || true
+    tail -n 35 "$evidence/install.log" "$evidence/test.log" "$evidence/supplemental.log" "$evidence/industry-d0.log" "$evidence/canonical.log" 2>/dev/null || true
   fi
   # The exact mktemp directory is the only deletion target, even on failure.
   if [[ "${ACQUISITION_KEEP_SANDBOX:-0}" == 1 ]]; then
@@ -133,6 +135,13 @@ if [[ "${ACQUISITION_GENERIC_D0_PROOF:-0}" == 1 ]]; then
   cp "$repo_root/docs/research/acquisition-199/OWNER-COLD-SEND-AUTHORIZATION.json" "$sandbox/backend/private/owner-cold-source-record.json"
   "${isolated[@]}" "ACQUISITION_DRUPAL_EVIDENCE=$evidence/generic-d0" ACQUISITION_DRUPAL_PHASE=generic_delivery "$php_bin" "${php_args[@]}" "$sandbox/backend/vendor/drush/drush/drush.php" "--root=$sandbox/backend/web" --uri=http://acquisition-drupal.example.test php:script "$sandbox/scripts/acquisition-sample-drupal.php" >"$evidence/generic-d0.log" 2>&1
   cat "$evidence/generic-d0.log"
+fi
+if [[ -n "${ACQUISITION_INDUSTRY_D0_BUNDLE:-}" ]]; then
+  test -f "$ACQUISITION_INDUSTRY_D0_BUNDLE/manifest.json"
+  mkdir -p "$sandbox/backend/private/industry-d0" "$evidence/industry-d0"
+  rsync -a "$ACQUISITION_INDUSTRY_D0_BUNDLE/" "$sandbox/backend/private/industry-d0/"
+  "${isolated[@]}" "ACQUISITION_DRUPAL_EVIDENCE=$evidence/industry-d0" "$php_bin" "${php_args[@]}" "$sandbox/backend/vendor/drush/drush/drush.php" "--root=$sandbox/backend/web" --uri=http://acquisition-drupal.example.test php:script "$sandbox/scripts/acquisition-industry-drupal.php" >"$evidence/industry-d0.log" 2>&1
+  cat "$evidence/industry-d0.log"
 fi
 cat "$evidence/test.log" "$evidence/supplemental.log"
 echo "Evidence: $evidence/evidence.json"

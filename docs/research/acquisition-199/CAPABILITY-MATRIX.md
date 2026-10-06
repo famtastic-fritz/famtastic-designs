@@ -1,3 +1,16 @@
+<!-- INDUSTRY-ACTIVATION-CURRENT -->
+The approved nine-industry native integration is source-complete and tested locally. Classification: **changed**; current live backend2c1d908d/frontendcb8f5b07 and customer SMTP total51 remain the last verified production state. Fresh private900audit passed900eligible/0held; native production preparation repeats each audit. Deployment and900sending remain pending at this source checkpoint.
+
+| Capability / actor / task | Entry and stored result | Evidence | Provider / owner boundary |
+| --- | --- | --- | --- |
+| acq.industry-d0-v1 / invited owner / open matching Lab | Exact suppliedindustry→approved immutable email/nativeclick/account/unsubscribe binding; pinned private93filebundle |91installed synthetic checks across9industries;40sampletests559assertions |9fakecaptures only; actualSMTP/inbox pending; physicalowner pending |
+| acq.industry-lab-v1 / invited owner / practice inquiry work | Stored interactiveHTML/CSS/JS, isolated opaqueiframe; localfictional reply/status/instructions reset on reload |18desktop1280/phone390 installed browser checks; source/bundle-absent storedpreview | Local practice; no external persistence; uncoached owner pending |
+| acq.industry-context-v1 / verified owner / continue interview | Native same-email verification and exact business/category/recipe continuation |9installed real-controller registration/verification checks with memorymail | Actual customer verification/inbox pending |
+| acq.industry-clock-v1 / operator / finish remaining outreach | Shared durable cap50/window200TOTAL/day, hourlysame-day expiry, no uncertain replay; finite routinewindows |28SQLite tests1080assertions;51prior+149max same-day modeled | Live installation/sends pending; other native traffic and reserves counted |
+
+Exact source proof: [INDUSTRY-NATIVE-SOURCE-PROOF-20261006.json](INDUSTRY-NATIVE-SOURCE-PROOF-20261006.json). Approval applies to the54original reviewed bytes; compiler only binds production links and required sender/footer slots.
+<!-- /INDUSTRY-ACTIVATION-CURRENT -->
+
 <!-- EXECUTOR-CURRENT -->
 # Fifty beauty emails accepted — October 6
 

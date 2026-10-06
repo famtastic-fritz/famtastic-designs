@@ -1,0 +1,22 @@
+{
+  "schema": "famtastic.acquisition-private-upload-authorization.v1",
+  "owner": "Fritz Medine",
+  "verified_at": "2026-10-06T21:39:22.807224+00:00",
+  "source_kind": "direct human voice transcript verified by read_thread",
+  "source_thread_id": "01a10d13-9d03-74c3-9ab4-15e8045e7688",
+  "source_turn_id": "01a11326-2e14-78d2-b330-80953159786e",
+  "question": "Do you approve uploading the prepared nine-hundred-contact queue to your existing GoDaddy server\u2019s private acquisition folder for campaign sending?",
+  "owner_answer": "Yes",
+  "scope": "Prepared900 queue to existing GoDaddy private acquisition folder for fresh native/history/suppression checks and already-authorized campaign sending",
+  "destination": "existing GoDaddy server /home/xrdj7j99xhzt/private_files/acquisition-199",
+  "approved_other_destinations": false,
+  "approved_new_provider_or_purchase": false,
+  "managed_review_disabled": false,
+  "automatic_review_result": "accepted after this new destination-specific authorization",
+  "upload_result": "SCP queue and read-only audit driver completed exit0; fresh audit running; no900cohort send yet",
+  "not_a_direct_in_this_chat_confirmation": true,
+  "batch_cap": 50,
+  "day_cap": 200,
+  "prior_customer_smtp_accepted": 51,
+  "additional_today_max_before_other_traffic": 149
+}

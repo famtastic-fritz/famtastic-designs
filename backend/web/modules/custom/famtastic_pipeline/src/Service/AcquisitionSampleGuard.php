@@ -61,6 +61,9 @@ final class AcquisitionSampleGuard {
     if ($internalCandidate) {
       if (($recipe['review']['status'] ?? '') !== 'candidate' || ($recipe['recipe_ref']['status'] ?? '') !== 'import_request_pending' || $recipe['id'] !== 'beauty_soft_power_acquisition' || $recipe['recipe_ref']['id'] !== $recipe['id'] || (int) $recipe['recipe_ref']['version'] !== (int) $recipe['version'] || $recipe['artifact_path'] !== 'marketing/campaigns/acquisition-199/generic-review/beauty-template.html') throw new \InvalidArgumentException('internal_candidate_recipe_required');
     }
+    elseif (($recipe['review']['status'] ?? '') === 'approved_campaign_artifact' && str_starts_with((string) ($recipe['id'] ?? ''), 'industry_')) {
+      if (!AcquisitionIndustryTemplate::isNativeRecipe($recipe)) throw new \InvalidArgumentException('industry_approved_recipe_binding_required');
+    }
     elseif (($recipe['review']['status'] ?? '') === 'approved_campaign_artifact') {
       $record = self::creativeApproval((array) ($recipe['review']['approval_record'] ?? []));
       if ($recipe['id'] !== 'beauty_soft_power_acquisition' || $recipe['artifact_path'] !== 'marketing/campaigns/acquisition-199/generic-review/beauty-template.html' || $recipe['sha256'] !== ($record['artifact_sha256'][$recipe['artifact_path']] ?? '') || !in_array($recipe['recipe_ref']['status'] ?? '', ['import_request_pending', 'registered'], TRUE) || $recipe['recipe_ref']['id'] !== $recipe['id'] || (int) $recipe['recipe_ref']['version'] !== (int) $recipe['version']) throw new \InvalidArgumentException('generic_approved_recipe_binding_required');
@@ -80,6 +83,18 @@ final class AcquisitionSampleGuard {
 
   /** Verify owner-approved campaign bytes without claiming registry registration. */
   public static function creativeApproval(array $receipt, ?string $frozen = NULL): array {
+    if (($receipt['reference'] ?? '') === AcquisitionIndustryTemplate::APPROVAL_REFERENCE) {
+      $slug = (string) ($receipt['template_slug'] ?? '');
+      $industry = AcquisitionIndustryTemplate::bySlug($slug);
+      if (preg_match('/^[a-f0-9]{64}$/D', (string) ($receipt['sha256'] ?? '')) !== 1 || !hash_equals($industry['approval_sha256'], (string) $receipt['sha256'])) throw new \InvalidArgumentException('industry_creative_approval_changed');
+      $bytes = $frozen ?? $industry['approval_bytes'];
+      if (!hash_equals($industry['approval_sha256'], hash('sha256', $bytes)) || !hash_equals($industry['approval_bytes'], $bytes)) throw new \InvalidArgumentException('industry_creative_approval_changed');
+      $record = json_decode($bytes, TRUE, 64, JSON_THROW_ON_ERROR);
+      if (($record['schema'] ?? '') !== AcquisitionIndustryTemplate::APPROVAL_SCHEMA || ($record['owner'] ?? '') !== 'Fritz Medine' || ($record['creative_source_commit'] ?? '') !== $industry['source_commit']) throw new \InvalidArgumentException('industry_creative_approval_required');
+      $record['content_id'] = $industry['content_id'];
+      $record['template_slug'] = $slug;
+      return $record;
+    }
     if (($receipt['reference'] ?? '') !== 'docs/research/acquisition-199/CREATIVE-APPROVAL.json' || preg_match('/^[a-f0-9]{64}$/D', (string) ($receipt['sha256'] ?? '')) !== 1) throw new \InvalidArgumentException('generic_creative_approval_required');
     $bytes = $frozen ?? (string) file_get_contents(AcquisitionSampleArtifacts::path($receipt['reference']));
     if (!hash_equals($receipt['sha256'], hash('sha256', $bytes))) throw new \InvalidArgumentException('generic_creative_approval_changed');
@@ -112,11 +127,21 @@ final class AcquisitionSampleGuard {
       if (($permission['provider'] ?? '') !== $account['provider'] || ($permission['policy'] ?? '') !== 'opt_in_only' || ($permission['permitted_use'] ?? FALSE) !== TRUE || empty($permission['written_opt_in_reference']) || preg_match('/^[a-f0-9]{64}$/D', (string) ($permission['written_opt_in_sha256'] ?? '')) !== 1) throw new \InvalidArgumentException('generic_actual_sender_use_required');
     }
     if (($authorization['history_receipt']['classification'] ?? '') !== 'actual_native_history_reconciled' || ($authorization['history_receipt']['coverage_complete'] ?? FALSE) !== TRUE || ($authorization['history_receipt']['eligible_for_new_outreach'] ?? FALSE) !== TRUE || ($authorization['history_receipt']['known_stop_reasons'] ?? NULL) !== []) throw new \InvalidArgumentException('generic_actual_history_required');
-    $creative = self::creativeApproval((array) ($authorization['creative_approval'] ?? []), $frozenCreative);
+    $creativeApproval = (array) ($authorization['creative_approval'] ?? []);
     $recipes = json_decode((string) $sample['recipe_snapshot'], TRUE, 32, JSON_THROW_ON_ERROR);
-    if (count($recipes) !== 1 || $recipes[0]['id'] !== 'beauty_soft_power_acquisition' || $recipes[0]['sha256'] !== ($creative['artifact_sha256'][$recipes[0]['artifact_path']] ?? '') || !hash_equals($recipes[0]['sha256'], hash('sha256', (string) $recipes[0]['html_snapshot']))) throw new \InvalidArgumentException('generic_approved_recipe_binding_required');
-    $approvedContent = $creative['content_id'] ?? 'acquisition-199:beauty_soft_power_generic_d0:v1';
-    if (!in_array($approvedContent, ['acquisition-199:beauty_soft_power_generic_d0:v1', 'acquisition-199:beauty_soft_power_generic_d0:v2'], TRUE) || ($authorization['content_id'] ?? '') !== $approvedContent) throw new \InvalidArgumentException('generic_approved_content_identity_required');
+    $industrySlug = (string) ($creativeApproval['template_slug'] ?? '');
+    if ($industrySlug !== '') {
+      $industry = AcquisitionIndustryTemplate::bySlug($industrySlug);
+      $context = json_decode((string) $sample['bindings'], TRUE, 32, JSON_THROW_ON_ERROR)['_preparation'] ?? [];
+      $expectedApproval = ['reference' => AcquisitionIndustryTemplate::APPROVAL_REFERENCE, 'sha256' => $industry['approval_sha256'], 'template_slug' => $industrySlug];
+      if ($creativeApproval !== $expectedApproval || ($authorization['content_id'] ?? '') !== $industry['content_id'] || ($context['industry_template_slug'] ?? '') !== $industrySlug || ($sample['niche'] ?? '') !== 'generic' || count($recipes) !== 1 || ($recipes[0]['id'] ?? '') !== 'industry_' . str_replace('-', '_', $industrySlug) || ($recipes[0]['industry_template']['content_id'] ?? '') !== $industry['content_id'] || ($recipes[0]['industry_template']['approval_sha256'] ?? '') !== $industry['approval_sha256'] || !hash_equals((string) ($recipes[0]['industry_template']['lab_source_sha256'] ?? ''), (string) $industry['source_hashes']['lab.html']) || !hash_equals((string) ($recipes[0]['sha256'] ?? ''), hash('sha256', (string) ($recipes[0]['html_snapshot'] ?? ''))) || ($frozenCreative !== NULL && !hash_equals($industry['approval_bytes'], $frozenCreative))) throw new \InvalidArgumentException('industry_approved_recipe_binding_required');
+    }
+    else {
+      $creative = self::creativeApproval($creativeApproval, $frozenCreative);
+      if (count($recipes) !== 1 || $recipes[0]['id'] !== 'beauty_soft_power_acquisition' || $recipes[0]['sha256'] !== ($creative['artifact_sha256'][$recipes[0]['artifact_path']] ?? '') || !hash_equals($recipes[0]['sha256'], hash('sha256', (string) $recipes[0]['html_snapshot']))) throw new \InvalidArgumentException('generic_approved_recipe_binding_required');
+      $approvedContent = $creative['content_id'] ?? 'acquisition-199:beauty_soft_power_generic_d0:v1';
+      if (!in_array($approvedContent, ['acquisition-199:beauty_soft_power_generic_d0:v1', 'acquisition-199:beauty_soft_power_generic_d0:v2'], TRUE) || ($authorization['content_id'] ?? '') !== $approvedContent) throw new \InvalidArgumentException('generic_approved_content_identity_required');
+    }
   }
 
   /** Owner intent is distinct from recipient consent and provider permission. */

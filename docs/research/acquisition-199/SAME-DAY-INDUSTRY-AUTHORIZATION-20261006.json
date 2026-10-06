@@ -1,0 +1,20 @@
+{
+  "schema": "famtastic.acquisition-same-day-industry-authorization.v1",
+  "recorded_at": "2026-10-06T21:07:09.548891+00:00",
+  "approved_by": "Fritz Medine",
+  "source_kind": "Direct human voice transcript verified by read_thread in originating chat",
+  "source_thread_id": "01a10d13-9d03-74c3-9ab4-15e8045e7688",
+  "source_turn_id": "01a11307-7203-70d1-b39c-16ac69a17345",
+  "owner_words": "I want to start sending today ... start knocking down that nine hundred today.",
+  "scope": "Same-day sending of eligible contacts in the remaining900 using the nine existing approved email/Lab templates, matching native continuations and existing GoDaddy sender.",
+  "template_approval_reference": "docs/research/acquisition-199/TEMPLATE-APPROVAL-20261006.json",
+  "local_date": "2026-10-06",
+  "window_cap": 50,
+  "day_cap": 200,
+  "daily_total_includes_prior_customer_acceptances": true,
+  "daily_capacity_reduced_by_other_actual_traffic_and_reserves": true,
+  "optional_identity_or_competitor_research_required": false,
+  "new_lab_redesign_dependency": false,
+  "new_provider_or_purchase_authorized": false,
+  "prior_in_this_chat_approval_fabricated": false
+}

@@ -143,9 +143,10 @@ class OutreachMailer {
       $mailer->AltBody = $body;
       foreach ($attachments as $attachment) {
         $cid = (string) ($attachment['cid'] ?? '');
+        $mediaType = (string) ($attachment['media_type'] ?? '');
         $bytes = base64_decode((string) ($attachment['bytes_base64'] ?? ''), TRUE);
-        if (!preg_match('/^(?:connect-qr|sample-[a-z0-9_]+)$/D', $cid) || $bytes === FALSE || strlen($bytes) > 1048576 || !hash_equals((string) ($attachment['sha256'] ?? ''), hash('sha256', $bytes)) || !in_array($attachment['media_type'] ?? '', ['image/png', 'image/jpeg'], TRUE)) throw new RuntimeException('acquisition_attachment_integrity_failed');
-        $mailer->addStringEmbeddedImage($bytes, $cid, $cid . ($attachment['media_type'] === 'image/png' ? '.png' : '.jpg'), 'base64', $attachment['media_type']);
+        $extension = self::frozenAttachmentExtension($attachment, $template, $bytes);
+        $mailer->addStringEmbeddedImage($bytes, $cid, $cid . $extension, 'base64', $mediaType);
       }
       $mailer->send();
       $providerMessageId = trim($mailer->getLastMessageID());
@@ -169,6 +170,15 @@ class OutreachMailer {
       '@message_id' => $providerMessageId,
     ]);
     return $providerMessageId;
+  }
+
+  /** SVG is admitted only for the hash-pinned industry sample MIME path. */
+  private static function frozenAttachmentExtension(array $attachment, string $template, string|false $bytes): string {
+    $cid = (string) ($attachment['cid'] ?? '');
+    $mediaType = (string) ($attachment['media_type'] ?? '');
+    $svgAllowed = $template === AcquisitionSampleSequenceService::MESSAGE_KIND && $mediaType === 'image/svg+xml' && preg_match('/^sample-industry_[a-z0-9_]+$/D', $cid) === 1 && $bytes !== FALSE && preg_match('/\A(?:<\?xml[^>]*>\s*)?<svg\b/i', $bytes) === 1;
+    if (!preg_match('/^(?:connect-qr|sample-[a-z0-9_]+)$/D', $cid) || $bytes === FALSE || strlen($bytes) > 1048576 || !hash_equals((string) ($attachment['sha256'] ?? ''), hash('sha256', $bytes)) || (!in_array($mediaType, ['image/png', 'image/jpeg'], TRUE) && !$svgAllowed)) throw new RuntimeException('acquisition_attachment_integrity_failed');
+    return match ($mediaType) { 'image/png' => '.png', 'image/jpeg' => '.jpg', 'image/svg+xml' => '.svg', default => throw new RuntimeException('acquisition_attachment_integrity_failed') };
   }
 
   /** Pure presentation preview: never touches a transport, capture or outbox. */

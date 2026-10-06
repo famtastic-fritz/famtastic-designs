@@ -55,7 +55,7 @@ final class AcquisitionWindowExecutor {
   public function execute(array $config,array $queue,callable $prepare,callable $operator,callable $capacity,?callable $pace=NULL,bool $asap=FALSE): array {
     $now=$this->time->getCurrentTime();$local=AcquisitionWindowQuota::local($now);$date=$local->format('Y-m-d');$hour=(int)$local->format('G');$key=$date.'-'.sprintf('%02d',$hour);
     if(!$asap&&(!in_array($hour,AcquisitionWindowQuota::HOURS,TRUE)||(int)$local->format('i')>=5))return ['status'=>'outside_window','inbox_delivery_proved'=>FALSE];
-    $asapExpires=$this->validateMode($config,$now,$asap);if($asap)$key=AcquisitionWindowQuota::ASAP_KEY;
+    $asapExpires=$this->validateMode($config,$now,$asap);if($asap)$key=($config['execution_mode']??'')==='asap_industry'?$config['asap_authorization']['window_key']:AcquisitionWindowQuota::ASAP_KEY;
     $account=$this->validateConfig($config,$date);
     $existing=$this->quota->result($key);
     if($existing['status']!=='absent')return $existing+['duplicate'=>TRUE]; // Never resume a running/interrupted window.
@@ -81,7 +81,7 @@ final class AcquisitionWindowExecutor {
       $read=$capacity($binding);$available=$this->capacity($read,$this->time->getCurrentTime(),$account['account_sha256']);
       $records=array_slice($records,0,min(count($records),$available['available_today'],$available['available_hour']));
       if(!$records)throw new \RuntimeException('acquisition_provider_capacity_unavailable');
-      $reservation=$this->quota->reserveWindow($date,$hour,hash('sha256',json_encode($config,JSON_THROW_ON_ERROR)),$records,(int)$config['campaign_id'],$asapExpires);
+      $reservation=$this->quota->reserveWindow($date,$hour,hash('sha256',json_encode($config,JSON_THROW_ON_ERROR)),$records,(int)$config['campaign_id'],$asapExpires,($config['execution_mode']??'')==='asap_industry'?$key:NULL);
       if($reservation['duplicate'])return $this->quota->result($key)+['duplicate'=>TRUE];
       foreach($records as $i=>$record){
         $current=$this->time->getCurrentTime();$clock=AcquisitionWindowQuota::local($current);
@@ -123,7 +123,8 @@ final class AcquisitionWindowExecutor {
     $mode=$config['execution_mode']??'scheduled';
     if(!$asap){if($mode!=='scheduled'||isset($config['asap_authorization']))throw new \RuntimeException('acquisition_asap_explicit_mode_required');return NULL;}
     $a=$config['asap_authorization']??[];$date=AcquisitionWindowQuota::local($now)->format('Y-m-d');
-    if($mode!=='asap_initial'||($config['campaign_id']??0)!==5||($config['starts_on']??'')!==$date||($config['ends_on']??'')!==$date||($a['schema']??'')!=='famtastic.acquisition-asap-authorization.v1'||($a['campaign_id']??0)!==5||($a['cap']??0)!==50||($a['owner_authorized']??FALSE)!==TRUE||($a['local_date']??'')!==$date||!is_int($a['issued_at']??NULL)||!is_int($a['expires']??NULL)||$a['issued_at']>$now||$a['issued_at']<$now-3600||$a['expires']<=$now||$a['expires']>$a['issued_at']+3600||AcquisitionWindowQuota::local($a['expires'])->format('Y-m-d')!==$date||!preg_match('/^[a-zA-Z0-9:_.-]{8,128}$/D',(string)($a['approval_ref']??''))||empty($a['reference'])||!preg_match('/^[a-f0-9]{64}$/D',(string)($a['sha256']??'')))throw new \RuntimeException('acquisition_asap_authorization_invalid');
+    if(!in_array($mode,['asap_initial','asap_industry'],TRUE)||($config['campaign_id']??0)!==5||($config['starts_on']??'')!==$date||($config['ends_on']??'')!==$date||($a['schema']??'')!=='famtastic.acquisition-asap-authorization.v1'||($a['campaign_id']??0)!==5||($a['cap']??0)!==50||($a['owner_authorized']??FALSE)!==TRUE||($a['local_date']??'')!==$date||!is_int($a['issued_at']??NULL)||!is_int($a['expires']??NULL)||$a['issued_at']>$now||$a['issued_at']<$now-3600||$a['expires']<=$now||$a['expires']>$a['issued_at']+3600||AcquisitionWindowQuota::local($a['expires'])->format('Y-m-d')!==$date||!preg_match('/^[a-zA-Z0-9:_.-]{8,128}$/D',(string)($a['approval_ref']??''))||empty($a['reference'])||!preg_match('/^[a-f0-9]{64}$/D',(string)($a['sha256']??'')))throw new \RuntimeException('acquisition_asap_authorization_invalid');
+    if($mode==='asap_industry'&&(($a['window_key']??'')!=='asap-industry-'.AcquisitionWindowQuota::local($now)->format('Y-m-d-H')||AcquisitionWindowQuota::local($a['expires']-1)->format('Y-m-d-H')!==AcquisitionWindowQuota::local($now)->format('Y-m-d-H')||($a['reference']??'')!=='docs/research/acquisition-199/SAME-DAY-INDUSTRY-AUTHORIZATION-20261006.json'))throw new \RuntimeException('acquisition_industry_asap_binding_required');
     return $a['expires'];
   }
   private function validateQueue(array $queue): void {

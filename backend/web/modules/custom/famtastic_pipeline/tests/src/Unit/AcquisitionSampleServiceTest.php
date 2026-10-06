@@ -15,6 +15,9 @@ use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\UnitTestCase;
 
 require_once dirname(__DIR__, 3) . '/famtastic_pipeline.install';
+foreach (['AcquisitionSampleSchema', 'OperationalLedger', 'BrandedEmail', 'AcquisitionSampleArtifacts', 'AcquisitionSampleGuard', 'AcquisitionIndustryTemplate', 'AcquisitionSampleEmail', 'AcquisitionSampleService', 'AcquisitionSampleSequenceService', 'AcquisitionSampleMemoryAdapter', 'OutreachMailer', 'AcquisitionSampleExactAdapter'] as $service) {
+  require_once dirname(__DIR__, 3) . '/src/Service/' . $service . '.php';
+}
 
 /** Real SQLite query tests; synthetic recipients only, no shared Drupal boot. */
 final class AcquisitionSampleServiceTest extends UnitTestCase {
@@ -662,6 +665,72 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
     $this->assertFalse($sample['context_provenance']['component_studio_registration_proved']);
     $this->assertFalse($sample['context_provenance']['niche_verified']);
     $this->assertNull($this->db->select('famtastic_acquisition_sample','s')->fields('s',['eligible_at'])->condition('id',$invitation['id'])->execute()->fetchField());
+  }
+
+  public function testAllNineApprovedIndustryRecipesCompileNativeBoundMailAndInteractiveLabs(): void {
+    $segments = [
+      'Mobile Detailing, Auto Care & Tinting' => 'mobile-detailing',
+      'Fitness, Personal Training & Meal Prep' => 'fitness-meal-prep',
+      'Photography, Videography & Media' => 'photography-media',
+      'Custom Baking, Catering & Private Chefs' => 'baking-catering',
+      'Home Services, Cleaning & Maintenance' => 'home-services',
+      'Events, Party Rentals & Entertainment' => 'events-rentals',
+      'Pet Services, Grooming & Training' => 'pet-services',
+      'Consulting, Tutoring & Digital Creators' => 'consulting-tutoring',
+      'Handcrafted Products, Fashion & Boutiques' => 'handcrafted-boutiques',
+    ];
+    foreach ($segments as $segment => $slug) {
+      $this->assertSame($slug, \Drupal\famtastic_pipeline\Service\AcquisitionIndustryTemplate::fromSegment($segment));
+      $recipe = \Drupal\famtastic_pipeline\Service\AcquisitionIndustryTemplate::nativeRecipe($slug);
+      $this->assertTrue(\Drupal\famtastic_pipeline\Service\AcquisitionIndustryTemplate::isNativeRecipe($recipe));
+      $creative = AcquisitionSampleGuard::creativeApproval($recipe['review']['approval_record']);
+      $this->assertSame($recipe['content_id'], $creative['content_id']);
+      $this->assertSame($slug, $creative['template_slug']);
+      $frozen = \Drupal\famtastic_pipeline\Service\AcquisitionIndustryTemplate::freezeLab($slug, str_repeat('a', 64));
+      $this->assertTrue($frozen['interactive']);
+      $this->assertStringContainsString('data-famtastic-industry-lab="' . $slug . '"', $frozen['html']);
+      $email = \Drupal\famtastic_pipeline\Service\AcquisitionSampleEmail::compileIndustry($slug, ['business_name' => 'Synthetic ' . $slug], str_repeat('b', 64), str_repeat('c', 48), str_repeat('d', 48), '123 Fictional Test Street, Example City, FL 00000');
+      $this->assertSame('famtastic.acquisition-industry-d0.v1', $email['schema']);
+      $this->assertSame($recipe['content_id'], $email['content_id']);
+      $this->assertStringContainsString('https://famtasticdesigns.com/login?mode=register&amp;sample_continuation=' . str_repeat('b', 64), $email['html']);
+      $this->assertStringContainsString('https://famtasticdesigns.com/login?mode=register&sample_continuation=' . str_repeat('b', 64), $email['body']);
+      $this->assertStringContainsString('https://famtasticdesigns.com/web/api/pipeline/email/unsubscribe/confirm/' . str_repeat('c', 48), $email['html']);
+      $this->assertStringContainsString('https://famtasticdesigns.com/web/api/pipeline/email/unsubscribe/confirm/' . str_repeat('c', 48), $email['body']);
+      $this->assertStringContainsString('data-famtastic-email-brand="v1"', $email['html']);
+      $this->assertNotEmpty($email['postal_address']);
+      $this->assertStringContainsString('Shay-Shay', $email['body']);
+      $this->assertStringContainsString('cid:connect-qr', $email['html']);
+      $this->assertCount(1 + $email['sample_image_count'], $email['attachments']);
+      $this->assertStringNotContainsString('example.invalid', $email['html'] . $email['images_blocked_html'] . $email['body']);
+      $this->assertStringNotContainsString('{{', $email['html'] . $email['images_blocked_html'] . $email['body']);
+      $this->assertDoesNotMatchRegularExpression('/(?:DRAFT ONLY|CONCEPT PREVIEW|LOCAL REVIEW CANDIDATE|review candidate|owner review pending|unbound placeholder)/i', $email['body']);
+      $this->assertNull(\Drupal\famtastic_pipeline\Service\AcquisitionIndustryTemplate::fromSegment($segment . ' expanded'));
+    }
+  }
+
+  public function testCreativeApprovalValidatesIndustryTemplateReceiptAndPreservesBeautyRecord(): void {
+    $recipe = \Drupal\famtastic_pipeline\Service\AcquisitionIndustryTemplate::nativeRecipe('events-rentals');
+    $receipt = $recipe['review']['approval_record'];
+    $industry = AcquisitionSampleGuard::creativeApproval($receipt);
+    $this->assertSame('famtastic.acquisition-industry-creative-approval.v1', $industry['schema']);
+    $this->assertSame('Fritz Medine', $industry['owner']);
+    $this->assertSame('events-rentals', $industry['template_slug']);
+    $this->assertSame('acquisition-199:industry-events_rentals_d0:v1', $industry['content_id']);
+
+    foreach ([
+      array_merge($receipt, ['template_slug' => 'fitness-meal-prep-unknown']),
+      array_merge($receipt, ['sha256' => str_repeat('0', 64)]),
+    ] as $invalidReceipt) {
+      try { AcquisitionSampleGuard::creativeApproval($invalidReceipt); $this->fail('A mismatched industry approval receipt was accepted.'); }
+      catch (\InvalidArgumentException) { $this->addToAssertionCount(1); }
+    }
+    try { AcquisitionSampleGuard::creativeApproval($receipt, 'tampered approval bytes'); $this->fail('Changed frozen approval bytes were accepted.'); }
+    catch (\InvalidArgumentException) { $this->addToAssertionCount(1); }
+
+    $beautyPath = dirname(__DIR__, 8) . '/docs/research/acquisition-199/CREATIVE-APPROVAL.json';
+    $beauty = AcquisitionSampleGuard::creativeApproval(['reference' => 'docs/research/acquisition-199/CREATIVE-APPROVAL.json', 'sha256' => hash_file('sha256', $beautyPath)]);
+    $this->assertSame('famtastic.acquisition-creative-approval.v1', $beauty['schema']);
+    $this->assertSame('acquisition-199:beauty_soft_power_generic_d0:v2', $beauty['content_id']);
   }
 
   public function testGenericExactAdapterRequiresMatchingReceiptAndPreservesCapAndUncertainRetry(): void {

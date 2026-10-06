@@ -44,6 +44,28 @@ final class AcquisitionWindowTest extends UnitTestCase {
     $this->config['asap_authorization']=['schema'=>'famtastic.acquisition-asap-authorization.v1','approval_ref'=>'synthetic_first_fifty','issued_at'=>$this->now,'expires'=>$this->now+3300,'local_date'=>'2026-10-07','campaign_id'=>5,'cap'=>50,'owner_authorized'=>TRUE,'reference'=>'synthetic-owner-approval','sha256'=>str_repeat('e',64)];
   }
   private function executeAsap(array $queue,?callable $dispatch=NULL,?callable $pace=NULL):array{return $this->executor->execute($this->config,$queue,fn(array $r,array $b):array=>$this->prepare($r,$b),$dispatch??fn(string $m,string $p):array=>$this->operator($m,$p),fn(array $b):array=>$this->capacity(),$pace??static fn(int $s)=>NULL,TRUE);}
+  private function industryAsap(string $clock):void {
+    $this->at($clock);$date=AcquisitionWindowQuota::local($this->now)->format('Y-m-d');$hour=AcquisitionWindowQuota::local($this->now)->format('H');
+    $this->config['campaign_id']=5;$this->config['execution_mode']='asap_industry';$this->config['starts_on']=$this->config['ends_on']=$date;
+    $this->config['asap_authorization']=['schema'=>'famtastic.acquisition-asap-authorization.v1','approval_ref'=>'owner_industry_today','issued_at'=>$this->now,'expires'=>min($this->now+3300,AcquisitionWindowQuota::local($this->now)->setTime((int)$hour,59,59)->getTimestamp()),'local_date'=>$date,'campaign_id'=>5,'cap'=>50,'owner_authorized'=>TRUE,'reference'=>'docs/research/acquisition-199/SAME-DAY-INDUSTRY-AUTHORIZATION-20261006.json','sha256'=>str_repeat('e',64),'window_key'=>'asap-industry-'.$date.'-'.$hour];
+  }
+  public function testIndustryImmediateHoursShareDailyCapAndExcludePriorAcceptances():void {
+    $this->config['campaign_id']=5;$this->at('2026-10-07 10:00:00');for($i=0;$i<51;$i++)$this->message('prior-'.$i.'@example.test',0,TRUE);
+    $queue=$this->queue(900);
+    foreach(['17:15:00','18:00:00','19:00:00'] as $clock){$this->industryAsap('2026-10-07 '.$clock);$r=$this->executeAsap($queue);$this->assertSame('complete',$r['status']);$this->assertLessThanOrEqual(50,$r['counts']['accepted']);$this->assertTrue($this->executeAsap($queue)['duplicate']);}
+    $this->assertSame(149,$this->sent);$this->assertSame(200,$this->quota->usage('2026-10-07',19)['day']);$this->assertSame(149,$this->prepared);
+    $this->industryAsap('2026-10-07 20:00:00');$this->assertSame('capacity_exhausted',$this->executeAsap($queue)['status']);$this->assertSame(149,$this->sent);
+  }
+  public function testIndustryImmediateRejectsWrongHourOrCrossHourExpiry():void {
+    $this->industryAsap('2026-10-07 17:15:00');$this->config['asap_authorization']['window_key']='asap-industry-2026-10-07-18';
+    try{$this->executeAsap($this->queue(1));$this->fail('Wrong-hour window accepted');}catch(\RuntimeException $e){$this->assertSame('acquisition_industry_asap_binding_required',$e->getMessage());}
+    $this->config['asap_authorization']['window_key']='asap-industry-2026-10-07-17';$this->config['asap_authorization']['expires']=$this->now+3300;
+    try{$this->executeAsap($this->queue(1));$this->fail('Cross-hour window accepted');}catch(\RuntimeException $e){$this->assertSame('acquisition_industry_asap_binding_required',$e->getMessage());}$this->assertSame(0,$this->sent);
+  }
+  public function testIndustryImmediateFailureHaltsNextHourAndKeepsReservedSlots():void {
+    $this->industryAsap('2026-10-07 17:15:00');$r=$this->executeAsap($this->queue(3),function(string $m,string $p):array{if($m==='dispatch')throw new \RuntimeException('synthetic_uncertain');return $this->operator($m,$p);});$this->assertSame('halted',$r['status']);$this->assertSame(3,$this->quota->usage('2026-10-07',17)['day']);
+    $this->industryAsap('2026-10-07 18:00:00');$this->assertSame('halted',$this->executeAsap($this->queue(5))['status']);$this->assertSame(0,$this->sent);
+  }
   public function testAsapFirstFiftyOffHoursIsOneTimeAndExcludedFromRoutineNextDay():void {
     $this->asapConfig();$queue=$this->queue(99);$r=$this->executeAsap($queue);$this->assertSame('complete',$r['status']);$this->assertSame('asap-first-50',$r['window_key']);$this->assertSame(50,$r['counts']['accepted']);$this->assertSame(50,$this->quota->usage('2026-10-07',15)['day']);$this->assertSame(50,$this->quota->usage('2026-10-07',15)['window']);
     $this->assertTrue($this->executeAsap($queue)['duplicate']);$this->assertSame(50,$this->sent);

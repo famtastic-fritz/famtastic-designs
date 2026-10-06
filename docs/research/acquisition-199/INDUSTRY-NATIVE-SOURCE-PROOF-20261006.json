@@ -1,0 +1,31 @@
+{
+  "schema": "famtastic.acquisition-industry-native-source-proof.v1",
+  "checked_at": "2026-10-06T21:46:41.670124+00:00",
+  "classification": "changed",
+  "installed_industry_checks": 91,
+  "fake_dispatches": 9,
+  "browser_viewports": 18,
+  "customer_sends": 0,
+  "live_deployment": false,
+  "unit_sample_tests": 40,
+  "unit_sample_assertions": 559,
+  "unit_window_tests": 28,
+  "unit_window_assertions": 1080,
+  "frontend_privacy_tests": 3,
+  "frontend_build": "Node22.23.2;623modules;221HTML",
+  "bundle_manifest_sha256": "c4d9e431c97ae424fae83671d84fd88cf777c7d11581ba6445a67d6a6e0a0f1b",
+  "installed_evidence_sha256": "70531c7ce4650ed8dfb65518aabd474d78aedc23d884b41f33320655d37b794a",
+  "browser_evidence_sha256": "c3960a2da50ecf70a268772c6d2c04e8dbeb264946d2a28a9a5c1a5f2d9a3433",
+  "physical_owner_acceptance": "pending",
+  "production_operator_proof": "local_synthetic_installed_real_signed_prepare;18checks;9industries;zero_dispatch",
+  "combined_unit_tests": 78,
+  "combined_unit_assertions": 1861,
+  "unit_deprecation_notices": 70,
+  "remaining_today_after_owned_probe_before_more_traffic": 148,
+  "private_timer_driver_sha256": {
+    "install-industry-runtime.php": "ad825f4bd726f62a36be3892bd2bd2d810d2fdbe6e1b148f4a0cedc1243f332e",
+    "industry-today-clock.php": "69019e84960decb64c44501ab376edfc7be174d232a96a49fb90f531fb0e7aa2",
+    "configure-industry-private-settings.php": "e0a4e4004a0c9b94f64abdc097a57180840d8d1b3f85525680262a94550d0fc2"
+  },
+  "operator_evidence_sha256": "e1c727befd94bc5ae7e79e60f6e07366004f85b6e2ccd7b5e712e06c092262aa"
+}

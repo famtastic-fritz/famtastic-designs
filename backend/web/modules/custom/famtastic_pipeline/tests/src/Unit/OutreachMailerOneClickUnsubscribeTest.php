@@ -6,8 +6,12 @@ namespace Drupal\Tests\famtastic_pipeline\Unit;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\famtastic_pipeline\Service\OutreachMailer;
+use Drupal\famtastic_pipeline\Service\AcquisitionSampleSequenceService;
 use Drupal\Tests\UnitTestCase;
 use Psr\Log\LoggerInterface;
+
+require_once dirname(__DIR__, 3) . '/src/Service/OutreachMailer.php';
+require_once dirname(__DIR__, 3) . '/src/Service/AcquisitionSampleSequenceService.php';
 
 /** @group famtastic_pipeline */
 final class OutreachMailerOneClickUnsubscribeTest extends UnitTestCase {
@@ -164,6 +168,29 @@ final class OutreachMailerOneClickUnsubscribeTest extends UnitTestCase {
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('notification_template_invalid');
     $mailer->send('customer@example.test', 'Subject', 'Body', NULL, OutreachMailer::TEMPLATE_CUSTOMER_PROOF_READY, 99);
+  }
+
+  public function testIndustrySvgAttachmentsAreNarrowlyAcceptedByFrozenAcquisitionPath(): void {
+    $method = new \ReflectionMethod(OutreachMailer::class, 'frozenAttachmentExtension');
+    $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path d="M0 0h1v1H0z"/></svg>';
+    $invoke = static fn(array $attachment, string $template, string $bytes): string => $method->invoke(NULL, $attachment, $template, $bytes);
+    $svgAttachment = ['cid' => 'sample-industry_mobile_detailing', 'media_type' => 'image/svg+xml', 'sha256' => hash('sha256', $svg)];
+    $this->assertSame('.svg', $invoke($svgAttachment, AcquisitionSampleSequenceService::MESSAGE_KIND, $svg));
+
+    $png = "\x89PNG\r\n\x1a\nsynthetic";
+    $jpeg = "\xff\xd8\xffsynthetic";
+    $this->assertSame('.png', $invoke(['cid' => 'connect-qr', 'media_type' => 'image/png', 'sha256' => hash('sha256', $png)], 'customer_notice', $png));
+    $this->assertSame('.jpg', $invoke(['cid' => 'sample-photo', 'media_type' => 'image/jpeg', 'sha256' => hash('sha256', $jpeg)], 'customer_notice', $jpeg));
+
+    foreach ([
+      [$svgAttachment, 'customer_notice', $svg],
+      [array_merge($svgAttachment, ['media_type' => 'image/webp']), AcquisitionSampleSequenceService::MESSAGE_KIND, $svg],
+      [array_merge($svgAttachment, ['sha256' => str_repeat('0', 64)]), AcquisitionSampleSequenceService::MESSAGE_KIND, $svg],
+      [array_merge($svgAttachment, ['cid' => 'sample-arbitrary']), AcquisitionSampleSequenceService::MESSAGE_KIND, $svg],
+    ] as [$attachment, $template, $bytes]) {
+      try { $invoke($attachment, $template, $bytes); $this->fail('Unapproved embedded image type or binding was accepted.'); }
+      catch (\RuntimeException $error) { $this->assertSame('acquisition_attachment_integrity_failed', $error->getMessage()); }
+    }
   }
 
   private function setEnvironment(string $name, string $value): void {

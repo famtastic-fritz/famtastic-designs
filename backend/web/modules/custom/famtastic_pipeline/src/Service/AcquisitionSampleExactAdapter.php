@@ -45,26 +45,59 @@ final class AcquisitionSampleExactAdapter {
       if (!in_array($messageId, $due, TRUE) || $message['status'] !== 'held' || $sequence['status'] !== 'active' || !AcquisitionSampleGuard::live($sample, $now) || $this->ledger->isSuppressed((string) $message['recipient_address'])) throw new \RuntimeException('acquisition_message_not_due_or_stopped');
       $snapshot = json_decode((string) $content['snapshot'], TRUE, 32, JSON_THROW_ON_ERROR);
       if (!hash_equals((string) ($snapshot['tracking_key'] ?? ''), (string) $message['tracking_key']) || !hash_equals((string) ($snapshot['unsubscribe_key'] ?? ''), (string) $message['unsubscribe_key']) || !hash_equals((string) ($snapshot['invitation_token_hash'] ?? ''), (string) $sample['token_hash']) || trim((string) ($snapshot['subject'] ?? '')) !== $message['subject'] || trim((string) ($snapshot['body'] ?? '')) !== $message['body_snapshot']) throw new \InvalidArgumentException('acquisition_native_header_content_drift');
-      $generic = ($snapshot['schema'] ?? '') === 'famtastic.acquisition-generic-d0.v1';
+      $industryD0 = ($snapshot['schema'] ?? '') === 'famtastic.acquisition-industry-d0.v1';
+      $generic = $industryD0 || ($snapshot['schema'] ?? '') === 'famtastic.acquisition-generic-d0.v1';
       if (!$generic && $basis === 'owner_authorized_cold_outreach') throw new \InvalidArgumentException('acquisition_cold_basis_generic_only');
       if ($generic) {
-        $authorization = $this->sequences->genericAuthorization($sample, (string) ($snapshot['creative_approval_record'] ?? ''));
+        $approvalBytes = (string) ($industryD0 ? ($snapshot['industry_approval_record'] ?? '') : ($snapshot['creative_approval_record'] ?? ''));
+        $authorization = $this->sequences->genericAuthorization($sample, $approvalBytes);
         if ($basis !== AcquisitionSampleGuard::authorizationBasis($authorization) || ($snapshot['authorization'] ?? []) !== $authorization || ($manifest[$permissionKey] ?? []) !== $authorization[$permissionKey] || ($manifest['history_receipt'] ?? []) !== $authorization['history_receipt'] || ($manifest['sender_account_sha256'] ?? '') !== $authorization['sender']['account_sha256'] || ($manifest['generic_authorization_hash'] ?? '') !== $sample['qualification_ref'] || (int) $content['day'] !== 0 || $snapshot['content_id'] !== $authorization['content_id']) throw new \InvalidArgumentException('generic_dispatch_receipt_binding_required');
-        $creative = AcquisitionSampleGuard::creativeApproval($authorization['creative_approval'], $snapshot['creative_approval_record']);
-        $expectedMedia = ['connect-qr' => ['connect-qr.png', 'digital-card'], 'sample-beauty_soft_power_acquisition' => ['hair-studio.jpg', 'illustrative-generic-sample']];
-        $media = [];
-        foreach ($snapshot['attachments'] ?? [] as $attachment) {
-          $cid = $attachment['cid'] ?? '';
-          if (!isset($expectedMedia[$cid]) || isset($media[$cid]) || ($attachment['purpose'] ?? '') !== $expectedMedia[$cid][1] || ($attachment['sha256'] ?? '') !== ($creative['artifact_sha256']['marketing/campaigns/acquisition-199/generic-review/assets/' . $expectedMedia[$cid][0]] ?? '')) throw new \InvalidArgumentException('generic_approved_media_binding_required');
-          $media[$cid] = TRUE;
+        if ($industryD0) {
+          $slug = (string) ($snapshot['industry_slug'] ?? '');
+          $industry = AcquisitionIndustryTemplate::bySlug($slug);
+          $context = json_decode((string) $sample['bindings'], TRUE, 32, JSON_THROW_ON_ERROR)['_preparation'] ?? [];
+          if (($context['industry_template_slug'] ?? '') !== $slug || ($snapshot['industry_approval_ref'] ?? '') !== $industry['approval_ref'] || ($snapshot['industry_approval_sha256'] ?? '') !== $industry['approval_sha256'] || ($snapshot['source_hashes'] ?? []) !== $industry['source_hashes'] || ($snapshot['creative_approval'] ?? []) !== $authorization['creative_approval'] || !hash_equals($industry['approval_bytes'], $approvalBytes)) throw new \InvalidArgumentException('industry_approved_content_binding_required');
+          $expectedMedia = [];
+          foreach ($industry['asset_hashes'] as $path => $sha256) {
+            $basename = basename($path);
+            if ($basename === 'connect-qr.png') $expectedMedia['connect-qr'] = [$sha256, 'digital-card', 'image/png'];
+            elseif (str_ends_with(strtolower($basename), '.svg') && str_starts_with($path, 'marketing/campaigns/acquisition-199/industry-previews/' . $slug . '/')) $expectedMedia['sample-industry_' . str_replace('-', '_', $slug)] = [$sha256, 'illustrative-industry-sample', 'image/svg+xml'];
+          }
+          $media = [];
+          foreach ($snapshot['attachments'] ?? [] as $attachment) {
+            $cid = (string) ($attachment['cid'] ?? '');
+            if (!isset($expectedMedia[$cid]) || isset($media[$cid]) || ($attachment['purpose'] ?? '') !== $expectedMedia[$cid][1] || ($attachment['media_type'] ?? '') !== $expectedMedia[$cid][2] || ($attachment['sha256'] ?? '') !== $expectedMedia[$cid][0]) throw new \InvalidArgumentException('industry_approved_media_binding_required');
+            $media[$cid] = TRUE;
+          }
+          if (count($media) !== count($expectedMedia) || (int) ($snapshot['sample_image_count'] ?? -1) !== count($expectedMedia) - 1) throw new \InvalidArgumentException('industry_approved_media_binding_required');
         }
-        if (count($media) !== 2 || ($snapshot['sample_image_count'] ?? 0) !== 1) throw new \InvalidArgumentException('generic_approved_media_binding_required');
+        else {
+          $creative = AcquisitionSampleGuard::creativeApproval($authorization['creative_approval'], $snapshot['creative_approval_record']);
+          $expectedMedia = ['connect-qr' => ['connect-qr.png', 'digital-card'], 'sample-beauty_soft_power_acquisition' => ['hair-studio.jpg', 'illustrative-generic-sample']];
+          $media = [];
+          foreach ($snapshot['attachments'] ?? [] as $attachment) {
+            $cid = $attachment['cid'] ?? '';
+            if (!isset($expectedMedia[$cid]) || isset($media[$cid]) || ($attachment['purpose'] ?? '') !== $expectedMedia[$cid][1] || ($attachment['sha256'] ?? '') !== ($creative['artifact_sha256']['marketing/campaigns/acquisition-199/generic-review/assets/' . $expectedMedia[$cid][0]] ?? '')) throw new \InvalidArgumentException('generic_approved_media_binding_required');
+            $media[$cid] = TRUE;
+          }
+          if (count($media) !== 2 || ($snapshot['sample_image_count'] ?? 0) !== 1) throw new \InvalidArgumentException('generic_approved_media_binding_required');
+        }
       }
-      if ($generic && (($snapshot['branding_asset']['sha256'] ?? '') !== ($creative['artifact_sha256']['marketing/campaigns/acquisition-199/generic-review/assets/famtastic-designs-logo-v1.png'] ?? '') || ($snapshot['branding_asset']['url'] ?? '') !== BrandedEmail::LOGO_URL || !str_contains((string) $snapshot['html'], BrandedEmail::LOGO_URL))) throw new \InvalidArgumentException('generic_approved_branding_binding_required');
-      if (empty($snapshot['postal_address']) || !str_contains((string) $snapshot['html'], 'data-famtastic-email-brand=') || !str_contains((string) $snapshot['html'], 'cid:connect-qr') || !str_contains((string) $snapshot['body'], 'Shay-Shay') || count($snapshot['attachments'] ?? []) !== ($generic ? 2 : ((int) $content['day'] === 0 ? 3 : 1))) throw new \InvalidArgumentException('acquisition_frozen_release_content_required');
+      if ($generic && $industryD0) {
+        $industry = AcquisitionIndustryTemplate::bySlug((string) ($snapshot['industry_slug'] ?? ''));
+        $logoHash = '';
+        foreach ($industry['asset_hashes'] as $path => $hash) if (basename($path) === 'famtastic-designs-logo-v1.png') { $logoHash = $hash; break; }
+        if (!$logoHash || ($snapshot['branding_asset']['sha256'] ?? '') !== $logoHash || ($snapshot['branding_asset']['url'] ?? '') !== BrandedEmail::LOGO_URL || !str_contains((string) $snapshot['html'], BrandedEmail::LOGO_URL)) throw new \InvalidArgumentException('industry_approved_branding_binding_required');
+      }
+      elseif ($generic && (($snapshot['branding_asset']['sha256'] ?? '') !== ($creative['artifact_sha256']['marketing/campaigns/acquisition-199/generic-review/assets/famtastic-designs-logo-v1.png'] ?? '') || ($snapshot['branding_asset']['url'] ?? '') !== BrandedEmail::LOGO_URL || !str_contains((string) $snapshot['html'], BrandedEmail::LOGO_URL))) throw new \InvalidArgumentException('generic_approved_branding_binding_required');
+      $expectedAttachmentCount = $industryD0 ? 1 + (int) ($snapshot['sample_image_count'] ?? 0) : ($generic ? 2 : ((int) $content['day'] === 0 ? 3 : 1));
+      if (empty($snapshot['postal_address']) || !str_contains((string) $snapshot['html'], 'data-famtastic-email-brand=') || !str_contains((string) $snapshot['html'], 'cid:connect-qr') || !str_contains((string) $snapshot['body'], 'Shay-Shay') || count($snapshot['attachments'] ?? []) !== $expectedAttachmentCount) throw new \InvalidArgumentException('acquisition_frozen_release_content_required');
       foreach ($snapshot['attachments'] as $attachment) {
         $bytes = base64_decode((string) ($attachment['bytes_base64'] ?? ''), TRUE);
-        if ($bytes === FALSE || strlen($bytes) > 1048576 || !hash_equals((string) ($attachment['sha256'] ?? ''), hash('sha256', $bytes))) throw new \InvalidArgumentException('acquisition_frozen_media_integrity_required');
+        $type = (string) ($attachment['media_type'] ?? '');
+        $cid = (string) ($attachment['cid'] ?? '');
+        $allowedType = in_array($type, ['image/png', 'image/jpeg'], TRUE) || ($industryD0 && $type === 'image/svg+xml' && str_starts_with($cid, 'sample-industry_'));
+        if ($bytes === FALSE || strlen($bytes) > 1048576 || !$allowedType || !hash_equals((string) ($attachment['sha256'] ?? ''), hash('sha256', $bytes))) throw new \InvalidArgumentException('acquisition_frozen_media_integrity_required');
       }
       if ($this->database->select('famtastic_acquisition_dispatch','d')->condition('approval_ref',$manifest['approval_ref'])->countQuery()->execute()->fetchField()) throw new \RuntimeException('acquisition_approval_cap_exhausted');
       $this->mailer->assertAcquisitionTransportAllowed();

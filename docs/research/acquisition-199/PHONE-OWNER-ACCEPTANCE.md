@@ -1,3 +1,5 @@
+Industry release task `industry-native-01`: pending. Source is the scoped industry activation commit to be recorded in the live release receipt. On a physical phone, an invited owner opens their matching Lab, practices an inquiry reply/status/instructions, resets it, registers/verifies the invited email, and saves/reopens the matching interview draft. Developer evidence: nine installed synthetic native journeys and18browser viewport checks. Expected: correct business/category/recipe, clearly fictional practice, durable account draft. Physical uncoached owner evidence is absent; classify changed until deployment, then deployed, never owner_accepted from these tests.
+
 <!-- EXECUTOR-CURRENT -->
 # Fifty beauty emails accepted — October 6
 

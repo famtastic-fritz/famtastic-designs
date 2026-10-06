@@ -16,7 +16,7 @@ final class AcquisitionWindowCommands extends DrushCommands {
   #[CLI\Command(name:'famtastic:acquisition-window')]
   #[CLI\Option(name:'input',description:'Signed 0600 campaign schedule config in file_private_path/acquisition-199.')]
   #[CLI\Option(name:'check-config',description:'Validate exact source, private queue and fresh capacity without reserving, preparing or sending.')]
-  #[CLI\Option(name:'asap',description:'Execute only the signed one-time initial campaign-5 exception, capped at 50 and one hour.')]
+  #[CLI\Option(name:'asap',description:'Execute a signed campaign-5 initial or date/hour industry exception, capped at 50 and one hour.')]
   public function tick(array $options=['input'=>'','check-config'=>FALSE,'asap'=>FALSE]): int {
     try {$this->signingKey();$result=\Drupal::service('famtastic_pipeline.acquisition_window_executor')->run((string)$options['input'],(bool)$options['check-config'],(bool)$options['asap']);$this->io()->writeln(json_encode($result,JSON_THROW_ON_ERROR));return in_array($result['status'],['halted','failed_closed'],TRUE)?self::EXIT_FAILURE:self::EXIT_SUCCESS;}
     catch(\Throwable $e){$this->io()->writeln(json_encode(['status'=>'failed_closed','error_code'=>preg_match('/^[a-z][a-z0-9_]{1,99}$/D',$e->getMessage())?$e->getMessage():'acquisition_private_failure_review','inbox_delivery_proved'=>FALSE],JSON_THROW_ON_ERROR));return self::EXIT_FAILURE;}

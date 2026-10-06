@@ -105,4 +105,131 @@ final class AcquisitionSampleEmail {
     return ['schema' => 'famtastic.acquisition-generic-d0.v1', 'subject' => $metadata[1], 'preview' => $metadata[2], 'body' => $plain, 'html' => $html, 'content_id' => $authorization['content_id'], 'draft_hash' => hash('sha256', $read($base . 'beauty-email.html') . $read($base . 'beauty-email.txt')), 'source_artifacts' => $creative['artifact_sha256'], 'creative_approval_record' => $recordBytes, 'authorization' => $authorization, 'authorization_hash' => hash('sha256', json_encode($authorization, JSON_THROW_ON_ERROR)), 'attachments' => $attachments, 'sample_image_count' => 1, 'branding_asset' => ['url' => BrandedEmail::LOGO_URL, 'sha256' => hash('sha256', $logo)], 'postal_address' => $postal, 'unsubscribe_key' => $unsubscribe, 'tracking_key' => $tracking, 'invitation_token_hash' => AcquisitionSampleGuard::tokenHash($token), 'greeting_source' => 'neutral', 'component_studio_registration_proved' => FALSE];
   }
 
+  /** Bind an owner-approved industry template to native invitation tokens. */
+  public static function compileIndustry(string $slug, array $bindings, string $token, string $unsubscribe, string $tracking, string $postal): array {
+    $entry = AcquisitionIndustryTemplate::bySlug($slug);
+    AcquisitionSampleGuard::tokenHash($token);
+    $bindings = AcquisitionSampleGuard::bindings($bindings);
+    if (!preg_match('/^[a-f0-9]{48}$/D', $unsubscribe) || !preg_match('/^[a-f0-9]{48}$/D', $tracking)) throw new \InvalidArgumentException('industry_native_bindings_required');
+    $postal = trim((string) preg_replace('/ +/', ' ', str_replace(["\r", "\n", "\t"], ' ', $postal)), ' ');
+    if ($postal === '' || strlen($postal) > 1000 || preg_match('/[<>\x00-\x1f\x7f]/', $postal)) throw new \InvalidArgumentException('industry_postal_binding_required');
+    $base = 'marketing/campaigns/acquisition-199/industry-previews/' . $slug . '/';
+    $read = static function (string $name) use ($entry): string {
+      $path = AcquisitionSampleArtifacts::industryPath($entry['source_paths'][$name], $entry['source_hashes'][$name]);
+      return (string) file_get_contents($path);
+    };
+    $html = $read('email.html');
+    $plainSource = $read('email.txt');
+    $imagesBlocked = $read('email-images-blocked.html');
+    if (!preg_match('/\ASubject: ([^\r\n]+)\r?\nPreview: ([^\r\n]+)\r?\n\r?\n/', $plainSource, $metadata)) throw new \RuntimeException('industry_email_metadata_required');
+    $subject = trim($metadata[1]);
+    $preview = trim($metadata[2]);
+    $plain = substr($plainSource, strlen($metadata[0]));
+    $click = 'https://famtasticdesigns.com/web/api/pipeline/email/click/' . $tracking;
+    $registration = 'https://famtasticdesigns.com/login?mode=register&sample_continuation=' . $token;
+    $stop = 'https://famtasticdesigns.com/web/api/pipeline/email/unsubscribe/confirm/' . $unsubscribe;
+    $brand = BrandedEmail::LOGO_URL;
+    $esc = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    foreach (['primary' => &$html, 'images' => &$imagesBlocked] as &$document) {
+      $document = preg_replace('#<div\s+role="note"[^>]*>.*?</div>\s*#is', '', $document, 1, $noteCount);
+      if ($noteCount !== 1) throw new \RuntimeException('industry_email_review_scaffold_missing');
+      $document = str_replace('href="lab.html"', 'href="' . $esc($click) . '"', $document);
+      $document = str_replace('href="https://example.invalid/unsubscribe-not-bound"', 'href="' . $esc($stop) . '"', $document);
+      $document = str_replace('href="#unsubscribe-review"', 'href="' . $esc($stop) . '"', $document);
+      $document = str_replace(' (unbound draft placeholder)', '', $document);
+      $document = str_replace(' (unbound review placeholder)', '', $document);
+      $document = str_replace(' (unbound placeholder)', '', $document);
+      $document = str_replace(' (not active in this local candidate)', '', $document);
+      $document = str_replace('This Lab remains a local review candidate.', '', $document);
+      $document = str_replace('Local website example · owner review pending', '', $document);
+      $document = preg_replace('#<p\b[^>]*>[^<]*local review candidate[^<]*</p>#i', '', $document);
+      $document = preg_replace('#<p\b[^>]*>[^<]*(?:candidate|owner review pending)[^<]*</p>#i', '', $document);
+      $document = str_replace('Sending is not enabled for this review candidate.', '', $document);
+      $document = str_replace('Sending is not enabled for this candidate.', '', $document);
+      $document = preg_replace('/<span[^>]*>Unsubscribe link is not active in this local review candidate\.<\/span>/i', '<a href="' . $esc($stop) . '">Unsubscribe</a>', $document);
+      $document = str_replace('data-review-only="true" ', '', $document);
+      $document = preg_replace('/Create your free account and complete your website interview\./u', '<a href="' . $esc($registration) . '">Create your free account</a> and complete your website interview.', $document, 1, $accountCount);
+      if ($accountCount !== 1) throw new \RuntimeException('industry_registration_slot_invalid');
+      $document = preg_replace_callback('/<body\b([^>]*)>/i', static function (array $match): string {
+        if (preg_match('/\bdata-famtastic-email-brand=/i', $match[1])) return $match[0];
+        return '<body' . $match[1] . ' data-famtastic-email-brand="v1">';
+      }, $document, 1, $brandMarkerCount);
+      if ($brandMarkerCount !== 1 || !str_contains($document, 'data-famtastic-email-brand="v1"')) throw new \RuntimeException('industry_email_brand_marker_invalid');
+      $document = preg_replace_callback('/src="([^"]+)"/i', static function (array $match) use ($entry, $brand, $base): string {
+        $basename = basename(parse_url($match[1], PHP_URL_PATH) ?: $match[1]);
+        if ($basename === 'famtastic-designs-logo-v1.png') return 'src="' . $brand . '"';
+        if ($basename === 'connect-qr.png') return 'src="cid:connect-qr"';
+        foreach ($entry['asset_hashes'] as $path => $hash) {
+          if (basename($path) !== $basename || !str_starts_with($path, $base)) continue;
+          $bytes = (string) file_get_contents(AcquisitionSampleArtifacts::industryPath($path, $hash));
+          if (strlen($bytes) > 1_048_576 || !str_ends_with(strtolower($basename), '.svg')) throw new \RuntimeException('industry_email_original_scene_invalid');
+          return 'src="cid:sample-industry_' . str_replace('-', '_', $entry['slug']) . '"';
+        }
+        throw new \RuntimeException('industry_email_unapproved_image_reference');
+      }, $document);
+      unset($document);
+    }
+    unset($document);
+    if (preg_match('/\b(?:example\.invalid|lab\.html|local review candidate|owner review pending|unbound draft placeholder|\{\{[^}]+\}\})/i', $html . $imagesBlocked)) throw new \RuntimeException('industry_email_unbound_scaffold_remains');
+    foreach (['html' => &$html, 'images' => &$imagesBlocked] as &$document) {
+      if (!str_contains($document, $stop)) $document = str_replace('</body>', '<p style="margin:12px 0;text-align:center;font-size:12px;"><a href="' . $esc($stop) . '" style="color:#c6cfbd;">Unsubscribe</a></p></body>', $document);
+      unset($document);
+    }
+    unset($document);
+    $html = str_replace('</body>', '<img src="https://famtasticdesigns.com/web/api/pipeline/email/open/' . $tracking . '" width="1" height="1" alt=""></body>', $html);
+    $plain = preg_replace('/^\s*(?:LOCAL REVIEW CANDIDATE\b|DRAFT ONLY\b|CONCEPT PREVIEW\b|Owner review candidate\b|The matching Lab is a local review candidate\b|Lab review and owner approval pending\b)[^\r\n]*\R?/mi', '', $plain);
+    $plain = str_replace(['lab.html', ' (local illustrative review candidate)', 'https://example.invalid/unsubscribe-not-bound', ' (unbound placeholder)', 'This Lab remains a local review candidate.', 'The matching Lab is a local review candidate; its owner approval is pending.', 'Owner review candidate. No sending binding issued.', 'Unsubscribe: unbound review placeholder', 'Unsubscribe link is not active in this local review candidate.'], [$click, '', $stop, '', '', '', '', 'Unsubscribe: ' . $stop, 'Unsubscribe: ' . $stop], $plain);
+    $plain = preg_replace('/^Unsubscribe link:[ \t]*Not active in this local review candidate\.$/mi', 'Unsubscribe: ' . $stop, $plain);
+    $plain = preg_replace('/^Unsubscribe link is not active in this local review candidate\.?$/mi', 'Unsubscribe: ' . $stop, $plain);
+    $plain = preg_replace('/^Unsubscribe:[ \t]*not active in this local candidate\.?$/mi', 'Unsubscribe: ' . $stop, $plain);
+    $plain = preg_replace('/1\.?\s+Create your free account and complete your website interview\./u', '1. Create your free account and complete your website interview: ' . $registration, $plain, 1, $accountCount);
+    if ($accountCount !== 1) throw new \RuntimeException('industry_plain_registration_slot_invalid');
+    if (!str_contains($plain, $stop)) $plain = rtrim($plain) . "\n\nUnsubscribe: " . $stop;
+    $plain = preg_replace('/\R{3,}/', "\n\n", trim($plain));
+    if (preg_match('/(?:example\.invalid|lab\.html|local review candidate|owner review pending|unbound draft placeholder|\{\{[^}]+\}\})/i', $plain)) throw new \RuntimeException('industry_plain_unbound_scaffold_remains');
+    $qrAsset = self::industryAsset($entry, 'connect-qr.png');
+    $qrPath = AcquisitionSampleArtifacts::industryPath($qrAsset['path'], $qrAsset['sha256']);
+    $attachments = [[
+      'cid' => 'connect-qr', 'sha256' => hash_file('sha256', $qrPath), 'purpose' => 'digital-card', 'media_type' => 'image/png', 'bytes_base64' => base64_encode((string) file_get_contents($qrPath)),
+    ]];
+    $sampleImages = [];
+    foreach ($entry['asset_hashes'] as $path => $hash) {
+      if (!str_starts_with($path, $base) || !str_ends_with(strtolower($path), '.svg')) continue;
+      $bytes = (string) file_get_contents(AcquisitionSampleArtifacts::industryPath($path, $hash));
+      $cid = 'sample-industry_' . str_replace('-', '_', $slug);
+      $sampleImages[] = ['cid' => $cid, 'sha256' => hash('sha256', $bytes), 'source_path' => $path, 'purpose' => 'illustrative-industry-sample', 'media_type' => 'image/svg+xml', 'bytes_base64' => base64_encode($bytes)];
+    }
+    if (count($sampleImages) > 1) throw new \RuntimeException('industry_original_media_ambiguous');
+    $attachments = array_merge($attachments, $sampleImages);
+    $plain .= "\n\nFAMtastic Designs\n" . $postal;
+    return [
+      'schema' => 'famtastic.acquisition-industry-d0.v1',
+      'subject' => $subject,
+      'preview' => $preview,
+      'body' => $plain,
+      'html' => $html,
+      'images_blocked_html' => $imagesBlocked,
+      'content_id' => $entry['content_id'],
+      'draft_hash' => hash('sha256', json_encode($entry['source_hashes'], JSON_THROW_ON_ERROR)),
+      'source_hashes' => $entry['source_hashes'],
+      'source_commit' => $entry['source_commit'],
+      'industry_slug' => $slug,
+      'industry_approval_ref' => $entry['approval_ref'],
+      'industry_approval_sha256' => $entry['approval_sha256'],
+      'attachments' => $attachments,
+      'sample_image_count' => count($sampleImages),
+      'branding_asset' => ['url' => $brand, 'sha256' => self::industryAsset($entry, 'famtastic-designs-logo-v1.png')['sha256']],
+      'postal_address' => $postal,
+      'unsubscribe_key' => $unsubscribe,
+      'tracking_key' => $tracking,
+      'invitation_token_hash' => AcquisitionSampleGuard::tokenHash($token),
+      'greeting_source' => 'neutral',
+    ];
+  }
+
+  private static function industryAsset(array $entry, string $basename): array {
+    foreach ($entry['asset_hashes'] as $path => $hash) if (basename($path) === $basename) return ['path' => $path, 'sha256' => $hash];
+    throw new \RuntimeException('industry_approved_asset_missing');
+  }
+
 }

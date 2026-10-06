@@ -93,12 +93,28 @@ final class AcquisitionSampleSequenceService {
     $transaction = $this->database->startTransaction();
     $sample = $this->database->select('famtastic_acquisition_sample', 's')->fields('s')->condition('id', $invitationId)->condition('token_hash', AcquisitionSampleGuard::tokenHash($token))->forUpdate()->execute()->fetchAssoc();
     if (!$sample || !AcquisitionSampleGuard::live($sample, $this->time->getCurrentTime()) || !hash_equals($sample['recipient_hash'], $this->ledger->contactHash($email)) || $this->ledger->isSuppressed($email) || (json_decode((string) $sample['bindings'], TRUE)['_preparation']['classification'] ?? '') !== 'supplied_generic_preparation') throw new \InvalidArgumentException('sample_recipient_unavailable');
-    $authorization = $this->genericAuthorization($sample);
+    $recipes = json_decode((string) $sample['recipe_snapshot'], TRUE, 32, JSON_THROW_ON_ERROR);
+    $bindings = json_decode((string) $sample['bindings'], TRUE, 32, JSON_THROW_ON_ERROR);
+    $industrySlug = (string) ($bindings['_preparation']['industry_template_slug'] ?? '');
+    $frozenIndustryApproval = NULL;
+    if ($industrySlug !== '') {
+      $industry = AcquisitionIndustryTemplate::bySlug($industrySlug);
+      $frozenIndustryApproval = $industry['approval_bytes'];
+    }
+    $authorization = $this->genericAuthorization($sample, $frozenIndustryApproval);
     $key = 'sample-v1:' . $invitationId . ':day:0';
     $old = $this->database->select('famtastic_email_message', 'm')->fields('m')->condition('message_key', $key)->execute()->fetchAssoc();
     $tracking = $old ? $old['tracking_key'] : bin2hex(random_bytes(24));
     $unsubscribe = $old ? $old['unsubscribe_key'] : bin2hex(random_bytes(24));
-    $snapshot = AcquisitionSampleEmail::compileGeneric($authorization, $token, $unsubscribe, $tracking, (string) $this->configFactory?->get('famtastic_pipeline.settings')->get('outreach_postal_address'));
+    $snapshot = $industrySlug !== ''
+      ? AcquisitionSampleEmail::compileIndustry($industrySlug, ['business_name' => (string) $bindings['business_name']], $token, $unsubscribe, $tracking, (string) $this->configFactory?->get('famtastic_pipeline.settings')->get('outreach_postal_address'))
+      : AcquisitionSampleEmail::compileGeneric($authorization, $token, $unsubscribe, $tracking, (string) $this->configFactory?->get('famtastic_pipeline.settings')->get('outreach_postal_address'));
+    $snapshot['authorization'] = $authorization;
+    $snapshot['authorization_hash'] = hash('sha256', json_encode($authorization, JSON_THROW_ON_ERROR));
+    if ($industrySlug !== '') {
+      $snapshot['industry_approval_record'] = $frozenIndustryApproval;
+      $snapshot['creative_approval'] = $authorization['creative_approval'];
+    }
     $json = json_encode($snapshot, JSON_THROW_ON_ERROR);
     $hash = hash('sha256', $json);
     if ($old) {
@@ -146,7 +162,10 @@ final class AcquisitionSampleSequenceService {
     $reason = !$sample || !AcquisitionSampleGuard::live($sample, $this->time->getCurrentTime()) ? 'expired_or_revoked' : NULL;
     if (!$reason && isset(json_decode((string) $sample['bindings'], TRUE)['_preparation'])) {
       $snapshot = $this->database->select('famtastic_acquisition_message', 'c')->fields('c', ['snapshot'])->condition('invitation_id', (int) $sample['id'])->condition('day', 0)->execute()->fetchField();
-      try { $this->genericAuthorization($sample, $snapshot ? (json_decode((string) $snapshot, TRUE)['creative_approval_record'] ?? NULL) : NULL); }
+      try {
+        $decodedSnapshot = $snapshot ? json_decode((string) $snapshot, TRUE, 32, JSON_THROW_ON_ERROR) : [];
+        $this->genericAuthorization($sample, $decodedSnapshot['industry_approval_record'] ?? $decodedSnapshot['creative_approval_record'] ?? NULL);
+      }
       catch (\InvalidArgumentException) { $reason = 'generic_authorization_stale'; }
     }
     if (!$reason && $this->database->select('famtastic_consent', 'c')->condition('contact_hash', $sequence['recipient_hash'])->condition('consent_type', 'outreach')->condition('status', ['unsubscribed', 'bounced', 'complained', 'suppressed'], 'IN')->countQuery()->execute()->fetchField()) $reason = 'suppressed';

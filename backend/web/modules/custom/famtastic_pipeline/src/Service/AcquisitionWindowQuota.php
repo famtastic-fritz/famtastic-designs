@@ -49,10 +49,11 @@ final class AcquisitionWindowQuota {
     $old=$this->db->select('famtastic_acquisition_window','w')->fields('w',['window_key'])->condition('status','running')->condition('window_key',$current,'<>')->execute()->fetchField();
     if($old){$this->halt((string)$old,'acquisition_interrupted_window_manual_review');throw new \RuntimeException('acquisition_interrupted_window_manual_review');}
   }
-  public function reserveWindow(string $date,int $hour,string $configHash,array $records,int $campaign,?int $asapExpires=NULL): array {
+  public function reserveWindow(string $date,int $hour,string $configHash,array $records,int $campaign,?int $asapExpires=NULL,?string $immediateKey=NULL): array {
     $tx=$this->db->startTransaction();
     try {
-      $this->lock($date);$key=$asapExpires===NULL?$date.'-'.sprintf('%02d',$hour):self::ASAP_KEY;
+      $this->lock($date);$key=$asapExpires===NULL?$date.'-'.sprintf('%02d',$hour):($immediateKey??self::ASAP_KEY);
+      if($immediateKey!==NULL&&($asapExpires===NULL||$immediateKey!=='asap-industry-'.$date.'-'.sprintf('%02d',$hour)||self::local($this->now())->format('G')!==(string)$hour||self::local($asapExpires-1)->format('Y-m-d-H')!==$date.'-'.sprintf('%02d',$hour)))throw new \RuntimeException('acquisition_industry_window_binding_invalid');
       if($asapExpires!==NULL&&($campaign!==5||$asapExpires<=$this->now()||$asapExpires>$this->now()+3600||self::local($this->now())->format('Y-m-d')!==$date||self::local($asapExpires)->format('Y-m-d')!==$date))throw new \RuntimeException('acquisition_asap_reservation_invalid');
       $old=$this->db->select('famtastic_acquisition_window','w')->fields('w')->condition('window_key',$key)->execute()->fetchAssoc();
       if($old){if(!hash_equals($old['config_hash'],$configHash))throw new \RuntimeException('acquisition_window_config_changed');return ['duplicate'=>TRUE,'window_key'=>$key,'status'=>$old['status'],'slots'=>[]];}
@@ -78,7 +79,7 @@ final class AcquisitionWindowQuota {
   public function reserveMessage(int $messageId): void {
     $local=self::local($this->now());$date=$local->format('Y-m-d');$hour=(int)$local->format('G');$this->lock($date);
     $old=$this->db->select('famtastic_acquisition_slot','s')->fields('s')->condition('message_id',$messageId)->execute()->fetchAssoc();
-    if($old&&$old['window_key']===self::ASAP_KEY){$this->assertAsapSlot($old);if($old['status']!=='prepared')throw new \RuntimeException('acquisition_window_reservation_invalid');return;}
+    if($old&&self::immediateSlot($old)){$this->assertAsapSlot($old);if($old['status']!=='prepared')throw new \RuntimeException('acquisition_window_reservation_invalid');return;}
     if(!in_array($hour,self::HOURS,TRUE))throw new \RuntimeException('acquisition_outside_approved_window');
     if($old){if($old['local_date']!==$date||$old['window_key']!==$date.'-'.sprintf('%02d',$hour)||$old['status']!=='prepared')throw new \RuntimeException('acquisition_window_reservation_invalid');return;}
     $usage=$this->usage($date,$hour);if($usage['day']>=self::DAY_CAP||$usage['window']>=self::WINDOW_CAP)throw new \RuntimeException('acquisition_window_capacity_exhausted');
@@ -91,11 +92,13 @@ final class AcquisitionWindowQuota {
     $clock=$this->db->select('famtastic_acquisition_clock','c')->fields('c',['status'])->condition('id',1)->execute()->fetchField();
     $entry=$this->db->select('famtastic_acquisition_slot','s')->fields('s')->condition('message_id',$messageId)->execute()->fetchAssoc();
     $local=self::local($this->now());
-    if($clock==='active'&&$entry&&$entry['window_key']===self::ASAP_KEY){$this->assertAsapSlot($entry);return;}
+    if($clock==='active'&&$entry&&self::immediateSlot($entry)){$this->assertAsapSlot($entry);return;}
     if($clock!=='active'||!$entry||$entry['local_date']!==$local->format('Y-m-d')||$entry['window_key']!==$local->format('Y-m-d-H'))throw new \RuntimeException('acquisition_window_elapsed_or_halted');
   }
+  private static function immediateSlot(array $slot): bool { return ($slot['window_key']??'')===self::ASAP_KEY||preg_match('/^asap-industry-\d{4}-\d{2}-\d{2}-\d{2}$/D',(string)($slot['window_key']??''))===1; }
   private function assertAsapSlot(array $slot): void {
-    $window=$this->db->select('famtastic_acquisition_window','w')->fields('w')->condition('window_key',self::ASAP_KEY)->execute()->fetchAssoc();
+    $window=$this->db->select('famtastic_acquisition_window','w')->fields('w')->condition('window_key',$slot['window_key'])->execute()->fetchAssoc();
+    if($slot['window_key']!==self::ASAP_KEY&&$slot['window_key']!=='asap-industry-'.self::local($this->now())->format('Y-m-d-H'))throw new \RuntimeException('acquisition_industry_window_elapsed');
     if(!$window||$window['status']!=='running'||(int)$slot['campaign_id']!==5||$slot['local_date']!==self::local($this->now())->format('Y-m-d')||(int)$window['expires']<=$this->now()||(int)$window['expires']>(int)$window['created']+3600)throw new \RuntimeException('acquisition_asap_expired_or_unbound');
   }
   public function finish(string $key): void { $this->db->update('famtastic_acquisition_window')->fields(['status'=>'complete','changed'=>$this->now()])->condition('window_key',$key)->condition('status','running')->execute(); }
