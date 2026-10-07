@@ -1,0 +1,84 @@
+{
+  "environment": "hosted_production",
+  "captured_at": "2026-10-07T17:27:24.772Z",
+  "results": [
+    {
+      "suffix": "/lab",
+      "status": 200,
+      "mime": "text/html; charset=UTF-8"
+    },
+    {
+      "suffix": "/assets/lab.css",
+      "status": 200,
+      "mime": "text/css; charset=UTF-8"
+    },
+    {
+      "suffix": "/assets/lab.js",
+      "status": 200,
+      "mime": "application/javascript; charset=UTF-8"
+    },
+    {
+      "suffix": "/assets/fraunces.woff2",
+      "status": 200,
+      "mime": "font/woff2"
+    },
+    {
+      "suffix": "/assets/manrope.woff2",
+      "status": 200,
+      "mime": "font/woff2"
+    },
+    {
+      "suffix": "/assets/maintenance.webp",
+      "status": 200,
+      "mime": "image/webp"
+    },
+    {
+      "suffix": "/assets/creator-credit.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "suffix": "/assets/manifest.json",
+      "status": 404,
+      "mime": "text/html; charset=utf-8"
+    },
+    {
+      "suffix": "/assets/fraunces-OFL.txt",
+      "status": 404,
+      "mime": "text/html; charset=utf-8"
+    },
+    {
+      "suffix": "/email",
+      "status": 404,
+      "mime": "text/html; charset=utf-8"
+    },
+    {
+      "suffix": "invalid opaque invitation",
+      "status": 404
+    },
+    {
+      "suffix": "/web/samples/industry/home-services/lab",
+      "status": 404
+    }
+  ],
+  "homes": [
+    {
+      "host": "famtasticdesigns.com",
+      "status": 200,
+      "rendered": true,
+      "h1": [
+        "Agentic AI Business Solutions Engineering Studio "
+      ]
+    },
+    {
+      "host": "www.famtasticdesigns.com",
+      "status": 200,
+      "rendered": true,
+      "h1": [
+        "Agentic AI Business Solutions Engineering Studio "
+      ]
+    }
+  ],
+  "no_post_requests": true,
+  "no_live_invitation_created": true
+}

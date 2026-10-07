@@ -1,0 +1,55 @@
+{
+  "evaluation_id": "posteval_hvac_coastal_current_20261007",
+  "canonical_record": "/Users/famtastic-fritz/Development/FAMtastic/data-center/post-eval/posteval_hvac_coastal_current_20261007.json",
+  "canonical_report": "/Users/famtastic-fritz/Development/FAMtastic/data-center/reports/post-eval/posteval_hvac_coastal_current_20261007.md",
+  "canonical_ledger": "/Users/famtastic-fritz/Development/FAMtastic/data-center/ledgers/post-eval.jsonl",
+  "scope": "new canonical Data Center record appended locally; unrelated ecosystem Git work preserved",
+  "learnings": [
+    "The production native acquisition system owns this Lab; absent older React research is not an implicit runtime authority.",
+    "Compiled router requirements must include new category slugs as well as controller mappings.",
+    "Immutable staging must accept exact licensed OFL filenames and handle sparse materialization before status validation.",
+    "Protected Drupal settings directory550/file440 require writable unique staging followed by original modes and hash-conditional rollback.",
+    "Source, public illustrative practice, private verified account proof, owner acceptance, and Studio consumption remain distinct."
+  ],
+  "gaps": [
+    "Private positive hosted recipient/account flow was intentionally not exercised; local fictional persistence and isolation only.",
+    "Contractor requests, booking, message delivery and owner device acceptance remain unconnected or pending.",
+    "Component Studio has not imported/consumed recipe.",
+    "Existing locked build dependency source-map-js has high audit advisory; production dependency audit0."
+  ],
+  "opportunities": [
+    {
+      "opportunity_id": "opp_8b9ce9bec5b30459",
+      "type": "component_opportunity",
+      "title": "Import reusable six-page HVAC recipe after Studio review",
+      "priority": "medium",
+      "summary": "Import reusable six-page HVAC recipe after Studio review",
+      "evidence": [],
+      "suggested_action": "Consume recipe-contribution.json and verify source hashes; do not claim import until retrieval/use proof.",
+      "owner": "component-studio",
+      "status": "proposed"
+    },
+    {
+      "opportunity_id": "opp_c57595d63ca16658",
+      "type": "quality_failure",
+      "title": "Include route matching and protected permissions in deployment preflight",
+      "priority": "medium",
+      "summary": "Include route matching and protected permissions in deployment preflight",
+      "evidence": [],
+      "suggested_action": "Apply the compiled-route and protected staging checks to new Lab families.",
+      "owner": null,
+      "status": "proposed"
+    },
+    {
+      "opportunity_id": "opp_f56632303049d879",
+      "type": "process_opportunity",
+      "title": "Triage existing source-map-js build advisory separately",
+      "priority": "medium",
+      "summary": "Triage existing source-map-js build advisory separately",
+      "evidence": [],
+      "suggested_action": "Evaluate scoped dependency patch under normal frontend dependency review.",
+      "owner": null,
+      "status": "proposed"
+    }
+  ]
+}

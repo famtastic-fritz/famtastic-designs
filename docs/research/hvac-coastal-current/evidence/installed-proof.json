@@ -3,6 +3,8 @@
     "status": "passed",
     "classification": "local_synthetic",
     "checks": {
+        "famtastic_pipeline.acquisition_industry_preview_compiled_hvac_route": true,
+        "famtastic_pipeline.acquisition_industry_preview_asset_compiled_hvac_route": true,
         "prospect_0_scanner_gets_do_not_mutate": true,
         "prospect_0_frozen_escaped_identity_and_private_route": true,
         "prospect_0_sandbox_isolated_user_activation_only": true,

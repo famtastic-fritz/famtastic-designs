@@ -1,12 +1,12 @@
 {
   "schema": "famtastic.build-dna.v1",
   "build_id": "coastal-current-hvac-lab-20261007",
-  "classification": "local_tested_release_pending",
+  "classification": "deployed_owner_acceptance_pending",
   "created_at": "2026-10-07T17:10:32.819588+00:00",
   "repository": {
     "name": "famtastic-designs",
-    "revision": "91216e942ae9623197bcb2450f06095e02269fc2",
-    "worktree_state": "isolated scoped source modifications; final immutable revision in RELEASE.json"
+    "revision": "76c6faad5fe4b6fb199cb2842edca14f428d69d5",
+    "worktree_state": "released source; documentation closeout follows without runtime changes"
   },
   "recipe": {
     "routine": "native-reusable-hvac-lab",
@@ -109,6 +109,35 @@
       "result": {
         "status": "passed",
         "review": "scout guidance; six deployment findings corrected by lead"
+      }
+    },
+    {
+      "stage_id": "hosted-release",
+      "attempt": 1,
+      "capability": "scoped native release and real browser QA",
+      "execution": {
+        "provider": {
+          "id": "existing_godaddy_release_lanes"
+        },
+        "model": {
+          "status": "not_exposed"
+        },
+        "timing": {
+          "status": "release_times_recorded_in_RELEASE.json"
+        },
+        "cost": {
+          "status": "not_exposed"
+        },
+        "input": {
+          "revision": "76c6faad5fe4b6fb199cb2842edca14f428d69d5"
+        },
+        "output": {
+          "proof": "RELEASE.json;hosted-browser-proof.json;hosted-http-boundaries.json"
+        }
+      },
+      "result": {
+        "status": "passed",
+        "review": "19installed compiled-route checks;3hostedviewports,sixpages;12HTTPboundarychecks;apex/wwwrendered;owneracceptancepending"
       }
     }
   ],
@@ -242,7 +271,7 @@
     {
       "role": "source_asset_or_proof",
       "path": "docs/research/hvac-coastal-current/evidence/source-proof.json",
-      "sha256": "446bc7538606873e99a8e17d03ac9ea6babf33aaeeeb68f23448123cb54a810a",
+      "sha256": "fb42158cd3937cccfdf0ccca991c8c9fba6581248941763b35ca2a6c0e7c960d",
       "rights": "illustrative-generation or OFL or FAMtastic-owned; provenance in manifest",
       "retention": "source"
     },
@@ -263,14 +292,14 @@
     {
       "role": "source_asset_or_proof",
       "path": "docs/research/hvac-coastal-current/evidence/installed-proof.json",
-      "sha256": "018f61ac5a3ed18ddb6a172dde783de4bab7a45cbecf3b21ca74e71f5c581e96",
+      "sha256": "ed338634bbe6ad54a1b9a7aad29b36ad03f1ca78d8116e33965517c0d8a7862f",
       "rights": "illustrative-generation or OFL or FAMtastic-owned; provenance in manifest",
       "retention": "source"
     },
     {
       "role": "review_owner_evidence",
       "path": "docs/research/hvac-coastal-current/OWNER-TASK-GUIDE.md",
-      "sha256": "bd0bbfc12fc75e65ea25ad3b5c1705e47706e8a05878866c2f61dc21bcc0133c",
+      "sha256": "f8c973077bf322e9e7485d104514a22fda0617f2d5a4353afc7b3ffcbed635de",
       "rights": "FAMtastic synthetic local demonstration",
       "retention": "source"
     },
@@ -284,7 +313,7 @@
     {
       "role": "review_owner_evidence",
       "path": "docs/research/hvac-coastal-current/evidence/screenshots.json",
-      "sha256": "e47408f6d51779ec6a2e493b58e394f3d1e55cb0c3fe0bad1906e91093321728",
+      "sha256": "1a68c94bc14bed50de7e9331fea63f6cae162c04042963f680967ebec5c32a8f",
       "rights": "FAMtastic synthetic local demonstration",
       "retention": "source"
     },
@@ -293,6 +322,48 @@
       "path": "docs/research/hvac-coastal-current/evidence/home-390.png",
       "sha256": "29ee22f2462da62e768432c148a593535acd58a5b63b7de6ec482eb59fca4419",
       "rights": "FAMtastic synthetic local demonstration",
+      "retention": "source"
+    },
+    {
+      "role": "review_owner_evidence",
+      "path": "docs/research/hvac-coastal-current/RELEASE.json",
+      "sha256": "1ba0b0db39d1c1e36b84fc994ec5ae9522c4fcab927e947c7425eff131c2c50f",
+      "rights": "FAMtastic synthetic demonstration and release proof",
+      "retention": "source"
+    },
+    {
+      "role": "review_owner_evidence",
+      "path": "docs/research/hvac-coastal-current/POST-EVAL.json",
+      "sha256": "66db521679f00534508c005c2384be6f6a65b013736118088a06db1a7db82014",
+      "rights": "FAMtastic synthetic demonstration and release proof",
+      "retention": "source"
+    },
+    {
+      "role": "review_owner_evidence",
+      "path": "docs/research/hvac-coastal-current/evidence/hosted-browser-proof.json",
+      "sha256": "943c873f9fa639cbc29ed45bfa3694f50cc68773ca93e9c9f482acbfd6ff64ad",
+      "rights": "FAMtastic synthetic demonstration and release proof",
+      "retention": "source"
+    },
+    {
+      "role": "review_owner_evidence",
+      "path": "docs/research/hvac-coastal-current/evidence/hosted-http-boundaries.json",
+      "sha256": "4499e729dc8e42af5d2daa69a4379bd62e00e8a6343cb34c3afbbaed50f251a3",
+      "rights": "FAMtastic synthetic demonstration and release proof",
+      "retention": "source"
+    },
+    {
+      "role": "review_owner_evidence",
+      "path": "docs/research/hvac-coastal-current/evidence/hosted-home-390.png",
+      "sha256": "29ee22f2462da62e768432c148a593535acd58a5b63b7de6ec482eb59fca4419",
+      "rights": "FAMtastic synthetic demonstration and release proof",
+      "retention": "source"
+    },
+    {
+      "role": "review_owner_evidence",
+      "path": "docs/research/hvac-coastal-current/evidence/hosted-contact-390.png",
+      "sha256": "1222d14efdcadbffac6d9ca0b91709db1b350606daf27d788c72bd130c61089e",
+      "rights": "FAMtastic synthetic demonstration and release proof",
       "retention": "source"
     }
   ],
@@ -312,5 +383,6 @@
   },
   "integrity": {
     "artifact_hash_algorithm": "sha256"
-  }
+  },
+  "release_evidence": "RELEASE.json"
 }

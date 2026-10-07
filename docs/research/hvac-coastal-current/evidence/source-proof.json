@@ -2,7 +2,7 @@
   "php_runtime": "8.5.9 local /8.3.33 target",
   "tests": 52,
   "assertions": 852,
-  "installed_checks": 17,
+  "installed_checks": 19,
   "browser_viewports": [
     1280,
     390,
@@ -12,6 +12,6 @@
   "private_mobile_continuations": 2,
   "frontend_build": "Node22.23.2 normal npm run build;623modules,221HTML outputs",
   "manifest_sha256": "3df4c8055414b6d333f784318363cd1a0d9a0cdca6dc89feab332ed4a8e9cc1c",
-  "production_proof": "pending",
+  "production_proof": "RELEASE.json;hosted-browser-proof.json;hosted-http-boundaries.json",
   "owner_acceptance": "pending"
 }

@@ -16,13 +16,13 @@ The new approval status is `owner_authorized_lab_artifact`. It confers no email 
 
 ## Verification
 
-52 focused PHP tests/852 assertions; 17 installed SQLite checks with network/mail disabled; 3 actual viewports1280/390/320×844 across six routes, forms/errors/keyboard/reduced motion/loaded fonts/contrast; 2 private390×844 sandbox continuations. Proof JSON lives in `evidence/`. Private fictional tokens/HTML remain outside Git in the disposable sandbox. Generated images are illustrative; maintenance v2 is selected. Fonts are local licensed WOFF2. The exact approved transparent credit PNG is retained.
+52 focused PHP tests/852 assertions; 19 installed SQLite checks with network/mail disabled; 3 actual viewports1280/390/320×844 across six routes, forms/errors/keyboard/reduced motion/loaded fonts/contrast; 2 private390×844 sandbox continuations. Proof JSON lives in `evidence/`. Private fictional tokens/HTML remain outside Git in the disposable sandbox. Generated images are illustrative; maintenance v2 is selected. Fonts are local licensed WOFF2. The exact approved transparent credit PNG is retained.
 
-Source validation and a build are local evidence. Hosted results and exact revisions belong in `RELEASE.json`. Physical uncoached owner acceptance remains pending; HVAC booking, contractor intake persistence, messages and payments remain unconnected.
+Released backend76c6faad/frontend0fb17756; identical frontend tree. Hosted six-route1280/390/320 proof,12HTTP boundaries and apex/www rendered proof are in `RELEASE.json` and `evidence/hosted-*.json`. Physical uncoached owner acceptance remains pending; HVAC booking, contractor intake persistence, messages and payments remain unconnected.
 
 ## Release and rollback
 
-Normal entry: `FAMTASTIC_HVAC_LAB_ONLY=1 bash scripts/deploy-backend-godaddy.sh` and then the authorized `--apply`. It promotes only five native PHP files, immutable private HVAC assets and three HVAC settings; it validates base hashes and backs up exact files/settings. No schema/catalog/cron/general dispatcher mutation. The existing frontend deploy lane ships the one scoped iframe sandbox change after a pinned Node build. Release markers and backup paths must match `RELEASE.json`.
+Normal entry: `FAMTASTIC_HVAC_LAB_ONLY=1 bash scripts/deploy-backend-godaddy.sh` and then the authorized `--apply`. It promotes only five native PHP files plus the two existing preview route allowlist patterns, immutable private HVAC assets and three HVAC settings; it validates base hashes and backs up exact files/settings. No schema/catalog/cron/general dispatcher mutation; rebuild only router and expire only HVAC cached URLs. The existing frontend deploy lane ships the one scoped iframe sandbox change after a pinned Node build. Release markers and backup paths must match `RELEASE.json`.
 
 Backend rollback restores the five recorded base files (new class absent) and backed-up settings, subject to live CAS review; do not overwrite later changes. Private assets can remain inert. Frontend rollback uses its exact generated backup. The older main backend marker is preserved; `.hvac-lab-release` names this additive source. Never interpret rollback as authorization to retry recipients or change dispatch controls.
 

@@ -34,5 +34,45 @@
     "route": "#contact",
     "role": "fictional visitor/owner practice",
     "source_revision": "scoped source; immutable released match in RELEASE.json"
+  },
+  {
+    "file": "docs/research/hvac-coastal-current/evidence/hosted-home-390.png",
+    "sha256": "29ee22f2462da62e768432c148a593535acd58a5b63b7de6ec482eb59fca4419",
+    "decoded_format": "PNG",
+    "decoded_dimensions": [
+      390,
+      4831
+    ],
+    "actual_viewport": [
+      390,
+      844
+    ],
+    "capture_date": "2026-10-07",
+    "environment": "hosted_production",
+    "url": "https://famtasticdesigns.com/web/samples/industry/hvac-coastal-current/lab#home",
+    "route": "#home",
+    "role": "fictional visitor/owner practice; developer QA",
+    "source_revision": "76c6faad5fe4b6fb199cb2842edca14f428d69d5",
+    "owner_acceptance": "pending"
+  },
+  {
+    "file": "docs/research/hvac-coastal-current/evidence/hosted-contact-390.png",
+    "sha256": "1222d14efdcadbffac6d9ca0b91709db1b350606daf27d788c72bd130c61089e",
+    "decoded_format": "PNG",
+    "decoded_dimensions": [
+      390,
+      5790
+    ],
+    "actual_viewport": [
+      390,
+      844
+    ],
+    "capture_date": "2026-10-07",
+    "environment": "hosted_production",
+    "url": "https://famtasticdesigns.com/web/samples/industry/hvac-coastal-current/lab#contact",
+    "route": "#contact",
+    "role": "fictional visitor/owner practice; developer QA",
+    "source_revision": "76c6faad5fe4b6fb199cb2842edca14f428d69d5",
+    "owner_acceptance": "pending"
   }
 ]

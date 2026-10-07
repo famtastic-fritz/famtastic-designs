@@ -1,0 +1,91 @@
+{
+  "schema": "famtastic.hvac-lab-release.v1",
+  "classification": "deployed",
+  "recorded_at": "2026-10-07T17:28:42.293922+00:00",
+  "owning_repository": "famtastic-fritz/famtastic-designs",
+  "initial_base": "91216e942ae9623197bcb2450f06095e02269fc2",
+  "backend": {
+    "commit": "76c6faad5fe4b6fb199cb2842edca14f428d69d5",
+    "base": "0fb17756af7e29e134827cae9e970cea39312459",
+    "deployed_at": "2026-10-07T17:26:25Z",
+    "backup": "/home/xrdj7j99xhzt/deploy/famtastic-designs/releases/76c6faad5fe4b6fb199cb2842edca14f428d69d5/hvac-backup-20261007T172617Z-1298848",
+    "manifest_sha256": "3df4c8055414b6d333f784318363cd1a0d9a0cdca6dc89feab332ed4a8e9cc1c",
+    "scope": "five-runtime-files-routing-private-assets-HVAC-settings",
+    "cron_unchanged": "1",
+    "pipeline_smtp_config_unchanged": "1"
+  },
+  "frontend": {
+    "commit": "0fb17756af7e29e134827cae9e970cea39312459",
+    "deployed_at": "2026-10-07T17:24:54Z",
+    "node": "v22.23.3",
+    "backup": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20261007T172255Z-0fb17756af7e29e134827cae9e970cea39312459.tgz"
+  },
+  "frontend_tree_identical_between_releases": true,
+  "preview_url": "https://famtasticdesigns.com/web/samples/industry/hvac-coastal-current/lab",
+  "recipe_id": "coastal_current_hvac_v1",
+  "family": "hvac",
+  "manifest_sha256": "3df4c8055414b6d333f784318363cd1a0d9a0cdca6dc89feab332ed4a8e9cc1c",
+  "private_bundle": "/home/xrdj7j99xhzt/private_files/acquisition-199/hvac/76c6faad5fe4b6fb199cb2842edca14f428d69d5",
+  "runtime_scope": "five PHP files plus two existing industry route allowlist patterns, immutable HVAC bundle, HVAC-only settings; existing frontend sandbox change",
+  "proof": {
+    "php_tests": 52,
+    "php_assertions": 852,
+    "installed_checks": 19,
+    "private_mobile_continuations": 2,
+    "hosted_viewports": [
+      1280,
+      390,
+      320
+    ],
+    "height": 844,
+    "hosted_routes": 6,
+    "hosted_http_checks": 12,
+    "apex_www_rendered": true,
+    "source_runtime": "8.5.9 local;8.3.33 hosted",
+    "production_php_recipe_snapshot": true,
+    "compiled_router": true,
+    "settings_mode_preserved": "directory550,file440",
+    "owner_acceptance": "pending",
+    "smtp_delivery": "not_exercised",
+    "native_private_account_positive": "local_synthetic_only"
+  },
+  "boundaries": {
+    "campaign_emails_sent": false,
+    "live_invitations_created": false,
+    "recipient_schedule_suppression_changes": false,
+    "cron_unchanged": true,
+    "pipeline_smtp_config_unchanged": true,
+    "contractor_booking_intake_messages": "illustrative page-only practice",
+    "component_studio_import": "pending",
+    "original_pitch_and_frozen_design": "unchanged"
+  },
+  "rollback": {
+    "final_backend_backup": "/home/xrdj7j99xhzt/deploy/famtastic-designs/releases/76c6faad5fe4b6fb199cb2842edca14f428d69d5/hvac-backup-20261007T172617Z-1298848",
+    "initial_hvac_backup": "/home/xrdj7j99xhzt/deploy/famtastic-designs/releases/0fb17756af7e29e134827cae9e970cea39312459/hvac-backup-20261007T172237Z-1292945",
+    "frontend_backup": "/home/xrdj7j99xhzt/backups/famtastic-frontend-20261007T172255Z-0fb17756af7e29e134827cae9e970cea39312459.tgz",
+    "procedure": "Compare live file/settings hashes before restore. Final backup restores prior HVAC backend and pre-HVAC route rule; rebuild router and expire only HVAC page-cache IDs. Full removal additionally restores initial-HVAC backup four original PHP files/settings and removes new class only if its deployed hash matches. Restore original directory550/file440. Bundles may remain inert. Never overwrite later changes or modify dispatcher."
+  },
+  "attempt_notes": [
+    "No-checkout cleanliness check corrected before any promotion.",
+    "Uppercase OFL filename staging guard corrected before promotion.",
+    "Protected directory/file staging permission failures reverted five PHP files using CAS; settings unchanged.",
+    "First successful native snapshot release0fb17756 lacked public router allowlist. Final76c6faad adds/compiles both existing preview rules and clears only cached HVAC URLs."
+  ],
+  "dependency_audit": {
+    "production_dependencies": "0 vulnerabilities, npm audit --omit=dev",
+    "existing_build_dependency": "source-map-js high GHSA-68fv-2mgg-jv7q; locked build dependency unchanged; dependency upgrade outside HVAC scope"
+  },
+  "documentation_sync": {
+    "repo_surfaces": [
+      "docs/CHANGELOG.md",
+      "docs/CAPABILITY_REGISTRY.md",
+      ".site-context/SITE-LEARNINGS.md",
+      "docs/SITE_LEARNINGS.md"
+    ],
+    "drive_file": "/Users/famtastic-fritz/Library/CloudStorage/GoogleDrive-fritz.medine@gmail.com/My Drive/FAMtastic/famtasticdesigns.com/HVAC-Coastal-Current-Lab-2026-10-07.md",
+    "drive_local_file_sha256": "bf7cf2d83227ed0616990ed61a8a2fbf943dcfc66fb56376464533697efcae76",
+    "cloud_sync_remote": "not_independently_verified",
+    "data_center_evaluation": "posteval_hvac_coastal_current_20261007",
+    "plan_audit": "14active,0drift,0conflicts;clean"
+  }
+}

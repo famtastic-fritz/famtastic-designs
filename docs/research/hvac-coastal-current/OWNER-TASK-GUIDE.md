@@ -19,3 +19,11 @@ Booking calendar, real contractor requests/alerts, provider messages, prices/pol
 ![Illustrative contact and owner practice at390px; no contractor persistence](evidence/contact-390.png)
 
 Capture viewport390×844; full-page pixel height differs. Manifest:evidence/screenshots.json. Release/runtime proof is separate in RELEASE.json.
+
+## Hosted release phone screens
+
+Actual390×844 browser capture from the RELEASE.json preview, after six-route/practice verification. The visible heading ring is the keyboard-focus check. Owner device/acceptance remains pending.
+
+![Hosted illustrative HVAC home](evidence/hosted-home-390.png)
+
+![Hosted illustrative request and owner practice](evidence/hosted-contact-390.png)
