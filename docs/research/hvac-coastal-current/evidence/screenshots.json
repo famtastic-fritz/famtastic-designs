@@ -1,0 +1,38 @@
+[
+  {
+    "file": "docs/research/hvac-coastal-current/evidence/home-390.png",
+    "sha256": "29ee22f2462da62e768432c148a593535acd58a5b63b7de6ec482eb59fca4419",
+    "decoded_format": "PNG",
+    "decoded_dimensions": [
+      390,
+      4831
+    ],
+    "actual_viewport": [
+      390,
+      844
+    ],
+    "capture_date": "2026-10-07",
+    "environment": "local_generic_fixture",
+    "route": "#home",
+    "role": "fictional visitor/owner practice",
+    "source_revision": "scoped source; immutable released match in RELEASE.json"
+  },
+  {
+    "file": "docs/research/hvac-coastal-current/evidence/contact-390.png",
+    "sha256": "1222d14efdcadbffac6d9ca0b91709db1b350606daf27d788c72bd130c61089e",
+    "decoded_format": "PNG",
+    "decoded_dimensions": [
+      390,
+      5790
+    ],
+    "actual_viewport": [
+      390,
+      844
+    ],
+    "capture_date": "2026-10-07",
+    "environment": "local_generic_fixture",
+    "route": "#contact",
+    "role": "fictional visitor/owner practice",
+    "source_revision": "scoped source; immutable released match in RELEASE.json"
+  }
+]

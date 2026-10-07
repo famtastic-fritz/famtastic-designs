@@ -1,0 +1,29 @@
+{
+    "schema": "famtastic.hvac-installed-proof.v1",
+    "status": "passed",
+    "classification": "local_synthetic",
+    "checks": {
+        "prospect_0_scanner_gets_do_not_mutate": true,
+        "prospect_0_frozen_escaped_identity_and_private_route": true,
+        "prospect_0_sandbox_isolated_user_activation_only": true,
+        "prospect_0_registration_waits_for_verified_email": true,
+        "prospect_0_verified_identity_and_preference_isolated": true,
+        "prospect_0_native_website_inquiry_persisted": true,
+        "prospect_1_scanner_gets_do_not_mutate": true,
+        "prospect_1_frozen_escaped_identity_and_private_route": true,
+        "prospect_1_sandbox_isolated_user_activation_only": true,
+        "prospect_1_registration_waits_for_verified_email": true,
+        "prospect_1_verified_identity_and_preference_isolated": true,
+        "prospect_1_native_website_inquiry_persisted": true,
+        "two_prospects_keep_context_and_request_separate": true,
+        "cross_recipient_request_context_rejected": true,
+        "expired_public_room_keeps_verified_account_request_resume": true,
+        "native_snapshot_survives_source_bundle_removal": true,
+        "no_campaign_mail_queue_sequence_or_dispatch_created": true
+    },
+    "provider_sends": false,
+    "production_deployment": false,
+    "native_recipe": "coastal_current_hvac_v1",
+    "manifest_sha256": "3df4c8055414b6d333f784318363cd1a0d9a0cdca6dc89feab332ed4a8e9cc1c",
+    "source_design_commit": "3dfc722"
+}

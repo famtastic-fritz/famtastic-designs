@@ -31,8 +31,9 @@ final class AcquisitionSampleController extends ControllerBase {
     catch (\RuntimeException) { $html = NULL; }
     $response = new Response($html ?? 'Sample unavailable.', $html === NULL ? 404 : 200, ['Content-Type' => 'text/html; charset=UTF-8']);
     $industry = $html !== NULL && str_contains($html, 'data-famtastic-industry-lab=');
+    $hvac = $html !== NULL && str_contains($html, 'data-famtastic-industry-lab="hvac-coastal-current"');
     $response->headers->set('Content-Security-Policy', $industry
-      ? "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src 'self' data:; connect-src 'none'; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; sandbox allow-scripts"
+      ? "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src 'self' data:; connect-src 'none'; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; sandbox allow-scripts" . ($hvac ? ' allow-top-navigation-by-user-activation' : '')
       : "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; font-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; sandbox allow-same-origin");
     return $this->secure($response);
   }

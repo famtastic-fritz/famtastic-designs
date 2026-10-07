@@ -2861,3 +2861,8 @@ Observation: August 24 support import cron was absent in an August 27 backup and
 - Hosted core11.4.8, Webform6.3.1, ProjectBrowser2.1.5; locked audit0; schema8068/no pending updates; all17snapshot hashes and7backupfiles verified. Existing dispatch locktrue/zeroschedulers preserved; no customer sends or AI activation.
 - Cleared stale update-status metadata using the bounded Drupal updater only, which now reports patched projects current. Do not run broad cron to refresh a security notice under the exact-dispatch lock.
 - Classification **deployed**, owner acceptance pending; authenticated route/phone evidence and unproven persistence/provider boundaries are in October6 owner handoff. See `docs/implementation/PRODUCTION_RELEASE_2026-10-06.md`.
+
+
+## 2026-10-07 · Reusable HVAC Coastal Current Lab
+
+Separate HVAC recipe/coastal_current_hvac_v1, six navigable routes, selected maintenancev2 imagery, callback/full-request/owner practice, and native immutable private/account continuation. Source and local proof:docs/research/hvac-coastal-current/README.md and CAPABILITY-MATRIX.md. Matching release proof:RELEASE.json when available. Observed: older React candidate absent main; current native snapshots are the release owner. Guidance: keep separate family and approval boundary; template implementation approval never authorizes mail or alters accepted snapshots. Owner tasks pending; contractor booking/intake/messages remain illustrative/unconnected. Component Studio import pending.

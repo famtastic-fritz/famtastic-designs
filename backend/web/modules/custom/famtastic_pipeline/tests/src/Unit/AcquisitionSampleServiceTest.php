@@ -6,6 +6,7 @@ namespace Drupal\Tests\famtastic_pipeline\Unit;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\famtastic_pipeline\Service\AcquisitionSampleGuard;
+use Drupal\famtastic_pipeline\Service\AcquisitionHvacTemplate;
 use Drupal\famtastic_pipeline\Service\AcquisitionSampleSchema;
 use Drupal\famtastic_pipeline\Service\AcquisitionSampleService;
 use Drupal\famtastic_pipeline\Service\AcquisitionSampleSequenceService;
@@ -15,7 +16,8 @@ use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\UnitTestCase;
 
 require_once dirname(__DIR__, 3) . '/famtastic_pipeline.install';
-foreach (['AcquisitionSampleSchema', 'OperationalLedger', 'BrandedEmail', 'AcquisitionSampleArtifacts', 'AcquisitionSampleGuard', 'AcquisitionIndustryTemplate', 'AcquisitionSampleEmail', 'AcquisitionSampleService', 'AcquisitionSampleSequenceService', 'AcquisitionSampleMemoryAdapter', 'OutreachMailer', 'AcquisitionSampleExactAdapter'] as $service) {
+require_once dirname(__DIR__, 3) . '/src/Controller/AcquisitionSampleController.php';
+foreach (['AcquisitionSampleSchema', 'OperationalLedger', 'BrandedEmail', 'AcquisitionSampleArtifacts', 'AcquisitionSampleGuard', 'AcquisitionIndustryTemplate', 'AcquisitionHvacTemplate', 'AcquisitionSampleEmail', 'AcquisitionSampleService', 'AcquisitionSampleSequenceService', 'AcquisitionSampleMemoryAdapter', 'OutreachMailer', 'AcquisitionSampleExactAdapter'] as $service) {
   require_once dirname(__DIR__, 3) . '/src/Service/' . $service . '.php';
 }
 
@@ -705,6 +707,172 @@ final class AcquisitionSampleServiceTest extends UnitTestCase {
       $this->assertStringNotContainsString('{{', $email['html'] . $email['images_blocked_html'] . $email['body']);
       $this->assertDoesNotMatchRegularExpression('/(?:DRAFT ONLY|CONCEPT PREVIEW|LOCAL REVIEW CANDIDATE|review candidate|owner review pending|unbound placeholder)/i', $email['body']);
       $this->assertNull(\Drupal\famtastic_pipeline\Service\AcquisitionIndustryTemplate::fromSegment($segment . ' expanded'));
+    }
+  }
+
+  private function prepareHvac(int $prospectId = 1): array {
+    $this->db->update('famtastic_prospect')->fields(['business_category' => 'AC/HVAC', 'business_name' => $prospectId === 1 ? 'Juniper & "Friends" HVAC' : 'Cypress Fixture HVAC'])->condition('id', $prospectId)->execute();
+    return $this->samples->prepareGeneric('fixture:hvac:' . $prospectId, $prospectId, 1, AcquisitionHvacTemplate::nativeRecipe(), $this->now + 3600);
+  }
+
+  public function testHvacExactCategoriesKeepBroadHomeServicesAndOtherFamiliesSeparate(): void {
+    foreach (['HVAC', 'AC/HVAC', 'air conditioning', 'Heating & Air Conditioning', '  hvac  '] as $label) $this->assertSame('hvac', AcquisitionHvacTemplate::fromSegment($label));
+    foreach (['home services', 'HVAC and plumbing', 'AC', 'heating', 'Home Services, Cleaning & Maintenance', 'unknown'] as $label) $this->assertNull(AcquisitionHvacTemplate::fromSegment($label));
+    $this->assertSame('home-services', \Drupal\famtastic_pipeline\Service\AcquisitionIndustryTemplate::fromSegment('Home Services, Cleaning & Maintenance'));
+    $this->assertNull(\Drupal\famtastic_pipeline\Service\AcquisitionIndustryTemplate::fromSegment('HVAC'));
+  }
+
+  public function testHvacSnapshotEmbedsHashedWebpFontsAndContainsNoMutableSourcePaths(): void {
+    $manifest = AcquisitionHvacTemplate::bySlug();
+    $frozen = AcquisitionHvacTemplate::freezeLab(str_repeat('a', 64));
+    $this->assertTrue($frozen['interactive']);
+    $this->assertFalse($frozen['email_send_authorized']);
+    $this->assertSame(hash('sha256', $frozen['html']), $frozen['sha256']);
+    $this->assertSame($manifest['asset_hashes'], $frozen['asset_hashes']);
+    $this->assertStringContainsString('data:image/webp;base64,', $frozen['html']);
+    $this->assertStringContainsString('data:font/woff2;base64,', $frozen['html']);
+    $this->assertStringNotContainsString('src="lab.js"', $frozen['html']);
+    $this->assertStringNotContainsString('href="lab.css"', $frozen['html']);
+    $this->assertStringNotContainsString('__HVAC_CONTINUATION__', $frozen['html']);
+    $this->assertSame($frozen['sha256'], AcquisitionHvacTemplate::freezeLab(str_repeat('a', 64))['sha256']);
+    $this->expectException(\InvalidArgumentException::class);
+    AcquisitionHvacTemplate::assetPath('manifest.json');
+  }
+
+  public function testHvacTwoFictionalProspectsShareRecipeAndIsolateIdentityPreferenceClaimAndRequest(): void {
+    $first = $this->prepareHvac(1);
+    $second = $this->prepareHvac(2);
+    $this->assertNotSame($first['token'], $second['token']);
+    $before = $this->db->select('famtastic_acquisition_sample', 's')->fields('s')->orderBy('id')->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    foreach ([$first, $second] as $invitation) {
+      $sample = $this->samples->resolve($invitation['token']);
+      $this->assertSame(AcquisitionHvacTemplate::ID, $sample['recipes'][0]['id']);
+      $this->assertSame('owner_authorized_lab_implementation', $sample['context_provenance']['recipe_review']);
+      $this->assertFalse($sample['context_provenance']['email_send_authorized']);
+      $this->assertFalse($sample['context_provenance']['niche_verified']);
+    }
+    $html = $this->samples->preview($first['token'], AcquisitionHvacTemplate::ID);
+    $this->assertStringContainsString('Juniper &amp; &quot;Friends&quot; HVAC', $html);
+    $this->assertStringContainsString('/login?mode=register&amp;sample_continuation=' . $first['token'], $html);
+    $this->assertStringNotContainsString($second['token'], $html);
+    $this->assertStringNotContainsString('Cypress Fixture HVAC', $html);
+    $otherHtml = $this->samples->preview($second['token'], AcquisitionHvacTemplate::ID);
+    $this->assertStringContainsString('Cypress Fixture HVAC', $otherHtml);
+    $this->assertStringNotContainsString('Juniper', $otherHtml);
+    $this->assertStringContainsString('/login?mode=register&amp;sample_continuation=' . $second['token'], $otherHtml);
+    $this->assertStringNotContainsString($first['token'], $otherHtml);
+    $controller = new \Drupal\famtastic_pipeline\Controller\AcquisitionSampleController($this->samples, $this->createMock(\Drupal\Core\Session\AccountProxyInterface::class));
+    $response = $controller->preview($first['token'], AcquisitionHvacTemplate::ID);
+    $this->assertSame(200, $response->getStatusCode());
+    $this->assertSame('no-store, private', $response->headers->get('Cache-Control'));
+    $this->assertSame('no-referrer', $response->headers->get('Referrer-Policy'));
+    $this->assertStringContainsString('sandbox allow-scripts allow-top-navigation-by-user-activation', $response->headers->get('Content-Security-Policy'));
+    $this->assertStringContainsString("connect-src 'none'", $response->headers->get('Content-Security-Policy'));
+    $this->assertSame(404, $controller->preview(str_repeat('f', 64), AcquisitionHvacTemplate::ID)->getStatusCode());
+    $this->assertSame(404, $controller->preview($first['token'], 'beauty_editorial')->getStatusCode());
+    $this->assertSame($before, $this->db->select('famtastic_acquisition_sample', 's')->fields('s')->orderBy('id')->execute()->fetchAll(\PDO::FETCH_ASSOC));
+    $this->assertSame(0, (int) $this->db->select('famtastic_event', 'e')->countQuery()->execute()->fetchField());
+    $this->samples->preference($first['token'], AcquisitionHvacTemplate::ID);
+    $this->assertNull($this->samples->resolve($second['token'])['preference']);
+    $this->db->update('famtastic_customer')->fields(['verified_at' => $this->now])->execute();
+    try { $this->samples->claim(2, $first['token']); $this->fail('Cross-recipient claim admitted.'); }
+    catch (\InvalidArgumentException $e) { $this->assertSame('sample_not_found', $e->getMessage()); }
+    $firstContext = $this->samples->claim(1, $first['token']);
+    $secondContext = $this->samples->claim(2, $second['token']);
+    $this->assertNotSame($firstContext['context_id'], $secondContext['context_id']);
+    $this->assertSame(AcquisitionHvacTemplate::ID, $firstContext['recipe_id']);
+    $this->assertNull($secondContext['recipe_id']);
+    $this->db->query('CREATE TABLE famtastic_project_request (id INTEGER PRIMARY KEY, public_id TEXT, customer_id INTEGER, prospect_id INTEGER)');
+    $this->db->query("INSERT INTO famtastic_project_request VALUES (101,'hvac-fixture-a',1,1),(102,'hvac-fixture-b',2,2)");
+    $this->samples->attachRequest(1, $firstContext['context_id'], 101, 1);
+    $this->samples->attachRequest(2, $secondContext['context_id'], 102, 2);
+    $this->assertSame('hvac-fixture-a', $this->samples->continuation(1)['request_public_id']);
+    $this->assertSame('hvac-fixture-b', $this->samples->continuation(2)['request_public_id']);
+    $this->assertSame(101, $this->samples->associatedRequest(1, $firstContext['context_id']));
+    try { $this->samples->requestContext(2, $firstContext['context_id']); $this->fail('Cross-recipient request context admitted.'); }
+    catch (\InvalidArgumentException $e) { $this->assertSame('sample_request_context_invalid', $e->getMessage()); }
+    $this->now += 3601;
+    $this->assertNull($this->samples->preview($first['token'], AcquisitionHvacTemplate::ID));
+    $this->assertSame('hvac-fixture-a', $this->samples->continuation(1)['request_public_id']);
+    $this->assertSame(0, (int) $this->db->select('famtastic_email_message', 'm')->countQuery()->execute()->fetchField());
+  }
+
+  public function testHvacCannotReplaceBroadHomeServicesRecipeOrUseChangedReviewMetadata(): void {
+    $recipe = AcquisitionHvacTemplate::nativeRecipe();
+    $this->db->update('famtastic_prospect')->fields(['business_category' => 'Home Services, Cleaning & Maintenance'])->condition('id', 1)->execute();
+    try { $this->samples->prepareGeneric('fixture:hvac:mismatch', 1, 1, $recipe, $this->now + 3600); $this->fail('HVAC recipe replaced broad home services.'); }
+    catch (\InvalidArgumentException $e) { $this->assertSame('preparation_recipe_industry_mismatch', $e->getMessage()); }
+    foreach (['id' => 'different_hvac', 'sha256' => str_repeat('f', 64), 'industry_family' => 'general_service', 'content_id' => 'old_email'] as $key => $value) {
+      $bad = $recipe; $bad[$key] = $value;
+      try { AcquisitionSampleGuard::preparationRecipe($bad, FALSE); $this->fail('Changed HVAC recipe admitted.'); }
+      catch (\InvalidArgumentException $e) { $this->assertSame('hvac_reviewed_recipe_binding_required', $e->getMessage()); }
+    }
+    $this->assertSame(0, (int) $this->db->select('famtastic_acquisition_sample', 's')->countQuery()->execute()->fetchField());
+  }
+
+  public function testHvacUnknownIdentityRemainsUnknownAndUnsafeNameCannotEnterSnapshot(): void {
+    $this->db->update('famtastic_prospect')->fields(['business_category' => 'HVAC', 'business_name' => ''])->condition('id', 1)->execute();
+    $invitation = $this->samples->prepareGeneric('fixture:hvac:unknown', 1, 1, AcquisitionHvacTemplate::nativeRecipe(), $this->now + 3600);
+    $this->assertSame('unknown', $this->samples->resolve($invitation['token'])['context_provenance']['business_name_provenance']);
+    $this->assertStringContainsString('Your business', $this->samples->preview($invitation['token'], AcquisitionHvacTemplate::ID));
+    $this->db->update('famtastic_prospect')->fields(['business_name' => '<script>unsafe</script>'])->condition('id', 1)->execute();
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('unsafe_sample_binding');
+    $this->samples->prepareGeneric('fixture:hvac:unsafe', 1, 1, AcquisitionHvacTemplate::nativeRecipe(), $this->now + 3600);
+  }
+
+  public function testHvacLabImplementationApprovalCannotAuthorizeExistingEmailCreative(): void {
+    $invitation = $this->prepareHvac();
+    $authorization = $this->genericAuthorizationReceipt($invitation);
+    // Even valid synthetic row/account/history evidence plus OLD email approval cannot admit HVAC.
+    try { $this->samples->authorizeGeneric($invitation['id'], $authorization, $this->genericSignature($authorization)); $this->fail('Old beauty email approval authorized HVAC.'); }
+    catch (\InvalidArgumentException $e) { $this->assertSame('generic_approved_recipe_binding_required', $e->getMessage()); }
+    $authorization['creative_approval'] = AcquisitionHvacTemplate::nativeRecipe()['review']['approval_record'];
+    try { $this->samples->authorizeGeneric($invitation['id'], $authorization, $this->genericSignature($authorization)); $this->fail('HVAC implementation approval authorized email.'); }
+    catch (\InvalidArgumentException $e) { $this->assertSame('generic_creative_approval_required', $e->getMessage()); }
+    $this->assertNull($this->db->select('famtastic_acquisition_sample', 's')->fields('s', ['eligible_at'])->condition('id', $invitation['id'])->execute()->fetchField());
+    $this->assertSame(0, (int) $this->db->select('famtastic_acquisition_sequence', 's')->countQuery()->execute()->fetchField());
+    $this->assertSame(0, (int) $this->db->select('famtastic_email_message', 'm')->countQuery()->execute()->fetchField());
+  }
+
+  public function testHvacAdversarialSourceRejectsActiveHtmlAndPersistentOrNetworkJs(): void {
+    $html = '<html><head><link rel="stylesheet" href="lab.css"></head><body><h1>{{business_name}}</h1><script src="lab.js"></script></body></html>';
+    foreach (['fetch("/api")', 'window.localStorage.setItem("x","y")', 'new WebSocket("wss://example.test")', 'document.cookie = "x=y"', 'new Worker("other.js")', 'eval("x")', 'import("other.js")'] as $js) {
+      try { AcquisitionHvacTemplate::validateSource($html, '', $js); $this->fail('Network/storage JS admitted.'); }
+      catch (\RuntimeException $e) { $this->assertSame('hvac_network_or_storage_capability_forbidden', $e->getMessage()); }
+    }
+    foreach (['<img onerror="alert(1)">', '<iframe src="https://example.test"></iframe>', '<a href="javascript:alert(1)">x</a>', '<meta http-equiv="refresh" content="0;url=/api">'] as $markup) {
+      try { AcquisitionHvacTemplate::validateSource(str_replace('<h1>', $markup . '<h1>', $html), '', ''); $this->fail('Active HTML admitted.'); }
+      catch (\RuntimeException $e) { $this->assertSame('hvac_active_markup_invalid', $e->getMessage()); }
+    }
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('hvac_text_binding_required');
+    AcquisitionHvacTemplate::validateSource(str_replace('<h1>', '<h1 title="{{business_name}}">', $html), '', '');
+  }
+
+  public function testHvacPrivateReleaseBundleRejectsChangedManifestAndChangedSourceBytes(): void {
+    $entry = AcquisitionHvacTemplate::bySlug();
+    $directory = sys_get_temp_dir() . '/hvac-bundle-test-' . bin2hex(random_bytes(6));
+    mkdir($directory, 0700);
+    $instance = (new \ReflectionClass(\Drupal\Core\Site\Settings::class))->getProperty('instance')->getValue();
+    $settings = $instance ? \Drupal\Core\Site\Settings::getAll() : [];
+    try {
+      foreach (array_merge(['manifest.json'], array_keys($entry['source_hashes']), array_keys($entry['asset_hashes'])) as $name) copy($entry['root'] . '/' . $name, $directory . '/' . $name);
+      $fixtureSettings = ['file_private_path' => sys_get_temp_dir(), 'famtastic_acquisition_hvac_bundle_root' => $directory, 'famtastic_acquisition_hvac_bundle_sha256' => $entry['manifest_sha256']];
+      new \Drupal\Core\Site\Settings(array_replace($settings, $fixtureSettings));
+      $this->assertSame($entry['source_hashes'], AcquisitionHvacTemplate::bySlug()['source_hashes']);
+      file_put_contents($directory . '/lab.css', '\n/* changed reviewed source */', FILE_APPEND);
+      try { AcquisitionHvacTemplate::bySlug(); $this->fail('Changed private source admitted.'); }
+      catch (\RuntimeException $e) { $this->assertSame('hvac_artifact_hash_mismatch', $e->getMessage()); }
+      copy($entry['root'] . '/lab.css', $directory . '/lab.css');
+      file_put_contents($directory . '/manifest.json', '\n', FILE_APPEND);
+      try { AcquisitionHvacTemplate::bySlug(); $this->fail('Changed manifest admitted.'); }
+      catch (\RuntimeException $e) { $this->assertSame('hvac_private_bundle_required', $e->getMessage()); }
+    }
+    finally {
+      new \Drupal\Core\Site\Settings($settings);
+      foreach (glob($directory . '/*') ?: [] as $file) unlink($file);
+      rmdir($directory);
     }
   }
 

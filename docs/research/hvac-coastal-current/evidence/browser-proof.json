@@ -1,0 +1,90 @@
+{
+  "environment": "local_fixture",
+  "results": [
+    {
+      "width": 1280,
+      "height": 844,
+      "six_routes": true,
+      "callback_full_manual_address_optional_email": true,
+      "error_focus_input_retained": true,
+      "owner_draft_reset": true,
+      "keyboard_focus": {
+        "tag": "A",
+        "outline": "solid"
+      },
+      "reduced_motion": {
+        "motion": true,
+        "scroll": "auto",
+        "fonts": true,
+        "images": true
+      },
+      "mutations": 0,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "six_routes": true,
+      "callback_full_manual_address_optional_email": true,
+      "error_focus_input_retained": true,
+      "owner_draft_reset": true,
+      "keyboard_focus": {
+        "tag": "A",
+        "outline": "solid"
+      },
+      "reduced_motion": {
+        "motion": true,
+        "scroll": "auto",
+        "fonts": true,
+        "images": true
+      },
+      "mutations": 0,
+      "errors": []
+    },
+    {
+      "width": 320,
+      "height": 844,
+      "six_routes": true,
+      "callback_full_manual_address_optional_email": true,
+      "error_focus_input_retained": true,
+      "owner_draft_reset": true,
+      "keyboard_focus": {
+        "tag": "A",
+        "outline": "solid"
+      },
+      "reduced_motion": {
+        "motion": true,
+        "scroll": "auto",
+        "fonts": true,
+        "images": true
+      },
+      "mutations": 0,
+      "errors": []
+    }
+  ],
+  "contrast": [
+    {
+      "name": "ink/paper",
+      "ratio": 13.163596353469382
+    },
+    {
+      "name": "teal/paper",
+      "ratio": 5.765279915204149
+    },
+    {
+      "name": "white/cobalt",
+      "ratio": 9.265917113700473
+    },
+    {
+      "name": "ink/sea",
+      "ratio": 9.11602653975625
+    },
+    {
+      "name": "paper/ink",
+      "ratio": 13.163596353469382
+    }
+  ],
+  "no_live_invitations": true,
+  "no_messages": true,
+  "owner_acceptance": "pending"
+}

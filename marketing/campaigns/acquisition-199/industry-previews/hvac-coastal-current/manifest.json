@@ -1,0 +1,171 @@
+{
+  "schema": "famtastic.hvac-lab-manifest.v1",
+  "id": "coastal_current_hvac_v1",
+  "family": "hvac",
+  "version": 1,
+  "source_design_commit": "3dfc722",
+  "approval": {
+    "status": "owner_authorized_implementation",
+    "owner": "Fritz Medine",
+    "date": "2026-10-07",
+    "source": "October 7 reusable HVAC Lab implementation and release instruction",
+    "email_send_authorized": false,
+    "owner_task_acceptance": "pending"
+  },
+  "source_hashes": {
+    "lab.html": "0e89180025a07a110723574c050ff6b9ed5f232c2cd8ed829507aaa85d0847ee",
+    "lab.css": "53f8129763f60e3257d68cc6aa8fae82547fa8c0b9bcb2d38defeaaef58ec064",
+    "lab.js": "599efe1b478942d331ea7f5323894b42c0b95b2602df03d3165753f2a202be87"
+  },
+  "asset_hashes": {
+    "airflow.webp": "831cb8e09c2d611f674d56a7436b8c48189fcd8bc851f940b7b98334f5d83995",
+    "assessment.webp": "73012cfa134fc3873b97eea4cbee14f29c527435c471281e8458e9bbc64d352d",
+    "creator-credit.png": "ebb0477344132d32e449ba19e2b622921585aa71af0decdbcf8abfbe033fa950",
+    "fraunces.woff2": "3a1de7711d147bad4422825045f87597fd77cca72e7c96d3b0a81735d00dda82",
+    "maintenance.webp": "1404d1058ae73072e9ce4e7b14310219e385ac964786e3adc323eff0055dbf0c",
+    "manrope.woff2": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972",
+    "repair.webp": "f1d8b52d72524fd94b6e63d9c4a6d53ff4b04f8b9348c0c19b0781db20929c1b"
+  },
+  "public_file_allowlist": [
+    "lab.html",
+    "lab.css",
+    "lab.js",
+    "airflow.webp",
+    "assessment.webp",
+    "creator-credit.png",
+    "fraunces.woff2",
+    "maintenance.webp",
+    "manrope.woff2",
+    "repair.webp"
+  ],
+  "lineage": [
+    {
+      "output": "repair.webp",
+      "source": {
+        "file": "assets/repair-service.png",
+        "sha256": "596409e11be5b6c895459c4a7b98f52eb2f30fecce43737c164439452142ef7c",
+        "bytes": 2713509,
+        "dimensions": [
+          1536,
+          1024
+        ],
+        "mode": "RGB",
+        "alpha_extrema": null,
+        "status": "selected_candidate",
+        "operation": "generate",
+        "model_argument": "gpt-image-2.5-sunburst-2026-09-08",
+        "quality": "medium",
+        "size_argument": "1536x1024",
+        "output_format": "png",
+        "background_argument": "default",
+        "prompt_file": "prompts/repair-service.txt",
+        "prompt_sha256": "8193c5c4b66bedf8791e4dc617cc085347a5b0e82ec88212d830c5cb11f3ad13",
+        "cli_reported_elapsed_seconds": 19.4,
+        "raw_receipt_input": false,
+        "illustrative": true
+      },
+      "transform": "Pillow resize max1200x800 and WebP quality85 method6",
+      "company_work_claim": false
+    },
+    {
+      "output": "maintenance.webp",
+      "source": {
+        "file": "assets/maintenance-service-v2.png",
+        "sha256": "88f4798ed534f7c1f5a29918aaaf4cddf6783595badda0e6a56721857b6942bb",
+        "bytes": 2811675,
+        "dimensions": [
+          1536,
+          1024
+        ],
+        "mode": "RGB",
+        "alpha_extrema": null,
+        "status": "selected_candidate",
+        "operation": "edit",
+        "model_argument": "gpt-image-2.5-sunburst-2026-09-08",
+        "quality": "high",
+        "size_argument": "1536x1024",
+        "output_format": "png",
+        "background_argument": "default",
+        "prompt_file": "prompts/maintenance-service-v2.txt",
+        "prompt_sha256": "4d6f4db9f51b5c4a5907424f7567c5b47b4a73e7a519ac171e64705ddf6c98c9",
+        "cli_reported_elapsed_seconds": 35.2,
+        "raw_receipt_input": false,
+        "illustrative": true,
+        "reference_image": {
+          "file": "assets/maintenance-service.png",
+          "sha256": "90f7c72ac3afcc94663a9d2d2c761b9df8488f5eb256f1ac4d5f057fbb1181e6"
+        }
+      },
+      "transform": "Pillow resize max1200x800 and WebP quality85 method6",
+      "company_work_claim": false
+    },
+    {
+      "output": "assessment.webp",
+      "source": {
+        "file": "assets/assessment-service.png",
+        "sha256": "648eba1f0f84e71b278ae5830db23b109a6c5e7dad59f7af3dfc5d2f47e6ff20",
+        "bytes": 1823116,
+        "dimensions": [
+          1536,
+          1024
+        ],
+        "mode": "RGB",
+        "alpha_extrema": null,
+        "status": "selected_candidate",
+        "operation": "generate",
+        "model_argument": "gpt-image-2.5-sunburst-2026-09-08",
+        "quality": "medium",
+        "size_argument": "1536x1024",
+        "output_format": "png",
+        "background_argument": "default",
+        "prompt_file": "prompts/assessment-service.txt",
+        "prompt_sha256": "dd2473f421fcc7299ff6fc03fee7e4db203eb1eb1ef017448c47dd248dac1e6c",
+        "cli_reported_elapsed_seconds": 15.9,
+        "raw_receipt_input": false,
+        "illustrative": true
+      },
+      "transform": "Pillow resize max1200x800 and WebP quality85 method6",
+      "company_work_claim": false
+    },
+    {
+      "output": "airflow.webp",
+      "source": {
+        "file": "assets/airflow-layer.png",
+        "sha256": "174b4db9ed61916bae0d888924086e312f20cc116fc2b1300f5851d80397807f",
+        "bytes": 1871140,
+        "dimensions": [
+          1536,
+          1024
+        ],
+        "mode": "RGBA",
+        "alpha_extrema": [
+          0,
+          254
+        ],
+        "status": "selected_candidate",
+        "operation": "generate",
+        "model_argument": "gpt-image-2.5-sunburst-2026-09-08",
+        "quality": "high",
+        "size_argument": "1536x1024",
+        "output_format": "png",
+        "background_argument": "transparent",
+        "prompt_file": "prompts/airflow-layer.txt",
+        "prompt_sha256": "1317bf9c567af587c590e2810f54fbeca61e203bee7c87e7457fd66df50fd111",
+        "cli_reported_elapsed_seconds": 28.2,
+        "raw_receipt_input": false,
+        "illustrative": true
+      },
+      "transform": "Pillow resize max1200x800 and WebP quality85 method6",
+      "company_work_claim": false
+    }
+  ],
+  "fonts": {
+    "Fraunces": "Google Fonts v38 Latin600",
+    "Manrope": "Google Fonts v20 Latin variable400-700",
+    "licenses": [
+      "fraunces-OFL.txt",
+      "manrope-OFL.txt"
+    ],
+    "runtime": "self-hosted WOFF2; font-display swap"
+  }
+}

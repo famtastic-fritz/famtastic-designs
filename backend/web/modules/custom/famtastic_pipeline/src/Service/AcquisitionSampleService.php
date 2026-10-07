@@ -79,23 +79,27 @@ final class AcquisitionSampleService {
     // Exact display categories only. Broad or unknown categories stay generic;
     // neither this map nor a supplied category is a qualification assertion.
     $industrySlug = AcquisitionIndustryTemplate::fromSegment($industry);
-    $family = $industrySlug !== NULL ? 'industry-' . $industrySlug : match (mb_strtolower($industry)) {
+    $hvac = AcquisitionHvacTemplate::fromSegment($industry) !== NULL;
+    $family = $hvac ? AcquisitionHvacTemplate::FAMILY : ($industrySlug !== NULL ? 'industry-' . $industrySlug : match (mb_strtolower($industry)) {
       'beauty_hair', 'hair salon', 'beauty salon', 'beauty', 'beauty services', 'beauty, hair styling & braiding' => 'hair_beauty',
       'barber', 'barber shop' => 'barber',
       'mobile_detailing', 'mobile detailing', 'auto detailing' => 'mobile_detailing',
       'baking_catering', 'bakery', 'catering' => 'baking_catering',
       default => 'general_service',
-    };
-    $niche = $industrySlug !== NULL ? 'generic' : match ($family) { 'hair_beauty', 'barber' => 'beauty_hair', 'general_service' => 'generic', default => $family };
+    });
+    $niche = $hvac || $industrySlug !== NULL ? 'generic' : match ($family) { 'hair_beauty', 'barber' => 'beauty_hair', 'general_service' => 'generic', default => $family };
     $recipe = AcquisitionSampleGuard::preparationRecipe($recipe, $internalCandidate);
     $recipeFamily = $recipe['id'] === 'beauty_soft_power_acquisition' ? 'hair_beauty' : ($recipe['industry_family'] ?? '');
-    if ($industrySlug !== NULL) {
+    if ($hvac) {
+      if ($recipeFamily !== AcquisitionHvacTemplate::FAMILY || !AcquisitionHvacTemplate::isNativeRecipe($recipe)) throw new \InvalidArgumentException('preparation_recipe_industry_mismatch');
+    }
+    elseif ($industrySlug !== NULL) {
       if ($recipeFamily !== $industrySlug || !AcquisitionIndustryTemplate::isNativeRecipe($recipe)) throw new \InvalidArgumentException('preparation_recipe_industry_mismatch');
     }
     elseif ($recipeFamily !== $family || ($recipe['niche'] ?? '') !== ($niche === 'generic' ? 'general_service' : $niche)) throw new \InvalidArgumentException('preparation_recipe_industry_mismatch');
     if ($internalCandidate && Settings::get('famtastic_acquisition_internal_preparation', FALSE) !== TRUE) throw new \InvalidArgumentException('internal_sample_preparation_disabled');
-    if ($industrySlug !== NULL) {
-      $frozen = AcquisitionIndustryTemplate::freezeLab($industrySlug, str_repeat('a', 64));
+    if ($hvac || $industrySlug !== NULL) {
+      $frozen = $hvac ? AcquisitionHvacTemplate::freezeLab(str_repeat('a', 64)) : AcquisitionIndustryTemplate::freezeLab($industrySlug, str_repeat('a', 64));
       $recipe['source_sha256'] = $recipe['sha256'];
       $recipe['sha256'] = $frozen['sha256'];
       $recipe['html_snapshot'] = $frozen['html'];
@@ -110,6 +114,12 @@ final class AcquisitionSampleService {
     $email = mb_strtolower(trim((string) $prospect['public_email']));
     $emailAvailable = (bool) filter_var($email, FILTER_VALIDATE_EMAIL);
     $context = ['classification' => 'supplied_generic_preparation', 'industry' => $industry, 'industry_template_slug' => $industrySlug, 'industry_content_id' => $industrySlug ? AcquisitionIndustryTemplate::contentId($industrySlug) : NULL, 'business_name_provenance' => $suppliedBusinessName === '' ? 'unknown' : 'stored_supplied', 'industry_provenance' => $industry === '' ? 'unknown' : 'stored_supplied', 'niche_verified' => FALSE, 'owner_name_provenance' => 'unknown', 'contact_ownership' => 'unknown', 'delivery_eligibility' => 'unassessed', 'account_continuation_available' => $emailAvailable, 'recipe_review' => $internalCandidate ? 'internal_candidate_owner_pending' : (($recipe['review']['status'] ?? '') === 'approved_campaign_artifact' ? 'owner_approved_campaign_artifact' : 'approved'), 'component_studio_registration_proved' => ($recipe['recipe_ref']['status'] ?? '') === 'registered'];
+    if ($hvac) {
+      $context['industry_template_slug'] = AcquisitionHvacTemplate::SLUG;
+      $context['industry_content_id'] = AcquisitionHvacTemplate::CONTENT_ID;
+      $context['recipe_review'] = 'owner_authorized_lab_implementation';
+      $context['email_send_authorized'] = FALSE;
+    }
     $bindings['_preparation'] = $context;
     $evidence = hash('sha256', json_encode([$prospectId, $campaignId, $email, $niche, $recipe, $bindings, $expires], JSON_THROW_ON_ERROR));
     $transaction = $this->database->startTransaction();
@@ -191,6 +201,7 @@ final class AcquisitionSampleService {
       $bindings = json_decode((string) $row['bindings'], TRUE, 32, JSON_THROW_ON_ERROR);
       unset($bindings['_preparation']);
       if (!empty($recipe['industry_template']['interactive'])) $html = str_replace('/samples/' . str_repeat('a', 64), '/samples/' . rawurlencode($token), $html);
+      if (($recipe['id'] ?? '') === AcquisitionHvacTemplate::ID) $html = str_replace('/login?mode=register&amp;sample_continuation=' . str_repeat('a', 64), '/login?mode=register&amp;sample_continuation=' . rawurlencode($token), $html);
       return AcquisitionSampleGuard::render($html, $bindings);
     }
     return NULL;

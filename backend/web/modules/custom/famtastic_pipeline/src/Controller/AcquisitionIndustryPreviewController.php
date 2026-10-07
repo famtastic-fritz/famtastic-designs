@@ -6,6 +6,7 @@ namespace Drupal\famtastic_pipeline\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Site\Settings;
+use Drupal\famtastic_pipeline\Service\AcquisitionHvacTemplate;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class AcquisitionIndustryPreviewController extends ControllerBase {
 
   private const INDUSTRIES = [
+    'hvac-coastal-current',
     'mobile-detailing', 'fitness-meal-prep', 'photography-media',
     'baking-catering', 'home-services', 'events-rentals',
     'pet-services', 'consulting-tutoring', 'handcrafted-boutiques',
@@ -29,7 +31,7 @@ final class AcquisitionIndustryPreviewController extends ControllerBase {
 
   /** Read-only candidate HTML. No invitation, identity, or persistence input. */
   public function preview(string $industry, string $view): Response {
-    if (!$this->enabled() || !in_array($industry, self::INDUSTRIES, TRUE) || !in_array($view, ['email', 'lab'], TRUE)) {
+    if (!$this->enabled($industry) || !in_array($industry, self::INDUSTRIES, TRUE) || !in_array($view, ['email', 'lab'], TRUE)) {
       return $this->secure(new Response('Preview unavailable.', 404));
     }
 
@@ -38,6 +40,9 @@ final class AcquisitionIndustryPreviewController extends ControllerBase {
       return $this->secure(new Response('Preview unavailable.', 404));
     }
 
+    if ($industry === AcquisitionHvacTemplate::SLUG) {
+      $html = str_replace(['{{business_name}}', '__HVAC_CONTINUATION__'], ['Your HVAC company', '/login?mode=register'], $html);
+    }
     $html = $this->rewriteLocalUrls($html, $industry);
     $response = new Response($html, 200, ['Content-Type' => 'text/html; charset=UTF-8']);
     $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; font-src 'self' data:; form-action 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'");
@@ -46,7 +51,7 @@ final class AcquisitionIndustryPreviewController extends ControllerBase {
 
   /** Read-only, filename-allowlisted candidate and frozen brand assets. */
   public function asset(string $industry, string $asset): Response {
-    if (!$this->enabled() || !in_array($industry, self::INDUSTRIES, TRUE) || preg_match('/^[a-z0-9_-]+\.(?:css|js|svg|png|jpe?g|webp|woff2)$/D', $asset) !== 1) {
+    if (!$this->enabled($industry) || !in_array($industry, self::INDUSTRIES, TRUE) || preg_match('/^[a-z0-9_-]+\.(?:css|js|svg|png|jpe?g|webp|woff2)$/D', $asset) !== 1) {
       return $this->secure(new Response('', 404));
     }
 
@@ -92,13 +97,18 @@ final class AcquisitionIndustryPreviewController extends ControllerBase {
     return $this->secure($response);
   }
 
-  private function enabled(): bool {
+  private function enabled(string $industry = ''): bool {
+    if ($industry === AcquisitionHvacTemplate::SLUG) return Settings::get('famtastic_acquisition_hvac_preview_enabled', FALSE) === TRUE;
     return Settings::get('famtastic_acquisition_industry_previews_enabled', FALSE) === TRUE;
   }
 
   private function readIndustryFile(string $industry, string $filename): ?string {
     if (!in_array($industry, self::INDUSTRIES, TRUE) || preg_match('/^[a-z0-9_-]+\.(?:html|css|js|svg|png|jpe?g|webp|woff2)$/D', $filename) !== 1) {
       return NULL;
+    }
+    if ($industry === AcquisitionHvacTemplate::SLUG) {
+      try { return (string) file_get_contents(AcquisitionHvacTemplate::assetPath($filename)); }
+      catch (\Throwable) { return NULL; }
     }
     $repo = realpath(dirname(__DIR__, 7));
     $base = $repo ? realpath($repo . '/marketing/campaigns/acquisition-199/industry-previews/' . $industry) : FALSE;

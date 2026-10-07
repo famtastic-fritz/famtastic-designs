@@ -1,0 +1,30 @@
+{
+  "classification": "local_synthetic",
+  "results": [
+    {
+      "prospect": 0,
+      "actual_viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "opaque_sandbox": true,
+      "user_activation_continuation": true,
+      "own_token": true,
+      "no_external_requests": true,
+      "errors": []
+    },
+    {
+      "prospect": 1,
+      "actual_viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "opaque_sandbox": true,
+      "user_activation_continuation": true,
+      "own_token": true,
+      "no_external_requests": true,
+      "errors": []
+    }
+  ],
+  "production_invitations_created": false
+}

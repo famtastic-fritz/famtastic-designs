@@ -89,6 +89,10 @@ esac
 if [[ "${FAMTASTIC_INBOUND_MAIL_ONLY:-0}" == 1 ]]; then
   exec bash "$SCRIPT_DIR/deploy-inbound-mail-backend.sh" "$@"
 fi
+# Native HVAC template-only promotion preserves all campaign/provider controls.
+if [[ "${FAMTASTIC_HVAC_LAB_ONLY:-0}" == 1 ]]; then
+  exec bash "$SCRIPT_DIR/deploy-hvac-lab-backend.sh" "$@"
+fi
 bash "$SCRIPT_DIR/assert-inbound-mail-scheduler.sh"
 
 # Bounded full-site review feature: code and router/container caches only.

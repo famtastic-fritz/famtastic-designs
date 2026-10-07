@@ -61,6 +61,9 @@ final class AcquisitionSampleGuard {
     if ($internalCandidate) {
       if (($recipe['review']['status'] ?? '') !== 'candidate' || ($recipe['recipe_ref']['status'] ?? '') !== 'import_request_pending' || $recipe['id'] !== 'beauty_soft_power_acquisition' || $recipe['recipe_ref']['id'] !== $recipe['id'] || (int) $recipe['recipe_ref']['version'] !== (int) $recipe['version'] || $recipe['artifact_path'] !== 'marketing/campaigns/acquisition-199/generic-review/beauty-template.html') throw new \InvalidArgumentException('internal_candidate_recipe_required');
     }
+    elseif (($recipe['review']['status'] ?? '') === 'owner_authorized_lab_artifact') {
+      if (!AcquisitionHvacTemplate::isNativeRecipe($recipe)) throw new \InvalidArgumentException('hvac_reviewed_recipe_binding_required');
+    }
     elseif (($recipe['review']['status'] ?? '') === 'approved_campaign_artifact' && str_starts_with((string) ($recipe['id'] ?? ''), 'industry_')) {
       if (!AcquisitionIndustryTemplate::isNativeRecipe($recipe)) throw new \InvalidArgumentException('industry_approved_recipe_binding_required');
     }

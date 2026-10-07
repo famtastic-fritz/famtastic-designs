@@ -16,6 +16,24 @@ require_once dirname(__DIR__, 3) . '/src/Controller/AcquisitionIndustryPreviewCo
 #[Group('famtastic_pipeline')]
 final class AcquisitionIndustryPreviewControllerTest extends UnitTestCase {
 
+  public function testHvacHasIndependentFlagAndExactPublicAssetAllowlist(): void {
+    new Settings(['famtastic_acquisition_hvac_preview_enabled' => TRUE]);
+    $this->installPrefixedUrlGenerator();
+    $controller = new AcquisitionIndustryPreviewController();
+    $response = $controller->preview('hvac-coastal-current', 'lab');
+    self::assertSame(200, $response->getStatusCode());
+    self::assertStringContainsString('Your HVAC company', (string) $response->getContent());
+    self::assertStringNotContainsString('{{business_name}}', (string) $response->getContent());
+    self::assertStringNotContainsString('__HVAC_CONTINUATION__', (string) $response->getContent());
+    self::assertSame(404, $controller->preview('hvac-coastal-current', 'email')->getStatusCode());
+    self::assertSame(404, $controller->preview('mobile-detailing', 'lab')->getStatusCode());
+    self::assertSame(404, $controller->asset('hvac-coastal-current', 'manifest.json')->getStatusCode());
+    self::assertSame(404, $controller->asset('hvac-coastal-current', '../lab.css')->getStatusCode());
+    self::assertSame(200, $controller->asset('hvac-coastal-current', 'maintenance.webp')->getStatusCode());
+    self::assertSame('image/webp', $controller->asset('hvac-coastal-current', 'maintenance.webp')->headers->get('Content-Type'));
+    self::assertSame('font/woff2', $controller->asset('hvac-coastal-current', 'fraunces.woff2')->headers->get('Content-Type'));
+  }
+
   protected function tearDown(): void {
     \Drupal::unsetContainer();
     parent::tearDown();

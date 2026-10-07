@@ -1,0 +1,35 @@
+{
+  "schema": "famtastic.component-recipe-contribution.v1",
+  "id": "coastal_current_hvac_v1",
+  "version": 1,
+  "owner": "component-studio",
+  "status": "import_request_pending",
+  "pages": [
+    "home",
+    "repair",
+    "maintenance",
+    "assessment",
+    "about",
+    "contact"
+  ],
+  "components": [
+    "scoped-nav",
+    "organic-hero",
+    "service-vignettes",
+    "fictional-service-summary",
+    "branched-request-practice",
+    "owner-practice",
+    "native-account-continuation",
+    "creator-credit"
+  ],
+  "manifest": "marketing/campaigns/acquisition-199/industry-previews/hvac-coastal-current/manifest.json",
+  "runtime_owner": "famtastic-designs Drupal acquisition",
+  "binding": "private native stored context; no one-site-per-recipient",
+  "media_slots": [
+    "repair",
+    "maintenance-v2",
+    "assessment",
+    "airflow"
+  ],
+  "consumption": "source_captured; retrieval/import/production unverified"
+}
