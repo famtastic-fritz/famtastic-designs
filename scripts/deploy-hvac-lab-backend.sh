@@ -8,12 +8,12 @@ apply=false
 case "${1:-}" in '') ;; --apply) apply=true ;; *) exit 2 ;; esac
 [[ -z "$(git status --porcelain)" ]] || { echo 'Clean source required.' >&2; exit 1; }
 revision="$(git rev-parse HEAD)"
-base="${FAMTASTIC_HVAC_BASE_REVISION:-91216e942ae9623197bcb2450f06095e02269fc2}"
+base="${FAMTASTIC_HVAC_BASE_REVISION:-0fb17756af7e29e134827cae9e970cea39312459}"
 [[ "$base" =~ ^[a-f0-9]{40}$ ]] || exit 1
 git merge-base --is-ancestor "$base" "$revision"
 [[ "$revision" == "$(git ls-remote https://github.com/famtastic-fritz/famtastic-designs.git refs/heads/main | awk '{print $1}')" ]] || { echo 'Current main required.' >&2; exit 1; }
 prefix=backend/web/modules/custom/famtastic_pipeline
-owned=(src/Service/AcquisitionHvacTemplate.php src/Service/AcquisitionSampleGuard.php src/Service/AcquisitionSampleService.php src/Controller/AcquisitionSampleController.php src/Controller/AcquisitionIndustryPreviewController.php)
+owned=(famtastic_pipeline.routing.yml src/Service/AcquisitionHvacTemplate.php src/Service/AcquisitionSampleGuard.php src/Service/AcquisitionSampleService.php src/Controller/AcquisitionSampleController.php src/Controller/AcquisitionIndustryPreviewController.php)
 while IFS= read -r changed; do
  [[ -z "$changed" || "$changed" == "$prefix/tests/"* ]] && continue
  found=false
@@ -48,7 +48,7 @@ while read -r file expected current; do
  if [[ "$expected" == absent ]]; then [[ ! -e "$module/$file" ]] || { echo "New target exists: $file" >&2; exit 1; }
  else [[ "$(sha256sum "$module/$file" | awk '{print $1}')" == "$expected" ]] || { echo "Baseline mismatch: $file" >&2; exit 1; }; fi
 done <<< "$spec"
-if [[ "$apply" != true ]]; then printf 'Scoped HVAC preflight passed revision=%s base=%s runtime=five-PHP-files bundle=private settings=HVAC-only no-state-mutation\n' "$revision" "$base";exit 0;fi
+if [[ "$apply" != true ]]; then printf 'Scoped HVAC preflight passed revision=%s base=%s runtime=five-PHP-files-and-routing bundle=private settings=HVAC-only no-state-mutation\n' "$revision" "$base";exit 0;fi
 settings_dir="$(dirname "$settings")";settings_mode="$(stat -c %a "$settings_dir")"
 lock="$deploy/.hvac-lab-release-lock";mkdir "$lock";trap 'chmod "$settings_mode" "$settings_dir";rmdir "$lock"' EXIT
 mirror="$deploy/repository.git";git --git-dir="$mirror" fetch origin
@@ -64,7 +64,7 @@ new="$source/backend/web/modules/custom/famtastic_pipeline"; assets="$source/mar
 backup="$release/hvac-backup-$(date -u +%Y%m%dT%H%M%SZ)-$$";mkdir -m0700 "$backup";cp -p "$settings" "$backup/settings.local.php"
 while read -r file expected current; do
  [[ -n "$file" ]] || continue
- [[ "$(sha256sum "$new/$file" | awk '{print $1}')" == "$current" ]];"$php" -l "$new/$file"
+ [[ "$(sha256sum "$new/$file" | awk '{print $1}')" == "$current" ]];[[ "$file" != *.php ]] || "$php" -l "$new/$file"
  if [[ "$expected" != absent ]];then mkdir -p "$backup/$(dirname "$file")";cp -p "$module/$file" "$backup/$file";fi
 done <<< "$spec"
 bundle="$private/acquisition-199/hvac/$revision"
@@ -89,6 +89,7 @@ rollback(){
    echo 'Concurrent settings edit preserved; manual reconciliation required.' >&2
  fi
  while read -r file expected current;do [[ -n "$file" ]] || continue;if [[ -f "$module/$file" && "$(sha256sum "$module/$file" | awk '{print $1}')" == "$current" ]];then if [[ "$expected" != absent ]];then cp -p "$backup/$file" "$module/$file";else rm -f "$module/$file";fi;fi;done <<< "$spec"
+ "$php" vendor/bin/drush.php php:eval '\Drupal::service("router.builder")->rebuild();' || echo 'Router rollback reconciliation required.' >&2
  echo "HVAC promotion failed; five-file/settings rollback performed; backup=$backup" >&2;exit 1
 }
 promoted_settings_hash="$settings_hash"
@@ -106,6 +107,7 @@ promoted_settings_hash="$(sha256sum "$settings_tmp" | awk '{print $1}')"
 chmod "$(stat -c %a "$settings")" "$settings_tmp"
 mv "$settings_tmp" "$settings"
 "$php" -l "$settings"
+"$php" vendor/bin/drush.php php:eval '\Drupal::service("router.builder")->rebuild();$routes=\Drupal::service("router.route_provider");foreach(["famtastic_pipeline.acquisition_industry_preview","famtastic_pipeline.acquisition_industry_preview_asset"] as $name){$r=$routes->getRouteByName($name);if(!str_contains($r->getRequirement("industry"),"hvac-coastal-current"))throw new RuntimeException("HVAC router missing");}$cids=\Drupal::database()->select("cache_page","c")->fields("c",["cid"])->condition("cid","%samples/industry/hvac-coastal-current/%","LIKE")->execute()->fetchCol();\Drupal::cache("page")->deleteMultiple($cids);print "HVAC compiled router verified\n";'
 "$php" vendor/bin/drush.php php:eval '$r=\Drupal\famtastic_pipeline\Service\AcquisitionHvacTemplate::nativeRecipe();$f=\Drupal\famtastic_pipeline\Service\AcquisitionHvacTemplate::freezeLab(str_repeat("a",64));if($r["id"]!=="coastal_current_hvac_v1"||!$f["interactive"]||$f["email_send_authorized"]!==false)throw new RuntimeException("Native HVAC release invalid");print "HVAC native recipe and immutable snapshot verified\n";'
 "$php" vendor/bin/drush.php php:eval 'if(\Drupal\Core\Site\Settings::get("famtastic_acquisition_hvac_preview_enabled")!==TRUE)throw new RuntimeException("HVAC preview flag missing");'
 [[ "$(sha256sum "$settings" | awk '{print $1}')" == "$promoted_settings_hash" ]]
@@ -113,7 +115,7 @@ state_after="$($php vendor/bin/drush.php php:eval '$keys=["famtastic_pipeline.se
 [[ "$state_before" == "$state_after" ]]
 [[ "$cron_before" == "$(crontab -l | sha256sum | awk '{print $1}')" ]]
 while read -r file expected current;do [[ -n "$file" ]] || continue;[[ "$(sha256sum "$module/$file" | awk '{print $1}')" == "$current" ]];done <<< "$spec"
-printf 'commit=%s\nbase=%s\ndeployed_at=%s\nbackup=%s\nmanifest_sha256=%s\nscope=five-runtime-files-private-assets-HVAC-settings\ncron_unchanged=1\npipeline_smtp_config_unchanged=1\n' "$revision" "$base" "$(date -u +%FT%TZ)" "$backup" "$manifest_hash" > "$production/.hvac-lab-release.tmp"
+printf 'commit=%s\nbase=%s\ndeployed_at=%s\nbackup=%s\nmanifest_sha256=%s\nscope=five-runtime-files-routing-private-assets-HVAC-settings\ncron_unchanged=1\npipeline_smtp_config_unchanged=1\n' "$revision" "$base" "$(date -u +%FT%TZ)" "$backup" "$manifest_hash" > "$production/.hvac-lab-release.tmp"
 mv "$production/.hvac-lab-release.tmp" "$production/.hvac-lab-release"
 trap - ERR INT TERM HUP
 cat "$production/.hvac-lab-release"

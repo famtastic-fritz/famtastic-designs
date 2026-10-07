@@ -20,6 +20,11 @@ new Settings(array_replace(Settings::getAll(), ['famtastic_acquisition_hvac_bund
 $report = ['schema' => 'famtastic.hvac-installed-proof.v1', 'status' => 'running', 'classification' => 'local_synthetic', 'checks' => [], 'provider_sends' => FALSE, 'production_deployment' => FALSE, 'native_recipe' => AcquisitionHvacTemplate::ID];
 register_shutdown_function(static function () use (&$report, $output): void { file_put_contents($output . '/evidence.json', json_encode($report, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . "\n"); });
 $check = static function (bool $result, string $name) use (&$report): void { $report['checks'][$name] = $result; if (!$result) { $report['status'] = 'failed'; throw new RuntimeException('FAIL: ' . $name); } print 'PASS: ' . $name . "\n"; };
+\Drupal::service('router.builder')->rebuild();
+foreach (['famtastic_pipeline.acquisition_industry_preview', 'famtastic_pipeline.acquisition_industry_preview_asset'] as $routeName) {
+  $route = \Drupal::service('router.route_provider')->getRouteByName($routeName);
+  $check(str_contains($route->getRequirement('industry'), 'hvac-coastal-current'), $routeName . '_compiled_hvac_route');
+}
 $samples = \Drupal::service('famtastic_pipeline.acquisition_samples');
 $portal = \Drupal::service('famtastic_pipeline.customer_portal');
 $controller = AcquisitionSampleController::create(\Drupal::getContainer());

@@ -1556,7 +1556,7 @@ famtastic_pipeline.acquisition_industry_preview:
   methods: [GET]
   requirements:
     _access: 'TRUE'
-    industry: 'mobile-detailing|fitness-meal-prep|photography-media|baking-catering|home-services|events-rentals|pet-services|consulting-tutoring|handcrafted-boutiques'
+    industry: 'hvac-coastal-current|mobile-detailing|fitness-meal-prep|photography-media|baking-catering|home-services|events-rentals|pet-services|consulting-tutoring|handcrafted-boutiques'
     view: 'email|lab'
   options:
     no_cache: 'TRUE'
@@ -1568,7 +1568,7 @@ famtastic_pipeline.acquisition_industry_preview_asset:
   methods: [GET]
   requirements:
     _access: 'TRUE'
-    industry: 'mobile-detailing|fitness-meal-prep|photography-media|baking-catering|home-services|events-rentals|pet-services|consulting-tutoring|handcrafted-boutiques'
+    industry: 'hvac-coastal-current|mobile-detailing|fitness-meal-prep|photography-media|baking-catering|home-services|events-rentals|pet-services|consulting-tutoring|handcrafted-boutiques'
     asset: '[a-z0-9_-]+\.(?:css|js|svg|png|jpe?g|webp|woff2)'
   options:
     no_cache: 'TRUE'
