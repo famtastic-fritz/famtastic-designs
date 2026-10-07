@@ -1,0 +1,141 @@
+{
+  "schema": "famtastic.acquisition-today250-live-proof.v1",
+  "classification": "deployed",
+  "checked_at": "2026-10-07T02:09:15+00:00",
+  "local_date": "2026-10-06",
+  "timezone": "America/New_York",
+  "frontend_commit": "3b2a50101115611c561f0b82040be1bce11a81d6",
+  "backend_commit": "d27b6af475f394ad240e3a2ad02af657c1cd1b41",
+  "normal_deployed_at": "2026-10-07T01:59:32Z",
+  "authority": "TODAY-250-DIRECT-APPROVAL-20261006.json",
+  "source_tests": {
+    "tests": 32,
+    "assertions": 1813
+  },
+  "deployed_check_only_preflight": {
+    "status": "checked",
+    "config_hash": "26a22a30e0d65a506dc3a099e92aee9e5a48986c0381bb1f0e951b6631150acc",
+    "queue_rows": 900,
+    "capacity_mode": "published_limit_with_reserved_budget",
+    "available_today": 45,
+    "available_hour": 50,
+    "effective_shared_day_cap": 251,
+    "release_commit": "d27b6af475f394ad240e3a2ad02af657c1cd1b41",
+    "reservations_created": 0,
+    "prepared": 0,
+    "sent": 0,
+    "inbox_delivery_proved": false
+  },
+  "preserved_before_rebind": {
+    "customers": 199,
+    "industry_acceptances": 148,
+    "unresolved": 0,
+    "clock_latch_reset": false,
+    "accepted_or_uncertain_retry": false
+  },
+  "timer_installed_at": "2026-10-07T02:00:20+00:00",
+  "today_customer_target": 250,
+  "today_shared_acquisition_cap": 251,
+  "existing_owned_probe_count": 1,
+  "reserved_budget_unchanged": true,
+  "automatic_window": {
+    "key": "asap-industry-2026-10-06-22",
+    "status": "complete",
+    "new_customer_smtp_accepted": 45,
+    "failed": 0,
+    "uncertain": 0
+  },
+  "customer_campaign_total_smtp_accepted": 244,
+  "today_target_achieved": false,
+  "target_shortfall": 6,
+  "industry_total_accepted": 193,
+  "industry_native_context_matches": 193,
+  "accepted_industries": 9,
+  "binding_failures": 0,
+  "unresolved_dispatches": 0,
+  "shared_acquisition_usage": {
+    "day": 245,
+    "window": 45
+  },
+  "fresh_account_budget_before": {
+    "checked_at": "2026-10-07T01:55:09+00:00",
+    "available_today": 45,
+    "available_hour": 50,
+    "observed_today": 205,
+    "observed_eastern_today": 205,
+    "observed_rolling_24h": 205,
+    "observed_hour": 0,
+    "unresolved_exact_transport": 0,
+    "reserve_day": 250,
+    "reserve_hour": 400,
+    "provider_remaining_verified": false,
+    "outside_usage_unknown": true,
+    "capacity_mode": "published_limit_with_reserved_budget"
+  },
+  "fresh_account_budget_after": {
+    "checked_at": "2026-10-07T02:09:29+00:00",
+    "available_today": 0,
+    "available_hour": 50,
+    "observed_today": 250,
+    "observed_eastern_today": 250,
+    "observed_rolling_24h": 250,
+    "observed_hour": 45,
+    "unresolved_exact_transport": 0,
+    "reserve_day": 250,
+    "reserve_hour": 400,
+    "provider_remaining_verified": false,
+    "outside_usage_unknown": true,
+    "capacity_mode": "published_limit_with_reserved_budget"
+  },
+  "native_plan_receipt": {
+    "checked_at": "2026-10-07T02:09:32+00:00",
+    "campaign_id": 5,
+    "revision_before": 5,
+    "revision_after": 6,
+    "native_saved_reloaded": true,
+    "timer_verified": true,
+    "release_commit": "d27b6af475f394ad240e3a2ad02af657c1cd1b41",
+    "customer_accepted_at_plan_update": 244,
+    "messages_sent_by_plan_update": 0,
+    "today_customer_target": 250,
+    "today_shared_acquisition_cap": 251,
+    "normal_day_cap_after_today": 200,
+    "generic_followups_enabled": false
+  },
+  "normal_schedule": {
+    "starts_on": "2026-10-07",
+    "ends_on": "2026-10-16",
+    "hours": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "timezone": "America/New_York",
+    "window_cap": 50,
+    "day_cap": 200,
+    "today_exception_present": false,
+    "installed_readback": true,
+    "queue_rows": 999,
+    "unused_keys": 756,
+    "fresh_rolling_account_budget_required": true,
+    "future_sends_claimed_complete": false
+  },
+  "today_timer_installed": true,
+  "today_driver_expires_after_local_date": true,
+  "unrelated_cron_preserved": true,
+  "pilot_lock": true,
+  "broad_schedulers": 0,
+  "customer_inbox_delivery_proved": false,
+  "physical_owner_acceptance": false,
+  "generic_D3_D7": "held",
+  "prior_browser_evidence": {
+    "hosted_checks": 18,
+    "viewports": [
+      1280,
+      390
+    ],
+    "reference": "INDUSTRY-LIVE-ACTIVATION-20261006.json",
+    "creative_changed_by_today_exception": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "famtastic.acquisition-direct-approval.v1",
+  "recorded_at": "2026-10-07T01:57:05.008996+00:00",
+  "approved_by": "Fritz Medine",
+  "source": "direct human reply in this chat",
+  "answer": "yesI approve",
+  "question_scope": {
+    "local_date": "2026-10-06",
+    "timezone": "America/New_York",
+    "customer_target": 250,
+    "shared_acquisition_cap": 251,
+    "existing_owned_probe_count": 1,
+    "main_push": true,
+    "normal_backend_deployment": true,
+    "window_cap": 50,
+    "normal_day_cap_from_20261007": 200,
+    "reserve_day": 250,
+    "reserve_hour": 400
+  },
+  "prior_automatic_rejection_resolved": true,
+  "frozen_authorization_sha256": "09fd8bdd36350d24bc6c9d354816e448573ce11c91bbb4b538550649293ee9a5",
+  "recipient_consent_or_provider_exception_inferred": false,
+  "guaranteed_target": false
+}

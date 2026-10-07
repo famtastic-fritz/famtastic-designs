@@ -1,0 +1,12 @@
+{
+  "schema": "famtastic.acquisition-post-eval-pointer.v1",
+  "classification": "deployed",
+  "evaluation_id": "posteval_74ebef1ee847dbde",
+  "record": "data-center/post-eval/posteval_74ebef1ee847dbde.json",
+  "report": "data-center/reports/post-eval/posteval_74ebef1ee847dbde.md",
+  "customer_smtp_accepted": 244,
+  "target250_achieved": false,
+  "account_budget_remaining": 0,
+  "normal_schedule_installed": true,
+  "future_sends_complete": false
+}
