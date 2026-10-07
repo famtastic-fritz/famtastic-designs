@@ -70,7 +70,7 @@ bundle="$private/acquisition-199/hvac/$revision"
 mkdir -m0700 -p "$(dirname "$bundle")"
 if [[ ! -e "$bundle" ]];then
  stage="$(mktemp -d "$private/acquisition-199/hvac/.stage.XXXXXX")"
- "$php" -r '$src=$argv[1];$dst=$argv[2];$m=json_decode(file_get_contents($src."/manifest.json"),true,32,JSON_THROW_ON_ERROR);$files=array_merge(["manifest.json"],array_keys($m["source_hashes"]+$m["asset_hashes"]),$m["fonts"]["licenses"]);foreach($files as $name){if(!preg_match("/^[a-z0-9][a-z0-9_.-]*$/D",$name)||is_link($src."/".$name)||!copy($src."/".$name,$dst."/".$name))throw new RuntimeException("Bundle copy invalid");}' "$assets" "$stage"
+ "$php" -r '$src=$argv[1];$dst=$argv[2];$m=json_decode(file_get_contents($src."/manifest.json"),true,32,JSON_THROW_ON_ERROR);$files=array_merge(["manifest.json"],array_keys($m["source_hashes"]+$m["asset_hashes"]),$m["fonts"]["licenses"]);foreach($files as $name){if(!preg_match("/^[A-Za-z0-9][A-Za-z0-9_.-]*$/D",$name)||is_link($src."/".$name)||!copy($src."/".$name,$dst."/".$name))throw new RuntimeException("Bundle copy invalid");}' "$assets" "$stage"
  mv "$stage" "$bundle"
 fi
 [[ ! -L "$bundle" ]]
