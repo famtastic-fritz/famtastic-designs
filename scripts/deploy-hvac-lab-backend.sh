@@ -49,7 +49,8 @@ while read -r file expected current; do
  else [[ "$(sha256sum "$module/$file" | awk '{print $1}')" == "$expected" ]] || { echo "Baseline mismatch: $file" >&2; exit 1; }; fi
 done <<< "$spec"
 if [[ "$apply" != true ]]; then printf 'Scoped HVAC preflight passed revision=%s base=%s runtime=five-PHP-files bundle=private settings=HVAC-only no-state-mutation\n' "$revision" "$base";exit 0;fi
-lock="$deploy/.hvac-lab-release-lock";mkdir "$lock";trap 'rmdir "$lock"' EXIT
+settings_dir="$(dirname "$settings")";settings_mode="$(stat -c %a "$settings_dir")"
+lock="$deploy/.hvac-lab-release-lock";mkdir "$lock";trap 'chmod "$settings_mode" "$settings_dir";rmdir "$lock"' EXIT
 mirror="$deploy/repository.git";git --git-dir="$mirror" fetch origin
 [[ "$(git --git-dir="$mirror" rev-parse refs/heads/main)" == "$revision" ]]
 mkdir -p "$release"
@@ -80,7 +81,9 @@ fi
 printf '<?php\n$settings["famtastic_acquisition_hvac_bundle_root"] = "%s";\n$settings["famtastic_acquisition_hvac_bundle_sha256"] = "%s";\n$settings["famtastic_acquisition_hvac_preview_enabled"] = TRUE;\n' "$bundle" "$manifest_hash" > "$bundle/hvac-settings.php"
 rollback(){
  trap - ERR INT TERM HUP
- if [[ "$(sha256sum "$settings" | awk '{print $1}')" == "$promoted_settings_hash" ]];then
+ if [[ "$(sha256sum "$settings" | awk '{print $1}')" == "$settings_hash" ]];then
+   : # Original settings need no restore.
+ elif [[ "$(sha256sum "$settings" | awk '{print $1}')" == "$promoted_settings_hash" ]];then
    cp -p "$backup/settings.local.php" "$settings.rollback.tmp";mv "$settings.rollback.tmp" "$settings"
  elif [[ "$(sha256sum "$settings" | awk '{print $1}')" != "$settings_hash" ]];then
    echo 'Concurrent settings edit preserved; manual reconciliation required.' >&2
@@ -90,6 +93,7 @@ rollback(){
 }
 promoted_settings_hash="$settings_hash"
 trap rollback ERR INT TERM HUP
+chmod u+w "$settings_dir"
 [[ "$(sha256sum "$settings" | awk '{print $1}')" == "$settings_hash" ]]
 while read -r file expected current;do [[ -n "$file" ]] || continue;install -m0644 "$new/$file" "$module/$file";done <<< "$spec"
 cp -p "$settings" "$settings.hvac.tmp"
