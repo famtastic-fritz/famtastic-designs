@@ -1,3 +1,7 @@
+## 2026-10-07 — Acquisition sender release repair and finite catch-up
+
+Rebound and checked the installed approved normal sender to the current frontend, preserving prior accepts and immutable message keys. Installed the owner-authorized October7-only evening catch-up under the normal200 TOTAL/day and50/window ceiling; future outcomes remain pending actual receipts. Added a tested read-only frontend promotion guard that rejects stale installed sender pins and requires explicit pause, destination validation and signed rebind. See docs/research/acquisition-199/CLOCK-REPAIR-LIVE-20261007.json for exact runtime and source-only evidence.
+
 ## 2026-10-06 — Native acquisition window executor
 
 Dedicated campaign-only Drush clock and signed private beauty queue; atomic 50/window and 200/day limits, fresh history/capacity checks, exact existing SMTP transport, and halt/no-retry behavior. Other-industry D0 copy drafts remain held for matching previews and approval. Installation/outcomes: docs/research/acquisition-199/EXECUTOR-BRIEF.md.

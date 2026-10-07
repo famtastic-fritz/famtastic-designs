@@ -1,3 +1,7 @@
+## 2026-10-07 — Release pins and rolling budget explain different sender failures
+
+A deployed frontend pin mismatch blocks the future native sender and must be repaired only after actual destination validation. It cannot explain missed windows before that deployment. Reconstruct historical account budget from dated native timestamps separately; zero allowance returns before a window reservation and can leave no window row. Label reconstruction honestly when tick logs and historical unresolved-state receipts are unavailable. Guard frontend promotion before public writes while an incompatible release-bound clock remains installed; the guard does not automatically authorize a rebind or dispatch.
+
 # FAMtastic Designs site learnings
 
 ## 2026-10-04 — Agency mail and customer SMS are different channels

@@ -272,6 +272,10 @@ if [[ "$creator_credit_only" == 1 ]]; then
   return
 fi
 
+# Fail before public promotion if a release-bound sender would become stale.
+# This gate never signs input, changes cron, or dispatches a message.
+/usr/local/bin/php "$source_dir/scripts/acquisition-frontend-release-guard.php" "$HOME" "$commit_sha"
+
 backup_items=()
 [[ -e "$production_dir/index.html" ]] && backup_items+=("index.html")
 [[ -e "$production_dir/assets" ]] && backup_items+=("assets")

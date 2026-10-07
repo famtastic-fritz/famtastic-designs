@@ -1,0 +1,214 @@
+{
+  "schema": "famtastic.acquisition-clock-repair-live.v1",
+  "checked_at": "2026-10-07T22:16:48+00:00",
+  "classification": "deployed",
+  "source_only_guard_classification": "changed",
+  "frontend_commit": "0fb17756af7e29e134827cae9e970cea39312459",
+  "backend_base_commit": "d27b6af475f394ad240e3a2ad02af657c1cd1b41",
+  "scoped_hvac_overlay_commit": "76c6faad5fe4b6fb199cb2842edca14f428d69d5",
+  "repair": {
+    "applied_at": "2026-10-07T22:04:06Z",
+    "check_only": "checked",
+    "repair_sent": 0,
+    "prior_customer_acceptances_preserved": 249,
+    "prior_morning_acceptances_preserved": 5,
+    "all_window_slot_and_immutable_snapshot_fingerprints_unchanged": true,
+    "clock_latch_reset": false,
+    "accepted_or_uncertain_retry": false
+  },
+  "hosted_destinations": {
+    "industries": 9,
+    "widths": [
+      1280,
+      390
+    ],
+    "checks_passed": 18,
+    "actual_accepted_invitation_contexts": true,
+    "interaction_reset_sandbox_csp": "passed"
+  },
+  "normal_schedule": {
+    "installed_readback": true,
+    "starts_on": "2026-10-07",
+    "ends_on": "2026-10-16",
+    "hours_eastern": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "day_cap": 200,
+    "window_cap": 50,
+    "today_exception": false,
+    "queue_rows": 999,
+    "remaining_unused_queue_keys": 701
+  },
+  "catchup": {
+    "date": "2026-10-07",
+    "installed_readback": true,
+    "installed_at": "2026-10-07T22:06:35Z",
+    "hours_eastern": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "first_current_hour_started_manually_after_validation": true,
+    "industry_queue_rows": 900,
+    "priority": "approved_matched_industry_original_queue_keys",
+    "first_window": {
+      "window_key": "asap-industry-2026-10-07-18",
+      "status": "complete",
+      "reason": "",
+      "counts": {
+        "accepted": 50
+      },
+      "inbox_delivery_proved": false
+    },
+    "today_customer_smtp_accepted": 55,
+    "cumulative_customer_smtp_accepted": 299,
+    "remaining_to_daily_ceiling": 145,
+    "future_hours_pending": [
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "future_sends_guaranteed": false,
+    "expires_at": "2026-10-08T00:00:00-04:00",
+    "authorization_reference": "docs/research/acquisition-199/OCT7-CATCHUP-AUTHORIZATION.json",
+    "authorization_sha256": "70a6f9c7cfd5655f830774fe98c90684f1339a0e77e2af6af18f7e3db33618a7",
+    "authority_note": "Existing ASAP API retains its historical Oct6 contract reference; the new driver independently enforces current Oct7 human authorization hash/date/normal caps and includes this provenance in its HMAC-signed input."
+  },
+  "bindings": {
+    "all_industry_accepted_native_matches": 243,
+    "industries": 9,
+    "failures": 0,
+    "unresolved_dispatches": 0,
+    "pilot_lock": true
+  },
+  "budget": {
+    "transactional_day_reserve": 250,
+    "transactional_hour_reserve": 400,
+    "provider_remaining_verified": false,
+    "outside_usage_unknown": true,
+    "fresh_each_window_and_contact": true
+  },
+  "morning_reconstruction": {
+    "checked_at": "2026-10-07T22:13:33+00:00",
+    "evidence_kind": "historical_reconstruction_from_currently_persisted_sent_timestamps",
+    "contemporaneous_timer_ticks_proved": false,
+    "historical_unresolved_state_proved": false,
+    "windows": [
+      {
+        "hour_eastern": 9,
+        "asof": "2026-10-07T13:00:00+00:00",
+        "sources": {
+          "famtastic_email_message": {
+            "eastern_today": 0,
+            "rolling_24h": 243,
+            "rolling_1h": 0
+          },
+          "famtastic_notification_outbox": {
+            "eastern_today": 2,
+            "rolling_24h": 2,
+            "rolling_1h": 0
+          }
+        },
+        "observed_day": 245,
+        "conservative_available_day": 5,
+        "conservative_available_hour": 50
+      },
+      {
+        "hour_eastern": 10,
+        "asof": "2026-10-07T14:00:00+00:00",
+        "sources": {
+          "famtastic_email_message": {
+            "eastern_today": 5,
+            "rolling_24h": 248,
+            "rolling_1h": 5
+          },
+          "famtastic_notification_outbox": {
+            "eastern_today": 2,
+            "rolling_24h": 2,
+            "rolling_1h": 0
+          }
+        },
+        "observed_day": 250,
+        "conservative_available_day": 0,
+        "conservative_available_hour": 50
+      },
+      {
+        "hour_eastern": 11,
+        "asof": "2026-10-07T15:00:00+00:00",
+        "sources": {
+          "famtastic_email_message": {
+            "eastern_today": 5,
+            "rolling_24h": 248,
+            "rolling_1h": 0
+          },
+          "famtastic_notification_outbox": {
+            "eastern_today": 2,
+            "rolling_24h": 2,
+            "rolling_1h": 0
+          }
+        },
+        "observed_day": 250,
+        "conservative_available_day": 0,
+        "conservative_available_hour": 50
+      },
+      {
+        "hour_eastern": 12,
+        "asof": "2026-10-07T16:00:00+00:00",
+        "sources": {
+          "famtastic_email_message": {
+            "eastern_today": 5,
+            "rolling_24h": 248,
+            "rolling_1h": 0
+          },
+          "famtastic_notification_outbox": {
+            "eastern_today": 2,
+            "rolling_24h": 2,
+            "rolling_1h": 0
+          }
+        },
+        "observed_day": 250,
+        "conservative_available_day": 0,
+        "conservative_available_hour": 50
+      }
+    ]
+  },
+  "native_plan": {
+    "checked_at": "2026-10-07T22:14:55+00:00",
+    "campaign_id": 5,
+    "revision_before": 6,
+    "revision_after": 7,
+    "native_saved_reloaded": true,
+    "timer_verified": true,
+    "release_commit": "d27b6af475f394ad240e3a2ad02af657c1cd1b41",
+    "customer_accepted_at_plan_update": 289,
+    "messages_sent_by_plan_update": 0,
+    "today_customer_target": 200,
+    "today_shared_acquisition_cap": 200,
+    "today_actual_customer_accepted": 45,
+    "normal_day_cap_after_today": 200,
+    "generic_followups_enabled": false
+  },
+  "deployment_guard": {
+    "paths": [
+      "scripts/acquisition-frontend-release-guard.php",
+      "scripts/deploy-frontend-godaddy.sh"
+    ],
+    "checks_passed": 14,
+    "php_and_bash_syntax": "passed",
+    "gate_before_public_promotion": true,
+    "source_captured": true,
+    "future_deployer_consumption_proved": false,
+    "automatic_rebind_or_send": false
+  },
+  "customer_inbox_delivery_proved": false,
+  "physical_owner_acceptance": false,
+  "generic_followups_enabled": false
+}
