@@ -55,9 +55,9 @@ mirror="$deploy/repository.git";git --git-dir="$mirror" fetch origin
 mkdir -p "$release"
 if [[ ! -e "$source/.git" ]];then git --git-dir="$mirror" worktree add --detach --no-checkout "$source" "$revision";fi
 [[ "$(git -C "$source" rev-parse HEAD)" == "$revision" ]]
-[[ -z "$(git -C "$source" status --porcelain)" ]]
 git -C "$source" sparse-checkout set backend/web/modules/custom/famtastic_pipeline marketing/campaigns/acquisition-199/industry-previews/hvac-coastal-current scripts
- git -C "$source" read-tree -mu HEAD
+git -C "$source" read-tree -mu HEAD
+[[ -z "$(git -C "$source" status --porcelain)" ]]
 new="$source/backend/web/modules/custom/famtastic_pipeline"; assets="$source/marketing/campaigns/acquisition-199/industry-previews/hvac-coastal-current"
 [[ "$(sha256sum "$assets/manifest.json" | awk '{print $1}')" == "$manifest_hash" ]]
 backup="$release/hvac-backup-$(date -u +%Y%m%dT%H%M%SZ)-$$";mkdir -m0700 "$backup";cp -p "$settings" "$backup/settings.local.php"
