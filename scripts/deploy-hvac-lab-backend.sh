@@ -96,12 +96,15 @@ trap rollback ERR INT TERM HUP
 chmod u+w "$settings_dir"
 [[ "$(sha256sum "$settings" | awk '{print $1}')" == "$settings_hash" ]]
 while read -r file expected current;do [[ -n "$file" ]] || continue;install -m0644 "$new/$file" "$module/$file";done <<< "$spec"
-cp -p "$settings" "$settings.hvac.tmp"
-printf '\n// Scoped immutable HVAC Lab release; no campaign state changes.\nrequire "%s/hvac-settings.php";\n' "$bundle" >> "$settings.hvac.tmp"
-"$php" -l "$settings.hvac.tmp"
-promoted_settings_hash="$(sha256sum "$settings.hvac.tmp" | awk '{print $1}')"
+settings_tmp="$settings.hvac.tmp.$$"
+cp -p "$settings" "$settings_tmp"
+chmod u+w "$settings_tmp"
+printf '\n// Scoped immutable HVAC Lab release; no campaign state changes.\nrequire "%s/hvac-settings.php";\n' "$bundle" >> "$settings_tmp"
+"$php" -l "$settings_tmp"
+promoted_settings_hash="$(sha256sum "$settings_tmp" | awk '{print $1}')"
 [[ "$(sha256sum "$settings" | awk '{print $1}')" == "$settings_hash" ]]
-mv "$settings.hvac.tmp" "$settings"
+chmod "$(stat -c %a "$settings")" "$settings_tmp"
+mv "$settings_tmp" "$settings"
 "$php" -l "$settings"
 "$php" vendor/bin/drush.php php:eval '$r=\Drupal\famtastic_pipeline\Service\AcquisitionHvacTemplate::nativeRecipe();$f=\Drupal\famtastic_pipeline\Service\AcquisitionHvacTemplate::freezeLab(str_repeat("a",64));if($r["id"]!=="coastal_current_hvac_v1"||!$f["interactive"]||$f["email_send_authorized"]!==false)throw new RuntimeException("Native HVAC release invalid");print "HVAC native recipe and immutable snapshot verified\n";'
 "$php" vendor/bin/drush.php php:eval 'if(\Drupal\Core\Site\Settings::get("famtastic_acquisition_hvac_preview_enabled")!==TRUE)throw new RuntimeException("HVAC preview flag missing");'
