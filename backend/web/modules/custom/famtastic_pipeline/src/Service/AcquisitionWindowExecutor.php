@@ -48,7 +48,7 @@ final class AcquisitionWindowExecutor {
     $release=\AcquisitionWindowContact::check($binding);
     if(($release['release_verified']??FALSE)!==TRUE||($release['sender_account_sha256']??'')!==$account['account_sha256']||($release['release_commit']??'')!==$config['release_commit'])throw new \RuntimeException('acquisition_window_hosted_release_unproved');
     if($checkConfig&&$this->quota->clockStatus()==='halted')throw new \RuntimeException('acquisition_clock_halted_manual_review');
-    if($checkConfig){$read=\AcquisitionWindowContact::capacity($binding);$budget=$this->capacity($read,$this->time->getCurrentTime(),$account['account_sha256']);return ['status'=>'checked','config_hash'=>hash('sha256',json_encode($config,JSON_THROW_ON_ERROR)),'queue_rows'=>count($queue['records']),'queue_sha256'=>hash('sha256',$queueBytes),'capacity_mode'=>$budget['capacity_mode'],'available_today'=>$budget['available_today'],'available_hour'=>$budget['available_hour'],'effective_shared_day_cap'=>$this->todayExceptionCap($config,$this->time->getCurrentTime(),$asap),'release_commit'=>$config['release_commit'],'reservations_created'=>0,'prepared'=>0,'sent'=>0,'inbox_delivery_proved'=>FALSE];}
+    if($checkConfig){$read=\AcquisitionWindowContact::capacity($binding);$budget=$this->capacity($read,$this->time->getCurrentTime(),$account['account_sha256']);return ['status'=>'checked','config_hash'=>hash('sha256',json_encode($config,JSON_THROW_ON_ERROR)),'queue_rows'=>count($queue['records']),'queue_sha256'=>hash('sha256',$queueBytes),'capacity_mode'=>$budget['capacity_mode'],'available_today'=>$budget['available_today'],'available_hour'=>$budget['available_hour'],'effective_shared_day_cap'=>$this->todayExceptionCap($config,$this->time->getCurrentTime(),$asap),'required_batch_size'=>$config['batch_size']??NULL,'batch_admission'=>isset($config['batch_size'])?(min($budget['available_today'],$budget['available_hour'])>=50?'account_room_for_full_batch':'deferred_account_allowance'):'legacy_partial','release_commit'=>$config['release_commit'],'reservations_created'=>0,'prepared'=>0,'sent'=>0,'inbox_delivery_proved'=>FALSE];}
     return $this->execute($config,$queue['records'],static fn(array $record,array $binding):array=>\AcquisitionWindowContact::prepare($record,$binding),self::exactOperator(...),static fn(array $binding):array=>\AcquisitionWindowContact::capacity($binding),static fn(int $seconds)=>sleep($seconds),$asap);
   }
   /** Injected callables exist for focused no-network proof; production run binds exact files. */
@@ -69,7 +69,9 @@ final class AcquisitionWindowExecutor {
       $row['recipient_hash']=$this->ledger->contactHash($email);$records[]=$row;
     }
     if(!$records)return ['status'=>'empty','window_key'=>$key,'inbox_delivery_proved'=>FALSE];
+    $batchSize=$config['batch_size']??NULL;
     $usage=$this->quota->usage($date,$hour);$limit=min(50-$usage['window'],$dayLimit-$usage['day']);
+    if($batchSize!==NULL&&min(count($records),$limit)<$batchSize)return $this->deferredBatch($key,min(count($records),max(0,$limit)),'queue_or_shared_quota');
     if($limit<=0)return ['status'=>'capacity_exhausted','window_key'=>$key,'inbox_delivery_proved'=>FALSE];
     $records=array_slice($records,0,$limit);
     // This is a freshly derived window binding, not a renewed historical receipt.
@@ -79,7 +81,9 @@ final class AcquisitionWindowExecutor {
     try {
       $this->quota->assertNoInterruptedRun($key);
       $read=$capacity($binding);$available=$this->capacity($read,$this->time->getCurrentTime(),$account['account_sha256']);
-      $records=array_slice($records,0,min(count($records),$available['available_today'],$available['available_hour']));
+      $admitted=min(count($records),$available['available_today'],$available['available_hour']);
+      if($batchSize!==NULL&&$admitted<$batchSize)return $this->deferredBatch($key,$admitted,'account_allowance');
+      $records=array_slice($records,0,$batchSize??$admitted);
       if(!$records)return ['status'=>'capacity_exhausted','reason'=>'provider_capacity_unavailable','window_key'=>$key,'inbox_delivery_proved'=>FALSE];
       $reservation=$this->quota->reserveWindow($date,$hour,hash('sha256',json_encode($config,JSON_THROW_ON_ERROR)),$records,(int)$config['campaign_id'],$asapExpires,($config['execution_mode']??'')==='asap_industry'?$key:NULL,$dayLimit);
       if($reservation['duplicate'])return $this->quota->result($key)+['duplicate'=>TRUE];
@@ -104,6 +108,9 @@ final class AcquisitionWindowExecutor {
       $this->quota->finish($key);return $this->quota->result($key)+['duplicate'=>FALSE];
     }catch(\Throwable $error){$this->quota->halt($key,$error->getMessage());return array_replace($this->quota->result($key),['status'=>'halted','inbox_delivery_proved'=>FALSE]);}
   }
+  private function deferredBatch(string $key,int $available,string $constraint): array {
+    return ['status'=>'deferred','reason'=>'full_batch_unavailable','constraint'=>$constraint,'window_key'=>$key,'required_batch_size'=>50,'available_batch_size'=>$available,'reservations_created'=>0,'prepared'=>0,'sent'=>0,'inbox_delivery_proved'=>FALSE];
+  }
   private function capacity(array $value,int $now,string $account): array {
     $mode=$value['capacity_mode']??'';
     $conservative=$mode==='published_limit_with_reserved_budget';
@@ -113,6 +120,8 @@ final class AcquisitionWindowExecutor {
   }
   private function validateConfig(array $config,string $date,bool $preview=FALSE): array {
     if(($config['schema']??'')!=='famtastic.acquisition-window-config.v1'||($config['timezone']??'')!==AcquisitionWindowQuota::ZONE||($config['hours']??[])!==AcquisitionWindowQuota::HOURS||($config['window_cap']??0)!==50||($config['day_cap']??0)!==200||($config['enabled']??FALSE)!==TRUE||!preg_match('/^\d{4}-\d{2}-\d{2}$/D',(string)($config['starts_on']??''))||!preg_match('/^\d{4}-\d{2}-\d{2}$/D',(string)($config['ends_on']??''))||(!$preview&&$date<$config['starts_on'])||$date>$config['ends_on']||$config['starts_on']>$config['ends_on']||(int)($config['campaign_id']??0)<1||(int)($config['pace_seconds']??0)<1||(int)$config['pace_seconds']>60)throw new \RuntimeException('acquisition_window_config_invalid');
+    if(array_key_exists('batch_size',$config)&&(($config['batch_size']??NULL)!==50||($config['execution_mode']??'scheduled')!=='scheduled'))throw new \RuntimeException('acquisition_full_batch_config_invalid');
+    if(isset($config['batch_size'])&&(!preg_match('/^[a-f0-9]{64}$/D',(string)($config['batch_executor_sha256']??''))||!hash_equals(hash_file('sha256',__FILE__),(string)$config['batch_executor_sha256'])))throw new \RuntimeException('acquisition_full_batch_executor_drift');
     $account=$this->sequences->senderAccount();if(!hash_equals($account['account_sha256'],(string)($config['sender_account_sha256']??'')))throw new \RuntimeException('acquisition_window_sender_changed');return $account;
   }
   private function binding(array $config,string $account): array {

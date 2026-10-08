@@ -55,6 +55,38 @@ final class AcquisitionWindowTest extends UnitTestCase {
     $this->config['today_exception']=['schema'=>'famtastic.acquisition-today-customer-target.v1','local_date'=>'2026-10-06','timezone'=>AcquisitionWindowQuota::ZONE,'customer_target'=>250,'shared_acquisition_cap'=>251,'existing_owned_probe_count'=>1,'window_cap'=>50,'normal_day_cap_after_today'=>200,'owner_authorized'=>TRUE,'approved_by'=>'Fritz Medine','sender'=>'hello@famtasticdesigns.com','reference'=>$reference,'sha256'=>$sha];
     $this->config['asap_authorization']['reference']=$reference;$this->config['asap_authorization']['sha256']=$sha;
   }
+  public function testFullBatchDefersPartialAllowanceWithoutConsumingKeys():void {
+    $this->config['batch_size']=50;$this->config['batch_executor_sha256']=hash_file('sha256',dirname(__DIR__,3).'/src/Service/AcquisitionWindowExecutor.php');
+    foreach([0,5,48,49] as $allowance){
+      $result=$this->executeWindow($this->queue(100),NULL,function()use($allowance):array{$c=$this->capacity();$c['available_today']=$allowance;return $c;});
+      $this->assertSame('deferred',$result['status']);$this->assertSame('account_allowance',$result['constraint']);$this->assertSame($allowance,$result['available_batch_size']);
+      $this->assertSame(0,$this->prepared);$this->assertSame(0,$this->sent);$this->assertSame('absent',$this->quota->result('2026-10-07-09')['status']);$this->assertFalse($this->quota->usedQueue('beauty-fixture-1'));$this->assertSame('absent',$this->quota->clockStatus());
+    }
+    // Later in the same approved start interval, genuinely fresh room admits all50.
+    $this->at('2026-10-07 09:03:00');$result=$this->executeWindow($this->queue(100));
+    $this->assertSame('complete',$result['status']);$this->assertSame(50,$result['counts']['accepted']);$this->assertSame(50,$this->sent);$this->assertTrue($this->executeWindow($this->queue(100))['duplicate']);$this->assertSame(50,$this->sent);
+  }
+  public function testFullBatchChecksQueueSharedQuotaAndHourlyAllowance():void {
+    $this->config['batch_size']=50;$this->config['batch_executor_sha256']=hash_file('sha256',dirname(__DIR__,3).'/src/Service/AcquisitionWindowExecutor.php');
+    $this->assertSame('deferred',$this->executeWindow($this->queue(49))['status']);$this->assertSame(0,$this->prepared);
+    $hour=$this->executeWindow($this->queue(100),NULL,function():array{$c=$this->capacity();$c['available_hour']=20;return $c;});$this->assertSame('deferred',$hour['status']);$this->assertSame(20,$hour['available_batch_size']);$this->assertSame(0,$this->sent);
+    for($i=0;$i<151;$i++)$this->message('shared-'.$i.'@example.test',0,TRUE);
+    $quota=$this->executeWindow($this->queue(100));$this->assertSame('deferred',$quota['status']);$this->assertSame('queue_or_shared_quota',$quota['constraint']);$this->assertSame(0,$this->prepared);$this->assertFalse($this->quota->usedQueue('beauty-fixture-1'));
+  }
+  public function testFullBatchStillHaltsWhenCapacityDropsAfterAdmission():void {
+    $this->config['batch_size']=50;$this->config['batch_executor_sha256']=hash_file('sha256',dirname(__DIR__,3).'/src/Service/AcquisitionWindowExecutor.php');$reads=0;
+    $result=$this->executeWindow($this->queue(100),NULL,function()use(&$reads):array{$c=$this->capacity();if(++$reads>=3)$c['available_today']=0;return $c;});
+    $this->assertSame('halted',$result['status']);$this->assertSame(1,$this->sent);$this->assertSame('halted',$this->quota->clockStatus());$this->assertTrue($this->executeWindow($this->queue(100))['duplicate']);$this->assertSame(1,$this->sent);
+  }
+  public function testFullBatchRejectsInvalidSizeAndAsapMode():void {
+    foreach([NULL,0,20,51,'50',50.0] as $bad){$this->config['batch_size']=$bad;try{$this->executeWindow($this->queue(100));$this->fail('Invalid batch accepted');}catch(\RuntimeException $e){$this->assertSame('acquisition_full_batch_config_invalid',$e->getMessage());}}
+    $this->asapConfig();$this->config['batch_size']=50;$this->config['batch_executor_sha256']=hash_file('sha256',dirname(__DIR__,3).'/src/Service/AcquisitionWindowExecutor.php');try{$this->executeAsap($this->queue(100));$this->fail('ASAP batch policy accepted');}catch(\RuntimeException $e){$this->assertSame('acquisition_full_batch_config_invalid',$e->getMessage());}$this->assertSame(0,$this->sent);
+  }
+  public function testFullBatchRejectsUnpinnedExecutorBeforeAnyReservation():void {
+    $this->config['batch_size']=50;
+    foreach([NULL,str_repeat('f',64)] as $hash){$this->config['batch_executor_sha256']=$hash;try{$this->executeWindow($this->queue(100));$this->fail('Unpinned executor accepted');}catch(\RuntimeException $e){$this->assertSame('acquisition_full_batch_executor_drift',$e->getMessage());}}
+    $this->assertSame(0,$this->prepared);$this->assertSame(0,$this->sent);$this->assertFalse($this->quota->usedQueue('beauty-fixture-1'));
+  }
   public function testIndustryImmediateHoursShareDailyCapAndExcludePriorAcceptances():void {
     $this->config['campaign_id']=5;$this->at('2026-10-07 10:00:00');for($i=0;$i<51;$i++)$this->message('prior-'.$i.'@example.test',0,TRUE);
     $queue=$this->queue(900);
