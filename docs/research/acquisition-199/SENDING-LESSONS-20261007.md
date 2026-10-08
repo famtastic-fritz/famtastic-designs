@@ -1,3 +1,5 @@
+October 8 extension: read [delivery incident lessons](DELIVERY-INCIDENT-LESSONS-20261008.md) and STATUS.md for the current full 50 schedule, permanent-failure suppression and reporting diagnosis. This dated October 7 record is retained.
+
 # October 7 acquisition sending lessons
 
 Recorded: 2026-10-07. Classification: `changed` internal operating documentation; lessons `site_local`, consumption `source_captured`. This review changes no sender, timer, contact, reserve, approval, provider or customer message. It extends the existing repair post-evaluation `posteval_2d7c3a261b59328f`; no second universal incident ledger is introduced.

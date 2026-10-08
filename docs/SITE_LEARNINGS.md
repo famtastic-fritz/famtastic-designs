@@ -1,3 +1,9 @@
+## 2026-10-08 — Delivery failures, full-batch admission and tracking truth
+
+Observation:468 permanent DSNs among 497 SMTP sends; 10 raw open events with0 message timestamps. Native DSN suppression now protects all 468 confirmed failures. Signed full 50 admission is deployed; existing morning schedule was restored with direct current authority.
+
+Guidance: read the [incident lessons](research/acquisition-199/DELIVERY-INCIDENT-LESSONS-20261008.md). Separate acceptance/delivery/human response, correlate failed recipients rather than daemon senders, deduplicate suppression while preserving sent status, and defer before reservation when50 room is unavailable. Recurring DSN ingestion/dashboard fixes remain proposed. Site-local/source-captured; shared promotion unverified.
+
 ## 2026-10-07 — Acquisition sending: budget, release health and recovery
 
 Observation: rolling24-hour usage left five modeled accepts at9a.m., then zero; later a1:24p.m. frontend update invalidated the signed sender pin. These are separate causes. Absent window rows do not prove cron failure because capacity deferral happens before reservation. A timer marked active does not establish healthy preflight.

@@ -1,3 +1,7 @@
+## Current operations pointer — October 8, 2026
+
+Use [STATUS.md](STATUS.md), [live incident receipts](DELIVERY-INCIDENT-LIVE-20261008.json) and [delivery lessons](DELIVERY-INCIDENT-LESSONS-20261008.md). Existing schedule is restored/full 50 active; 468 permanent failures suppressed; 497 SMTP sends do not mean497 delivered. The October 7 exception is expired. Earlier cutoffs below are historical.
+
 ## Current operations pointer — October 7, 2026
 
 Read [STATUS.md](STATUS.md), [CLOCK-REPAIR-LIVE-20261007.json](CLOCK-REPAIR-LIVE-20261007.json), and [SENDING-LESSONS-20261007.md](SENDING-LESSONS-20261007.md) before continuing sending or diagnosing a stopped clock. The sections below preserve earlier source/approval/history cutoffs; do not revive superseded holds or qualification counts. Current counts require a fresh native readback. Generic day3/day7 follow-ups remain disabled.

@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-10-08 — Full 50 admission and dated permanent-failure suppression
+
+**Deployed bounded runtime; site-local lessons source-captured.** Executor overlay c6d8970b admits50 only when fresh quota/account/queue room supports 50, otherwise defers before reservation. Existing normal schedule restored with direct current-chat approval. Native reconciliation independently matched 468 permanent failures among 497 sent and suppressed all 468; replay created0 duplicates and preserved all sent records/snapshots. Readback 17:05:09Z:active timer, 53 today, 0 unresolved, 10 raw opens/0 clicks/reply events. Human engagement and remaining 29 delivery unknown. No recurring DSN ingestion or event-based dashboard fix is deployed. [Incident proof/lessons](research/acquisition-199/DELIVERY-INCIDENT-LESSONS-20261008.md); owner acceptance and shared promotion remain pending.
+
 ## 2026-10-07 — Acquisition clock repair and operational learning
 
 **Deployed repair, dated hosted evidence; internal lessons source-captured.** Signed release binding repair and finite October7 catch-up are documented in `docs/research/acquisition-199/CLOCK-REPAIR-LIVE-20261007.json`; later native readback23:56:57Z confirms349customer SMTP accepts overall/105today/zero unresolved. SMTP acceptance is not inbox delivery. Normal200/day and50/window limits remain. The frontend promotion guard passed14source tests and was published to main; future deployment consumption remains unverified. [Sending lessons/runbook](research/acquisition-199/SENDING-LESSONS-20261007.md) records the independent SRE review. Durable deferral logs, native health notifications and forecasting remain proposed. Historical rows below retain their original cutoffs and must not be used as current dispatch state.

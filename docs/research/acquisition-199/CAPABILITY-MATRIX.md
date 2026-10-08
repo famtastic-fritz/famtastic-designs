@@ -1,3 +1,18 @@
+# October 8 — active full 50 schedule and delivery incident
+
+Current runtime: frontend 0fb17756 / backend base d27b6af4, existing HVAC overlay 76c6faad, acquisition executor overlay c6d8970b. Classification **deployed**, owner acceptance pending. Full 50 admission defers before reservation when available room is below 50; safety can still stop a running batch.
+
+The existing 9/10/11 a.m./noon Eastern schedule is restored after direct current-chat approval: 200 total/day, 50/window/hour, 250/day and 400/hour reserves, end date October 16. October 7 catch-up is expired. Readback 17:05:09Z: **497 SMTP sent total / 53 today / 0 unresolved**. Independently verified **468 permanent failures**, all now native-suppressed; sent rows/snapshots unchanged. Remaining 29 delivery unknown; 503 unused queue contacts' deliverability unknown. 10 raw opens / 0 clicks / 0 campaign reply events in checked sources; human engagement unknown. Dashboard timestamps remain 0; report correction/recurring DSN ingestion are documented gaps.
+
+Evidence: [DELIVERY-INCIDENT-LIVE-20261008.json](DELIVERY-INCIDENT-LIVE-20261008.json), [lessons](DELIVERY-INCIDENT-LESSONS-20261008.md), [resumable checkpoint](DELIVERY-INCIDENT-BRIEF-20261008.md). Next modeled approved opening: October 9 09:00, conditional on fresh room and all guards; no evening exception. Historical cutoffs below do not override this state.
+
+| Capability / actor / task | Evidence / native consumption | Remaining gap |
+| --- | --- | --- |
+| Batch admission / operator / wait for50 room | c6d8970b deployed, signed executor hash matched; 36 tests/1, 961 assertions; 0 keys reserved on deferral | Next actual full 50 outcome; smaller final tail policy |
+| Delivery suppression / operator / stop permanent failures |468 native bounced facts/events; replay 0 duplicates; 497 sent records/snapshots unchanged | Recurring DSN ingestion and diagnosis of134 other permanent failures |
+| Metrics / owner / assess engagement |10 bound raw opens vs0message timestamps; 0raw clicks/replies; reporting seam documented | Dashboard projection unchanged; human engagement unknown |
+| Owner / phone / use the released workflow uncoached | Previous dated hosted proof retained; exact runtime composition listed above | Physical owner acceptance pending; no new browser/owner proof in this operational checkpoint |
+
 # October 7 sender repair and evening catch-up — current checkpoint
 
 Classification: **deployed** for the repaired native sender and installed date-only catch-up; **changed** for the future frontend deployment guard. Current frontend `0fb17756af7e29e134827cae9e970cea39312459`, backend base `d27b6af475f394ad240e3a2ad02af657c1cd1b41`; the independent scoped HVAC backend overlay is `76c6faad5fe4b6fb199cb2842edca14f428d69d5`. The current signed normal input was rebound to the actual frontend and checked without dispatch, preserving all 249 prior customer acceptances and every window, slot and immutable snapshot fingerprint.

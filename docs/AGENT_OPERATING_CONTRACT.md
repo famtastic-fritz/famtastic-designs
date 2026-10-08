@@ -1,5 +1,9 @@
 # FAMtastic agent operating contract
 
+## October 8 — Delivery incident operational readback
+
+Before continuing acquisition work, read [the current delivery incident and lessons](research/acquisition-199/DELIVERY-INCIDENT-LESSONS-20261008.md) plus STATUS.md. Existing authorized sending remains active; 468 confirmed permanent failures are suppressed. Use native suppression and immutable dispatch evidence, report raw event counts separately from human engagement, and do not infer clean delivery from SMTP acceptance or a zero dashboard. The full 50 admission gate preserves approved hours/caps; recurring DSN ingestion and dashboard correction are still gaps.
+
 ## October 7 — Acquisition clock operational recovery
 
 Before changing or diagnosing the $199 acquisition sender, read [its current status and specialist-reviewed sending runbook](research/acquisition-199/SENDING-LESSONS-20261007.md). Distinguish rolling-budget deferral, release-pin failure, SMTP failure and uncertain transport. Installed/active is not healthy; source-tested is not deployed. Coordinate one signed schedule owner with the deployment owner, preserve accepted keys, and use current authority without replaying historical approvals or broad queues. These site-local lessons do not change customer fulfillment or provider policy.

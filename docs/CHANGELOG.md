@@ -1,3 +1,9 @@
+## 2026-10-08 — Acquisition full 50 and delivery incident checkpoint
+
+- Deployed signed full 50 admission c6d8970b; restored existing schedule with direct owner approval.
+- Independently verified/suppressed 468 permanent failures; replay 0 duplicates; 497 sent records/snapshots preserved; 0 operational sends.
+- Captured event/timestamp reporting and DSN ingestion gaps, site-local lessons, capability/owner-task state and aggregate receipts. Corrected future helper trailing-newline preservation comparison in source; frozen receipt retained.
+
 ## 2026-10-07 — Specialist-reviewed acquisition sending lessons
 
 - Captured the separate rolling-budget and stale-release causes, evidence limits, native recovery runbook and prioritized acceptance criteria in `docs/research/acquisition-199/SENDING-LESSONS-20261007.md`.

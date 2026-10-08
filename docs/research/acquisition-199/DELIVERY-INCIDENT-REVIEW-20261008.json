@@ -1,0 +1,35 @@
+{
+  "scope": "One source receipt comparator correction; incident/learning/authority/capability evidence and existing truth-surface updates. No new provider, hours, mail dispatch, reporting code or HVAC mutation.",
+  "review": "Bounded self-review and native readback; no new independent specialist review claimed.",
+  "classification": "deployed",
+  "learning_scope": "site_local",
+  "source_tests": {
+    "batch_tests": 36,
+    "batch_assertions": 1961,
+    "capacity_checks": 28,
+    "frontend_guard_checks": 14,
+    "consent_bounce_tests": 2,
+    "consent_bounce_assertions": 13,
+    "php_syntax": "pass",
+    "normalized_cron_fixture": "pass",
+    "expanded_sample_suite": "not_passing:48tests649assertions1missingHVACprivatebundle13warnings; unrelated fixture"
+  },
+  "runtime_proof": {
+    "verified_failures": 468,
+    "suppressed": 468,
+    "duplicate_replay_new_events": 0,
+    "sent_records_and_snapshots_preserved": 497,
+    "clock": "active",
+    "timer_installed": true,
+    "operational_sends": 0
+  },
+  "privacy_scan": {
+    "actual_addresses_compared": 999,
+    "historical_individual_hashes_compared": 260,
+    "leaks": 0
+  },
+  "owner_acceptance": "pending",
+  "recurring_dsn_ingestion": "not_deployed",
+  "dashboard_event_projection": "not_changed",
+  "shared_promotion": "unverified"
+}
