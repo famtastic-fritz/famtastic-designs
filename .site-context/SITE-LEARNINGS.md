@@ -1,3 +1,9 @@
+## 2026-10-07 — Read sending receipts before diagnosing a stopped clock
+
+**Observation:** The native sender can defer on its conservative rolling allowance before creating a window row, and remain marked active after a release-pin preflight failure. Morning deferral and afternoon release change must be dated separately.
+
+**Guidance:** Follow `docs/research/acquisition-199/SENDING-LESSONS-20261007.md`: actual counts → current release validation → fresh modeled allowance → installed next hour. Preserve keys and uncertain outcomes; do not infer provider rejection, inbox delivery or a failed cron from an absent row. Durable tick outcomes and forecasting are proposed, not installed. Lessons are site-local/source-captured.
+
 # FAMtastic Designs site learnings
 
 ## 2026-10-04 — Keep reusable SMS logic separate from provider lab and customer truth

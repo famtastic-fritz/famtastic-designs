@@ -1,0 +1,31 @@
+{
+  "schema": "famtastic.incident-lessons-review.v1",
+  "date": "2026-10-07",
+  "classification": "changed",
+  "scope": "Internal documentation only; no live sender/config, customer interface, limits or provider changes",
+  "source_base_commit": "dae766308713cce0512a17ca864349cb52016652",
+  "specialist": {
+    "profile_id": "engineering/engineering-sre",
+    "catalog_commit": "765be42358100bf89d2faa567668a94c602f9a26",
+    "review_method": "Independent read-only subagent source and document review",
+    "result": "Causal bounds and published-versus-proposed labels sound; concrete corrections addressed",
+    "corrections": [
+      "Require no in-flight sending before deployment, preserve uncertain reservations",
+      "P0 release coordination, P1 durable outcomes/health, P2 forecast",
+      "Do not change reserves or caps automatically",
+      "Retain later aggregate readback separately from earlier repair JSON",
+      "Label morning reconstruction and historical invocation uncertainty"
+    ]
+  },
+  "validation": {
+    "release_guard_checks_passed": 14,
+    "capacity_synthetic_checks_passed": 28,
+    "git_diff_check": "passed",
+    "real_email_sent_by_checks": 0
+  },
+  "report_sha256": "93b1827f7fd95bfa9dfed5de60a31e7821ee0bbc8a6404980eb15676537c8082",
+  "readback_sha256": "df04c65d6a7cb9971f71e77f713c3fdeee43332ee65368daf6a9f73f6dfb8a0c",
+  "consumption": "source_captured",
+  "shared_promotion": "site_local; cross-configuration/Studio retrieval unverified",
+  "owner_task_acceptance": "not_applicable_internal_docs; no customer acceptance inferred"
+}

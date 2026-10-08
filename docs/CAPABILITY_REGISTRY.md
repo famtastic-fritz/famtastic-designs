@@ -1,5 +1,9 @@
 # FAMtastic Designs capability registry
 
+## 2026-10-07 — Acquisition clock repair and operational learning
+
+**Deployed repair, dated hosted evidence; internal lessons source-captured.** Signed release binding repair and finite October7 catch-up are documented in `docs/research/acquisition-199/CLOCK-REPAIR-LIVE-20261007.json`; later native readback23:56:57Z confirms349customer SMTP accepts overall/105today/zero unresolved. SMTP acceptance is not inbox delivery. Normal200/day and50/window limits remain. The frontend promotion guard passed14source tests and was published to main; future deployment consumption remains unverified. [Sending lessons/runbook](research/acquisition-199/SENDING-LESSONS-20261007.md) records the independent SRE review. Durable deferral logs, native health notifications and forecasting remain proposed. Historical rows below retain their original cutoffs and must not be used as current dispatch state.
+
 ## 2026-10-05 — Acquisition199 campaign source candidate
 
 **Changed source; local and synthetic evidence.** Six shared candidate recipes, nine BrandedEmail drafts, private sample invitation/preferences, verified account/interview context, held0/3/7 sequences and current Commerce capture/refund scorecard are reviewable in `docs/research/acquisition-199/README.md`. The phone demonstration has actual developer viewport/interactions, explicitly page-local reply/content actions and no connected customer inbox claim. Existing hosted SMTP configuration is read-only evidence, not outreach permission or delivery. Zero contacts are verified eligible at the cutoff. Component Studio acceptance, exact content/cohort review, hosted release, real email clients/provider exits and uncoached owner acceptance remain open; real dispatch is HOLD. No source test grants owner_accepted or general production readiness.

@@ -1,3 +1,9 @@
+## 2026-10-07 — Acquisition sending: budget, release health and recovery
+
+Observation: rolling24-hour usage left five modeled accepts at9a.m., then zero; later a1:24p.m. frontend update invalidated the signed sender pin. These are separate causes. Absent window rows do not prove cron failure because capacity deferral happens before reservation. A timer marked active does not establish healthy preflight.
+
+Guidance: use the [specialist-reviewed sending lessons and runbook](research/acquisition-199/SENDING-LESSONS-20261007.md). Check actual accepts, both usage windows, exact release health and next eligible hour before promising volume. Coordinate scoped pause/deploy/validate/signed rebind; preserve all accepted keys. Persisted deferral telemetry, health notifications and forecasting remain proposed. Source-captured, site-local; no new live behavior in this documentation capture.
+
 ## 2026-10-07 — Release pins and rolling budget explain different sender failures
 
 A deployed frontend pin mismatch blocks the future native sender and must be repaired only after actual destination validation. It cannot explain missed windows before that deployment. Reconstruct historical account budget from dated native timestamps separately; zero allowance returns before a window reservation and can leave no window row. Label reconstruction honestly when tick logs and historical unresolved-state receipts are unavailable. Guard frontend promotion before public writes while an incompatible release-bound clock remains installed; the guard does not automatically authorize a rebind or dispatch.

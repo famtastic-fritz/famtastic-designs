@@ -1,0 +1,35 @@
+{
+  "schema": "famtastic.acquisition.aggregate-readback.v1",
+  "checked_at": "2026-10-07T23:56:57Z",
+  "timezone": "America/New_York",
+  "method": "Read-only existing oct7-runtime-readback.php executed through production Drupal CLI; redacted aggregate output only",
+  "customer_campaign_total_smtp_accepted": 349,
+  "customer_today_smtp_accepted": 105,
+  "industry_accepted_native_context_matches": 293,
+  "accepted_industries": 9,
+  "binding_failures": 0,
+  "unresolved_dispatches": 0,
+  "remaining_unused_queue_keys": 651,
+  "clock_status": "active",
+  "routine_timer_installed": true,
+  "oct7_catchup_timer_installed": true,
+  "routine_hours": [
+    9,
+    10,
+    11,
+    12
+  ],
+  "window_cap": 50,
+  "day_cap": 200,
+  "current_industry_window": {
+    "window_key": "asap-industry-2026-10-07-19",
+    "status": "complete",
+    "accepted": 50
+  },
+  "frontend_commit": "0fb17756af7e29e134827cae9e970cea39312459",
+  "backend_base_commit": "d27b6af475f394ad240e3a2ad02af657c1cd1b41",
+  "customer_inbox_delivery_proved": false,
+  "physical_owner_acceptance": false,
+  "provider_remaining_verified": false,
+  "later_outcomes": "Not observed by this snapshot; future schedules are not completion proof."
+}

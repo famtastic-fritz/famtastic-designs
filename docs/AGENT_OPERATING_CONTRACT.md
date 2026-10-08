@@ -1,5 +1,9 @@
 # FAMtastic agent operating contract
 
+## October 7 — Acquisition clock operational recovery
+
+Before changing or diagnosing the $199 acquisition sender, read [its current status and specialist-reviewed sending runbook](research/acquisition-199/SENDING-LESSONS-20261007.md). Distinguish rolling-budget deferral, release-pin failure, SMTP failure and uncertain transport. Installed/active is not healthy; source-tested is not deployed. Coordinate one signed schedule owner with the deployment owner, preserve accepted keys, and use current authority without replaying historical approvals or broad queues. These site-local lessons do not change customer fulfillment or provider policy.
+
 ## September 18 amendment — executable evidence is request-version-bound
 
 Embedded continuation evidence needs a producer-recorded request binding, not a

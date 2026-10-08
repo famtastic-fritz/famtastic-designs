@@ -1,3 +1,7 @@
+## Current operations pointer — October 7, 2026
+
+Read [STATUS.md](STATUS.md), [CLOCK-REPAIR-LIVE-20261007.json](CLOCK-REPAIR-LIVE-20261007.json), and [SENDING-LESSONS-20261007.md](SENDING-LESSONS-20261007.md) before continuing sending or diagnosing a stopped clock. The sections below preserve earlier source/approval/history cutoffs; do not revive superseded holds or qualification counts. Current counts require a fresh native readback. Generic day3/day7 follow-ups remain disabled.
+
 # $199 outreach and Sample Lab — current review
 
 **Current owner scope:** prepare generic outreach for all 1,000 supplied workbook records and review one polished email-to-Lab representative. Deep business research is optional. The six earlier designs were declined and are retained only as historical candidates. Owner authorizes paced sending in principle; actual execution remains **blocked by sender/release/runtime checks**.
